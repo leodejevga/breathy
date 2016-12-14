@@ -1,0 +1,7 @@
+#Tue Dec 13 22:38:10 CET 2016
+base.0=D\:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_6a9900075f01db6ff37d2586cd1c88c7c4e2501d
+renamed.1=classes2.dex
+renamed.0=classes.dex
+file.1=D\:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_af5b69d904a7fdffaa86dc400c88f0934778e237\\classes.dex
+base.1=D\:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_af5b69d904a7fdffaa86dc400c88f0934778e237
+file.0=D\:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_6a9900075f01db6ff37d2586cd1c88c7c4e2501d\\classes.dex
