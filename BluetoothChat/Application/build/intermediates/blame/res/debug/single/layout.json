@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\message.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\src\\main\\res\\layout\\message.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\activity_device_list.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\src\\main\\res\\layout\\activity_device_list.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\device_name.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\src\\main\\res\\layout\\device_name.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\fragment_bluetooth_chat.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\src\\main\\res\\layout\\fragment_bluetooth_chat.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\activity_main.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\BluetoothChat\\Application\\src\\main\\res\\layout\\activity_main.xml"
+    }
+]
