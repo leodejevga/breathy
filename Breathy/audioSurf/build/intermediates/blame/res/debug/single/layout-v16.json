@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\App\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout-v16\\notification_template_custom_big.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\App\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout-v16\\notification_template_custom_big.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout-v16\\notification_template_custom_big.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout-v16\\notification_template_custom_big.xml"
+    }
+]
