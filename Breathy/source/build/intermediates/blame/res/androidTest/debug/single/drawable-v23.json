@@ -1,9 +1,5 @@
 [
     {
-        "merged": "D:\\Dokumente\\Jev\\breathy\\App\\source\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-v23\\abc_control_background_material.xml",
-        "source": "D:\\Dokumente\\Jev\\breathy\\App\\source\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\drawable-v23\\abc_control_background_material.xml"
-    },
-    {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-v23\\abc_control_background_material.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\source\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\drawable-v23\\abc_control_background_material.xml"
     }

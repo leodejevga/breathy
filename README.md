@@ -1,11 +1,11 @@
-# breathy
+﻿# breathy
 
 ### Android Studio Project
 
-###Projekt App und Projekt Spiel miteinander verbinden
-1.Import Gradle Projekt
+### Projekt App und Projekt Spiel miteinander verbinden
+1. Import Gradle Projekt
   File -> Project Structure -> grün "Plus" Button oben link -> Import Gradle Project
-2.Configuration
+2. Configuration
   2.1 in build.gradle von Unterprojekt 
 	- ändern:  apply plugin: 'com.android.application' -> apply plugin: 'com.android.library'
 	- löschen: applicationId "<package>"
