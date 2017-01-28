@@ -1,6 +1,9 @@
 package com.apps.philipps.app;
 
-import com.apps.philipps.source.interfaces.IHandler;
+import android.content.Context;
+
+import com.apps.philipps.audiosurf.AudioSurf;
+import com.apps.philipps.source.interfaces.IGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +13,13 @@ import java.util.List;
  */
 
 public class Backend {
-    public static List<IHandler> games;
+    public static List<IGame> games;
+    public static IGame selected;
 
-    public static boolean init(){
+    public static boolean init(Context c){
         games = new ArrayList<>();
+        Backend.games.add(new AudioSurf(c)); //TODO: Automatisches Füllen der Spiele in die Liste
         return true;
     }
+
 }

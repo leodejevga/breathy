@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">AudioSurf</string>
+    <string name="app_name">Audio Surf</string>
+    <string name="running">Audio Surf is running</string>
+    <string name="options">Here are the Audio Surf Options</string>
 </resources>

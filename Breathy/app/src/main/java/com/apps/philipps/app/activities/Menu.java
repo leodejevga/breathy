@@ -1,40 +1,42 @@
 package com.apps.philipps.app.activities;
 
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
+import android.widget.ImageButton;
 
 import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.R;
-
-import com.apps.philipps.audiosurf.AudioSurfHandler;
-import com.apps.philipps.source.interfaces.IHandler;
+import com.apps.philipps.audiosurf.AudioSurf;
 
 public class Menu extends AppCompatActivity {
-    ListView gamesList;
-    ArrayAdapter<IHandler> adapter;
+
+    ImageButton games;
+    ImageButton options;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Backend.init();
-        initGamesList();
+        Backend.init(this);
+        initActivity();
     }
 
-    private void initGamesList() {
-        Backend.games.add(new AudioSurfHandler(this));
-        gamesList = (ListView) findViewById(R.id.games);
-        adapter = new ArrayAdapter<IHandler>(this, android.R.layout.simple_list_item_1, Backend.games);
-        gamesList.setAdapter(adapter);
-        gamesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void initActivity() {
+        games = (ImageButton) findViewById(R.id.mainGames);
+        games.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                IHandler game = Backend.games.get(position);
-                game.getGame().start();
+            public void onClick(View v) {
+                Intent i = new Intent(Menu.this, SelectGame.class);
+                startActivity(i);
+            }
+        });
+        options = (ImageButton) findViewById(R.id.mainOptions);
+        options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Menu.this, Options.class);
+                startActivity(i);
             }
         });
     }

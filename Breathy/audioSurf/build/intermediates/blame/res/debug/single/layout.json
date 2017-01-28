@@ -24,10 +24,6 @@
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\notification_template_part_chronometer.xml"
     },
     {
-        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\activity_game.xml",
-        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\src\\main\\res\\layout\\activity_game.xml"
-    },
-    {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\abc_list_menu_item_checkbox.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_list_menu_item_checkbox.xml"
     },
@@ -50,6 +46,10 @@
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_mode_close_item_material.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_action_mode_close_item_material.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\as_preview.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\src\\main\\res\\layout\\as_preview.xml"
     },
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\select_dialog_multichoice_material.xml",
@@ -82,6 +82,10 @@
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\abc_search_dropdown_item_icons_2line.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_search_dropdown_item_icons_2line.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\as_game.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\src\\main\\res\\layout\\as_game.xml"
     },
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\abc_screen_content_include.xml",
@@ -128,10 +132,6 @@
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_alert_dialog_material.xml"
     },
     {
-        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\activity_options.xml",
-        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\src\\main\\res\\layout\\activity_options.xml"
-    },
-    {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\abc_activity_chooser_view_list_item.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_activity_chooser_view_list_item.xml"
     },
@@ -142,6 +142,10 @@
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_bar_up_container.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_action_bar_up_container.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\as_options.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\src\\main\\res\\layout\\as_options.xml"
     },
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\debug\\layout\\abc_alert_dialog_title_material.xml",

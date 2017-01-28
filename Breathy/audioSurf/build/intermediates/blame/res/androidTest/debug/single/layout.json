@@ -1,9 +1,5 @@
 [
     {
-        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\activity_game.xml",
-        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\bundles\\debug\\res\\layout\\activity_game.xml"
-    },
-    {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\notification_action_tombstone.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\notification_action_tombstone.xml"
     },
@@ -22,10 +18,6 @@
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_select_dialog_material.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_select_dialog_material.xml"
-    },
-    {
-        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\activity_options.xml",
-        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\bundles\\debug\\res\\layout\\activity_options.xml"
     },
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\notification_template_custom_big.xml",
@@ -62,6 +54,10 @@
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_activity_chooser_view_list_item.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_activity_chooser_view_list_item.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\as_preview.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\bundles\\debug\\res\\layout\\as_preview.xml"
     },
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_list_menu_item_layout.xml",
@@ -102,6 +98,10 @@
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_alert_dialog_material.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_alert_dialog_material.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\as_game.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\bundles\\debug\\res\\layout\\as_game.xml"
     },
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_action_mode_close_item_material.xml",
@@ -154,6 +154,10 @@
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_action_mode_bar.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_action_mode_bar.xml"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\as_options.xml",
+        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\bundles\\debug\\res\\layout\\as_options.xml"
     },
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\notification_template_part_chronometer.xml",

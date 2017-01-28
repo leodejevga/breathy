@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Breathy</string>
+    <string name="buttonOptions">Optionen</string>
+    <string name="buttonStart">Spiel starten</string>
 </resources>

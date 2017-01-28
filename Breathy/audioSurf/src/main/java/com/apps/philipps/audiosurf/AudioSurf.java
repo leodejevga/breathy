@@ -1,9 +1,7 @@
 package com.apps.philipps.audiosurf;
 
 import android.content.Context;
-import android.content.Intent;
 
-import com.apps.philipps.audiosurf.activities.Main;
 import com.apps.philipps.source.abstracts.AbstractGame;
 
 /**
@@ -11,19 +9,12 @@ import com.apps.philipps.source.abstracts.AbstractGame;
  */
 
 public class AudioSurf extends AbstractGame {
-
-    public AudioSurf(Context context){
-        this.context = context;
-        name = "Audio Surf";
+    public AudioSurf(Context c){
         price = 2500;
-    }
-
-    @Override
-    public boolean start() {
-        if(context==null)
-            return false;
-        Intent i = new Intent(context, Main.class);
-        context.startActivity(i);
-        return true;
+        name = "Audio Surf";
+        game = new AudioSurfGame(c);
+        options = new AudioSurfOptions(c);
+        preview = new AudioSurfPreview(c);
+        Backend.init();
     }
 }

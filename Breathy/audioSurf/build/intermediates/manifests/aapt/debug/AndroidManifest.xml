@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity android:name="com.apps.philipps.audiosurf.activities.Options" />
-        <activity android:name="com.apps.philipps.audiosurf.activities.Main" />
+        <activity android:name="com.apps.philipps.audiosurf.activities.Game" />
+        <activity android:name="com.apps.philipps.audiosurf.activities.Preview" />
     </application>
 
 </manifest>
