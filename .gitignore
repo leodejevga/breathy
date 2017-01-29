@@ -4,7 +4,7 @@
 .idea/
 .gradle/
 local.properties
-
+*R.java
 
 */build/
 

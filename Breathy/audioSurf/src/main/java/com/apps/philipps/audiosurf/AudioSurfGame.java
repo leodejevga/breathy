@@ -28,9 +28,4 @@ public class AudioSurfGame extends AbstractGameObject {
         return true;
     }
 
-    @Override
-    public boolean end() {
-        //TODO: Beende die Activity
-        return false;
-    }
 }
