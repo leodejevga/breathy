@@ -7,11 +7,16 @@ import android.widget.Toast;
 import com.apps.philipps.source.interfaces.IBootable;
 
 /**
- * Created by leode on 28.01.2017.
+ * Created by Jevgenij Huebert on 28.01.2017. Project Breathy
  */
-
 public abstract class AbstractGameObject implements IBootable {
+    /**
+     * The Context.
+     */
     protected Context context;
+    /**
+     * The Activity.
+     */
     protected Activity activity;
 
     @Override

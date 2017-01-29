@@ -10,10 +10,13 @@ import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.R;
 import com.apps.philipps.audiosurf.AudioSurf;
 
+/**
+ * Main Activity.
+ */
 public class Menu extends AppCompatActivity {
 
-    ImageButton games;
-    ImageButton options;
+    private ImageButton games;
+    private ImageButton options;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

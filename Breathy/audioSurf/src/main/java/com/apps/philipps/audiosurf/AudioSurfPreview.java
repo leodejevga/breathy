@@ -7,9 +7,14 @@ import com.apps.philipps.audiosurf.activities.Preview;
 import com.apps.philipps.source.abstracts.AbstractGameObject;
 
 /**
- * Created by leode on 27.01.2017.
+ * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
  */
 public class AudioSurfPreview extends AbstractGameObject {
+    /**
+     * Instantiates a new Audio surf preview.
+     *
+     * @param context the context
+     */
     public AudioSurfPreview(Context context) {
         this.context = context;
     }

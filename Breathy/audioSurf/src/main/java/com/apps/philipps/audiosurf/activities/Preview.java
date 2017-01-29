@@ -7,6 +7,9 @@ import android.os.Bundle;
 
 import com.apps.philipps.audiosurf.R;
 
+/**
+ * Preview Activity
+ */
 public class Preview extends FragmentActivity {
 
     @Override

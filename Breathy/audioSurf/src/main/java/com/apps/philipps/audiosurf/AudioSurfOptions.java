@@ -6,10 +6,15 @@ import com.apps.philipps.audiosurf.activities.Options;
 import com.apps.philipps.source.abstracts.AbstractGameObject;
 
 /**
- * Created by leode on 27.01.2017.
+ * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
  */
 public class AudioSurfOptions extends AbstractGameObject {
 
+    /**
+     * Instantiates a new Audio surf options.
+     *
+     * @param context the context
+     */
     public AudioSurfOptions(Context context){
         this.context = context;
     }

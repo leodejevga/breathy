@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 import com.apps.philipps.app.R;
 
+/**
+ * Options Activity
+ */
 public class Options extends AppCompatActivity {
 
     @Override

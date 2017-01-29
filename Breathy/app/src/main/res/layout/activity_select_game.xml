@@ -17,9 +17,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_height="300dp"
         android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false" />
+        android:headerDividersEnabled="false"
+        android:layout_height="150dp" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -52,6 +52,25 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/buttonStart"
         android:onClick="startGame" />
+
+    <Button
+        android:text="@string/buttonBuy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonBuy"
+        android:visibility="invisible"
+        android:layout_above="@+id/buttonOptions"
+        android:layout_centerHorizontal="true"
+        android:onClick="buyGame" />
+
+    <TextView
+        android:text="0 Coins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonBuy"
+        android:layout_toRightOf="@+id/buttonOptions"
+        android:layout_toEndOf="@+id/buttonOptions"
+        android:id="@+id/textCoins" />
 
 
 </RelativeLayout>
