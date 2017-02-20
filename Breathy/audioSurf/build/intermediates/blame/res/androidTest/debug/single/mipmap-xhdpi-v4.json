@@ -2,5 +2,9 @@
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xhdpi-v4\\ic_launcher.png",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\bundles\\debug\\res\\mipmap-xhdpi-v4\\ic_launcher.png"
+    },
+    {
+        "merged": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xhdpi-v4\\ic_launcher.png",
+        "source": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\bundles\\debug\\res\\mipmap-xhdpi-v4\\ic_launcher.png"
     }
 ]

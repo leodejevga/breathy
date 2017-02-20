@@ -4,12 +4,28 @@
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout-v21\\notification_template_custom_big.xml"
     },
     {
+        "merged": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_action_tombstone.xml",
+        "source": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout-v21\\notification_action_tombstone.xml"
+    },
+    {
+        "merged": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_action.xml",
+        "source": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout-v21\\notification_action.xml"
+    },
+    {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_action_tombstone.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout-v21\\notification_action_tombstone.xml"
     },
     {
+        "merged": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_template_icon_group.xml",
+        "source": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout-v21\\notification_template_icon_group.xml"
+    },
+    {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_template_icon_group.xml",
         "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout-v21\\notification_template_icon_group.xml"
+    },
+    {
+        "merged": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_template_custom_big.xml",
+        "source": "E:\\Programming\\Game\\Breathy\\audioSurf\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout-v21\\notification_template_custom_big.xml"
     },
     {
         "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\audioSurf\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_action.xml",
