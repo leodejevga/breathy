@@ -60,7 +60,7 @@ public abstract class AbstractGame implements IGame {
     @Override
     public boolean startGame() {
         if(bought)
-            return game.start();
+            return (Boolean) game.start();
         else
             game.makeToast("The game " + name + " was not bought");
         return bought;
@@ -68,13 +68,13 @@ public abstract class AbstractGame implements IGame {
     @Override
     public boolean startOptions() {
         if(bought)
-            return options.start();
+            return (Boolean) options.start();
         else
             game.makeToast("The game " + name + " was not bought");
         return bought;
     }
     @Override
-    public boolean startPreview() {
+    public Object startPreview() {
         return preview.start();
     }
     @Override

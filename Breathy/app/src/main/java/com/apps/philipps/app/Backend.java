@@ -47,7 +47,6 @@ public class Backend {
         if(!initialized){
             games = new ArrayList<>();
             Backend.games.add(new AudioSurf(context)); //TODO: Automatisches Füllen der Spiele in die Liste
-
             //TODO: Initialisieren von weiteren Objekten, die diese Klasse haben wird
             initialized = true;
             return true;

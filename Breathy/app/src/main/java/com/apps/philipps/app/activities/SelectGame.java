@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 
 import com.apps.philipps.app.Backend;
@@ -27,6 +28,7 @@ public class SelectGame extends AppCompatActivity {
     private TextView coins;
     private ListView gamesList;
     private ArrayAdapter<IGame> adapter;
+    private VideoView preview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class SelectGame extends AppCompatActivity {
                 Backend.selected = Backend.games.get(position);
                 Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
                 buy.setVisibility(Backend.selected.isBought()?View.INVISIBLE:View.VISIBLE);
+                preview = (VideoView) Backend.selected.startPreview();
             }
         });
     }
