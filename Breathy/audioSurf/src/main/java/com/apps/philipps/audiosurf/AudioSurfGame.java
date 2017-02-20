@@ -20,7 +20,7 @@ public class AudioSurfGame extends AbstractGameObject {
         this.context = context;
     }
     @Override
-    public boolean start() {
+    public Object start() {
         if(context==null)
             return false;
         Intent i = new Intent(context, Game.class);
