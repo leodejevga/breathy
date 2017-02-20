@@ -2,7 +2,9 @@ package com.apps.philipps.audiosurf;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
+import android.widget.VideoView;
 
 import com.apps.philipps.audiosurf.activities.Preview;
 import com.apps.philipps.source.abstracts.AbstractGameObject;
@@ -11,6 +13,8 @@ import com.apps.philipps.source.abstracts.AbstractGameObject;
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
  */
 public class AudioSurfPreview extends AbstractGameObject {
+
+    VideoView videoView;
     /**
      * Instantiates a new Audio surf preview.
      *
@@ -21,8 +25,10 @@ public class AudioSurfPreview extends AbstractGameObject {
     }
     @Override
     public View start() {
-
-        //TODO: Videoview zurück geben
-        return null;
+        String videoPath = "android.resource://com.apps.philipps.audiosurf/" + R.raw.aaa;
+        Uri uri = Uri.parse(videoPath);
+        videoView.setVideoURI(uri);
+        videoView.start();
+        return videoView;
     }
 }

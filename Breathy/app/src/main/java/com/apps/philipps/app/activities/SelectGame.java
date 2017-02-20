@@ -27,6 +27,7 @@ public class SelectGame extends AppCompatActivity {
     private Button buy;
     private TextView coins;
     private ListView gamesList;
+    private VideoView videoV;
     private ArrayAdapter<IGame> adapter;
     private VideoView preview;
 
@@ -42,6 +43,7 @@ public class SelectGame extends AppCompatActivity {
         coins = (TextView) findViewById(R.id.textCoins);
 
 
+        videoV = (VideoView) findViewById(R.id.videoView);
         gamesList = (ListView) findViewById(R.id.games);
         adapter = new ArrayAdapter<IGame>(this, android.R.layout.simple_list_item_1, Backend.games);
         gamesList.setAdapter(adapter);
