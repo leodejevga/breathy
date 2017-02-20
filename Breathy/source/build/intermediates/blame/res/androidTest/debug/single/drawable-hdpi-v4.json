@@ -148,12 +148,12 @@
         "source": "E:\\Programming\\Game\\Breathy\\source\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\drawable-hdpi-v4\\abc_scrubber_control_to_pressed_mtrl_005.png"
     },
     {
-        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\abc_tab_indicator_mtrl_alpha.9.png",
-        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\source\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\drawable-hdpi-v4\\abc_tab_indicator_mtrl_alpha.9.png"
-    },
-    {
         "merged": "E:\\Programming\\Game\\Breathy\\source\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\abc_ic_star_black_16dp.png",
         "source": "E:\\Programming\\Game\\Breathy\\source\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\drawable-hdpi-v4\\abc_ic_star_black_16dp.png"
+    },
+    {
+        "merged": "D:\\Dokumente\\Jev\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\abc_tab_indicator_mtrl_alpha.9.png",
+        "source": "D:\\Dokumente\\Jev\\breathy\\Breathy\\source\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\drawable-hdpi-v4\\abc_tab_indicator_mtrl_alpha.9.png"
     },
     {
         "merged": "E:\\Programming\\Game\\Breathy\\source\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\notify_panel_notification_icon_bg.png",

@@ -21,17 +21,6 @@
         android:headerDividersEnabled="false"
         android:layout_height="150dp" />
 
-    <VideoView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:id="@+id/videoView"
-        android:layout_below="@+id/games"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <Button
         android:text="@string/buttonOptions"
         android:layout_height="wrap_content"
@@ -71,6 +60,14 @@
         android:layout_toRightOf="@+id/buttonOptions"
         android:layout_toEndOf="@+id/buttonOptions"
         android:id="@+id/textCoins" />
+
+    <VideoView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/games"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/videoView"
+        android:layout_above="@+id/buttonBuy" />
 
 
 </RelativeLayout>

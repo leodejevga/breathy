@@ -1,10 +1,12 @@
 package com.apps.philipps.source.abstracts;
 
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.interfaces.IBootable;
 import com.apps.philipps.source.interfaces.IGame;
+import com.apps.philipps.source.interfaces.IPreview;
 
 /**
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
@@ -21,7 +23,7 @@ public abstract class AbstractGame implements IGame {
     /**
      * The Preview.
      */
-    protected AbstractGameObject preview;
+    protected IPreview preview;
     /**
      * The Price for this Game.
      */
@@ -60,7 +62,7 @@ public abstract class AbstractGame implements IGame {
     @Override
     public boolean startGame() {
         if(bought)
-            return (Boolean) game.start();
+            game.start();
         else
             game.makeToast("The game " + name + " was not bought");
         return bought;
@@ -68,14 +70,14 @@ public abstract class AbstractGame implements IGame {
     @Override
     public boolean startOptions() {
         if(bought)
-            return (Boolean) options.start();
+            options.start();
         else
             game.makeToast("The game " + name + " was not bought");
         return bought;
     }
     @Override
-    public Object startPreview() {
-        return preview.start();
+    public VideoView startPreview(VideoView videoview) {
+        return preview.start(videoview);
     }
     @Override
     public String toString() {

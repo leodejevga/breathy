@@ -1,5 +1,7 @@
 package com.apps.philipps.source.interfaces;
 
+import android.widget.VideoView;
+
 /**
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
  */
@@ -23,7 +25,7 @@ public interface IGame {
      *
      * @return true if the preview successfully started
      */
-    public Object startPreview();
+    public VideoView startPreview(VideoView videoView);
 
     /**
      * Returns <code>true</code> if this game was bought.

@@ -13,7 +13,7 @@ public interface IBootable {
      *
      * @return true if the Activity started
      */
-    public Object start();
+    public boolean start();
 
     /**
      * End Activity

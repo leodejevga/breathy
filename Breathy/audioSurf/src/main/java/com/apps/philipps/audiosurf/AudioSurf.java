@@ -22,7 +22,7 @@ public class AudioSurf extends AbstractGame {
         name = "Audio Surf";
         game = new AudioSurfGame(context);
         options = new AudioSurfOptions(context);
-        preview = new AudioSurfPreview(context);
+        preview = new AudioSurfPreview();
         Backend.init();
     }
 }

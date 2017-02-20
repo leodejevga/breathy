@@ -14,10 +14,6 @@ public abstract class AbstractGameObject implements IBootable {
      * The Context.
      */
     protected Context context;
-    /**
-     * The Activity.
-     */
-    protected Activity activity;
 
     @Override
     public void makeToast(String text) {

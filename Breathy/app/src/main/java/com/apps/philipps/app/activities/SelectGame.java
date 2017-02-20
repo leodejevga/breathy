@@ -1,5 +1,6 @@
 package com.apps.philipps.app.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -27,7 +28,6 @@ public class SelectGame extends AppCompatActivity {
     private Button buy;
     private TextView coins;
     private ListView gamesList;
-    private VideoView videoV;
     private ArrayAdapter<IGame> adapter;
     private VideoView preview;
 
@@ -43,7 +43,7 @@ public class SelectGame extends AppCompatActivity {
         coins = (TextView) findViewById(R.id.textCoins);
 
 
-        videoV = (VideoView) findViewById(R.id.videoView);
+        preview = (VideoView) findViewById(R.id.videoView);
         gamesList = (ListView) findViewById(R.id.games);
         adapter = new ArrayAdapter<IGame>(this, android.R.layout.simple_list_item_1, Backend.games);
         gamesList.setAdapter(adapter);
@@ -53,9 +53,7 @@ public class SelectGame extends AppCompatActivity {
                 Backend.selected = Backend.games.get(position);
                 Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
                 buy.setVisibility(Backend.selected.isBought()?View.INVISIBLE:View.VISIBLE);
-                preview = (VideoView) Backend.selected.startPreview();
-                if(preview != null)
-                    preview.start();
+                preview = Backend.selected.startPreview(preview);
             }
         });
     }
