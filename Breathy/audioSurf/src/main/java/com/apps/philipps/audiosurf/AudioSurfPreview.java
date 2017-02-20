@@ -2,6 +2,7 @@ package com.apps.philipps.audiosurf;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import com.apps.philipps.audiosurf.activities.Preview;
 import com.apps.philipps.source.abstracts.AbstractGameObject;
@@ -19,11 +20,9 @@ public class AudioSurfPreview extends AbstractGameObject {
         this.context = context;
     }
     @Override
-    public boolean start() {
-        if (context == null)
-            return false;
-        Intent i = new Intent(context, Preview.class);
-        context.startActivity(i);
-        return true;
+    public View start() {
+
+        //TODO: Videoview zurück geben
+        return null;
     }
 }

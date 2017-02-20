@@ -23,7 +23,7 @@ public interface IGame {
      *
      * @return true if the preview successfully started
      */
-    public boolean startPreview();
+    public Object startPreview();
 
     /**
      * Returns <code>true</code> if this game was bought.
