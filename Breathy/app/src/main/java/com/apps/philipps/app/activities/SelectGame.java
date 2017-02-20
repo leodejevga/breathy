@@ -52,6 +52,8 @@ public class SelectGame extends AppCompatActivity {
                 Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
                 buy.setVisibility(Backend.selected.isBought()?View.INVISIBLE:View.VISIBLE);
                 preview = (VideoView) Backend.selected.startPreview();
+                if(preview != null)
+                    preview.start();
             }
         });
     }
