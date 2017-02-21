@@ -3,10 +3,13 @@
 *.ipr
 .idea/
 .gradle/
-local.properties
+/local.properties
 *R.java
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
 
-*/build/
-
+/build
+/captures
 *~
 *.swp
