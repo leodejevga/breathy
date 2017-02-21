@@ -1,8 +1,11 @@
 package com.apps.philipps.app;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 
 import com.apps.philipps.audiosurf.AudioSurf;
+import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.interfaces.IGame;
 
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ public class Backend {
      */
     public static IGame selected;
     private static boolean initialized=false;
+    private static BluetoothService bluetoothService = null;
     //TODO: Hier kommen weitere Daten hin die von überall zugreifbar sein müssen. In der Methode init werden sie initialisiert
 
     /**
@@ -47,6 +51,8 @@ public class Backend {
         if(!initialized){
             games = new ArrayList<>();
             Backend.games.add(new AudioSurf(context)); //TODO: Automatisches Füllen der Spiele in die Liste
+            bluetoothService = new BluetoothService(context);
+            BreathData.init(0);
             //TODO: Initialisieren von weiteren Objekten, die diese Klasse haben wird
             initialized = true;
             return true;
@@ -54,4 +60,7 @@ public class Backend {
         return false;
     }
 
+    public static boolean bluetoothEnabled(){
+        return bluetoothService.getState() != BluetoothService.STATE_NONE;
+    }
 }
