@@ -1,6 +1,7 @@
 package com.apps.philipps.app;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 
@@ -51,7 +52,7 @@ public class Backend {
         if(!initialized){
             games = new ArrayList<>();
             Backend.games.add(new AudioSurf(context)); //TODO: Automatisches Füllen der Spiele in die Liste
-            bluetoothService = new BluetoothService(context);
+            bluetoothService = new BluetoothService();
             BreathData.init(0);
             //TODO: Initialisieren von weiteren Objekten, die diese Klasse haben wird
             initialized = true;
@@ -61,6 +62,31 @@ public class Backend {
     }
 
     public static boolean bluetoothEnabled(){
+        return bluetoothService.isEnabled();
+    }
+    public static boolean bluetoothConnected(){
         return bluetoothService.getState() != BluetoothService.STATE_NONE;
+    }
+
+    public static void destroy() {
+        bluetoothService.stop();
+    }
+
+    public static void bluetoothResume() {
+        if (bluetoothService != null) {
+            // Only if the state is STATE_NONE, do we know that we haven't started already
+            if (bluetoothService.getState() == BluetoothService.STATE_NONE) {
+                // Start the Bluetooth chat services
+                bluetoothService.start();
+            }
+        }
+    }
+
+    public static BluetoothAdapter getAdapter() {
+        return bluetoothService.getAdapter();
+    }
+
+    public static void connectDevice(BluetoothDevice device, boolean secure) {
+        bluetoothService.connect(device, secure);
     }
 }

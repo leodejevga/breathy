@@ -15,6 +15,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.apps.philipps.app.activities.Menu;
 import com.apps.philipps.source.BreathData;
 
 import java.io.IOException;
@@ -30,6 +31,12 @@ import java.util.UUID;
  */
 public class BluetoothService {
     // Debugging
+    public static final String EXTRA_DEVICE = "AdressOfSelectedDevice";
+    public static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+    public static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    public static final int REQUEST_ENABLE_BT = 3;
+
+
     private static final String TAG = "BluetoothService";
 
     // Name for the SDP record when creating server socket
@@ -50,7 +57,6 @@ public class BluetoothService {
     private ConnectedThread mConnectedThread;
     private int mState;
     private int mNewState;
-    private Context activity;
     private String deviceName;
 
     // Constants that indicate the current connection state
@@ -61,14 +67,15 @@ public class BluetoothService {
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
-     *
-     * @param context The UI Activity Context
      */
-    public BluetoothService(Context context) {
+    public BluetoothService() {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mNewState = mState;
-        activity = context;
+    }
+
+    public BluetoothAdapter getAdapter() {
+        return mAdapter;
     }
 
     /**
@@ -282,6 +289,10 @@ public class BluetoothService {
 
         // Start the service over to restart listening mode
         BluetoothService.this.start();
+    }
+
+    public boolean isEnabled() {
+        return mAdapter.isEnabled();
     }
 
     /**
@@ -548,16 +559,6 @@ public class BluetoothService {
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     deviceName = msg.getData().getString(Constants.DEVICE_NAME);
-                    if (null != activity) {
-                        Toast.makeText(activity, "Connected to "
-                                + deviceName, Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case Constants.MESSAGE_TOAST:
-                    if (null != activity) {
-                        Toast.makeText(activity, msg.getData().getString(Constants.TOAST),
-                                Toast.LENGTH_SHORT).show();
-                    }
                     break;
             }
         }

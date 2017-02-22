@@ -1,5 +1,6 @@
 package com.apps.philipps.app.activities;
 
+import android.bluetooth.BluetoothAdapter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.widget.VideoView;
 
 
 import com.apps.philipps.app.Backend;
+import com.apps.philipps.app.BluetoothService;
 import com.apps.philipps.app.R;
 
 import com.apps.philipps.source.Coins;
@@ -41,7 +43,6 @@ public class SelectGame extends AppCompatActivity {
     private void initGame() {
         buy = (Button) findViewById(R.id.buttonBuy);
         coins = (TextView) findViewById(R.id.textCoins);
-
 
         preview = (VideoView) findViewById(R.id.videoView);
         gamesList = (ListView) findViewById(R.id.games);
