@@ -1,6 +1,8 @@
 package com.apps.philipps.source;
 
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,10 @@ import java.util.List;
  * Created by Jevgenij Huebert on 29.01.2017. Project Breathy
  */
 public class BreathData {
+    public Context activity;
+    public BreathData(Context context){
+        this.activity = context;
+    }
     //TODO: Hier werden Bluetooth Daten gesammelt und live gefiltert, sodass sie wieder als Rückmeldung fungieren können
     //Diese Klasse soll statisch agieren
     private static LimitedList Data;
@@ -60,15 +66,18 @@ public class BreathData {
          */
         public LimitedList(){
             super();
-            if(ramSize!=0)
-                saveData = new SaveData<>("BluetoothData");
+            if(ramSize!=0) {
+                //TODO save bluetooth data
+                //saveData = new SaveData<>("BluetoothData");
+            }
         }
 
         @Override
         public boolean add(Integer t) {
             super.add(t);
             if(saveData!=null && size()>ramSize) {
-                saveData.write(remove(size()-1));
+                //TODO save bluetooth data
+                //saveData.write(remove(size()-1));
                 return true;
             }
             return false;
@@ -79,7 +88,9 @@ public class BreathData {
             if(index<size() && index>=0)
                 return super.get(index);
             else if(saveData!=null && size()==ramSize && index>=ramSize)
-                return saveData.read(index);
+                //TODO read bluetooth data
+                //return saveData.read(index);
+                return 1;
             else return null;
         }
     }

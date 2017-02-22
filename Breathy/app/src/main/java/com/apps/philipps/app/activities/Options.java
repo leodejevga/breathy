@@ -15,7 +15,9 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.apps.philipps.app.R;
+import com.apps.philipps.source.SaveData;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,12 +46,18 @@ public class Options extends AppCompatActivity {
         saveAndBack.setOnClickListener(new View.OnClickListener() {
                                            @Override
                                            public void onClick(View v) {
-                                               saveandback();
+                                               try {
+                                                   saveandback();
+                                               } catch (IOException e) {
+                                                   Toast.makeText(activitiy.getApplicationContext(), "Can not store data to Cache", Toast.LENGTH_LONG).show();
+                                               }
                                            }
                                        }
         );
         initControls();
+        getUserData();
     }
+
 
     private void sendAnEmailToDoctor() {
         if (!vadilateName())
@@ -76,7 +84,7 @@ public class Options extends AppCompatActivity {
         }
     }
 
-    private void saveandback() {
+    private void saveandback() throws IOException {
         if (!vadilateName())
             Toast.makeText(Options.this, "Name should not be empty", Toast.LENGTH_LONG).show();
         if (!vadilateAge())
@@ -84,10 +92,18 @@ public class Options extends AppCompatActivity {
         if (!vadilateEmail(findViewById(R.id.email)))
             Toast.makeText(Options.this, "Email is invalid", Toast.LENGTH_LONG).show();
         if (vadilateName() && vadilateAge() && vadilateEmail(findViewById(R.id.email))) {
+            UserData userData = new UserData();
+            userData.setName(((EditText) findViewById(R.id.name)).getText().toString());
+            userData.setEmail(((EditText) findViewById(R.id.email)).getText().toString());
+            userData.setAge(Integer.parseInt(((EditText) findViewById(R.id.age)).getText().toString()));
+            //TODO write Erfahrung
+            SaveData<UserData> saveData = new SaveData<>(activitiy.getApplicationContext());
+            saveData.writeObject("userdata", userData);
+            Toast.makeText(activitiy.getApplicationContext(), "User data saved", Toast.LENGTH_LONG).show();
+
             Intent i = new Intent(Options.this, Menu.class);
             startActivity(i);
         }
-        //TODO wo und in welchem Format soll die Daten gespeichert werden ?
     }
 
     public void onRadioButtonClicked(View view) {
@@ -161,6 +177,25 @@ public class Options extends AppCompatActivity {
                 }
             });
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getUserData() {
+        SaveData<UserData> saveData = new SaveData<>(activitiy.getApplicationContext());
+        Log.i("Data", saveData.toString());
+        try {
+            UserData userData = saveData.readObject("userdata");
+            EditText editText = (EditText) findViewById(R.id.name);
+            editText.setText(userData.getName());
+            editText = (EditText) findViewById(R.id.age);
+            editText.setText(userData.getAge() + "");
+            editText = (EditText) findViewById(R.id.email);
+            editText.setText(userData.getEmail());
+            //TODO read Erfahrung
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
