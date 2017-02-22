@@ -9,12 +9,17 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.util.StateSet;
 import android.widget.Toast;
 
+import com.apps.philipps.app.activities.Menu;
+import com.apps.philipps.app.activities.Options;
+import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 
 import java.io.IOException;
@@ -30,6 +35,11 @@ import java.util.UUID;
  */
 public class BluetoothService {
     // Debugging
+    public static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+    public static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    public static final int REQUEST_ENABLE_BT = 3;
+
+
     private static final String TAG = "BluetoothService";
 
     // Name for the SDP record when creating server socket
@@ -50,7 +60,6 @@ public class BluetoothService {
     private ConnectedThread mConnectedThread;
     private int mState;
     private int mNewState;
-    private Context activity;
     private String deviceName;
 
     // Constants that indicate the current connection state
@@ -61,14 +70,15 @@ public class BluetoothService {
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
-     *
-     * @param context The UI Activity Context
      */
-    public BluetoothService(Context context) {
+    public BluetoothService() {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mNewState = mState;
-        activity = context;
+    }
+
+    public BluetoothAdapter getAdapter() {
+        return mAdapter;
     }
 
     /**
@@ -327,7 +337,7 @@ public class BluetoothService {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
                     socket = mmServerSocket.accept();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Log.e(TAG, "Socket Type: " + mSocketType + "accept() failed", e);
                     break;
                 }
@@ -363,7 +373,7 @@ public class BluetoothService {
             Log.d(TAG, "Socket Type" + mSocketType + "cancel " + this);
             try {
                 mmServerSocket.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Socket Type" + mSocketType + "close() of server failed", e);
             }
         }
@@ -522,42 +532,37 @@ public class BluetoothService {
     public interface Constants {
 
         // Message types sent from the BluetoothService Handler
-        public static final int MESSAGE_STATE_CHANGE = 1;
-        public static final int MESSAGE_READ = 2;
-        public static final int MESSAGE_WRITE = 3;
-        public static final int MESSAGE_DEVICE_NAME = 4;
-        public static final int MESSAGE_TOAST = 5;
+        int MESSAGE_STATE_CHANGE = 1;
+        int MESSAGE_READ = 2;
+        int MESSAGE_WRITE = 3;
+        int MESSAGE_DEVICE_NAME = 4;
+        int MESSAGE_TOAST = 5;
 
         // Key names received from the BluetoothService Handler
-        public static final String DEVICE_NAME = "device_name";
-        public static final String TOAST = "toast";
+        String DEVICE_NAME = "device_name";
+        String TOAST = "toast";
 
     }
 
     private final Handler mHandler = new Handler() {
+        private String message ="";
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    BreathData.add(Integer.parseInt(readMessage));
-                    Log.d("Message", "Data = " + BreathData.get(0));
+                    String read = new String(readBuf, 0, msg.arg1);
+                    message+=read;
+                    if(message.endsWith("\r\n")){
+                        BreathData.add(message);
+                        message="";
+                    }
+
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     deviceName = msg.getData().getString(Constants.DEVICE_NAME);
-                    if (null != activity) {
-                        Toast.makeText(activity, "Connected to "
-                                + deviceName, Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case Constants.MESSAGE_TOAST:
-                    if (null != activity) {
-                        Toast.makeText(activity, msg.getData().getString(Constants.TOAST),
-                                Toast.LENGTH_SHORT).show();
-                    }
                     break;
             }
         }

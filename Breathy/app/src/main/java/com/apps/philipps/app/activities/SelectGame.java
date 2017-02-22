@@ -1,6 +1,5 @@
 package com.apps.philipps.app.activities;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,9 +16,8 @@ import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.R;
 
 import com.apps.philipps.source.Coins;
+import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.interfaces.IGame;
-
-import org.w3c.dom.Text;
 
 /**
  * Select Game Activity
@@ -41,7 +39,6 @@ public class SelectGame extends AppCompatActivity {
     private void initGame() {
         buy = (Button) findViewById(R.id.buttonBuy);
         coins = (TextView) findViewById(R.id.textCoins);
-
 
         preview = (VideoView) findViewById(R.id.videoView);
         gamesList = (ListView) findViewById(R.id.games);
@@ -74,8 +71,14 @@ public class SelectGame extends AppCompatActivity {
      * @param view the Button that was clicked
      */
     public void startGame(View view) {
-        if(Backend.selected != null)
+        if(Backend.selected == null)
+            Toast.makeText(this, "Please select one game", Toast.LENGTH_SHORT).show();
+        else if(!Backend.bluetoothConnected())
+            Toast.makeText(this, "You are not connected to a Breathy device", Toast.LENGTH_SHORT).show();
+        else {
+            AppState.inGame = AppState.recordData = true;
             Backend.selected.startGame();
+        }
     }
 
     /**

@@ -2,6 +2,7 @@ package com.apps.philipps.source;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +11,11 @@ import java.util.List;
  * Created by Jevgenij Huebert on 29.01.2017. Project Breathy
  */
 public class BreathData {
-    public Context activity;
-    public BreathData(Context context){
-        this.activity = context;
-    }
     //TODO: Hier werden Bluetooth Daten gesammelt und live gefiltert, sodass sie wieder als Rückmeldung fungieren können
     //Diese Klasse soll statisch agieren
     private static LimitedList Data;
     private static int ramSize = 67108864; //256 MB
+    private static int blockSize = 0;
     private static boolean initialized = false;
 
     /**
@@ -26,9 +24,12 @@ public class BreathData {
      * @param ramSize the size of Data in RAM. <code>ramSize==0</code> sets no Limit to RAM
      * @return the boolean
      */
-    public static boolean init(int ramSize){
-        boolean result = init();
-        if(result) BreathData.ramSize = ramSize;
+    public static boolean init(Context context, int ramSize){
+        boolean result = init(context);
+        if(result){
+            BreathData.ramSize = ramSize;
+            blockSize = ramSize/2;
+        }
         return result;
     }
 
@@ -37,9 +38,10 @@ public class BreathData {
      *
      * @return the boolean
      */
-    public static boolean init(){
+    public static boolean init(Context context){
         if(!initialized){
-            Data = new LimitedList();
+            blockSize = ramSize/2;
+            Data = new LimitedList(context);
             initialized = true;
             return true;
         }
@@ -51,48 +53,28 @@ public class BreathData {
      *
      * @param value the Value to add
      */
-    public static void add(Integer value){
-        Data.add(value);
+    public static void add(String value){
+        if(AppState.recordData){
+            Log.d("Message", " " + value);
+            for(int i : convert(value))
+                Data.add(i);
+        }
     }
-
-    private static class LimitedList extends ArrayList<Integer>{
-        /**
-         * Instantiates a new Limited list.
-         */
-        private static SaveData<Integer> saveData=null;
-
-        /**
-         * Instantiates a new Limited list.
-         */
-        public LimitedList(){
-            super();
-            if(ramSize!=0) {
-                //TODO save bluetooth data
-                //saveData = new SaveData<>("BluetoothData");
+    private static int[] convert(String value){
+        String[] values = value.split("\r\n|\r|\n");
+        int[] result = new int[values.length-1];
+        for (int i=0; i<result.length; i++) {
+            try {
+                result[i] = Integer.parseInt(values[i]);
+            }
+            catch (NumberFormatException e){
+                e.printStackTrace();
+                if(i>0)
+                    result[i] = result[i-1];
+                Log.d("Format Exception", "" + values[i]);
             }
         }
-
-        @Override
-        public boolean add(Integer t) {
-            super.add(t);
-            if(saveData!=null && size()>ramSize) {
-                //TODO save bluetooth data
-                //saveData.write(remove(size()-1));
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public Integer get(int index) {
-            if(index<size() && index>=0)
-                return super.get(index);
-            else if(saveData!=null && size()==ramSize && index>=ramSize)
-                //TODO read bluetooth data
-                //return saveData.read(index);
-                return 1;
-            else return null;
-        }
+        return result;
     }
 
     /**
@@ -118,6 +100,56 @@ public class BreathData {
      */
     public static Integer get(int index){
         return Data.get(index);
+    }
+
+
+
+    private static class LimitedList extends ArrayList<Integer>{
+        /**
+         * Instantiates a new Limited list.
+         */
+        private long block;
+        private SaveData<Object[]> saveData=null;
+
+        /**
+         * Instantiates a new Limited list.
+         */
+        public LimitedList(Context context){
+            super();
+            if(ramSize!=0) {
+                block = 0L;
+                saveData = new SaveData<>(context);
+            }
+        }
+
+        @Override
+        public boolean add(Integer t) {
+            super.add(t);
+            if(saveData!=null && size()>ramSize) {
+                Object[] data = subList(size()-blockSize, size()-1).toArray();
+                saveData.writeObject("DataKey_" + block, data);
+                block++;
+                removeRange(size()-blockSize, size()-1);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public Integer get(int index) {
+            if(index<size() && index>=0)
+                return super.get(index);
+            else if(saveData!=null && index>=size()) {
+                //TODO read bluetooth data
+                int i = (index - size()) / blockSize + 1;
+                if (i < block) {
+                    Object[] block = saveData.readObject("DataKey_" + i);
+                    i = (index - size()) % blockSize-1;
+                    return (Integer) block[i];
+                }
+            }
+            return null;
+        }
     }
 
 }

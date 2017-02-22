@@ -3,4 +3,20 @@
     <string name="buttonOptions">Optionen</string>
     <string name="buttonStart">Spiel starten</string>
     <string name="buttonBuy">Spiel kaufen</string>
+    <string name="select_device">Gerät ausgewählt</string>
+    <string name="none_found">Keine Geräte gefunden</string>
+    <string name="bt_not_enabled_leaving">Bluetooth nicht eingeschaltet</string>
+    <string name="none_paired">Nicht gepaart</string>
+    <string name="save_back_menu">Speichern und zurück</string>
+    <string name="send_doc">Daten zum Doktor senden</string>
+    <string name="activate_bt">Bluetooth aktivieren</string>
+    <string name="connect_bt">Mit Breathy verbinden</string>
+    <string name="name">Name</string>
+    <string name="mail">E-Mail</string>
+    <string name="age">Alter</string>
+    <string name="exp">Erfahrungsstufe</string>
+    <string name="sound">Sound</string>
+    <string name="mail_doc">Email des Doktors</string>
+    <string name="noob">Neuling</string>
+    <string name="pro">Erfahren</string>
 </resources>

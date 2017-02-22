@@ -9,18 +9,11 @@ import android.view.View;
  */
 public interface IBootable {
     /**
-     * Start Activity
+     * Start Activity. Provide here your states with the <code>AppState</code> Class
      *
      * @return true if the Activity started
      */
     public boolean start();
-
-    /**
-     * End Activity
-     *
-     * @return true if the Activity ended
-     */
-    public boolean end(); //TODO: Ich weiß noch nicht ob diese Methode sinnvoll ist.
 
     /**
      * Pops the Toast with the given <code>text</code>

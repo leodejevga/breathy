@@ -7,6 +7,7 @@ package com.apps.philipps.source;
 import android.content.Context;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -24,19 +25,35 @@ public class SaveData<T extends Serializable> {
         this.context = context;
     }
 
-    public void writeObject(String key, T object) throws IOException {
-        FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(object);
-        oos.close();
-        fos.close();
+    public void writeObject(String key, T object) {
+        FileOutputStream fos = null;
+        try {
+            fos = context.openFileOutput(key, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(object);
+            oos.close();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public T readObject(String key) throws IOException,
-            ClassNotFoundException {
-        FileInputStream fis = context.openFileInput(key);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        Object object = ois.readObject();
-        return (T) object;
+    public T readObject(String key){
+        FileInputStream fis = null;
+        try {
+            fis = context.openFileInput(key);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Object object = ois.readObject();
+            return (T) object;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

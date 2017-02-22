@@ -1,4 +1,4 @@
-package com.apps.philipps.app.activities;
+package com.apps.philipps.app;
 
 import java.io.Serializable;
 
