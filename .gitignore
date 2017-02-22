@@ -9,9 +9,7 @@
 /.idea/libraries
 .DS_Store
 
-Breathy/audioSurf/build
-Breathy/source/build
-Breathy/app/build
+*/build/*
 /captures
 *~
 *.swp
