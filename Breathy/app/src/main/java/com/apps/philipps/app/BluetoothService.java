@@ -9,13 +9,17 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.util.StateSet;
 import android.widget.Toast;
 
 import com.apps.philipps.app.activities.Menu;
+import com.apps.philipps.app.activities.Options;
+import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 
 import java.io.IOException;
@@ -31,7 +35,6 @@ import java.util.UUID;
  */
 public class BluetoothService {
     // Debugging
-    public static final String EXTRA_DEVICE = "AdressOfSelectedDevice";
     public static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     public static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     public static final int REQUEST_ENABLE_BT = 3;
@@ -291,10 +294,6 @@ public class BluetoothService {
         BluetoothService.this.start();
     }
 
-    public boolean isEnabled() {
-        return mAdapter.isEnabled();
-    }
-
     /**
      * This thread runs while listening for incoming connections. It behaves
      * like a server-side client. It runs until a connection is accepted
@@ -338,7 +337,7 @@ public class BluetoothService {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
                     socket = mmServerSocket.accept();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Log.e(TAG, "Socket Type: " + mSocketType + "accept() failed", e);
                     break;
                 }
@@ -374,7 +373,7 @@ public class BluetoothService {
             Log.d(TAG, "Socket Type" + mSocketType + "cancel " + this);
             try {
                 mmServerSocket.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Socket Type" + mSocketType + "close() of server failed", e);
             }
         }
@@ -533,28 +532,33 @@ public class BluetoothService {
     public interface Constants {
 
         // Message types sent from the BluetoothService Handler
-        public static final int MESSAGE_STATE_CHANGE = 1;
-        public static final int MESSAGE_READ = 2;
-        public static final int MESSAGE_WRITE = 3;
-        public static final int MESSAGE_DEVICE_NAME = 4;
-        public static final int MESSAGE_TOAST = 5;
+        int MESSAGE_STATE_CHANGE = 1;
+        int MESSAGE_READ = 2;
+        int MESSAGE_WRITE = 3;
+        int MESSAGE_DEVICE_NAME = 4;
+        int MESSAGE_TOAST = 5;
 
         // Key names received from the BluetoothService Handler
-        public static final String DEVICE_NAME = "device_name";
-        public static final String TOAST = "toast";
+        String DEVICE_NAME = "device_name";
+        String TOAST = "toast";
 
     }
 
     private final Handler mHandler = new Handler() {
+        private String message ="";
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    BreathData.add(Integer.parseInt(readMessage));
-                    Log.d("Message", "Data = " + BreathData.get(0));
+                    String read = new String(readBuf, 0, msg.arg1);
+                    message+=read;
+                    if(message.endsWith("\r\n")){
+                        BreathData.add(message);
+                        message="";
+                    }
+
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name

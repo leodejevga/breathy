@@ -1,5 +1,8 @@
 package com.apps.philipps.app.activities;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -14,7 +17,11 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.apps.philipps.app.Backend;
+import com.apps.philipps.app.BluetoothService;
 import com.apps.philipps.app.R;
+import com.apps.philipps.app.UserData;
+import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.SaveData;
 
 import java.io.IOException;
@@ -24,8 +31,9 @@ import java.util.regex.Pattern;
 public class Options extends AppCompatActivity {
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    AppCompatActivity activitiy;
-    AudioManager audioManager;
+    private AppCompatActivity activitiy;
+    private AudioManager audioManager;
+    private Button btButton;
 
 
     @Override
@@ -149,6 +157,14 @@ public class Options extends AppCompatActivity {
 
     private void initControls() {
         try {
+            btButton = (Button) findViewById(R.id.activate_bt_button);
+            if(!Backend.bluetoothEnabled())
+                btButton.setText(R.string.activate_bt);
+            else if(!Backend.bluetoothConnected())
+                btButton.setText(R.string.connect_bt);
+            else
+                btButton.setVisibility(View.GONE);
+
             SeekBar volumeSeekbar = (SeekBar) findViewById(R.id.soundseekbar);
             audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             volumeSeekbar.setMax(audioManager
@@ -184,26 +200,73 @@ public class Options extends AppCompatActivity {
     private void getUserData() {
         SaveData<UserData> saveData = new SaveData<>(activitiy.getApplicationContext());
         Log.i("Data", saveData.toString());
-        try {
-            UserData userData = saveData.readObject("userdata");
+        UserData userData = saveData.readObject("userdata");
+        if(userData!=null){
             EditText editText = (EditText) findViewById(R.id.name);
             editText.setText(userData.getName());
             editText = (EditText) findViewById(R.id.age);
             editText.setText(userData.getAge() + "");
             editText = (EditText) findViewById(R.id.email);
             editText.setText(userData.getEmail());
-            //TODO read Erfahrung
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 
+    private boolean btclicked = false;
     @Override
-    protected void onPause() {
-        super.onPause();
-
+    protected void onStart() {
+        super.onStart();
+        if(btclicked) {
+            if (Backend.bluetoothEnabled())
+                btButton.setText(R.string.connect_bt);
+            else if(Backend.bluetoothConnected())
+                btButton.setVisibility(View.GONE);
+        }
     }
 
+    public void connectBluetooth(View view) {
+        if(Backend.bluetoothEnabled()){
+            Backend.bluetoothResume();
+            Intent i = new Intent(this, Devices.class);
+            startActivityForResult(i, BluetoothService.REQUEST_CONNECT_DEVICE_SECURE);
+        }
+        else if (!Backend.bluetoothEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, BluetoothService.REQUEST_ENABLE_BT);
+        }
+        btclicked = true;
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case BluetoothService.REQUEST_CONNECT_DEVICE_SECURE:
+                // When DeviceListActivity returns with a device to connect
+                if (resultCode == Activity.RESULT_OK) {
+                    connectDevice(data, true);
+                }
+                break;
+            case BluetoothService.REQUEST_CONNECT_DEVICE_INSECURE:
+                // When DeviceListActivity returns with a device to connect
+                if (resultCode == Activity.RESULT_OK) {
+                    connectDevice(data, false);
+                }
+                break;
+            case BluetoothService.REQUEST_ENABLE_BT:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                } else {
+                    // User did not enable Bluetooth or an error occurred
+                    Toast.makeText(this, R.string.bt_not_enabled_leaving,
+                            Toast.LENGTH_SHORT).show();
+                }
+        }
+    }
+    private void connectDevice(Intent data, boolean secure) {
+        // Get the device MAC address
+        String address = data.getExtras().getString(BluetoothDevice.EXTRA_DEVICE);
+        if (address != null) {
+            // Get the BluetoothDevice object
+            BluetoothDevice device = Backend.getAdapter().getRemoteDevice(address);
+            // Attempt to connect to the device
+            Backend.connectDevice(device, secure);
+        }
+    }
 }

@@ -1,10 +1,9 @@
 package com.apps.philipps.source.abstracts;
 
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.apps.philipps.source.Coins;
-import com.apps.philipps.source.interfaces.IBootable;
+import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.interfaces.IGame;
 import com.apps.philipps.source.interfaces.IPreview;
 
@@ -61,6 +60,7 @@ public abstract class AbstractGame implements IGame {
 
     @Override
     public boolean startGame() {
+        AppState.inGame = true;
         if(bought)
             game.start();
         else

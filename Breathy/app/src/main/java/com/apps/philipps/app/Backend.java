@@ -28,8 +28,10 @@ public class Backend {
      * Selected Game
      */
     public static IGame selected;
+    public static boolean choosen;
     private static boolean initialized=false;
     private static BluetoothService bluetoothService = null;
+    private static BluetoothAdapter adapter;
     //TODO: Hier kommen weitere Daten hin die von überall zugreifbar sein müssen. In der Methode init werden sie initialisiert
 
     /**
@@ -52,8 +54,8 @@ public class Backend {
         if(!initialized){
             games = new ArrayList<>();
             Backend.games.add(new AudioSurf(context)); //TODO: Automatisches Füllen der Spiele in die Liste
-            bluetoothService = new BluetoothService();
-            BreathData.init(0);
+            BreathData.init(context, 400);
+            adapter = BluetoothAdapter.getDefaultAdapter();
             //TODO: Initialisieren von weiteren Objekten, die diese Klasse haben wird
             initialized = true;
             return true;
@@ -62,14 +64,19 @@ public class Backend {
     }
 
     public static boolean bluetoothEnabled(){
-        return bluetoothService.isEnabled();
+        return adapter.isEnabled();
     }
     public static boolean bluetoothConnected(){
-        return bluetoothService.getState() != BluetoothService.STATE_NONE;
+        return bluetoothService!=null && bluetoothService.getState() == BluetoothService.STATE_CONNECTED;
+    }
+    public static void startBTService(){
+        if(bluetoothService == null)
+            bluetoothService = new BluetoothService();
     }
 
     public static void destroy() {
-        bluetoothService.stop();
+        if(bluetoothService!=null)
+            bluetoothService.stop();
     }
 
     public static void bluetoothResume() {
@@ -83,10 +90,11 @@ public class Backend {
     }
 
     public static BluetoothAdapter getAdapter() {
-        return bluetoothService.getAdapter();
+        return adapter;
     }
 
     public static void connectDevice(BluetoothDevice device, boolean secure) {
+        startBTService();
         bluetoothService.connect(device, secure);
     }
 }
