@@ -1,13 +1,32 @@
 package com.apps.philipps.app;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.apps.philipps.app.activities.Menu;
+
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -16,6 +35,16 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    ArrayList<String> gameNameList = new ArrayList<>();
+    @Rule
+    public ActivityTestRule<Menu> mActivityRule = new ActivityTestRule<>(
+            Menu.class);
+
+    @Before
+    public void initValidString() {
+        gameNameList.add("Audio Surf");
+    }
+
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
@@ -23,4 +52,45 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.apps.philipps.app", appContext.getPackageName());
     }
+
+    @Test
+    public void menuActivityUITest() throws Exception{
+        /* When the app starts, the 2 buttons (Main game and main option) should be showed*/
+        onView(withId(R.id.mainGames)).check(matches(isDisplayed()));
+        onView(withId(R.id.mainOptions)).check(matches(isDisplayed()));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Test
+    public void gameActivityUITest() throws Exception {
+        String testGame = gameNameList.get(0);
+        /* After clicking on play button, the play activity should be showed*/
+        onView(withId(R.id.mainGames)).perform(click());
+        onView(withId(R.id.videoView)).check(matches(isDisplayed()));
+        onView(withId(R.id.games)).check(matches(isDisplayed()));
+        for (int i = 0; i < gameNameList.size(); i++) {
+            onView(withText(gameNameList.get(i))).check(matches(isDisplayed()));
+        }
+        /*Click on the first game, and then dispose the dialog box*/
+        onView(withText(testGame)).perform(click());
+        onView(withText("Can't play this video.")).inRoot(isDialog()).check(matches(isDisplayed()));
+        onView(withText("OK")).perform(click());
+        /*Check if the byu button available*/
+        onView(withId(R.id.buttonBuy)).check(matches(isDisplayed()));
+        /*Option button and play button should do nothing, because no game is available*/
+        onView(withId(R.id.buttonOptions)).perform(click());
+        onView(withText("The game Audio Surf was not bought")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+
+        /*Now we buy a game to test*/
+        onView(withId(R.id.buttonBuy)).perform(click());
+        onView(withText("Congratulations! You bought " + testGame)).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        //TODO Option button is now available, gameoption activity should be checked
+        onView(withId(R.id.buttonOptions)).perform(click());
+
+
+    }
+
+    //TODO @Test If play button is available after device is connected via bluetooth and a game is bought
+    //TODO @Test Main Option
+    //TODO @Test Userdata is in Cache stored and read correctly
 }
