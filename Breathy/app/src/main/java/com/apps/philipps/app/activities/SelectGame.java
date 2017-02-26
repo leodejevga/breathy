@@ -56,7 +56,7 @@ public class SelectGame extends AppCompatActivity {
     }
 
     /**
-     * Start Options Listener
+     * Start GameOptions Listener
      *
      * @param view the Button that was clicked
      */

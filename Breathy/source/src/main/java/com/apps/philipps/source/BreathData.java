@@ -16,13 +16,14 @@ public class BreathData {
     //TODO: Hier werden Bluetooth Daten gesammelt und live gefiltert, sodass sie wieder als Rückmeldung fungieren können
     //Diese Klasse soll statisch agieren
     private static LimitedList Data;
-    private static int ramSize = 67108864; //256 MB
+    private static int ramSize = 8388608; //32 MB
     private static int blockSize = 0;
     private static boolean initialized = false;
 
     /**
      * Initialize BreathData to perform saving the integer values in RAM and hard drive. Choose your own size of RAM
      *
+     * @param context the context
      * @param ramSize the size of Data in RAM. <code>ramSize==0</code> sets no Limit to RAM
      * @return the boolean
      */
@@ -38,6 +39,7 @@ public class BreathData {
     /**
      * Initialize BreathData to perform saving the integer values in RAM and hard drive.
      *
+     * @param context the context
      * @return the boolean
      */
     public static boolean init(Context context){
@@ -49,20 +51,24 @@ public class BreathData {
         }
         return false;
     }
+    private static List<IObserver> observer = new ArrayList<>();
+
+    /**
+     * Sets observer.
+     *
+     * @param observer the observer
+     */
+    public static void addObserver(IObserver observer) {
+        BreathData.observer.add(observer);
+    }
 
     /**
      * Adds a Value to Data. If the Limit of RAM size is reached, the Data will written on the hard drive.
      *
      * @param value the Value to add
      */
-    private static List<IObserver> observer = new ArrayList<>();
-    public static void setObserver(IObserver observer) {
-        BreathData.observer.add(observer);
-    }
-
     public static void add(String value){
         if(AppState.recordData){
-            Log.d("Message", " " + value);
             for(int i : convert(value))
                 Data.add(i);
         }

@@ -16,7 +16,7 @@ public abstract class AbstractGame implements IGame {
      */
     protected AbstractGameObject game;
     /**
-     * The Options.
+     * The GameOptions.
      */
     protected AbstractGameObject options;
     /**

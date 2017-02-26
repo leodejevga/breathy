@@ -20,7 +20,7 @@ public class Game extends Activity implements IObserver {
         setContentView(R.layout.as_game);
         data = (TextView) findViewById(R.id.data);
         AppState.inGame = AppState.recordData = true;
-        BreathData.setObserver(this);
+        BreathData.addObserver(this);
     }
 
     private void setValue(){
