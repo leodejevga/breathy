@@ -9,9 +9,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/background"
     tools:context="com.apps.philipps.app.activities.SelectGame">
 
     <ListView
+        android:divider="@color/colorAccent"
+        android:dividerHeight="1dp"
         android:layout_width="match_parent"
         android:id="@+id/games"
         android:layout_alignParentLeft="true"
@@ -19,55 +22,62 @@
         android:layout_alignParentTop="true"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
-        android:layout_height="150dp" />
-
-    <Button
-        android:text="@string/buttonOptions"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/buttonOptions"
-        android:elevation="0dp"
-        android:layout_width="150dp"
-        android:onClick="gameOptions" />
-
-    <Button
-        android:text="@string/buttonStart"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/buttonOptions"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/buttonStart"
-        android:onClick="startGame" />
-
-    <Button
-        android:text="@string/buttonBuy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonBuy"
-        android:visibility="invisible"
-        android:layout_above="@+id/buttonOptions"
-        android:layout_centerHorizontal="true"
-        android:onClick="buyGame" />
-
-    <TextView
-        android:text="0 Coins"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonBuy"
-        android:layout_toRightOf="@+id/buttonOptions"
-        android:layout_toEndOf="@+id/buttonOptions"
-        android:id="@+id/textCoins" />
+        android:layout_height="200dp" />
 
     <VideoView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/games"
-        android:layout_centerHorizontal="true"
         android:id="@+id/videoView"
-        android:layout_above="@+id/buttonBuy" />
+        android:layout_below="@+id/games"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/textCoins" />
+
+    <TextView
+        android:gravity="center"
+        android:textColor="@color/text"
+        android:text="0 Coins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textCoins"
+        android:layout_above="@+id/buttonBuy"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:visibility="invisible"
+        android:layout_margin="5dp"
+        android:textColor="@color/textbg"
+        android:background="@color/colorPrimary"
+        android:text="@string/buttonBuy"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonBuy"
+        android:onClick="buyGame"
+        android:layout_above="@+id/buttonOptions"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:textColor="@color/textbg"
+        android:background="@color/colorPrimary"
+        android:text="@string/buttonStart"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonStart"
+        android:onClick="startGame"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:textColor="@color/textbg"
+        android:background="@color/colorPrimary"
+        android:text="@string/buttonOptions"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonOptions"
+        android:elevation="0dp"
+        android:layout_width="150dp"
+        android:onClick="gameOptions"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

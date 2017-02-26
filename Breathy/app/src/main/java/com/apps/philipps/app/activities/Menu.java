@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ButtonBarLayout;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -25,8 +27,8 @@ import com.apps.philipps.source.Coins;
  */
 public class Menu extends Activity {
 
-    private ImageButton games;
-    private ImageButton options;
+    private Button games;
+    private Button options;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,7 @@ public class Menu extends Activity {
     }
 
     private void initActivity() {
-        games = (ImageButton) findViewById(R.id.mainGames);
+        games = (Button) findViewById(R.id.mainGames);
         games.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +54,7 @@ public class Menu extends Activity {
                 startActivity(i);
             }
         });
-        options = (ImageButton) findViewById(R.id.mainOptions);
+        options = (Button) findViewById(R.id.mainOptions);
         options.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +68,8 @@ public class Menu extends Activity {
     protected void onStart() {
         super.onStart();
 
-        if (!Backend.bluetoothEnabled()) {
+        if (!Backend.bluetoothEnabled() && !AppState.btAsked) {
+            AppState.btAsked=true;
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, BluetoothService.REQUEST_ENABLE_BT);
         }

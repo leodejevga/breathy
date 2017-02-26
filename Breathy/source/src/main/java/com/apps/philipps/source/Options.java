@@ -18,11 +18,11 @@ import java.util.Objects;
 /**
  * Options provide a List of Pairs.
  *
- * @param <K> the type of the Option
+ * @param <P> the type of the Option
  * @param <V> the type of the Value of the Option
  */
-public class Options<K,V> {
-    private ArrayList<Pair<K, V>> options;
+public class Options<P,V> {
+    private ArrayList<Pair<P, V>> options;
 
     /**
      * Instantiates new Options.
@@ -38,28 +38,28 @@ public class Options<K,V> {
      * @param parameter the parameter of the option
      * @param value     the value of the parameter
      */
-    public void set(K parameter, V value){
-        for (Pair<K, V> e : options) {
+    public void set(P parameter, V value){
+        for (Pair<P, V> e : options) {
             if(e.first.equals(parameter)) {
                 options.remove(e);
                 break;
             }
         }
 
-        options.add(new Pair<K,V>(parameter,value));
+        options.add(new Pair<P,V>(parameter,value));
     }
 
     /**
      * Set the Option at index <code>id</code> with the given <code>value</code>.
      *
-     * @param id    the id of the option
+     * @param index    the id of the option
      * @param value the value of the found parameter
      * @return true if the option was found
      */
-    public boolean set(int id, V value){
-        if(id>=size())
+    public boolean set(int index, V value){
+        if(index>=size())
             return false;
-        options.set(id, new Pair<K, V>(options.get(id).first, value));
+        options.set(index, new Pair<P, V>(options.get(index).first, value));
         return true;
     }
 
@@ -68,13 +68,14 @@ public class Options<K,V> {
      *
      * @param parameter the parameter to remove
      */
-    public void removeParameter(K parameter){
-        for (Pair<K, V> e : options) {
+    public boolean removeParameter(P parameter){
+        for (Pair<P, V> e : options) {
             if(e.first.equals(parameter)) {
                 options.remove(e);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -102,7 +103,7 @@ public class Options<K,V> {
      * @param id the id of the option
      * @return the parameter of the option
      */
-    public K getParameter(int id){
+    public P getParameter(int id){
         return options.get(id).first;
     }
 
@@ -112,7 +113,7 @@ public class Options<K,V> {
      * @param id id of the option
      * @return the option
      */
-    public Pair<K,V> getEntry(int id){
+    public Pair<P,V> getEntry(int id){
         return options.get(id);
     }
 }

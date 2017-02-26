@@ -23,12 +23,13 @@ import com.apps.philipps.app.R;
 import com.apps.philipps.app.UserData;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.SaveData;
+import com.apps.philipps.source.interfaces.IObserver;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Options extends AppCompatActivity {
+public class Options extends AppCompatActivity implements IObserver{
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private AppCompatActivity activitiy;
@@ -43,24 +44,24 @@ public class Options extends AppCompatActivity {
         setContentView(R.layout.activity_options);
         final Button sendAnEmailToDoctor = (Button) findViewById(R.id.sendemailtodoctor);
         final Button saveAndBack = (Button) findViewById(R.id.saveandback);
-
+        BluetoothService.observe(this);
         sendAnEmailToDoctor.setOnClickListener(new View.OnClickListener() {
                                                    @Override
                                                    public void onClick(View v) {
-                                                       sendAnEmailToDoctor();
-                                                   }
-                                               }
+               sendAnEmailToDoctor();
+           }
+       }
         );
         saveAndBack.setOnClickListener(new View.OnClickListener() {
-                                           @Override
-                                           public void onClick(View v) {
-                                               try {
-                                                   saveandback();
-                                               } catch (IOException e) {
-                                                   Toast.makeText(activitiy.getApplicationContext(), "Can not store data to Cache", Toast.LENGTH_LONG).show();
-                                               }
-                                           }
-                                       }
+               @Override
+               public void onClick(View v) {
+                   try {
+                       saveandback();
+                   } catch (IOException e) {
+                       Toast.makeText(activitiy.getApplicationContext(), "Can not store data to Cache", Toast.LENGTH_LONG).show();
+                   }
+               }
+           }
         );
         initControls();
         getUserData();
@@ -104,13 +105,12 @@ public class Options extends AppCompatActivity {
             userData.setName(((EditText) findViewById(R.id.name)).getText().toString());
             userData.setEmail(((EditText) findViewById(R.id.email)).getText().toString());
             userData.setAge(Integer.parseInt(((EditText) findViewById(R.id.age)).getText().toString()));
+            userData.setEmailOfDoctor(((EditText) findViewById(R.id.doctoremail)).getText().toString());
             //TODO write Erfahrung
             SaveData<UserData> saveData = new SaveData<>(activitiy.getApplicationContext());
             saveData.writeObject("userdata", userData);
             Toast.makeText(activitiy.getApplicationContext(), "User data saved", Toast.LENGTH_LONG).show();
-
-            Intent i = new Intent(Options.this, Menu.class);
-            startActivity(i);
+            finish();
         }
     }
 
@@ -208,6 +208,8 @@ public class Options extends AppCompatActivity {
             editText.setText(userData.getAge() + "");
             editText = (EditText) findViewById(R.id.email);
             editText.setText(userData.getEmail());
+            editText = (EditText) findViewById(R.id.doctoremail);
+            editText.setText(userData.getEmailOfDoctor());
         }
     }
 
@@ -268,5 +270,15 @@ public class Options extends AppCompatActivity {
             // Attempt to connect to the device
             Backend.connectDevice(device, secure);
         }
+    }
+
+    @Override
+    public void call(Object message) {
+        Integer msg = (Integer) message;
+        if(msg == BluetoothService.STATE_CONNECTED)
+            btButton.setVisibility(View.GONE);
+        else if(msg == BluetoothService.STATE_NONE)
+            btButton.setVisibility(View.VISIBLE);
+
     }
 }

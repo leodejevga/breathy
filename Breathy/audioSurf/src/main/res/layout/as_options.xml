@@ -9,10 +9,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/background"
     tools:context="com.apps.philipps.audiosurf.activities.Options">
 
     <TextView
-        android:text="@string/options"
+        android:textColor="@color/text"
+        android:text="@string/as_options"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/options"
@@ -20,6 +22,7 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
+        android:textColor="@color/text"
         android:text="0 Coins"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -8,13 +8,30 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/background"
     tools:context="com.apps.philipps.app.activities.Devices">
 
+    <TextView
+        android:layout_margin="10dp"
+        android:textColor="@color/text"
+        android:background="@color/background"
+        android:text="@string/select_device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button2"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
     <ListView
+        android:divider="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:id="@+id/list_devices" />
+        android:id="@+id/list_devices"
+        android:dividerHeight="1dp"
+        android:drawSelectorOnTop="false"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button2" />
+
+
+
 </RelativeLayout>

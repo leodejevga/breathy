@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Audio Surf</string>
-    <string name="running">Audio Surf is running</string>
-    <string name="options">Here are the Audio Surf Options</string>
+    <string name="app_name">Breathy</string>
+    <string name="as_running">Audio Surf wurde gestartet</string>
+    <string name="as_options">Audio Surf Optionen</string>
 </resources>

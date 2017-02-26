@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="buttonOptions">Options</string>
+    <string name="buttonStart">Start the game</string>
+    <string name="buttonBuy">Buy the game</string>
+    <string name="select_device">Choose device</string>
+    <string name="none_found">No devices are found</string>
+    <string name="bt_not_enabled_leaving">Bluetooth is disabled</string>
+    <string name="none_paired">Not paired</string>
+    <string name="save_back_menu">Save and close</string>
+    <string name="send_doc">Send data to Doctor</string>
+    <string name="activate_bt">Activate bluetooth</string>
+    <string name="connect_bt">Connect with Breathy</string>
+    <string name="name">Name</string>
+    <string name="mail">Email</string>
+    <string name="age">Age</string>
+    <string name="exp">Experience</string>
+    <string name="sound">Sound</string>
+    <string name="mail_doc">Email of Doctor</string>
+    <string name="noob">Newcome</string>
+    <string name="pro">Professional</string>
+    <string name="select_game">Select the game</string>
+    <string name="main_options">Main options</string>
+</resources>

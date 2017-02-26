@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <string name="app_name">Source</string>
+    <color name="background">#ced6ff</color>
+    <color name="colorAccent">#ffd67f</color>
+    <color name="colorPrimary">#7f96ff</color>
+    <color name="colorPrimaryDark">#5564a9</color>
+    <string name="app_name">Breathy</string>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>

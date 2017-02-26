@@ -21,10 +21,13 @@ import com.apps.philipps.app.activities.Menu;
 import com.apps.philipps.app.activities.Options;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
+import com.apps.philipps.source.interfaces.IObserver;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -61,6 +64,7 @@ public class BluetoothService {
     private int mState;
     private int mNewState;
     private String deviceName;
+    private static List<IObserver> observers;
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -72,9 +76,15 @@ public class BluetoothService {
      * Constructor. Prepares a new BluetoothChat session.
      */
     public BluetoothService() {
+        observers = new ArrayList<>();
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mNewState = mState;
+    }
+
+    public static void observe(IObserver observer){
+        if(observers!=null)
+            observers.add(observer);
     }
 
     public BluetoothAdapter getAdapter() {
@@ -160,6 +170,12 @@ public class BluetoothService {
         mConnectThread.start();
         // Update UI title
         updateUserInterfaceTitle();
+        call(STATE_CONNECTED);
+    }
+
+    private void call(Object msg){
+        for (IObserver o : observers)
+            o.call(msg);
     }
 
     /**
@@ -319,6 +335,8 @@ public class BluetoothService {
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Socket Type: " + mSocketType + "listen() failed", e);
+            } catch (NullPointerException e){
+                Log.e("BT", "Nicht engeschaltet");
             }
             mmServerSocket = tmp;
             mState = STATE_LISTEN;
