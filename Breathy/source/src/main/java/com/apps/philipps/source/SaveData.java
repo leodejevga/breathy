@@ -25,7 +25,7 @@ public class SaveData<T extends Serializable> {
         this.context = context;
     }
 
-    public void writeObject(String key, T object) {
+    public boolean writeObject(String key, T object) {
         FileOutputStream fos = null;
         try {
             fos = context.openFileOutput(key, Context.MODE_PRIVATE);
@@ -33,10 +33,10 @@ public class SaveData<T extends Serializable> {
             oos.writeObject(object);
             oos.close();
             fos.close();
-        } catch (FileNotFoundException e) {
+            return true;
+        }catch (IOException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            return false;
         }
     }
 
@@ -47,8 +47,6 @@ public class SaveData<T extends Serializable> {
             ObjectInputStream ois = new ObjectInputStream(fis);
             Object object = ois.readObject();
             return (T) object;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

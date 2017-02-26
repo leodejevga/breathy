@@ -15,7 +15,7 @@ public class AudioSurfPreview implements IPreview {
 
     VideoView videoView;
     @Override
-    public VideoView start(VideoView view) {
+    public VideoView set(VideoView view) {
         String videoPath = "android.resource://com.apps.philipps.audiosurf/" + R.raw.aaa;
         Uri uri = Uri.parse(videoPath);
         view.setVideoURI(uri);

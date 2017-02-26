@@ -273,8 +273,8 @@ public class Options extends AppCompatActivity implements IObserver{
     }
 
     @Override
-    public void call(Object message) {
-        Integer msg = (Integer) message;
+    public void call(Object... message) {
+        Integer msg = (Integer) message[0];
         if(msg == BluetoothService.STATE_CONNECTED)
             btButton.setVisibility(View.GONE);
         else if(msg == BluetoothService.STATE_NONE)

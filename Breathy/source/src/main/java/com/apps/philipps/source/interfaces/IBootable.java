@@ -8,17 +8,18 @@ import android.view.View;
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
  */
 public interface IBootable {
+
     /**
      * Start Activity. Provide here your states with the <code>AppState</code> Class
      *
      * @return true if the Activity started
      */
-    public boolean start();
+    boolean start();
 
     /**
      * Pops the Toast with the given <code>text</code>
      *
      * @param text the text to show in the Toast
      */
-    public void makeToast(String text);
+    void message(String text);
 }

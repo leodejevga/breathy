@@ -46,7 +46,7 @@ public abstract class AbstractGame implements IGame {
         if(!bought) {
             bought = Coins.buy(price);
             if(bought)
-                game.makeToast("Congratulations! You bought " + name);
+                game.message("Congratulations! You bought " + name);
         }
         else return false;
 
@@ -64,7 +64,7 @@ public abstract class AbstractGame implements IGame {
         if(bought)
             game.start();
         else
-            game.makeToast("The game " + name + " was not bought");
+            game.message("The game " + name + " was not bought");
         return bought;
     }
     @Override
@@ -72,12 +72,12 @@ public abstract class AbstractGame implements IGame {
         if(bought)
             options.start();
         else
-            game.makeToast("The game " + name + " was not bought");
+            game.message("The game " + name + " was not bought");
         return bought;
     }
     @Override
     public VideoView startPreview(VideoView videoview) {
-        return preview.start(videoview);
+        return preview.set(videoview);
     }
     @Override
     public String toString() {

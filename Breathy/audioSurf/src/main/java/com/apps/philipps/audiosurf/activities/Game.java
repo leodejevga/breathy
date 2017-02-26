@@ -40,7 +40,7 @@ public class Game extends Activity implements IObserver {
     }
 
     @Override
-    public void call(Object message) {
+    public void call(Object... messages) {
         setValue();
     }
 

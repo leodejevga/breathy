@@ -15,8 +15,8 @@ public abstract class AbstractGameObject implements IBootable {
     protected Context context;
 
     @Override
-    public void makeToast(String text) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+    public void message(String text) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
     }
 
 }
