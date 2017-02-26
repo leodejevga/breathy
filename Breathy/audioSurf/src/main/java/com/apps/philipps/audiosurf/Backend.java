@@ -20,7 +20,7 @@ public class Backend {
     /**
      * The type As parameter.
      */
-    public static class AsOption extends Option{
+    public static class AsOption extends Option<String,Boolean>{
 
         /**
          * Instantiates a new As parameter.
@@ -50,7 +50,8 @@ public class Backend {
      */
     public static boolean init() {
         if (!init) {
-            options = new GameOptions();
+            //TODO: Die Werte (gekauft, nicht gekauft) sollten mit SaveData ausgelesen werden
+            options = new GameOptions<>();
             options.add(new AsOption("First Skin", 20, false));
             options.add(new AsOption("Second Skin", 40, false));
             options.add(new AsOption("Third Skin", 30, false));
