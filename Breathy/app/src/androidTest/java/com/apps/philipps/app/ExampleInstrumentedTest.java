@@ -17,7 +17,10 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
@@ -54,7 +57,7 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void menuActivityUITest() throws Exception{
+    public void menuActivityUITest() throws Exception {
         /* When the app starts, the 2 buttons (Main game and main option) should be showed*/
         onView(withId(R.id.mainGames)).check(matches(isDisplayed()));
         onView(withId(R.id.mainOptions)).check(matches(isDisplayed()));
@@ -91,6 +94,49 @@ public class ExampleInstrumentedTest {
     }
 
     //TODO @Test If play button is available after device is connected via bluetooth and a game is bought
-    //TODO @Test Main Option
-    //TODO @Test Userdata is in Cache stored and read correctly
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Test
+    public void mainOptionUITest() throws Exception {
+        /* After clicking on option button, the option activity should be showed*/
+        onView(withId(R.id.mainOptions)).perform(click());
+        scrollAndCheckView(R.id.name);
+        scrollAndCheckView(R.id.email);
+        scrollAndCheckView(R.id.age);
+        scrollAndCheckView(R.id.beginner);
+        scrollAndCheckView(R.id.expert);
+        scrollAndCheckView(R.id.doctoremail);
+        scrollAndCheckView(R.id.saveandback);
+        scrollAndCheckView(R.id.sendemailtodoctor);
+        scrollAndCheckView(R.id.activate_bt_button);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Test
+    public void userdataStoredCorrectly() throws Exception {
+        /*In this test we try to store the data in cache*/
+        onView(withId(R.id.mainOptions)).perform(click());
+        onView(withId(R.id.name)).perform(clearText(), typeText("mustermann"));
+        onView(withId(R.id.email)).perform(clearText(), typeText("mustermann@musterserver.com"));
+        onView(withId(R.id.age)).perform(clearText(), typeText(String.valueOf("18")));
+        onView(withId(R.id.saveandback)).perform(scrollTo());
+        onView(withId(R.id.saveandback)).perform(click());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Test
+    public void userdataReadCorrectly() throws Exception {
+        /*In this test we try to store the data in cache and then check if the data is stored correctly*/
+        userdataStoredCorrectly();
+        onView(withId(R.id.mainOptions)).perform(click());
+        onView(withId(R.id.name)).check(matches(withText("mustermann")));
+        onView(withId(R.id.email)).check(matches(withText("mustermann@musterserver.com")));
+        onView(withId(R.id.age)).check(matches(withText(String.valueOf("18"))));
+    }
+
+    private void scrollAndCheckView(int viewId) {
+        onView(withId(viewId)).perform(scrollTo());
+        onView(withId(viewId)).check(matches(isDisplayed()));
+    }
 }
