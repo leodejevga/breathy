@@ -4,6 +4,8 @@ package com.apps.philipps.source;
 import android.content.Context;
 import android.util.Log;
 
+import com.apps.philipps.source.interfaces.IObserver;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +16,14 @@ public class BreathData {
     //TODO: Hier werden Bluetooth Daten gesammelt und live gefiltert, sodass sie wieder als Rückmeldung fungieren können
     //Diese Klasse soll statisch agieren
     private static LimitedList Data;
-    private static int ramSize = 67108864; //256 MB
+    private static int ramSize = 8388608; //32 MB
     private static int blockSize = 0;
     private static boolean initialized = false;
 
     /**
      * Initialize BreathData to perform saving the integer values in RAM and hard drive. Choose your own size of RAM
      *
+     * @param context the context
      * @param ramSize the size of Data in RAM. <code>ramSize==0</code> sets no Limit to RAM
      * @return the boolean
      */
@@ -36,6 +39,7 @@ public class BreathData {
     /**
      * Initialize BreathData to perform saving the integer values in RAM and hard drive.
      *
+     * @param context the context
      * @return the boolean
      */
     public static boolean init(Context context){
@@ -47,6 +51,16 @@ public class BreathData {
         }
         return false;
     }
+    private static List<IObserver> observer = new ArrayList<>();
+
+    /**
+     * Sets observer.
+     *
+     * @param observer the observer
+     */
+    public static void addObserver(IObserver observer) {
+        BreathData.observer.add(observer);
+    }
 
     /**
      * Adds a Value to Data. If the Limit of RAM size is reached, the Data will written on the hard drive.
@@ -55,14 +69,13 @@ public class BreathData {
      */
     public static void add(String value){
         if(AppState.recordData){
-            Log.d("Message", " " + value);
             for(int i : convert(value))
                 Data.add(i);
         }
     }
     private static int[] convert(String value){
         String[] values = value.split("\r\n|\r|\n");
-        int[] result = new int[values.length-1];
+        int[] result = new int[values.length];
         for (int i=0; i<result.length; i++) {
             try {
                 result[i] = Integer.parseInt(values[i]);
@@ -84,10 +97,10 @@ public class BreathData {
      * @param range the range of values to get
      * @return the list of values at index with size of range
      */
-    public static List<Integer> get(int index, int range){
-        List<Integer> result = new ArrayList<>();
+    public static Integer[] get(int index, int range){
+        Integer[] result = new Integer[range];
         for (int i=index; i<index+range; i++){
-            result.add(Data.get(i));
+            result[i] = Data.get(i);
         }
         return result;
     }
@@ -101,7 +114,6 @@ public class BreathData {
     public static Integer get(int index){
         return Data.get(index);
     }
-
 
 
     private static class LimitedList extends ArrayList<Integer>{
@@ -124,7 +136,7 @@ public class BreathData {
 
         @Override
         public boolean add(Integer t) {
-            super.add(t);
+            super.add(0,t);
             if(saveData!=null && size()>ramSize) {
                 Object[] data = subList(size()-blockSize, size()-1).toArray();
                 saveData.writeObject("DataKey_" + block, data);
@@ -132,6 +144,8 @@ public class BreathData {
                 removeRange(size()-blockSize, size()-1);
                 return true;
             }
+            for(IObserver o : observer)
+                o.call(t);
             return false;
         }
 

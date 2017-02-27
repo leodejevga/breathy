@@ -4,8 +4,9 @@ package com.apps.philipps.source;
  * Created by Jevgenij Huebert on 28.01.2017. Project Breathy
  */
 public class Coins {
-    //TODO: Sollte in app/Background initialisiert werden. Dafür muss der Wert von der Festplatte gelesen werden
+    //TODO: Sollte in app/Backend initialisiert werden. Dafür muss der Wert von der Festplatte gelesen werden
     private static int amount=2600;
+    private static boolean initialized=false;
 
     /**
      * Buy any Object must call this method to change amount of Coins
@@ -18,6 +19,16 @@ public class Coins {
             amount-=coins;
         else return false;
         return true;
+    }
+
+    /**
+     * Init.
+     */
+    public static void init(){
+        if (!initialized) {
+            //TODO: initialisirung des Kontostands
+        }
+        initialized = true;
     }
 
     /**

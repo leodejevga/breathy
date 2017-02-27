@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import com.apps.philipps.audiosurf.AudioSurf;
 import com.apps.philipps.source.BreathData;
+import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.interfaces.IGame;
 
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class Backend {
             Backend.games.add(new AudioSurf(context)); //TODO: Automatisches Füllen der Spiele in die Liste
             BreathData.init(context, 400);
             adapter = BluetoothAdapter.getDefaultAdapter();
+            Coins.init();
             //TODO: Initialisieren von weiteren Objekten, die diese Klasse haben wird
             initialized = true;
             return true;
@@ -64,7 +66,9 @@ public class Backend {
     }
 
     public static boolean bluetoothEnabled(){
-        return adapter.isEnabled();
+        if (adapter!=null)
+            return adapter.isEnabled();
+        return false;
     }
     public static boolean bluetoothConnected(){
         return bluetoothService!=null && bluetoothService.getState() == BluetoothService.STATE_CONNECTED;

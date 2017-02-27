@@ -8,6 +8,5 @@ import android.widget.VideoView;
  */
 
 public interface IPreview {
-    public Context context = null;
-    public VideoView start(VideoView view);
+    VideoView set(VideoView view);
 }
