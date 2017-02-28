@@ -24,7 +24,9 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
@@ -87,14 +89,38 @@ public class ExampleInstrumentedTest {
         /*Now we buy a game to test*/
         onView(withId(R.id.buttonBuy)).perform(click());
         onView(withText("Congratulations! You bought " + testGame)).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
-        //TODO Option button is now available, gameoption activity should be checked
-        onView(withId(R.id.buttonOptions)).perform(click());
-
 
     }
 
-    //TODO @Test If play button is available after device is connected via bluetooth and a game is bought
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Test
+    public void gameOptionsUITest() throws Exception {
+        /* Option Button is now available, game option activity should be checked */
+        onView(withId(R.id.buttonOptions)).perform(click());
+        scrollAndCheckView(R.id.options);
+        scrollAndCheckView(R.id.asOptionsCoins);
+        scrollAndCheckView(R.id.optionsButtons);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Test
+    public void gameReadyToPlayTest() throws Exception {
+        /*If play button is available after device is connected via bluetooth and a game is bought*/
+
+        String testGame = gameNameList.get(0);
+
+        if (BluetoothService.STATE_CONNECTED ==3) {
+            onView(withId(R.id.games)).check(matches(isSelected()));
+            onView(withId(R.id.buttonBuy)).check(matches(isDisplayed()));
+            onView(withId(R.id.buttonBuy)).perform(click());
+            onView(withId(R.id.buttonStart)).check(matches(isClickable()));
+        }
+        else {
+            onView(withId(R.id.buttonStart)).check(matches(not(isClickable())));
+            onView(withText(" You should connect your Cell phone with device!!" + testGame)).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Test
