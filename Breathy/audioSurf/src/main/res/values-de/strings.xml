@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="as_running">Audio Surf wurde gestartet</string>
+    <string name="as_options">Audio Surf Optionen</string>
+</resources>

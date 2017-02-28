@@ -11,40 +11,40 @@ public interface IGame {
      *
      * @return true if the game successfully started
      */
-    public boolean startGame();
+    boolean startGame();
 
     /**
      * Start the options.
      *
      * @return true if the options successfully started
      */
-    public boolean startOptions();
+    boolean startOptions();
 
     /**
      * Start the preview.
      *
      * @return true if the preview successfully started
      */
-    public VideoView startPreview(VideoView videoView);
+    VideoView startPreview(VideoView videoView);
 
     /**
      * Returns <code>true</code> if this game was bought.
      *
      * @return true if this game was bought
      */
-    public boolean isBought();
+    boolean isBought();
 
     /**
      * Buy this game.
      *
      * @return true if player had enough amount of coins
      */
-    public boolean buy();
+    boolean buy();
 
     /**
      * Name of the game.
      *
      * @return name of the game
      */
-    public String getName();
+    String getName();
 }

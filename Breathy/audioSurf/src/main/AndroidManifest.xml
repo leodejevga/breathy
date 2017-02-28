@@ -9,8 +9,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.Options" />
-        <activity android:name=".activities.Game" />
-        <activity android:name=".activities.Preview"></activity>
+        <activity
+            android:name=".activities.Game"/>
+        <activity android:name=".activities.Preview"/>
     </application>
 
 </manifest>

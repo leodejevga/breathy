@@ -6,4 +6,13 @@ package com.apps.philipps.source;
 public class AppState {
     public static boolean inGame = false;
     public static boolean recordData = false;
+    public static boolean btAsked=false;
+
+    public static AppState.BtState btState = BtState.Disabled;
+
+    public enum BtState{
+        Disabled,
+        Enabled,
+        Connected
+    }
 }

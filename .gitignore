@@ -9,8 +9,10 @@
 /.idea/libraries
 .DS_Store
 
-*/build/*
+*/build
 /captures
 *~
 *.swp
 /BluetoothChat
+/Transparency-Test
+/Test
