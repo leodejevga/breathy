@@ -1,5 +1,6 @@
 package com.apps.philipps.app.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -16,7 +18,6 @@ import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.R;
 
 import com.apps.philipps.source.Coins;
-import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.interfaces.IGame;
 
 /**
@@ -50,7 +51,14 @@ public class SelectGame extends AppCompatActivity {
                 Backend.selected = Backend.games.get(position);
                 Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
                 buy.setVisibility(Backend.selected.isBought()?View.INVISIBLE:View.VISIBLE);
-                preview = Backend.selected.startPreview(preview);
+                String previewData = Backend.selected.getPreview();
+
+                //TODO: Das Video muss richtig geladen zurzeit zeigt er eine nachricht an in der steht: "Video kann nicht wiedergegeben werden"
+                String videoPath = "android.resource://" + getResources().getResourcePackageName(R.raw.preview) + "/" + previewData;
+//                preview.setMediaController(new MediaController(SelectGame.this));
+                Uri uri = Uri.parse(videoPath);
+                preview.setVideoURI(uri);
+                preview.start();
             }
         });
     }
@@ -73,7 +81,7 @@ public class SelectGame extends AppCompatActivity {
     public void startGame(View view) {
         if(Backend.selected == null)
             Toast.makeText(this, "Please select one game", Toast.LENGTH_SHORT).show();
-        else if(!Backend.bluetoothConnected())
+        else if(!Backend.bluetoothConnected() && false)
             Toast.makeText(this, "You are not connected to a Breathy device", Toast.LENGTH_SHORT).show();
         else {
             Backend.selected.startGame();

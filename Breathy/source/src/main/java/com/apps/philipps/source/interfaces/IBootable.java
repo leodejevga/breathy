@@ -22,4 +22,5 @@ public interface IBootable {
      * @param text the text to show in the Toast
      */
     void message(String text);
+
 }

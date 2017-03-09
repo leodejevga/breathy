@@ -1,26 +1,25 @@
 package com.apps.philipps.audiosurf.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.util.Log;
 
-import com.apps.philipps.audiosurf.R;
+import com.apps.philipps.audiosurf.MyRenderer;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
+import com.apps.philipps.source.abstracts.AbstractGameActivity;
 import com.apps.philipps.source.interfaces.IObserver;
 
 /**
  * Game Activity
  */
-public class Game extends Activity implements IObserver {
-    TextView data;
+public class Game extends AbstractGameActivity implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.as_game);
-        data = (TextView) findViewById(R.id.data);
         AppState.inGame = AppState.recordData = true;
         BreathData.addObserver(this);
+
+        gameRenderer = new MyRenderer(this, this);
     }
 
     private void setValue(){
@@ -29,7 +28,7 @@ public class Game extends Activity implements IObserver {
         for (Integer i : values)
             if(i!=null)
                 text+=" " + i;
-        data.setText(text);
+        Log.d("Data received", text);
     }
 
 
@@ -39,9 +38,13 @@ public class Game extends Activity implements IObserver {
         AppState.inGame = AppState.recordData = false;
     }
 
+
     @Override
     public void call(Object... messages) {
-        setValue();
+        if(messages[0].equals("Draw"))
+            Log.d("Draw", ((MyRenderer) gameRenderer).getFramerate() + " fps");
+        else
+            setValue();
     }
 
     //TODO: Hier wird das Spiel ausgeführt. OpenGL.

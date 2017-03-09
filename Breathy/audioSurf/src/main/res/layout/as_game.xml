@@ -34,4 +34,12 @@
         android:id="@+id/desc"
         android:layout_above="@+id/data"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="0 fps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/as_framerate" />
 </RelativeLayout>

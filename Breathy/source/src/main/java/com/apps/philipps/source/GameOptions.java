@@ -33,6 +33,12 @@ public class GameOptions<P,V> {
     public void add(Option option){
         options.add(option);
     }
+    public void add(P parameter, V value){
+        options.add(new Option<P, V>(parameter, value));
+    }
+    public void add(P parameter, V value, int price){
+        options.add(new Option<P, V>(parameter, value, price));
+    }
 
     /**
      * If the <code>Option</code> with the given <code>parameter</code> exists, it will be replaced by it.

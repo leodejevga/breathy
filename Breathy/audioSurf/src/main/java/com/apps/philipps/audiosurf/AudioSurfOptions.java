@@ -2,6 +2,7 @@ package com.apps.philipps.audiosurf;
 
 import android.content.Context;
 import android.content.Intent;
+
 import com.apps.philipps.audiosurf.activities.Options;
 import com.apps.philipps.source.abstracts.AbstractGameObject;
 

@@ -47,7 +47,7 @@ public class Options extends Activity {
                 public void onClick(View v) {
                     Button b = (Button)v;
                     int id = b.getId()-251;
-                    Backend.AsOption option = Backend.options.getParameter(id);
+                    GameOptions.Option option = Backend.options.getOption(id);
                     boolean bought = false;
                     if(!Backend.options.getValue(id)) {
                         bought = Coins.buy(option.Price);

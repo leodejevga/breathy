@@ -1,6 +1,5 @@
 package com.apps.philipps.audiosurf;
 
-import com.apps.philipps.source.GameOptions.Option;
 import com.apps.philipps.source.GameOptions;
 
 /**
@@ -10,33 +9,13 @@ public class Backend {
     /**
      * The GameOptions.
      */
-    public static GameOptions<AsOption, Boolean> options;
+    public static GameOptions<String, Boolean> options;
     /**
      * The constant highscore.
      */
     public static int highscore;
     private static boolean init=false;
 
-    /**
-     * The type As parameter.
-     */
-    public static class AsOption extends Option<String,Boolean>{
-
-        /**
-         * Instantiates a new As parameter.
-         *
-         * @param name  the name
-         * @param price the price
-         */
-        public AsOption(String name, int price, Boolean check){
-            super(name, check, price);
-        }
-
-        @Override
-        public String toString() {
-            return Parameter + " = " + Price + " Coins";
-        }
-    }
 
     /**
      * Reinitialize <code>Backend</code> of the game.
@@ -52,10 +31,10 @@ public class Backend {
         if (!init) {
             //TODO: Die Werte (gekauft, nicht gekauft) sollten mit SaveData ausgelesen werden
             options = new GameOptions<>();
-            options.add(new AsOption("First Skin", 20, false));
-            options.add(new AsOption("Second Skin", 40, false));
-            options.add(new AsOption("Third Skin", 30, false));
-            options.add(new AsOption("Fourth Skin", 70, false));
+            options.add("First Skin", false, 20);
+            options.add("Second Skin", false, 40);
+            options.add("Third Skin", false, 30);
+            options.add("Fourth Skin", false, 70);
             init = true;
             return true;
         }

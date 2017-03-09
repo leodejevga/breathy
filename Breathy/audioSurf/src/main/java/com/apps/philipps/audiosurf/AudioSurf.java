@@ -12,17 +12,29 @@ import com.apps.philipps.source.abstracts.AbstractGame;
  * Initializes the Audio Surf game
  */
 public class AudioSurf extends AbstractGame {
+
+    Context context;
     /**
      * Instantiates a new Audio surf Object.
      *
      * @param context the context from Main Activity
      */
     public AudioSurf(Context context){
+        this.context = context;
         price = 2500;
         name = "Audio Surf";
         game = new AudioSurfGame(context);
         options = new AudioSurfOptions(context);
-        preview = new AudioSurfPreview();
         Backend.init();
+    }
+
+    /**
+     * Start the preview.
+     *
+     * @return true if the preview successfully started
+     */
+    @Override
+    public String getPreview(){
+        return R.raw.preview + "";
     }
 }

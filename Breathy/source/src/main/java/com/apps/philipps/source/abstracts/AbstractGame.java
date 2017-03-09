@@ -1,11 +1,10 @@
 package com.apps.philipps.source.abstracts;
 
-import android.widget.VideoView;
+import android.graphics.Movie;
 
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.interfaces.IGame;
-import com.apps.philipps.source.interfaces.IPreview;
 
 /**
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
@@ -19,10 +18,6 @@ public abstract class AbstractGame implements IGame {
      * The GameOptions.
      */
     protected AbstractGameObject options;
-    /**
-     * The Preview.
-     */
-    protected IPreview preview;
     /**
      * The Price for this Game.
      */
@@ -76,11 +71,9 @@ public abstract class AbstractGame implements IGame {
         return bought;
     }
     @Override
-    public VideoView startPreview(VideoView videoview) {
-        return preview.set(videoview);
-    }
-    @Override
     public String toString() {
         return name;
     }
+
+
 }
