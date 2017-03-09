@@ -4,7 +4,6 @@
 .idea/
 .gradle/
 /local.properties
-*R.java
 /.idea/workspace.xml
 /.idea/libraries
 .DS_Store
