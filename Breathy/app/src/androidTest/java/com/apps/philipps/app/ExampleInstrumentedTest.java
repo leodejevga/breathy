@@ -100,6 +100,7 @@ public class ExampleInstrumentedTest {
         scrollAndCheckView(R.id.options);
         scrollAndCheckView(R.id.asOptionsCoins);
         scrollAndCheckView(R.id.optionsButtons);
+        onView(withId(R.id.optionsButtons)).check(matches(isClickable()));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -117,7 +118,7 @@ public class ExampleInstrumentedTest {
         }
         else {
             onView(withId(R.id.buttonStart)).check(matches(not(isClickable())));
-            onView(withText(" You should connect your Cell phone with device!!" + testGame)).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+            onView(withText(" You should connect your Cell phone with Breathy!!" + testGame)).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
         }
     }
