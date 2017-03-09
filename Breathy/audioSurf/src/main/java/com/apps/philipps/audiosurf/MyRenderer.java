@@ -24,11 +24,15 @@ public class MyRenderer extends AbstractRenderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        super.onSurfaceCreated(gl, config);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
 
+    }
+
+    @Override
+    public void onDrawFrame(GL10 gl) {
+        super.onDrawFrame(gl);
     }
 }
