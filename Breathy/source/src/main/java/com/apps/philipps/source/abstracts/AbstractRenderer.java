@@ -17,7 +17,7 @@ public abstract class AbstractRenderer implements GLSurfaceView.Renderer {
 
     protected IObserver observer;
     private long start = System.currentTimeMillis();
-    private float framerate;
+    private double framerate;
 
 
     @Override
@@ -25,16 +25,18 @@ public abstract class AbstractRenderer implements GLSurfaceView.Renderer {
         long delta = System.currentTimeMillis() - start;
         if(delta< (1000/ AppState.framelimit.getLimit()))
             try {
-                Thread.sleep((int)((1000/AppState.framelimit.getLimit()) - delta));
+                Thread.sleep((int)(1000/AppState.framelimit.getLimit() - delta-1));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        framerate = 1000/((1000/AppState.framelimit.getLimit()) - start);
-        Log.d("Framerate", framerate + " fps");
+        delta = (System.currentTimeMillis() - start);
+        framerate = 1000/delta;
+        Log.d("Delta", "ms = " + delta);
         start = System.currentTimeMillis();
+        observer.call("Draw");
     }
 
-    public float getFramerate() {
+    public double getFramerate() {
         return framerate;
     }
 }
