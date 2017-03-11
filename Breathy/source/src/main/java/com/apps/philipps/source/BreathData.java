@@ -61,6 +61,9 @@ public class BreathData {
     public static void addObserver(IObserver observer) {
         BreathData.observer.add(observer);
     }
+    public static boolean removeObserver(IObserver observer){
+        return BreathData.observer.remove(observer);
+    }
 
     /**
      * Adds a Value to Data. If the Limit of RAM size is reached, the Data will written on the hard drive.
@@ -74,7 +77,7 @@ public class BreathData {
         }
     }
 
-    public static void add(Integer... values){
+    public static void add(int... values){
         if(AppState.recordData){
             for(int i : values)
                 Data.add(i);
@@ -115,9 +118,10 @@ public class BreathData {
     public static String getAsString(int index, int range){
         String result = "";
         for (int i=index; i<index+range; i++){
-            result = Data.get(i) + ", ";
+            if(Data.get(i)!=null)
+                result +=  ", " + Data.get(i);
         }
-        return result;
+        return result.length()>1?result.substring(2):"";
     }
 
     /**

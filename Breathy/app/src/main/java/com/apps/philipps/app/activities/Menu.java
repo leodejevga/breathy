@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,12 +28,19 @@ import com.apps.philipps.source.Coins;
  */
 public class Menu extends Activity {
 
-    private Button games;
-    private Button options;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        IntentFilter enbaled = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        IntentFilter connected = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
+        IntentFilter disconnected = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        registerReceiver(AppState.btStateChanger, enbaled);
+        registerReceiver(AppState.btStateChanger, connected);
+        registerReceiver(AppState.btStateChanger, disconnected);
+        AppState.initBtState();
+
         Backend.init(this);
         initActivity();
     }
@@ -46,7 +54,7 @@ public class Menu extends Activity {
     }
 
     private void initActivity() {
-        games = (Button) findViewById(R.id.mainGames);
+        Button games = (Button) findViewById(R.id.mainGames);
         games.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +62,7 @@ public class Menu extends Activity {
                 startActivity(i);
             }
         });
-        options = (Button) findViewById(R.id.mainOptions);
+        Button options = (Button) findViewById(R.id.mainOptions);
         options.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +87,7 @@ public class Menu extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(AppState.btStateChanger);
         Backend.destroy();
     }
     @Override

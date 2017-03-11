@@ -3,9 +3,8 @@ package com.apps.philipps.app;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.Intent;
 
-import com.apps.philipps.app.simulator.Simulator;
+import com.apps.philipps.app.simulator.BreathSimulator;
 import com.apps.philipps.audiosurf.AudioSurf;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
@@ -35,7 +34,7 @@ public class Backend {
     private static boolean initialized=false;
     private static BluetoothService bluetoothService = null;
     private static BluetoothAdapter adapter;
-    private static Simulator simulator;
+    private static BreathSimulator breathSimulator;
     //TODO: Hier kommen weitere Daten hin die von überall zugreifbar sein müssen. In der Methode init werden sie initialisiert
 
     /**
@@ -60,7 +59,10 @@ public class Backend {
             Backend.games.add(new AudioSurf(context));
             BreathData.init(context, 400);
             Coins.init();
-            simulator = Simulator.getSimulator().init(context);
+            breathSimulator = BreathSimulator.getBreathSimulator();
+            breathSimulator.init(context, 1);
+            breathSimulator.removeRecordings(false);
+//            BreathSimulator.recordData(500);
             //TODO: Initialisieren von weiteren Objekten, die diese Klasse haben wird
             initialized = true;
             return true;
@@ -79,7 +81,7 @@ public class Backend {
 
     public static void startBTService(){
         if(AppState.simulateBreathy)
-            simulator.connect();
+            breathSimulator.connect();
         else if(bluetoothService == null)
             bluetoothService = new BluetoothService();
     }
@@ -90,7 +92,10 @@ public class Backend {
     }
 
     public static void bluetoothResume() {
-        if (bluetoothService != null) {
+        if(AppState.simulateBreathy) {
+            breathSimulator.connect();
+        }
+        else if (bluetoothService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (bluetoothService.getState() == BluetoothService.STATE_NONE) {
                 // Start the Bluetooth chat services
@@ -100,7 +105,12 @@ public class Backend {
     }
 
     public static void connectDevice(BluetoothDevice device, boolean secure) {
-        startBTService();
-        bluetoothService.connect(device, secure);
+        if(AppState.simulateBreathy) {
+            breathSimulator.connect();
+        }
+        else{
+            startBTService();
+            bluetoothService.connect(device, secure);
+        }
     }
 }

@@ -6,13 +6,13 @@ import android.util.Log;
 import com.apps.philipps.audiosurf.MyRenderer;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
-import com.apps.philipps.source.abstracts.AbstractGameActivity;
+import com.apps.philipps.source.abstracts.AbstractGlActivity;
 import com.apps.philipps.source.interfaces.IObserver;
 
 /**
  * Game Activity
  */
-public class Game extends AbstractGameActivity implements IObserver {
+public class Game extends AbstractGlActivity implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,9 +23,9 @@ public class Game extends AbstractGameActivity implements IObserver {
     }
 
     private void setValue(){
+        Log.d("Draw", ((MyRenderer) gameRenderer).getFramerate() + " fps");
         Log.d("Data received", BreathData.getAsString(0,10));
     }
-
 
     @Override
     protected void onDestroy() {
@@ -36,9 +36,7 @@ public class Game extends AbstractGameActivity implements IObserver {
 
     @Override
     public void call(Object... messages) {
-        if(messages[0].equals("Draw"))
-            Log.d("Draw", ((MyRenderer) gameRenderer).getFramerate() + " fps");
-        else
+        if(!messages[0].equals("Draw"))
             setValue();
     }
 

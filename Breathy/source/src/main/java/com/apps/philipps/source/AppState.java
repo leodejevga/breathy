@@ -1,5 +1,12 @@
 package com.apps.philipps.source;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+
 /**
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
@@ -12,7 +19,45 @@ public class AppState {
     public static AppState.BtState btState = BtState.Disabled;
     public static Framelimit framelimit = Framelimit.Unlimited;
 
+    public final static BroadcastReceiver btStateChanger = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            switch (action) {
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+                    final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                    switch (state) {
+                        case BluetoothAdapter.STATE_OFF:
+                            btState = BtState.Disabled;
+                            break;
+                        case BluetoothAdapter.STATE_ON:
+                            btState = BtState.Enabled;
+                            break;
+                    }
+                    break;
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    btState = BtState.Connected;
+                    break;
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    btState = BtState.Enabled;
+                    break;
+            }
+            Log.w("AppState Bluetooth", AppState.btState + "");
+        }
+    };
+
+    public static void initBtState() {
+        BluetoothAdapter a = BluetoothAdapter.getDefaultAdapter();
+        if(a==null)
+            btState = BtState.None;
+        else if(a.isEnabled())
+            btState = BtState.Enabled;
+        else
+            btState = BtState.Disabled;
+    }
+
     public enum BtState{
+        None,
         Disabled,
         Enabled,
         Connected
@@ -23,7 +68,7 @@ public class AppState {
         Thirty(30),
         Sixty(60),
         HundredTwenty(120),
-        Unlimited(1000);
+        Unlimited(Integer.MAX_VALUE);
 
         int frameLimit;
         Framelimit(int frames){

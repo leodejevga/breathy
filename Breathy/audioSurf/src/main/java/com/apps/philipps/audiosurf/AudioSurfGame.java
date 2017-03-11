@@ -3,7 +3,7 @@ package com.apps.philipps.audiosurf;
 import android.content.Context;
 import android.content.Intent;
 
-import com.apps.philipps.audiosurf.activities.Game;
+import com.apps.philipps.audiosurf.activities.Game2D;
 import com.apps.philipps.source.abstracts.AbstractGameObject;
 
 /**
@@ -23,7 +23,7 @@ public class AudioSurfGame extends AbstractGameObject {
     public boolean start() {
         if(context==null)
             return false;
-        Intent i = new Intent(context, Game.class);
+        Intent i = new Intent(context, Game2D.class);
         context.startActivity(i);
         return true;
     }
