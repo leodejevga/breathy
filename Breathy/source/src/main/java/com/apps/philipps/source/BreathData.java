@@ -73,6 +73,14 @@ public class BreathData {
                 Data.add(i);
         }
     }
+
+    public static void add(Integer... values){
+        if(AppState.recordData){
+            for(int i : values)
+                Data.add(i);
+        }
+    }
+
     private static int[] convert(String value){
         String[] values = value.split("\r\n|\r|\n");
         int[] result = new int[values.length];
@@ -101,6 +109,13 @@ public class BreathData {
         Integer[] result = new Integer[range];
         for (int i=index; i<index+range; i++){
             result[i] = Data.get(i);
+        }
+        return result;
+    }
+    public static String getAsString(int index, int range){
+        String result = "";
+        for (int i=index; i<index+range; i++){
+            result = Data.get(i) + ", ";
         }
         return result;
     }

@@ -17,6 +17,7 @@ import android.widget.VideoView;
 import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.R;
 
+import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.interfaces.IGame;
 
@@ -81,7 +82,7 @@ public class SelectGame extends AppCompatActivity {
     public void startGame(View view) {
         if(Backend.selected == null)
             Toast.makeText(this, "Please select one game", Toast.LENGTH_SHORT).show();
-        else if(!Backend.bluetoothConnected() && false)
+        else if(AppState.btState != AppState.BtState.Connected)
             Toast.makeText(this, "You are not connected to a Breathy device", Toast.LENGTH_SHORT).show();
         else {
             Backend.selected.startGame();

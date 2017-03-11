@@ -158,9 +158,9 @@ public class Options extends AppCompatActivity implements IObserver{
     private void initControls() {
         try {
             btButton = (Button) findViewById(R.id.activate_bt_button);
-            if(!Backend.bluetoothEnabled())
+            if(AppState.btState == AppState.BtState.Disabled)
                 btButton.setText(R.string.activate_bt);
-            else if(!Backend.bluetoothConnected())
+            else if(AppState.btState == AppState.BtState.Enabled)
                 btButton.setText(R.string.connect_bt);
             else
                 btButton.setVisibility(View.GONE);
@@ -218,20 +218,20 @@ public class Options extends AppCompatActivity implements IObserver{
     protected void onStart() {
         super.onStart();
         if(btclicked) {
-            if (Backend.bluetoothEnabled())
+            if (AppState.btState == AppState.BtState.Enabled)
                 btButton.setText(R.string.connect_bt);
-            else if(Backend.bluetoothConnected())
+            else if(AppState.btState == AppState.BtState.Connected)
                 btButton.setVisibility(View.GONE);
         }
     }
 
     public void connectBluetooth(View view) {
-        if(Backend.bluetoothEnabled()){
+        if(AppState.btState == AppState.BtState.Enabled){
             Backend.bluetoothResume();
             Intent i = new Intent(this, Devices.class);
             startActivityForResult(i, BluetoothService.REQUEST_CONNECT_DEVICE_SECURE);
         }
-        else if (!Backend.bluetoothEnabled()) {
+        else if (AppState.btState == AppState.BtState.Disabled) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, BluetoothService.REQUEST_ENABLE_BT);
         }
@@ -266,7 +266,7 @@ public class Options extends AppCompatActivity implements IObserver{
         String address = data.getExtras().getString(BluetoothDevice.EXTRA_DEVICE);
         if (address != null) {
             // Get the BluetoothDevice object
-            BluetoothDevice device = Backend.getAdapter().getRemoteDevice(address);
+            BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
             // Attempt to connect to the device
             Backend.connectDevice(device, secure);
         }

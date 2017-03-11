@@ -40,7 +40,7 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
-    ArrayList<String> gameNameList = new ArrayList<>();
+    private ArrayList<String> gameNameList = new ArrayList<>();
     @Rule
     public ActivityTestRule<Menu> mActivityRule = new ActivityTestRule<>(
             Menu.class);

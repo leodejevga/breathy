@@ -38,7 +38,7 @@ public class Menu extends Activity {
     }
 
     private void checkBluetooth() {
-        if(Backend.bluetoothEnabled() && !Backend.bluetoothConnected() && !Backend.choosen) {
+        if(AppState.btState == AppState.BtState.Enabled && !Backend.choosen) {
             Backend.choosen = true;
             Intent i = new Intent(this, Devices.class);
             startActivityForResult(i, BluetoothService.REQUEST_CONNECT_DEVICE_SECURE);
@@ -68,7 +68,7 @@ public class Menu extends Activity {
     protected void onStart() {
         super.onStart();
 
-        if (!Backend.bluetoothEnabled() && !AppState.btAsked) {
+        if (AppState.btState == AppState.BtState.Disabled && !AppState.btAsked) {
             AppState.btAsked=true;
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, BluetoothService.REQUEST_ENABLE_BT);
@@ -120,7 +120,7 @@ public class Menu extends Activity {
         String address = data.getExtras().getString(BluetoothDevice.EXTRA_DEVICE);
         if (address != null) {
             // Get the BluetoothDevice object
-            BluetoothDevice device = Backend.getAdapter().getRemoteDevice(address);
+            BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
             // Attempt to connect to the device
             Backend.connectDevice(device, secure);
         }

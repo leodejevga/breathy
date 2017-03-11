@@ -5,7 +5,9 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 
+import com.apps.philipps.app.simulator.Simulator;
 import com.apps.philipps.audiosurf.AudioSurf;
+import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.interfaces.IGame;
@@ -33,6 +35,7 @@ public class Backend {
     private static boolean initialized=false;
     private static BluetoothService bluetoothService = null;
     private static BluetoothAdapter adapter;
+    private static Simulator simulator;
     //TODO: Hier kommen weitere Daten hin die von überall zugreifbar sein müssen. In der Methode init werden sie initialisiert
 
     /**
@@ -54,10 +57,10 @@ public class Backend {
     public static boolean init(Context context){
         if(!initialized){
             games = new ArrayList<>();
-            Backend.games.add(new AudioSurf(context)); //TODO: Automatisches Füllen der Spiele in die Liste
+            Backend.games.add(new AudioSurf(context));
             BreathData.init(context, 400);
-            adapter = BluetoothAdapter.getDefaultAdapter();
             Coins.init();
+            simulator = Simulator.getSimulator().init(context);
             //TODO: Initialisieren von weiteren Objekten, die diese Klasse haben wird
             initialized = true;
             return true;
@@ -65,16 +68,19 @@ public class Backend {
         return false;
     }
 
-    public static boolean bluetoothEnabled(){
-        if (adapter!=null)
-            return adapter.isEnabled();
-        return false;
-    }
-    public static boolean bluetoothConnected(){
-        return bluetoothService!=null && bluetoothService.getState() == BluetoothService.STATE_CONNECTED;
-    }
+//    public static boolean bluetoothEnabled(){
+//        if (adapter!=null)
+//            return adapter.isEnabled();
+//        return false;
+//    }
+//    public static boolean bluetoothConnected(){
+//        return bluetoothService!=null && bluetoothService.getState() == BluetoothService.STATE_CONNECTED;
+//    }
+
     public static void startBTService(){
-        if(bluetoothService == null)
+        if(AppState.simulateBreathy)
+            simulator.connect();
+        else if(bluetoothService == null)
             bluetoothService = new BluetoothService();
     }
 
@@ -91,10 +97,6 @@ public class Backend {
                 bluetoothService.start();
             }
         }
-    }
-
-    public static BluetoothAdapter getAdapter() {
-        return adapter;
     }
 
     public static void connectDevice(BluetoothDevice device, boolean secure) {

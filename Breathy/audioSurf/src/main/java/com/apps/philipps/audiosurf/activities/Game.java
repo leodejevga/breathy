@@ -23,12 +23,7 @@ public class Game extends AbstractGameActivity implements IObserver {
     }
 
     private void setValue(){
-        Integer[] values = BreathData.get(0,10);
-        String text = "";
-        for (Integer i : values)
-            if(i!=null)
-                text+=" " + i;
-        Log.d("Data received", text);
+        Log.d("Data received", BreathData.getAsString(0,10));
     }
 
 

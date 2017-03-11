@@ -4,6 +4,7 @@ package com.apps.philipps.source;
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
 public class AppState {
+    public final static boolean simulateBreathy = true;
     public static boolean inGame = false;
     public static boolean recordData = false;
     public static boolean btAsked=false;
