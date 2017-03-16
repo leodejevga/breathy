@@ -61,9 +61,9 @@ public class Backend {
             Coins.init();
             breathSimulator = BreathSimulator.getBreathSimulator();
             breathSimulator.init(context, 1);
-            breathSimulator.removeRecordings(false);
+            breathSimulator.removeRecordings(true);
 //            BreathSimulator.recordData(500);
-            //TODO: Initialisieren von weiteren Objekten, die diese Klasse haben wird
+
             initialized = true;
             return true;
         }
