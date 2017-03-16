@@ -1,1 +1,1 @@
-include ':app', ':source', ':audioSurf', ':breathysimulator'
+include ':app', ':source', ':audioSurf', ':breathysimulator', ':Fade'

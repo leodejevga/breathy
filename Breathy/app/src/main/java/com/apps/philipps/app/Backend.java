@@ -3,7 +3,6 @@ package com.apps.philipps.app;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-
 import com.apps.philipps.app.simulator.BreathSimulator;
 import com.apps.philipps.audiosurf.AudioSurf;
 import com.apps.philipps.source.AppState;
@@ -57,6 +56,7 @@ public class Backend {
         if(!initialized){
             games = new ArrayList<>();
             Backend.games.add(new AudioSurf(context));
+            Backend.games.add(new Fade(context));
             BreathData.init(context, 400);
             Coins.init();
             breathSimulator = BreathSimulator.getBreathSimulator();
