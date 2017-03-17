@@ -16,7 +16,7 @@ public abstract class Activity3D extends Activity {
     /**
      * The Game renderer.
      */
-    protected GLSurfaceView.Renderer gameRenderer;
+    protected Renderer3D gameRenderer;
 
     /**
      * Please initialize here your gameRenderer
