@@ -5,6 +5,7 @@ import android.graphics.Movie;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.apps.philipps.source.AppState;
@@ -20,7 +21,12 @@ public abstract class Activity2D extends Activity {
     protected int frame = 0;
     private boolean initialized = false;
     private long start = System.currentTimeMillis();
+    private boolean destroy = false;
+    private DisplayMetrics displayMetrics;
 
+    protected void brakeDraw(){
+        draw = false;
+    }
 
     private final Thread startToDraw = new Thread(new Runnable() {
 
@@ -36,18 +42,34 @@ public abstract class Activity2D extends Activity {
                     initialized = true;
                 }
             });
-            while (draw) {
-                if (System.currentTimeMillis() - start >= 1000 / AppState.framelimit.getLimit()) {
+            while (!destroy) {
+                long delta = System.currentTimeMillis() - start;
+                if (initialized && draw && delta >= 1000/AppState.framelimit.getLimit()) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            draw();
-                            frame = ++frame%AppState.framelimit.getLimit();
+                            try {
+                                draw();
+                            } catch (Exception e) {
+                                Log.d(TAG, "Draw not successfull");
+                            }
+                            frame = ++frame % AppState.framelimit.getLimit();
                         }
                     });
                     long temp = System.currentTimeMillis() - start;
-                    frameRate = (int)(1000 / temp);
+                    if(temp == 0)
+                        frameRate = Integer.MAX_VALUE;
+                    else
+                        frameRate = (int)(1000 / temp);
                     start = System.currentTimeMillis();
+                }
+                else{
+                    try {
+                        long sleep = 1000/AppState.framelimit.getLimit() - delta;
+                        Thread.sleep(sleep>10?sleep-3:0);
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, "Fail to wait");
+                    }
                 }
             }
         }
@@ -57,18 +79,27 @@ public abstract class Activity2D extends Activity {
 
     protected abstract void init();
 
+    protected int getScreenWidth(){
+        return displayMetrics.widthPixels;
+    }
+    protected int getScreenHeight(){
+        return displayMetrics.heightPixels;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         startToDraw.start();
-        AppState.framelimit = AppState.Framelimit.HundredTwenty;
-        draw = true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        draw = false;
+        destroy = true;
+
     }
 
     @Override
@@ -80,7 +111,6 @@ public abstract class Activity2D extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!startToDraw.isAlive())
-            startToDraw.start();
+        draw = true;
     }
 }

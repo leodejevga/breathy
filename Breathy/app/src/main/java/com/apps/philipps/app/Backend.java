@@ -62,7 +62,7 @@ public class Backend {
             BreathData.init(context, 400);
             Coins.init();
             breathSimulator = BreathSimulator.getBreathSimulator();
-            breathSimulator.init(context, 1);
+            breathSimulator.init(context, 4);
             breathSimulator.removeRecordings(true);
 //            BreathSimulator.recordData(500);
 

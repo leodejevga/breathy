@@ -1,12 +1,16 @@
 package com.apps.philipps.audiosurf.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.TextView;
 
 import com.apps.philipps.audiosurf.R;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.helper.Activity2D;
+import com.apps.philipps.source.interfaces.IObserver;
 
 public class Game2D extends Activity2D {
 
@@ -21,6 +25,7 @@ public class Game2D extends Activity2D {
         AppState.recordData = AppState.inGame = true;
     }
 
+
     @Override
     protected void draw() {
         String data = BreathData.getAsString(0, 5);
@@ -34,5 +39,12 @@ public class Game2D extends Activity2D {
         framerate = (TextView) findViewById(R.id.as_framerate);
         dataDisplay = (TextView) findViewById(R.id.as_data);
         frameCount = (TextView) findViewById(R.id.as_frameCount);
+
+        AppState.framelimit = AppState.Framelimit.HundredTwenty;
+    }
+
+    public void startGame(View view) {
+        Intent i = new Intent(this, Application.class);
+        startActivity(i);
     }
 }

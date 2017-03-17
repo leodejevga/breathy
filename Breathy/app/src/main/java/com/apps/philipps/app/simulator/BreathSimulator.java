@@ -149,6 +149,8 @@ public class BreathSimulator {
                 long start = System.currentTimeMillis();
                 while (AppState.btState == AppState.BtState.Connected && generate) {
                     if (System.currentTimeMillis() - start >= 1000 / rate * 20) {
+                        if(data.length == 0)
+                            Log.d(TAG, "na sowas");
                         data[0] = 700 + r.nextInt(5);
                         data[1] = 750 + r.nextInt(5);
                         data[2] = 800 + r.nextInt(5);
