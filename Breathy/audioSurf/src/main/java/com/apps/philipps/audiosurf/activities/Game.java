@@ -23,7 +23,7 @@ public class Game extends Activity3D implements IObserver {
     }
 
     private void setValue(){
-        Log.d("Draw", ((MyRenderer) gameRenderer).getFramerate() + " fps");
+        Log.d("Draw", gameRenderer.getFramerate() + " fps");
         Log.d("Data received", BreathData.getAsString(0,10));
     }
 
