@@ -1,4 +1,4 @@
-package com.apps.philipps.source.abstracts;
+package com.apps.philipps.source.helper;
 
 import android.opengl.GLSurfaceView;
 import android.util.Log;
@@ -13,7 +13,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by Jevgenij Huebert on 09.03.2017. Project Breathy
  */
 
-public abstract class AbstractRenderer implements GLSurfaceView.Renderer {
+public abstract class Renderer3D implements GLSurfaceView.Renderer {
 
     protected IObserver observer;
     private long start = System.currentTimeMillis();

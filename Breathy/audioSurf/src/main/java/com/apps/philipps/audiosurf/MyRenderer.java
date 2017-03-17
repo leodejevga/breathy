@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.apps.philipps.audiosurf.activities.Game;
 import com.apps.philipps.source.AppState;
-import com.apps.philipps.source.abstracts.AbstractRenderer;
+import com.apps.philipps.source.helper.Renderer3D;
 import com.apps.philipps.source.interfaces.IObserver;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -13,7 +13,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by Jevgenij Huebert on 09.03.2017. Project Breathy
  */
-public class MyRenderer extends AbstractRenderer {
+public class MyRenderer extends Renderer3D {
     int frames;
     Context game;
     public MyRenderer(Game game, IObserver observer) {
