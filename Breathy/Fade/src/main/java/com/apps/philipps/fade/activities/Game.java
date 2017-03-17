@@ -18,7 +18,7 @@ public class Game extends Activity implements OnClickListener {
 
     private final static String TAG = "Game";
 
-    final static String BROADCAST_R_INTENT_FILTER_ACTION = "MainBroadcastReceiver";
+    public final static String BROADCAST_R_INTENT_FILTER_ACTION = "MainBroadcastReceiver";
 
     private Intent svc;
 
