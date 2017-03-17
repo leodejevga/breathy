@@ -6,13 +6,13 @@ import android.util.Log;
 import com.apps.philipps.audiosurf.MyRenderer;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
-import com.apps.philipps.source.abstracts.AbstractGlActivity;
+import com.apps.philipps.source.helper.Activity3D;
 import com.apps.philipps.source.interfaces.IObserver;
 
 /**
  * Game Activity
  */
-public class Game extends AbstractGlActivity implements IObserver {
+public class Game extends Activity3D implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

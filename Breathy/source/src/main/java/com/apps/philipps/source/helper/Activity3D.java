@@ -1,4 +1,4 @@
-package com.apps.philipps.source.abstracts;
+package com.apps.philipps.source.helper;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 /**
  * Created by Jevgenij Huebert on 09.03.2017. Project Breathy
  */
-public abstract class AbstractGlActivity extends Activity {
+public abstract class Activity3D extends Activity {
 
     /**
      * The Open gl.

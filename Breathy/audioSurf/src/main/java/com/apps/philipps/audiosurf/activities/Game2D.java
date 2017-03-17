@@ -6,9 +6,9 @@ import android.widget.TextView;
 import com.apps.philipps.audiosurf.R;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
-import com.apps.philipps.source.abstracts.AbstractGameActivity;
+import com.apps.philipps.source.helper.Activity2D;
 
-public class Game2D extends AbstractGameActivity {
+public class Game2D extends Activity2D {
 
     TextView framerate;
     TextView frameCount;
