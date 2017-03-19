@@ -8,20 +8,20 @@ import java.util.List;
 /**
  * Created by Jevgenij Huebert on 17.03.2017. Project Breathy
  */
-public class Position implements Comparable<Position>{
+public class Vector implements Comparable<Vector>, Cloneable{
 
-    private List<Double> coordinates;
+    private List<Float> coordinates;
 
     /**
-     * Instantiates a new Position.
+     * Instantiates a new Vector.
      *
      * @param coordinates the coordinates
      */
-    public Position(double... coordinates){
+    public Vector(Float... coordinates){
         this.coordinates = new ArrayList<>();
-        for(Double coordinate : coordinates){
-            this.coordinates.add(coordinate);
-        }
+        for(Float coordinate : coordinates)
+            if(coordinate!=null)
+                this.coordinates.add(coordinate);
     }
 
     /**
@@ -30,7 +30,7 @@ public class Position implements Comparable<Position>{
      * @param position the position
      * @return the position
      */
-    public Position add(Position position){
+    public Vector add(Vector position){
         for (int i = 0; i < this.coordinates.size() && i < position.coordinates.size(); i++)
             this.coordinates.set(i, this.coordinates.get(i) + position.coordinates.get(i));
         if(this.coordinates.size()<position.coordinates.size())
@@ -45,7 +45,7 @@ public class Position implements Comparable<Position>{
      * @param position the position
      * @return the position
      */
-    public Position sub(Position position){
+    public Vector sub(Vector position){
         for (int i = 0; i < this.coordinates.size() && i < position.coordinates.size(); i++)
             this.coordinates.set(i, this.coordinates.get(i) - position.coordinates.get(i));
         if(this.coordinates.size()<position.coordinates.size())
@@ -60,7 +60,7 @@ public class Position implements Comparable<Position>{
      * @param multiplier the multiplier
      * @return the position
      */
-    public Position mult(double multiplier){
+    public Vector mult(float multiplier){
         for (int i = 0; i < this.coordinates.size(); i++)
             this.coordinates.set(i, this.coordinates.get(i) * multiplier);
         return this;
@@ -74,7 +74,7 @@ public class Position implements Comparable<Position>{
      * @param multiplier the multiplier
      * @return the position
      */
-    public Position mult(int start, int end, double multiplier){
+    public Vector mult(int start, int end, float multiplier){
         for (int i = start; i < this.coordinates.size() && i <= end; i++)
             this.coordinates.set(i, this.coordinates.get(i) * multiplier);
         return this;
@@ -87,7 +87,7 @@ public class Position implements Comparable<Position>{
      * @param multiplier the multiplier
      * @return the position
      */
-    public Position mult(int coordinate, double multiplier){
+    public Vector mult(int coordinate, float multiplier){
         this.coordinates.set(coordinate, this.coordinates.get(coordinate) * multiplier);
         return this;
     }
@@ -98,7 +98,7 @@ public class Position implements Comparable<Position>{
      * @param divisor the divisor
      * @return the position
      */
-    public Position divide(double divisor){
+    public Vector divide(float divisor){
         if(divisor == 0)
             return null;
         for (int i = 0; i < this.coordinates.size(); i++)
@@ -106,54 +106,85 @@ public class Position implements Comparable<Position>{
         return this;
     }
 
-    /**
-     * Get double.
-     *
-     * @param coordinate the coordinate
-     * @return the double
-     */
-    public double get(int coordinate){
-        return coordinates.get(coordinate);
+    public Vector norm(){
+        return divide(getDistance());
     }
 
     /**
-     * Get double [ ].
+     * Get float.
      *
-     * @return the double [ ]
+     * @param coordinate the coordinate
+     * @return the float
      */
-    public Double[] get(){
-        Double[] result = new Double[coordinates.size()];
+    public Float get(int coordinate){
+        if(coordinate<coordinates.size())
+            return coordinates.get(coordinate);
+        else return null;
+    }
+
+    /**
+     * Get float [ ].
+     *
+     * @return the float [ ]
+     */
+    public Float[] get(){
+        Float[] result = new Float[coordinates.size()];
         coordinates.toArray(result);
         return result;
     }
 
-    public double getDistance(){
-        return getDistance(new Position());
+    public float getDistance(){
+        return getDistance(new Vector());
     }
-    public double getDistance(Position position){
-        double result=0;
+    public float getDistance(Vector position){
+        float result=0;
         for (int i = 0; i < coordinates.size() || i < position.coordinates.size(); i++) {
-            if(i<coordinates.size() && i<coordinates.size())
+            if(i<coordinates.size() && i<position.coordinates.size())
                 result += Math.pow(position.get(i) - get(i), 2);
             else if(i<coordinates.size())
                 result += get(i) * get(i);
             else
                 result += position.get(i) * position.get(i);
         }
-        result = Math.sqrt(result);
+        result = ((float) Math.sqrt(result));
         return result;
     }
-    public double getCoordinatesSum(){
-        double result = 0;
-        for(Double coordinate : coordinates)
+    public float getCoordinatesSum(){
+        float result = 0;
+        for(Float coordinate : coordinates)
             result+=coordinate;
         return result;
     }
 
+    public static Vector add(Vector a, Vector b){
+        Vector result = a.clone();
+        return result.add(b);
+    }
+
+    public static Vector sub(Vector a, Vector b){
+        Vector result = a.clone();
+        return result.sub(b);
+    }
+
+    public static Vector mult(Vector a, float b){
+        Vector result = a.clone();
+        return result.mult(b);
+    }
+
+    public static Vector divide(Vector a, float b){
+        Vector result = a.clone();
+        return result.divide(b);
+    }
+    public static Vector norm(Vector a){
+        Vector result = a.clone();
+        return result.norm();
+    }
+
+
     @Override
-    public int compareTo(@NonNull Position o) {
-        double a = getCoordinatesSum();
-        double b = o.getCoordinatesSum();
+    public int compareTo(@NonNull Vector o) {
+        int a = (int)(getCoordinatesSum()*1000);
+        int b = (int)(o.getCoordinatesSum()*1000);
         return a<b?-1:a>b?1:0;
     }
 
@@ -166,4 +197,10 @@ public class Position implements Comparable<Position>{
         }
         return result;
     }
+
+    @Override
+    public Vector clone() {
+        return new Vector(get());
+    }
+
 }

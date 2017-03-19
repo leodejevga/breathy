@@ -15,29 +15,6 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
-        <ImageView
-            android:id="@+id/as_enemy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/enemy"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="293dp"
-            tools:layout_editor_absoluteY="238dp"
-            android:layout_marginEnd="60dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="72dp" />
-
-        <ImageView
-            android:id="@+id/as_ship"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ship"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="-2dp"
-            tools:layout_editor_absoluteY="238dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

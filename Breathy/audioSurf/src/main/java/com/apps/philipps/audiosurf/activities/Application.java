@@ -1,21 +1,30 @@
 package com.apps.philipps.audiosurf.activities;
 
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.VideoView;
 
 import com.apps.philipps.audiosurf.R;
+import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.helper.Activity2D;
-import com.apps.philipps.source.helper.Position;
+import com.apps.philipps.source.helper.GameObject2D;
+import com.apps.philipps.source.helper.Vector;
 
+import java.security.PolicySpi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Application extends Activity2D{
-    ImageView ship;
-    List<ImageView> enemies;
-    List<ImageView> lasers;
+    GameObject2D ship;
+    List<GameObject2D> enemies;
+    List<GameObject2D> lasers;
     RelativeLayout game;
     double enemySpeed;
     long enemySpawn;
@@ -30,38 +39,46 @@ public class Application extends Activity2D{
 
     @Override
     protected void draw() {
-        if(System.currentTimeMillis() - enemySpawn>2000){
-            ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.enemy);
-            iv.setId(enemies.size());
-            iv.setX(getScreenWidth());
-            iv.setY(getScreenHeight()/2);
-            game.addView(iv);
-            enemies.add(iv);
+        long delta = System.currentTimeMillis() - start;
+        if(System.currentTimeMillis() - enemySpawn>1000){
+
+            float y = Math.abs(random.nextInt())%1920f;
+            enemies.add(initObject(new ImageView(this), R.drawable.enemy, 0, new Vector(1000f, y), new Vector(50f, y), 320));
             enemySpawn = System.currentTimeMillis();
         }
+        for(GameObject2D enemy : enemies){
+            for(GameObject2D laser : lasers)
+                if(enemy.intercect(laser)){
+                    game.removeView(enemy.getView());
+                    game.removeView(laser.getView());
+                    enemies.remove(enemy);
+                    lasers.remove(laser);
+                }
 
-        for(ImageView enemy : enemies){
-            Position position = new Position(enemy.getX(), enemy.getY());
-            double delta = (System.currentTimeMillis()-start) * enemySpeed;
-            position.sub(new Position(delta));
-            if(position.compareTo(new Position())==-1) {
-                game.removeView(enemy);
+            if(!enemy.isMoving()){
+                game.removeView(enemy.getView());
                 enemies.remove(enemy);
-            }
-            else {
-                enemy.setX((float) position.get(0));
-                enemy.setY((float) position.get(1));
-            }
+            } else
+                enemy.update(delta);
         }
+        for(GameObject2D laser : lasers){
+            if(!laser.isMoving()){
+                game.removeView(laser.getView());
+                lasers.remove(laser);
+            } else
+                laser.update(delta);
+        }
+        ship.move(new Vector(50f, 1920-(BreathData.get(0)*1920)/1024f));
+        ship.update(delta);
 
         start = System.currentTimeMillis();
     }
 
     @Override
     protected void init() {
+        AppState.framelimit = AppState.Framelimit.Sixty;
         game = (RelativeLayout) findViewById(R.id.as_game_area);
-        ship = (ImageView) findViewById(R.id.as_ship);
+        ship = initObject(new ImageView(this), R.drawable.ship, 1, new Vector(50f, 1920/2f), new Vector(50f, 1920f), 1200);
         enemies = new ArrayList<>();
         lasers = new ArrayList<>();
         start = System.currentTimeMillis();
@@ -72,4 +89,18 @@ public class Application extends Activity2D{
             brakeDraw();
     }
 
+    @Override
+    protected void touched(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN)
+            lasers.add(initObject(new ImageView(this), R.drawable.laser, 2, ship.getPosition().clone(), new Vector(1080f, ship.getPosition().get(1)), 3000));
+    }
+
+    private GameObject2D initObject(ImageView view, @DrawableRes int content, int id, Vector position, Vector destination, int move){
+        view.setId(id);
+        view.setImageResource(content);
+        game.addView(view);
+        GameObject2D result = new GameObject2D(view, position, destination);
+        result.move(move);
+        return result;
+    }
 }

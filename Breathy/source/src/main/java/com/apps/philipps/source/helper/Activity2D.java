@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import com.apps.philipps.source.AppState;
 
@@ -28,40 +29,30 @@ public abstract class Activity2D extends Activity {
         draw = false;
     }
 
-    private final Thread startToDraw = new Thread(new Runnable() {
+    private final Thread startToDraw =  new Thread(null, new Runnable() {
 
+        private double millis;
         @Override
         public void run() {
             draw = true;
+            long delta = 0;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (!initialized) {
                         init();
+                        millis = 1000/AppState.framelimit.getLimit();
                     }
                     initialized = true;
                 }
             });
             while (!destroy) {
-                long delta = System.currentTimeMillis() - start;
-                if (initialized && draw && delta >= 1000/AppState.framelimit.getLimit()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                draw();
-                            } catch (Exception e) {
-                                Log.d(TAG, "Draw not successfull");
-                            }
-                            frame = ++frame % AppState.framelimit.getLimit();
-                        }
-                    });
-                    long temp = System.currentTimeMillis() - start;
-                    if(temp == 0)
-                        frameRate = Integer.MAX_VALUE;
-                    else
-                        frameRate = (int)(1000 / temp);
-                    start = System.currentTimeMillis();
+                if(initialized){
+                    delta = System.currentTimeMillis() - start;
+                    if (draw && delta >= millis) {
+                        executeDraw(delta);
+                        start = System.currentTimeMillis();
+                    }
                 }
                 else{
                     try {
@@ -73,11 +64,13 @@ public abstract class Activity2D extends Activity {
                 }
             }
         }
-    });
+    }, "Activity 2D");
 
     protected abstract void draw();
 
     protected abstract void init();
+
+    protected abstract void touched(MotionEvent event);
 
     protected int getScreenWidth(){
         return displayMetrics.widthPixels;
@@ -86,6 +79,23 @@ public abstract class Activity2D extends Activity {
         return displayMetrics.heightPixels;
     }
 
+    private synchronized void executeDraw(long delta){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    draw();
+                } catch (Exception e) {
+                    Log.d(TAG, "Draw not successfull");
+                }
+                frame = ++frame % AppState.framelimit.getLimit();
+            }
+        });
+        if(delta == 0)
+            frameRate = Integer.MAX_VALUE;
+        else
+            frameRate = (int)(1000 / delta);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,5 +122,11 @@ public abstract class Activity2D extends Activity {
     protected void onResume() {
         super.onResume();
         draw = true;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        touched(event);
+        return super.onTouchEvent(event);
     }
 }
