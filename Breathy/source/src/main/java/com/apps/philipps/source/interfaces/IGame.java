@@ -1,6 +1,7 @@
 package com.apps.philipps.source.interfaces;
 
 import android.graphics.Movie;
+import android.support.annotation.RawRes;
 import android.widget.VideoView;
 
 /**
@@ -26,7 +27,7 @@ public interface IGame {
      *
      * @return true if the preview successfully started
      */
-    String getPreview();
+    @RawRes Integer getPreview();
 
     /**
      * Returns <code>true</code> if this game was bought.

@@ -1,6 +1,7 @@
 package com.apps.philipps.fade;
 
 import android.content.Context;
+import android.support.annotation.RawRes;
 
 import com.apps.philipps.source.abstracts.AbstractGame;
 public class Fade extends AbstractGame {
@@ -22,8 +23,7 @@ public class Fade extends AbstractGame {
      * @return true if the preview successfully started
      */
     @Override
-    public String getPreview(){
-        // TODO getPreview hinterlegen
-        return "";
+    public @RawRes Integer getPreview(){
+        return null;
     }
 }

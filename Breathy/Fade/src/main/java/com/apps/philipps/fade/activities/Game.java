@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.apps.philipps.R;
+import com.apps.philipps.fade.R;
 import com.apps.philipps.fade.TransparencyService;
 
 public class Game extends Activity implements OnClickListener {
@@ -22,9 +22,9 @@ public class Game extends Activity implements OnClickListener {
 
     private Intent svc;
 
-    private static Button btnStartService;
-    private static Button btnStopService;
-    private static Button btnAutoChangeTransparency;
+    private Button btnStartService;
+    private Button btnStopService;
+    private Button btnAutoChangeTransparency;
 
     private MainBroadcastReceiver mainBroadcastReceiver;
 
@@ -103,7 +103,7 @@ public class Game extends Activity implements OnClickListener {
         }
     }
 
-    private static void resetGUIElements() {
+    private void resetGUIElements() {
         btnStartService.setEnabled(true);
         btnStopService.setEnabled(false);
         btnAutoChangeTransparency.setEnabled(false);
@@ -115,7 +115,7 @@ public class Game extends Activity implements OnClickListener {
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "MainBroadcastReceiver:  onReceive()");
             if (intent.getIntExtra(TransparencyService.EXTRA_NEXT_STATE, 0) == TransparencyService.EXTRA_VALUE_STOP) {
-                resetGUIElements();
+                ((Game)context).resetGUIElements();
             }
         }
     }
