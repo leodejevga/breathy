@@ -10,9 +10,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.Options" />
         <activity android:name=".activities.Game" />
-        <activity android:name=".activities.Preview" />
-        <activity android:name=".activities.Game2D" />
-        <activity android:name=".activities.Application"></activity>
     </application>
 
 </manifest>

@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/background"
-    tools:context="com.apps.philipps.audiosurf.activities.Game2D">
+    tools:context="com.apps.philipps.audiosurf.activities.Game">
 
     <TextView
         android:gravity="center"

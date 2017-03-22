@@ -16,7 +16,7 @@ import com.apps.philipps.source.AppState;
  */
 
 public abstract class Activity2D extends Activity {
-    private static final String TAG = "Game Activity";
+    private static final String TAG = "Activity 2D";
     protected boolean draw;
     protected int frameRate = 0;
     protected int frame = 0;
@@ -72,10 +72,10 @@ public abstract class Activity2D extends Activity {
 
     protected abstract void touched(MotionEvent event);
 
-    protected int getScreenWidth(){
+    protected float getScreenWidth(){
         return displayMetrics.widthPixels;
     }
-    protected int getScreenHeight(){
+    protected float getScreenHeight(){
         return displayMetrics.heightPixels;
     }
 
@@ -86,7 +86,7 @@ public abstract class Activity2D extends Activity {
                 try {
                     draw();
                 } catch (Exception e) {
-                    Log.d(TAG, "Draw not successfull");
+                    Log.e(TAG, "Draw not successfull", e);
                 }
                 frame = ++frame % AppState.framelimit.getLimit();
             }

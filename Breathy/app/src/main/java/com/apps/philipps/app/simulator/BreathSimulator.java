@@ -75,7 +75,6 @@ public class BreathSimulator {
         public void call(Object... messages) {
             if (index < data.length) {
                 data[index++] = (Integer) messages[0];
-                Log.d(TAG, "Data: " + messages[0] + "  " + index);
             } else {
                 BreathData.removeObserver(this);
                 AppState.recordData = true;
@@ -129,7 +128,6 @@ public class BreathSimulator {
                     if (!recording && delta >= millis) {
                         start = System.currentTimeMillis();
                         BreathData.add(data[index]);
-                        Log.d(TAG, data[index] + "");
                         index++;
                         index = index % data.length;
                         index++;
