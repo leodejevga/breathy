@@ -24,7 +24,6 @@ public class BreathSimulator {
     private static final String DATA_NAME = "Breathy_Simulator_Data";
     private static final String TAG = "BreathSimulator";
     private static BreathSimulator simulator = new BreathSimulator();
-    private AppState.BtState prevState;
 
     private BreathSimulator() {
         rate = 2;
@@ -76,13 +75,11 @@ public class BreathSimulator {
         public void call(Object... messages) {
             if (index < data.length) {
                 data[index++] = (Integer) messages[0];
-                Log.d(TAG, "Data: " + messages[0] + "  " + index);
             } else {
                 BreathData.removeObserver(this);
                 AppState.recordData = true;
                 simulator.saveData.writeObject(DATA_NAME, data);
                 simulator.recording = false;
-                simulator.generate = false;
                 data = data;
                 Log.d(TAG, "Data collected!");
             }
@@ -111,68 +108,58 @@ public class BreathSimulator {
     }
 
     private void startSimulation() {
-        prevState = AppState.btState;
         AppState.btState = AppState.BtState.Connected;
 
-        new Thread(new Runnable() {
+        new Thread(null, new Runnable() {
             private long start = System.currentTimeMillis();
-            private int index = 0;
 
             @Override
             public void run() {
-                if ((data.length == 0) && !recording)
-                    generateData();
+
+                int index = 0;
+                long delta = 0;
+                double millis = 1000 / rate;
                 while (AppState.btState == AppState.BtState.Connected) {
-                    if (System.currentTimeMillis() - start >= 1000 / rate && !recording && data.length != 0) {
+                    delta = System.currentTimeMillis() - start;
+                    if(data == null || data.length==0 || index>=data.length){
+                        generateData();
+                        index = 0;
+                    }
+                    if (!recording && delta >= millis) {
                         start = System.currentTimeMillis();
-                        if (data[index] != null)
-                            BreathData.add(data[index]);
-                        Log.d(TAG, data[index] + "");
+                        BreathData.add(data[index]);
                         index++;
                         index = index % data.length;
+                        index++;
                     }
                 }
             }
-        }).start();
+        }, "Breath Data Simulator").start();
     }
 
-    private boolean generate = false;
 
     private void generateData() {
-        new Thread(new Runnable() {
-            private Random r = new Random(0);
-
-            @Override
-            public void run() {
-                generate = true;
-                data = new Integer[20];
-                long start = System.currentTimeMillis();
-                while (AppState.btState == AppState.BtState.Connected && generate) {
-                    if (System.currentTimeMillis() - start >= 1000 / rate * 20) {
-                        data[0] = 700 + r.nextInt(5);
-                        data[1] = 750 + r.nextInt(5);
-                        data[2] = 800 + r.nextInt(5);
-                        data[3] = 900 + r.nextInt(5);
-                        data[4] = 1000 + r.nextInt(5);
-                        data[5] = 950 + r.nextInt(5);
-                        data[6] = 850 + r.nextInt(5);
-                        data[7] = 750 + r.nextInt(5);
-                        data[8] = 700 + r.nextInt(5);
-                        data[9] = 700 + r.nextInt(5);
-                        data[10] = 650 + r.nextInt(5);
-                        data[11] = 600 + r.nextInt(5);
-                        data[12] = 550 + r.nextInt(5);
-                        data[13] = 500 + r.nextInt(5);
-                        data[14] = 450 + r.nextInt(5);
-                        data[15] = 400 + r.nextInt(5);
-                        data[16] = 350 + r.nextInt(5);
-                        data[17] = 400 + r.nextInt(5);
-                        data[18] = 550 + r.nextInt(5);
-                        data[19] = 700 + r.nextInt(5);
-                        start = System.currentTimeMillis();
-                    }
-                }
-            }
-        }).start();
+        Random r = new Random(0);
+        data = new Integer[20];
+        data[0] = 700 + r.nextInt(5);
+        data[1] = 750 + r.nextInt(5);
+        data[2] = 800 + r.nextInt(5);
+        data[3] = 900 + r.nextInt(5);
+        data[4] = 1000 + r.nextInt(5);
+        data[5] = 950 + r.nextInt(5);
+        data[6] = 850 + r.nextInt(5);
+        data[7] = 750 + r.nextInt(5);
+        data[8] = 700 + r.nextInt(5);
+        data[9] = 700 + r.nextInt(5);
+        data[10] = 650 + r.nextInt(5);
+        data[11] = 600 + r.nextInt(5);
+        data[12] = 550 + r.nextInt(5);
+        data[13] = 500 + r.nextInt(5);
+        data[14] = 450 + r.nextInt(5);
+        data[15] = 400 + r.nextInt(5);
+        data[16] = 350 + r.nextInt(5);
+        data[17] = 400 + r.nextInt(5);
+        data[18] = 550 + r.nextInt(5);
+        data[19] = 700 + r.nextInt(5);
     }
 }

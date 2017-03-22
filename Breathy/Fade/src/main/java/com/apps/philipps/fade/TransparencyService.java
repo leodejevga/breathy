@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-import com.apps.philipps.R;
 import com.apps.philipps.fade.activities.Game;
 
 public class TransparencyService extends Service{

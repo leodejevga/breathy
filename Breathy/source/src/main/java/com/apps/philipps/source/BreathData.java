@@ -16,7 +16,7 @@ public class BreathData {
     //TODO: Hier werden Bluetooth Daten gesammelt und live gefiltert, sodass sie wieder als Rückmeldung fungieren können
     //Diese Klasse soll statisch agieren
     private static LimitedList Data;
-    private static int ramSize = 8388608; //32 MB
+    private static int ramSize = 262144; //1 MB
     private static int blockSize = 0;
     private static boolean initialized = false;
 

@@ -1,6 +1,7 @@
 package com.apps.philipps.audiosurf;
 
 import android.content.Context;
+import android.support.annotation.RawRes;
 
 import com.apps.philipps.source.abstracts.AbstractGame;
 
@@ -34,7 +35,7 @@ public class AudioSurf extends AbstractGame {
      * @return true if the preview successfully started
      */
     @Override
-    public String getPreview(){
-        return R.raw.preview + "";
+    public @RawRes Integer getPreview(){
+        return R.raw.preview;
     }
 }

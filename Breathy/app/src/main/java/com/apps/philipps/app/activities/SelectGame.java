@@ -52,7 +52,7 @@ public class SelectGame extends AppCompatActivity {
                 Backend.selected = Backend.games.get(position);
                 Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
                 buy.setVisibility(Backend.selected.isBought()?View.INVISIBLE:View.VISIBLE);
-                String previewData = Backend.selected.getPreview();
+                Integer previewData = Backend.selected.getPreview();
 
                 //TODO: Das Video muss richtig geladen zurzeit zeigt er eine nachricht an in der steht: "Video kann nicht wiedergegeben werden"
                 String videoPath = "android.resource://" + getResources().getResourcePackageName(R.raw.preview) + "/" + previewData;

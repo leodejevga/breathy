@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/background"
-    tools:context="com.apps.philipps.audiosurf.activities.Game2D">
+    tools:context="com.apps.philipps.audiosurf.activities.Game">
 
     <TextView
         android:gravity="center"
@@ -49,5 +49,15 @@
         android:layout_height="wrap_content"
         android:id="@+id/as_frameCount"
         android:layout_below="@+id/as_framerate"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/as_startGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:onClick="startGame"
+        android:text="Starte Spiel"
+        android:layout_below="@+id/as_data"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
