@@ -7,9 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.Tag;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ButtonBarLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,10 +31,10 @@ public class Menu extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        IntentFilter enbaled = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        IntentFilter enabled = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         IntentFilter connected = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
         IntentFilter disconnected = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-        registerReceiver(AppState.btStateChanger, enbaled);
+        registerReceiver(AppState.btStateChanger, enabled);
         registerReceiver(AppState.btStateChanger, connected);
         registerReceiver(AppState.btStateChanger, disconnected);
         AppState.initBtState();

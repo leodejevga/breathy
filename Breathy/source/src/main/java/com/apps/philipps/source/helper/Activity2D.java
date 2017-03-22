@@ -1,4 +1,4 @@
-package com.apps.philipps.source.abstracts;
+package com.apps.philipps.source.helper;
 
 import android.app.Activity;
 import android.graphics.Movie;
@@ -13,7 +13,7 @@ import com.apps.philipps.source.AppState;
  * Created by Jevgenij Huebert on 11.03.2017. Project Breathy
  */
 
-public abstract class AbstractGameActivity extends Activity {
+public abstract class Activity2D extends Activity {
     private static final String TAG = "Game Activity";
     protected boolean draw;
     protected int frameRate = 0;

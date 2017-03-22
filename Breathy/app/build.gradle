@@ -32,7 +32,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':source')
     compile project(':audioSurf')
-
+    compile project(':fade')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2') {
         // Necessary if your app targets Marshmallow (since Espresso
         // hasn't moved to Marshmallow yet)
