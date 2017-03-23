@@ -45,7 +45,7 @@ public class Application extends Activity2D{
         for (int i = 0; i < enemies.size(); i++) {
             boolean removed = false;
             for (int j = 0; j < lasers.size(); j++) {
-                if (enemies.get(i).intercect(lasers.get(j))) {
+                if (enemies.get(i).intersect(lasers.get(j))) {
                     game.removeView(enemies.get(i).getView());
                     game.removeView(lasers.get(j).getView());
                     enemies.remove(enemies.get(i));
