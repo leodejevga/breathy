@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.apps.philipps.audiosurf.activities.Options;
-import com.apps.philipps.source.abstracts.AbstractGameObject;
+import com.apps.philipps.source.implementations.BreathyGameComponent;
 
 /**
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
  */
-public class AudioSurfOptions extends AbstractGameObject {
+public class AudioSurfOptions extends BreathyGameComponent {
 
     /**
      * Instantiates a new Audio surf options.

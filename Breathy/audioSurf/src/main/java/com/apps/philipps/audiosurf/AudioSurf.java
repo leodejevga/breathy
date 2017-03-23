@@ -3,7 +3,7 @@ package com.apps.philipps.audiosurf;
 import android.content.Context;
 import android.support.annotation.RawRes;
 
-import com.apps.philipps.source.abstracts.AbstractGame;
+import com.apps.philipps.source.implementations.BreathyGame;
 
 /**
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
@@ -12,7 +12,7 @@ import com.apps.philipps.source.abstracts.AbstractGame;
 /**
  * Initializes the Audio Surf game
  */
-public class AudioSurf extends AbstractGame {
+public class AudioSurf extends BreathyGame {
 
     Context context;
     /**

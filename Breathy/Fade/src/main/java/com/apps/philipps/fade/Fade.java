@@ -3,8 +3,8 @@ package com.apps.philipps.fade;
 import android.content.Context;
 import android.support.annotation.RawRes;
 
-import com.apps.philipps.source.abstracts.AbstractGame;
-public class Fade extends AbstractGame {
+import com.apps.philipps.source.implementations.BreathyGame;
+public class Fade extends BreathyGame {
     Context context;
     /**
      * Instantiates a new Audio surf Object.
