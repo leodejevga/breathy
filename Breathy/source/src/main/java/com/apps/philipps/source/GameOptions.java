@@ -1,14 +1,7 @@
 package com.apps.philipps.source;
 
-import android.support.v4.util.TimeUtils;
-
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by Jevgenij Huebert on 28.01.2017. Project Breathy
@@ -20,10 +13,19 @@ import java.util.Objects;
  * @param <P> the type of the Option
  * @param <V> the type of the Value of the Option
  */
-public class GameOptions<P,V> {
+public class GameOptions<P extends Serializable,V extends Serializable> implements Serializable{
     private ArrayList<Option<P, V>> options;
 
+    public ArrayList<Option<P, V>> getOptions() {
+        return options;
+    }
+
+    public void setOptions(ArrayList<Option<P, V>> options) {
+        this.options = options;
+    }
+
     /**
+
      * Instantiates new GameOptions.
      */
     public GameOptions(){
@@ -130,8 +132,33 @@ public class GameOptions<P,V> {
         return options.get(id);
     }
 
-    public static class Option<P,V>{
+    public static class Option<P,V> implements Serializable{
         public P Parameter;
+
+        public P getParameter() {
+            return Parameter;
+        }
+
+        public void setParameter(P parameter) {
+            Parameter = parameter;
+        }
+
+        public V getValue() {
+            return Value;
+        }
+
+        public void setValue(V value) {
+            Value = value;
+        }
+
+        public int getPrice() {
+            return Price;
+        }
+
+        public void setPrice(int price) {
+            Price = price;
+        }
+
         public V Value;
         public int Price;
         public Option(P parameter, V value, int cost){

@@ -1,8 +1,6 @@
 package com.apps.philipps.source.interfaces;
 
-import android.graphics.Movie;
 import android.support.annotation.RawRes;
-import android.widget.VideoView;
 
 /**
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
@@ -35,6 +33,8 @@ public interface IGame {
      * @return true if this game was bought
      */
     boolean isBought();
+
+    void setBought(boolean isBought);
 
     /**
      * Buy this game.

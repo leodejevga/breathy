@@ -3,7 +3,6 @@ package com.apps.philipps.app;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.transition.Fade;
 
 import com.apps.philipps.app.simulator.BreathSimulator;
 import com.apps.philipps.audiosurf.AudioSurf;
@@ -31,6 +30,7 @@ public class Backend {
     /**
      * Selected Game
      */
+    public static Context GLOBAL_CONTEXT;
     public static IGame selected;
     public static boolean choosen;
     private static boolean initialized=false;
@@ -56,6 +56,7 @@ public class Backend {
      * @return true if has initialized
      */
     public static boolean init(Context context){
+        GLOBAL_CONTEXT = context;
         if(!initialized){
             games = new ArrayList<>();
             Backend.games.add(new AudioSurf(context));

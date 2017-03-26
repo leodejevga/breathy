@@ -1,9 +1,7 @@
 package com.apps.philipps.source.abstracts;
 
-import android.graphics.Movie;
-
-import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.interfaces.IGame;
 
 /**
@@ -35,7 +33,10 @@ public abstract class AbstractGame implements IGame {
     public boolean isBought() {
         return bought;
     }
-
+    @Override
+    public void setBought( boolean isBought){
+        bought = isBought;
+    }
     @Override
     public boolean buy() {
         if(!bought) {

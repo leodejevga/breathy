@@ -5,8 +5,8 @@ package com.apps.philipps.source;
  */
 public class Coins {
     //TODO: Sollte in app/Backend initialisiert werden. Dafür muss der Wert von der Festplatte gelesen werden
-    private static int amount=2600;
-    private static boolean initialized=false;
+    private static int amount = 2600;
+    private static boolean initialized = false;
 
     /**
      * Buy any Object must call this method to change amount of Coins
@@ -14,9 +14,9 @@ public class Coins {
      * @param coins the privce of the Object to buy
      * @return true for object is bought. Amount of coins is subptracted
      */
-    public static boolean buy(int coins){
-        if(Coins.amount >= coins)
-            amount-=coins;
+    public static boolean buy(int coins) {
+        if (Coins.amount >= coins)
+            amount -= coins;
         else return false;
         return true;
     }
@@ -24,7 +24,7 @@ public class Coins {
     /**
      * Init.
      */
-    public static void init(){
+    public static void init() {
         if (!initialized) {
             //TODO: initialisirung des Kontostands
         }
@@ -36,7 +36,7 @@ public class Coins {
      *
      * @return Amount of coins
      */
-    public static int getAmount(){
+    public static int getAmount() {
         return amount;
     }
 
@@ -45,7 +45,11 @@ public class Coins {
      *
      * @param coins coins that have to be added
      */
-    public void addCoins(int coins){
-        Coins.amount+=coins;
+    public void addCoins(int coins) {
+        Coins.amount += coins;
+    }
+
+    public static void setCoins(int coins) {
+        Coins.amount = coins;
     }
 }
