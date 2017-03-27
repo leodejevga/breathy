@@ -45,6 +45,11 @@ public class Game2D extends Activity2D {
     double timerNextEmeny;
     int speed = 1;
 
+    public void touched(MotionEvent event){
+
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
