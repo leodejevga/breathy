@@ -35,6 +35,11 @@ public abstract class BreathyGame implements IGame {
     }
 
     @Override
+    public void setBought(boolean isBought) {
+        bought = isBought;
+    }
+
+    @Override
     public boolean buy() {
         if(!bought) {
             bought = Coins.buy(price);
