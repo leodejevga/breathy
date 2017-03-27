@@ -1,21 +1,21 @@
-package com.apps.philipps.source.abstracts;
+package com.apps.philipps.source.implementations;
 
-import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.Coins;
+import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.interfaces.IGame;
 
 /**
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
  */
-public abstract class AbstractGame implements IGame {
+public abstract class BreathyGame implements IGame {
     /**
      * The Game.
      */
-    protected AbstractGameObject game;
+    protected BreathyGameComponent game;
     /**
      * The GameOptions.
      */
-    protected AbstractGameObject options;
+    protected BreathyGameComponent options;
     /**
      * The Price for this Game.
      */
@@ -33,10 +33,7 @@ public abstract class AbstractGame implements IGame {
     public boolean isBought() {
         return bought;
     }
-    @Override
-    public void setBought( boolean isBought){
-        bought = isBought;
-    }
+
     @Override
     public boolean buy() {
         if(!bought) {

@@ -2,14 +2,13 @@ package com.apps.philipps.test;
 
 import android.content.Context;
 import android.support.annotation.RawRes;
-import com.apps.philipps.test.R;
 
-import com.apps.philipps.source.abstracts.AbstractGame;
+import com.apps.philipps.source.implementations.BreathyGame;
 
 /**
  * Created by Jevgenij Huebert on 19.03.2017. Project Breathy
  */
-public class Test extends AbstractGame {
+public class Test extends BreathyGame {
 
     public Test(Context context){
         game = new TestGame(context);

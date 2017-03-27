@@ -1,7 +1,6 @@
-package com.apps.philipps.source.abstracts;
+package com.apps.philipps.source.implementations;
 
 import android.content.Context;
-import android.graphics.Movie;
 import android.widget.Toast;
 
 import com.apps.philipps.source.interfaces.IBootable;
@@ -9,7 +8,7 @@ import com.apps.philipps.source.interfaces.IBootable;
 /**
  * Created by Jevgenij Huebert on 28.01.2017. Project Breathy
  */
-public abstract class AbstractGameObject implements IBootable {
+public abstract class BreathyGameComponent implements IBootable {
     /**
      * The Context.
      */

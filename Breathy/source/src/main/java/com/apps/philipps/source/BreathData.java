@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Jevgenij Huebert on 29.01.2017. Project Breathy
  */
-public class BreathData {
+public abstract class BreathData {
     //TODO: Hier werden Bluetooth Daten gesammelt und live gefiltert, sodass sie wieder als Rückmeldung fungieren können
     //Diese Klasse soll statisch agieren
     private static LimitedList Data;

@@ -2,12 +2,9 @@ package com.apps.philipps.test.activities;
 
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.VideoView;
 
 import com.apps.philipps.test.R;
 import com.apps.philipps.source.AppState;
@@ -16,7 +13,6 @@ import com.apps.philipps.source.helper.Activity2D;
 import com.apps.philipps.source.helper.GameObject2D;
 import com.apps.philipps.source.helper.Vector;
 
-import java.security.PolicySpi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -49,7 +45,7 @@ public class Application extends Activity2D{
         for (int i = 0; i < enemies.size(); i++) {
             boolean removed = false;
             for (int j = 0; j < lasers.size(); j++) {
-                if (enemies.get(i).intercect(lasers.get(j))) {
+                if (enemies.get(i).intersect(lasers.get(j))) {
                     game.removeView(enemies.get(i).getView());
                     game.removeView(lasers.get(j).getView());
                     enemies.remove(enemies.get(i));

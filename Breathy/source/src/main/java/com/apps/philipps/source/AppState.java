@@ -19,6 +19,8 @@ public class AppState {
     public static AppState.BtState btState = BtState.Disabled;
     public static Framelimit framelimit = Framelimit.Unlimited;
 
+    public static int breathyNormState = 700; //Standardwert
+
     public final static BroadcastReceiver btStateChanger = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

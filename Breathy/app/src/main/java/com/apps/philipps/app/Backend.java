@@ -11,6 +11,7 @@ import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.interfaces.IGame;
 import com.apps.philipps.test.Test;
+import com.breathy.racing.Race;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class Backend {
             games = new ArrayList<>();
             Backend.games.add(new AudioSurf(context));
             Backend.games.add(new Test(context));
+            Backend.games.add(new Race(context));
 //            Backend.games.add(new Fade(context)); //TODO Richtig initialisieren bitte!!! Schauen wie es bei AudioSurf gemacht wurde
             BreathData.init(context, 400);
             Coins.init();
