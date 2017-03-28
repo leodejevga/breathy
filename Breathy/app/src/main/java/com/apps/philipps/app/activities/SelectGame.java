@@ -13,7 +13,6 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.apps.philipps.app.Backend;
-import com.apps.philipps.app.CacheManager;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.Coins;
@@ -42,13 +41,13 @@ public class SelectGame extends AppCompatActivity {
         preview = (VideoView) findViewById(R.id.videoView);
         gamesList = (ListView) findViewById(R.id.games);
         adapter = new ArrayAdapter<IGame>(this, android.R.layout.simple_list_item_1, Backend.games);
-        Coins.setCoins(CacheManager.getCreditFromCache());
+        Coins.setCoins(Backend.cacheManager.getCreditFromCache());
         gamesList.setAdapter(adapter);
         gamesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Backend.selected = Backend.games.get(position);
-                Backend.selected.setBought(CacheManager.isIGameBought(Backend.selected.getName()));
+                Backend.selected.setBought(Backend.cacheManager.isIGameBought(Backend.selected.getName()));
                 Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
                 buy.setVisibility(Backend.selected.isBought() ? View.INVISIBLE : View.VISIBLE);
                 Integer previewData = Backend.selected.getPreview();
@@ -96,8 +95,8 @@ public class SelectGame extends AppCompatActivity {
     public void buyGame(View view) {
         Backend.selected.buy();
         coins.setText(Coins.getAmount() + " Coins");
-        CacheManager.saveCreditToCache();
-        CacheManager.saveIGameStatusToCache(Backend.selected.getName(), Backend.selected.isBought());
+        Backend.cacheManager.saveCreditToCache();
+        Backend.cacheManager.saveIGameStatusToCache(Backend.selected.getName(), Backend.selected.isBought());
         buy.setVisibility(Backend.selected.isBought() ? View.INVISIBLE : View.VISIBLE);
     }
 

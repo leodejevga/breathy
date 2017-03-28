@@ -27,11 +27,11 @@ public class UserData implements Serializable {
         this.email = email;
     }
 
-    public String getExp() {
+    public Experience getExp() {
         return exp;
     }
 
-    public void setExp(String exp) {
+    public void setExp(Experience exp) {
         this.exp = exp;
     }
 
@@ -46,8 +46,9 @@ public class UserData implements Serializable {
     private String name;
     private int age;
     private String email;
-    private String exp;
+    private Experience exp;
     private String emailOfDoctor;
 
+    public static enum Experience {BEGINNER, EXPERT}
 
 }

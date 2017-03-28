@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Options extends AppCompatActivity implements IObserver{
+public class Options extends AppCompatActivity implements IObserver {
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private AppCompatActivity activitiy;
@@ -48,20 +48,20 @@ public class Options extends AppCompatActivity implements IObserver{
         sendAnEmailToDoctor.setOnClickListener(new View.OnClickListener() {
                                                    @Override
                                                    public void onClick(View v) {
-               sendAnEmailToDoctor();
-           }
-       }
+                                                       sendAnEmailToDoctor();
+                                                   }
+                                               }
         );
         saveAndBack.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   try {
-                       saveandback();
-                   } catch (IOException e) {
-                       Toast.makeText(activitiy.getApplicationContext(), "Can not store data to Cache", Toast.LENGTH_LONG).show();
-                   }
-               }
-           }
+                                           @Override
+                                           public void onClick(View v) {
+                                               try {
+                                                   saveandback();
+                                               } catch (IOException e) {
+                                                   Toast.makeText(activitiy.getApplicationContext(), "Can not store data to Cache", Toast.LENGTH_LONG).show();
+                                               }
+                                           }
+                                       }
         );
         initControls();
         getUserData();
@@ -106,9 +106,14 @@ public class Options extends AppCompatActivity implements IObserver{
             userData.setEmail(((EditText) findViewById(R.id.email)).getText().toString());
             userData.setAge(Integer.parseInt(((EditText) findViewById(R.id.age)).getText().toString()));
             userData.setEmailOfDoctor(((EditText) findViewById(R.id.doctoremail)).getText().toString());
-            //TODO write Erfahrung
-            SaveData<UserData> saveData = new SaveData<>(activitiy.getApplicationContext());
-            saveData.writeObject("userdata", userData);
+
+            RadioButton isBeginner = (RadioButton) findViewById(R.id.beginner);
+            if (isBeginner.isChecked()) {
+                userData.setExp(UserData.Experience.BEGINNER);
+            } else {
+                userData.setExp(UserData.Experience.EXPERT);
+            }
+            Backend.cacheManager.saveUserdata(userData);
             Toast.makeText(activitiy.getApplicationContext(), "User data saved", Toast.LENGTH_LONG).show();
             finish();
         }
@@ -158,9 +163,9 @@ public class Options extends AppCompatActivity implements IObserver{
     private void initControls() {
         try {
             btButton = (Button) findViewById(R.id.activate_bt_button);
-            if(AppState.btState == AppState.BtState.Disabled)
+            if (AppState.btState == AppState.BtState.Disabled)
                 btButton.setText(R.string.activate_bt);
-            else if(AppState.btState == AppState.BtState.Enabled)
+            else if (AppState.btState == AppState.BtState.Enabled)
                 btButton.setText(R.string.connect_bt);
             else
                 btButton.setVisibility(View.GONE);
@@ -200,8 +205,8 @@ public class Options extends AppCompatActivity implements IObserver{
     private void getUserData() {
         SaveData<UserData> saveData = new SaveData<>(activitiy.getApplicationContext());
         Log.i("Data", saveData.toString());
-        UserData userData = saveData.readObject("userdata");
-        if(userData!=null){
+        UserData userData = Backend.cacheManager.readUserdata();
+        if (userData != null) {
             EditText editText = (EditText) findViewById(R.id.name);
             editText.setText(userData.getName());
             editText = (EditText) findViewById(R.id.age);
@@ -210,33 +215,38 @@ public class Options extends AppCompatActivity implements IObserver{
             editText.setText(userData.getEmail());
             editText = (EditText) findViewById(R.id.doctoremail);
             editText.setText(userData.getEmailOfDoctor());
+            if (userData.getExp() == UserData.Experience.BEGINNER)
+                ((RadioButton) findViewById(R.id.beginner)).toggle();
+            else
+                ((RadioButton) findViewById(R.id.expert)).toggle();
         }
     }
 
     private boolean btclicked = false;
+
     @Override
     protected void onStart() {
         super.onStart();
-        if(btclicked) {
+        if (btclicked) {
             if (AppState.btState == AppState.BtState.Enabled)
                 btButton.setText(R.string.connect_bt);
-            else if(AppState.btState == AppState.BtState.Connected)
+            else if (AppState.btState == AppState.BtState.Connected)
                 btButton.setVisibility(View.GONE);
         }
     }
 
     public void connectBluetooth(View view) {
-        if(AppState.btState == AppState.BtState.Enabled){
+        if (AppState.btState == AppState.BtState.Enabled) {
             Backend.bluetoothResume();
             Intent i = new Intent(this, Devices.class);
             startActivityForResult(i, BluetoothService.REQUEST_CONNECT_DEVICE_SECURE);
-        }
-        else if (AppState.btState == AppState.BtState.Disabled) {
+        } else if (AppState.btState == AppState.BtState.Disabled) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, BluetoothService.REQUEST_ENABLE_BT);
         }
         btclicked = true;
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case BluetoothService.REQUEST_CONNECT_DEVICE_SECURE:
@@ -261,6 +271,7 @@ public class Options extends AppCompatActivity implements IObserver{
                 }
         }
     }
+
     private void connectDevice(Intent data, boolean secure) {
         // Get the device MAC address
         String address = data.getExtras().getString(BluetoothDevice.EXTRA_DEVICE);
@@ -275,9 +286,9 @@ public class Options extends AppCompatActivity implements IObserver{
     @Override
     public void call(Object... message) {
         Integer msg = (Integer) message[0];
-        if(msg == BluetoothService.STATE_CONNECTED)
+        if (msg == BluetoothService.STATE_CONNECTED)
             btButton.setVisibility(View.GONE);
-        else if(msg == BluetoothService.STATE_NONE)
+        else if (msg == BluetoothService.STATE_NONE)
             btButton.setVisibility(View.VISIBLE);
 
     }
