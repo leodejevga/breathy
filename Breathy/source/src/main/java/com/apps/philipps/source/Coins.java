@@ -4,12 +4,7 @@ package com.apps.philipps.source;
  * Created by Jevgenij Huebert on 28.01.2017. Project Breathy
  */
 public class Coins {
-<<<<<<< HEAD
-
     private static int amount;
-=======
-    private static int amount = 2600;
->>>>>>> 413d70a38cfdc4142708ac149f12649707934203
     private static boolean initialized = false;
 
     /**
@@ -28,16 +23,9 @@ public class Coins {
     /**
      * Init.
      */
-<<<<<<< HEAD
     public static void init(int amount) {
         if (!initialized) {
             Coins.amount = amount;
-            //TODO: initialisirung des Kontostands
-=======
-    public static void init( int coins) {
-        if (!initialized) {
-           amount = coins;
->>>>>>> 413d70a38cfdc4142708ac149f12649707934203
         }
         initialized = true;
     }
