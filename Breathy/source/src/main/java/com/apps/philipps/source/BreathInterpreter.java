@@ -28,7 +28,7 @@ public class BreathInterpreter {
         return observer.remove(o);
     }
 
-    private static void setStatus() {
+    public static void setStatus() {
         int norm = AppState.breathyNormState; //TODO: Der breathyNormState zeigt den Druck an, ohne, dass jemand reinpustet. Dieser soll benutzt werden um strength richtig zu identifizieren
         Integer[] data = BreathData.get(0,10); //TODO: Diese Daten sollen analysiert werden und der status und strength entsprechend gesetzt werden.
 

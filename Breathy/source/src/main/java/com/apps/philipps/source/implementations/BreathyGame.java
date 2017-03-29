@@ -9,6 +9,10 @@ import com.apps.philipps.source.interfaces.IGame;
  */
 public abstract class BreathyGame implements IGame {
     /**
+     *
+     */
+    boolean initialized;
+    /**
      * The Game.
      */
     protected BreathyGameComponent game;
@@ -32,11 +36,6 @@ public abstract class BreathyGame implements IGame {
     @Override
     public boolean isBought() {
         return bought;
-    }
-
-    @Override
-    public void setBought(boolean isBought) {
-        bought = isBought;
     }
 
     @Override

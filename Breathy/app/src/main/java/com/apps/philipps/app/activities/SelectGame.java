@@ -41,13 +41,12 @@ public class SelectGame extends AppCompatActivity {
         preview = (VideoView) findViewById(R.id.videoView);
         gamesList = (ListView) findViewById(R.id.games);
         adapter = new ArrayAdapter<IGame>(this, android.R.layout.simple_list_item_1, Backend.games);
-        Coins.setCoins(Backend.cacheManager.getCreditFromCache());
         gamesList.setAdapter(adapter);
         gamesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Backend.selected = Backend.games.get(position);
-                Backend.selected.setBought(Backend.cacheManager.isIGameBought(Backend.selected.getName()));
+//                Backend.selected.setBought(Backend.cacheManager.isIGameBought(Backend.selected.getName())); //TODO: sollte im Backend initialisiert werden
                 Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
                 buy.setVisibility(Backend.selected.isBought() ? View.INVISIBLE : View.VISIBLE);
                 Integer previewData = Backend.selected.getPreview();

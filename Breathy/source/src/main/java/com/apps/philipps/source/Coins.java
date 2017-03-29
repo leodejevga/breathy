@@ -4,8 +4,7 @@ package com.apps.philipps.source;
  * Created by Jevgenij Huebert on 28.01.2017. Project Breathy
  */
 public class Coins {
-    //TODO: Sollte in app/Backend initialisiert werden. Dafür muss der Wert von der Festplatte gelesen werden
-    private static int amount = 2600;
+    private static int amount;
     private static boolean initialized = false;
 
     /**
@@ -24,9 +23,9 @@ public class Coins {
     /**
      * Init.
      */
-    public static void init() {
+    public static void init(int amount) {
         if (!initialized) {
-            //TODO: initialisirung des Kontostands
+            Coins.amount = amount;
         }
         initialized = true;
     }
@@ -47,9 +46,5 @@ public class Coins {
      */
     public void addCoins(int coins) {
         Coins.amount += coins;
-    }
-
-    public static void setCoins(int coins) {
-        Coins.amount = coins;
     }
 }

@@ -11,11 +11,13 @@ import com.apps.philipps.source.implementations.BreathyGame;
 
 public class Race extends BreathyGame {
 
-    public Race(Context context) {
+    @Override
+    public void init(Context context, boolean bought) {
         game = new RaceGame(context);
         options = new RaceOption(context);
         price = 1;
         name = "Racing Game";
+        this.bought = bought;
     }
 
     @Override

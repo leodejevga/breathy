@@ -10,11 +10,13 @@ import com.apps.philipps.source.implementations.BreathyGame;
  */
 public class Test extends BreathyGame {
 
-    public Test(Context context){
+    @Override
+    public void init(Context context, boolean bought) {
         game = new TestGame(context);
         options = new TestOptions(context);
         price = 1;
         name = "2D Minispiel zum Testen";
+        this.bought = bought;
     }
     @Override
     public @RawRes Integer getPreview() {

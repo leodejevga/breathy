@@ -10,7 +10,7 @@ import com.apps.philipps.source.SaveData;
  */
 
 public class CacheManager {
-    private final int START_CREDIT = 2650;
+    private final int START_CREDIT = 2600;
     private SaveData<Boolean> saveGame;
     private SaveData<Integer> saveCredit;
     private SaveData<UserData> saveUserdata;
