@@ -41,7 +41,6 @@ public class SelectGame extends AppCompatActivity {
         preview = (VideoView) findViewById(R.id.videoView);
         gamesList = (ListView) findViewById(R.id.games);
         adapter = new ArrayAdapter<IGame>(this, android.R.layout.simple_list_item_1, Backend.games);
-        Coins.setCoins(Backend.cacheManager.getCreditFromCache());
         gamesList.setAdapter(adapter);
         gamesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

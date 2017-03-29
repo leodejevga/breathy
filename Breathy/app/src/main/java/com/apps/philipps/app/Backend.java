@@ -65,7 +65,7 @@ public class Backend {
             Backend.games.add(new Race(context));
 //            Backend.games.add(new Fade(context)); //TODO Richtig initialisieren bitte!!! Schauen wie es bei AudioSurf gemacht wurde
             BreathData.init(context, 400);
-            Coins.init();
+            Coins.init(Backend.cacheManager.getCreditFromCache());
             breathSimulator = BreathSimulator.getBreathSimulator();
             breathSimulator.init(context, 4);
             breathSimulator.removeRecordings(true);
