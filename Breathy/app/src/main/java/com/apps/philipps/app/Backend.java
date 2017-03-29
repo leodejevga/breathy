@@ -64,7 +64,7 @@ public class Backend {
             Backend.games.add(new Test());
             Backend.games.add(new Race());
             for(IGame game : Backend.games){
-                game.init(context, false);
+                game.init(context, Backend.cacheManager.isIGameBought(game.getName()));
             }
 //            Backend.games.add(new Fade(context)); //TODO Richtig initialisieren bitte!!! Schauen wie es bei AudioSurf gemacht wurde
             BreathData.init(context, 400);
