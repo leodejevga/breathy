@@ -82,7 +82,7 @@ public class Application extends Activity2D {
     }
 
     @Override
-    protected void touched(MotionEvent event) {
+    protected void touche(MotionEvent event) {
         int dx = (int) event.getX();
         int dy = (int) event.getY();
 
