@@ -47,7 +47,7 @@ public class SelectGame extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Backend.selected = Backend.games.get(position);
-                Backend.selected.setBought(Backend.cacheManager.isIGameBought(Backend.selected.getName()));
+//                Backend.selected.setBought(Backend.cacheManager.isIGameBought(Backend.selected.getName())); //TODO: sollte im Backend initialisiert werden
                 Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
                 buy.setVisibility(Backend.selected.isBought() ? View.INVISIBLE : View.VISIBLE);
                 Integer previewData = Backend.selected.getPreview();

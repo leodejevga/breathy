@@ -15,12 +15,10 @@ import com.apps.philipps.source.implementations.BreathyGame;
 public class AudioSurf extends BreathyGame {
 
     Context context;
-    /**
-     * Instantiates a new Audio surf Object.
-     *
-     * @param context the context from Main Activity
-     */
-    public AudioSurf(Context context){
+
+    @Override
+    public void init(Context context, boolean bought) {
+        this.bought = bought;
         this.context = context;
         price = 2500;
         name = "Audio Surf";

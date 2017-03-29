@@ -1,5 +1,6 @@
 package com.apps.philipps.source.interfaces;
 
+import android.content.Context;
 import android.support.annotation.RawRes;
 
 /**
@@ -34,7 +35,7 @@ public interface IGame {
      */
     boolean isBought();
 
-    void setBought(boolean isBought);
+    void init(Context context, boolean bought);
 
     /**
      * Buy this game.
