@@ -3,7 +3,6 @@ package com.apps.philipps.app;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.transition.Fade;
 
 import com.apps.philipps.app.simulator.BreathSimulator;
 import com.apps.philipps.audiosurf.AudioSurf;
@@ -34,18 +33,19 @@ public class Backend {
      */
     public static IGame selected;
     public static boolean choosen;
-    private static boolean initialized=false;
+    private static boolean initialized = false;
     private static BluetoothService bluetoothService = null;
     private static BluetoothAdapter adapter;
     private static BreathSimulator breathSimulator;
     //TODO: Hier kommen weitere Daten hin die von überall zugreifbar sein müssen. In der Methode init werden sie initialisiert
+    public static CacheManager cacheManager;
 
     /**
      * Reinitialize the hole Backend Data
      *
      * @param context from the Main Activity
      */
-    public static void reinit(Context context){
+    public static void reinit(Context context) {
         initialized = false;
         init(context);
     }
@@ -56,15 +56,19 @@ public class Backend {
      * @param context from the Main Activity
      * @return true if has initialized
      */
-    public static boolean init(Context context){
-        if(!initialized){
+    public static boolean init(Context context) {
+        if (!initialized) {
+            cacheManager = new CacheManager(context);
             games = new ArrayList<>();
-            Backend.games.add(new AudioSurf(context));
-            Backend.games.add(new Test(context));
-            Backend.games.add(new Race(context));
+            Backend.games.add(new AudioSurf());
+            Backend.games.add(new Test());
+            Backend.games.add(new Race());
+            for(IGame game : Backend.games){
+                game.init(context, Backend.cacheManager.isIGameBought(game.getName()));
+            }
 //            Backend.games.add(new Fade(context)); //TODO Richtig initialisieren bitte!!! Schauen wie es bei AudioSurf gemacht wurde
             BreathData.init(context, 400);
-            Coins.init();
+            Coins.init(Backend.cacheManager.getCreditFromCache());
             breathSimulator = BreathSimulator.getBreathSimulator();
             breathSimulator.init(context, 4);
             breathSimulator.removeRecordings(true);
@@ -85,23 +89,22 @@ public class Backend {
 //        return bluetoothService!=null && bluetoothService.getState() == BluetoothService.STATE_CONNECTED;
 //    }
 
-    public static void startBTService(){
-        if(AppState.simulateBreathy)
+    public static void startBTService() {
+        if (AppState.simulateBreathy)
             breathSimulator.connect();
-        else if(bluetoothService == null)
+        else if (bluetoothService == null)
             bluetoothService = new BluetoothService();
     }
 
     public static void destroy() {
-        if(bluetoothService!=null)
+        if (bluetoothService != null)
             bluetoothService.stop();
     }
 
     public static void bluetoothResume() {
-        if(AppState.simulateBreathy) {
+        if (AppState.simulateBreathy) {
             breathSimulator.connect();
-        }
-        else if (bluetoothService != null) {
+        } else if (bluetoothService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (bluetoothService.getState() == BluetoothService.STATE_NONE) {
                 // Start the Bluetooth chat services
@@ -111,10 +114,9 @@ public class Backend {
     }
 
     public static void connectDevice(BluetoothDevice device, boolean secure) {
-        if(AppState.simulateBreathy) {
+        if (AppState.simulateBreathy) {
             breathSimulator.connect();
-        }
-        else{
+        } else {
             startBTService();
             bluetoothService.connect(device, secure);
         }

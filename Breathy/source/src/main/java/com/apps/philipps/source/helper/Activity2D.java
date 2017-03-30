@@ -70,7 +70,7 @@ public abstract class Activity2D extends Activity {
 
     protected abstract void init();
 
-    protected abstract void touched(MotionEvent event);
+    protected abstract void touch(MotionEvent event);
 
     protected float getScreenWidth(){
         return displayMetrics.widthPixels;
@@ -127,7 +127,7 @@ public abstract class Activity2D extends Activity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        touched(event);
+        touch(event);
         return super.onTouchEvent(event);
     }
 }

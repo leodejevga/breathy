@@ -127,7 +127,7 @@ public class Application extends Activity2D {
     }
 
     @Override
-    protected void touched(MotionEvent event) {
+    protected void touch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             int dx = (int) event.getX();
             int dy = (int) event.getY();
@@ -142,6 +142,7 @@ public class Application extends Activity2D {
             } else {
                 movePlayer("left");
             }
+
         }
     }
 

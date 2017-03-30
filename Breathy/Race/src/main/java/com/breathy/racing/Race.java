@@ -10,12 +10,16 @@ import com.apps.philipps.source.implementations.BreathyGame;
  */
 
 public class Race extends BreathyGame {
-
-    public Race(Context context) {
-        game = new RaceGame(context);
-        options = new RaceOption(context);
+    public Race() {
         price = 1;
         name = "Racing Game";
+    }
+
+    @Override
+    public void init(Context context, boolean bought) {
+        game = new RaceGame(context);
+        options = new RaceOption(context);
+        this.bought = bought;
     }
 
     @Override

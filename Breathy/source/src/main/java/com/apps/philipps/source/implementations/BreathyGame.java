@@ -9,6 +9,10 @@ import com.apps.philipps.source.interfaces.IGame;
  */
 public abstract class BreathyGame implements IGame {
     /**
+     *
+     */
+    boolean initialized;
+    /**
      * The Game.
      */
     protected BreathyGameComponent game;

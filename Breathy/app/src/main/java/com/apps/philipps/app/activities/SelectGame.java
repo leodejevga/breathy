@@ -8,15 +8,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-
 import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.R;
-
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.interfaces.IGame;
@@ -41,7 +38,6 @@ public class SelectGame extends AppCompatActivity {
     private void initGame() {
         buy = (Button) findViewById(R.id.buttonBuy);
         coins = (TextView) findViewById(R.id.textCoins);
-
         preview = (VideoView) findViewById(R.id.videoView);
         gamesList = (ListView) findViewById(R.id.games);
         adapter = new ArrayAdapter<IGame>(this, android.R.layout.simple_list_item_1, Backend.games);
@@ -50,8 +46,9 @@ public class SelectGame extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Backend.selected = Backend.games.get(position);
+//                Backend.selected.setBought(Backend.cacheManager.isIGameBought(Backend.selected.getName())); //TODO: sollte im Backend initialisiert werden
                 Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
-                buy.setVisibility(Backend.selected.isBought()?View.INVISIBLE:View.VISIBLE);
+                buy.setVisibility(Backend.selected.isBought() ? View.INVISIBLE : View.VISIBLE);
                 Integer previewData = Backend.selected.getPreview();
 
                 //TODO: Das Video muss richtig geladen zurzeit zeigt er eine nachricht an in der steht: "Video kann nicht wiedergegeben werden"
@@ -70,7 +67,7 @@ public class SelectGame extends AppCompatActivity {
      * @param view the Button that was clicked
      */
     public void gameOptions(View view) {
-        if(Backend.selected != null)
+        if (Backend.selected != null)
             Backend.selected.startOptions();
     }
 
@@ -80,9 +77,9 @@ public class SelectGame extends AppCompatActivity {
      * @param view the Button that was clicked
      */
     public void startGame(View view) {
-        if(Backend.selected == null)
+        if (Backend.selected == null)
             Toast.makeText(this, "Please select one game", Toast.LENGTH_SHORT).show();
-        else if(AppState.btState != AppState.BtState.Connected)
+        else if (AppState.btState != AppState.BtState.Connected)
             Toast.makeText(this, "You are not connected to a Breathy device", Toast.LENGTH_SHORT).show();
         else {
             Backend.selected.startGame();
@@ -97,7 +94,9 @@ public class SelectGame extends AppCompatActivity {
     public void buyGame(View view) {
         Backend.selected.buy();
         coins.setText(Coins.getAmount() + " Coins");
-        buy.setVisibility(Backend.selected.isBought()?View.INVISIBLE:View.VISIBLE);
+        Backend.cacheManager.saveCreditToCache();
+        Backend.cacheManager.saveIGameStatusToCache(Backend.selected.getName(), Backend.selected.isBought());
+        buy.setVisibility(Backend.selected.isBought() ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override
@@ -105,4 +104,6 @@ public class SelectGame extends AppCompatActivity {
         super.onStart();
         coins.setText(Coins.getAmount() + " Coins");
     }
+
+
 }

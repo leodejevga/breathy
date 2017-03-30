@@ -41,7 +41,7 @@ public class Game extends Activity2D {
     }
 
     @Override
-    protected void touched(MotionEvent event) {
+    protected void touch(MotionEvent event) {
 
     }
 
