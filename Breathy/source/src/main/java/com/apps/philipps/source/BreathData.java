@@ -165,7 +165,7 @@ public abstract class BreathData {
             }
             for(IObserver o : observer)
                 o.call(t);
-            BreathInterpreter.setStatus();
+//            BreathInterpreter.setStatus();
             return false;
         }
 

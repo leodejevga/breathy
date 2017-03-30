@@ -19,7 +19,7 @@ public class BreathInterpreter {
         None
     }
     public static int strength=0; // ist jetzt as a Prozent definiert!
-    public static Status status = Status.None;
+    public static Status status = Status.None; //TODO: wie oft schnelligkeit
     private static int in = 0;
     private static int out = 10;
     private static int none = 0;

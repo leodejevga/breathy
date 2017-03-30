@@ -11,8 +11,10 @@ public class Fade extends BreathyGame {
     public void init(Context context, boolean bought) {
         this.bought = bought;
         this.context = context;
-        price = 2500;
+        price = 0;
         name = "Fade";
+        options = new FadeOptions(context);
+        game = new FadeGame(context);
     }
 
     /**
