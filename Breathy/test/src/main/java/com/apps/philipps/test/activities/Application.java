@@ -90,7 +90,7 @@ public class Application extends Activity2D{
     }
 
     @Override
-    protected void touched(MotionEvent event) {
+    protected void touch(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN)
             lasers.add(initObject(new ImageView(this), R.drawable.laser, 2, ship.getPosition().clone(), new Vector(getScreenWidth(), ship.getPosition().get(1)), 3000));
     }

@@ -22,11 +22,6 @@ public class Game extends Activity3D implements IObserver {
         gameRenderer = new MyRenderer(this, this);
     }
 
-    private void setValue(){
-        Log.d("Draw", gameRenderer.getFramerate() + " fps");
-        Log.d("Data received", BreathData.getAsString(0,10));
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -36,9 +31,6 @@ public class Game extends Activity3D implements IObserver {
 
     @Override
     public void call(Object... messages) {
-        if(!messages[0].equals("Draw"))
-            setValue();
     }
 
-    //TODO: Hier wird das Spiel ausgeführt. OpenGL.
 }

@@ -96,8 +96,13 @@ public class GameObject2D implements IObserver, IGameObject{
     }
 
     @Override
+    public void setRotation(Vector rotation) {
+        //TODO: rotation umsetzen.
+    }
+
+    @Override
     public Vector getBoundaries() {
-        Float[] pos = getPosition().get();
+        float[] pos = getPosition().get();
         //02   12
         //03   13
         return new Vector(pos[0], pos[0] + object.getMeasuredWidth(), pos[1], pos[1] + object.getMeasuredHeight());

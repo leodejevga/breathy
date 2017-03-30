@@ -45,7 +45,7 @@ public class Game2D extends Activity2D {
     double timerNextEmeny;
     int speed = 1;
 
-    public void touched(MotionEvent event){
+    public void touch(MotionEvent event){
 
     };
 

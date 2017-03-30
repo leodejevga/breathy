@@ -25,6 +25,8 @@ public class AudioSurf extends BreathyGame {
     public void init(Context context, boolean bought) {
         this.bought = bought;
         this.context = context;
+        price = 0;
+        name = "Audio Surf";
         game = new AudioSurfGame(context);
         options = new AudioSurfOptions(context);
     }

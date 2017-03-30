@@ -13,7 +13,7 @@ public class BreathInterpreter {
 
     private static List<IObserver> observer = new ArrayList<>();
 
-    public enum Status{
+    public enum Status {
         In,
         Out,
         None
@@ -25,10 +25,11 @@ public class BreathInterpreter {
     private static int none = 0;
     private static int tolerance = 10; // Toleranz von 690<700<710;
 
-    public static void addObserver(IObserver o){
+    public static void addObserver(IObserver o) {
         observer.add(o);
     }
-    public static boolean removeObserver(IObserver o){
+
+    public static boolean removeObserver(IObserver o) {
         return observer.remove(o);
     }
 
@@ -62,7 +63,7 @@ public class BreathInterpreter {
         else if (in == 10){ status = Status.In;}
         else if(none == 10){ status = Status.None;}
 
-        for(IObserver o : observer)
+        for (IObserver o : observer)
             o.call(status, strength);
     }
 
