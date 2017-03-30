@@ -65,9 +65,10 @@ public class Backend {
             Backend.games.add(new Test());
             Backend.games.add(new Race());
             Backend.games.add(new Fade());
-            for(IGame game : Backend.games)
-                game.init(context, false);
 
+            for(IGame game : Backend.games){
+                game.init(context, Backend.cacheManager.isIGameBought(game.getName()));
+            }
             BreathData.init(context, 400);
             Coins.init(Backend.cacheManager.getCreditFromCache());
             breathSimulator = BreathSimulator.getBreathSimulator();
