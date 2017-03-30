@@ -30,6 +30,7 @@ public class Backend {
     public static boolean init() {
         if (!init) {
             //TODO: Die Werte (gekauft, nicht gekauft) sollten mit SaveData ausgelesen werden
+
             options = new GameOptions<>();
             options.add("First Skin", false, 20);
             options.add("Second Skin", false, 40);
