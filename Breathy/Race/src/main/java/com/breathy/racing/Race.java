@@ -26,7 +26,7 @@ public class Race extends BreathyGame {
     public
     @RawRes
     Integer getPreview() {
-        return R.raw.preview;
+        return null;//R.raw.preview; //ToDo wieder ändern
     }
 }
 

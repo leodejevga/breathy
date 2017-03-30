@@ -23,9 +23,9 @@ public class GameUtil {
         }
     }
 
-    public static int getRandomNumber(int start, int end){
-        double random = Math.random()*end + start;
-        return (int) Math.round(random);
+    public static int getRandomNumber(int Min, int Max){
+
+        return Min + (int)(Math.random() * ((Max - Min) + 1));
     }
 
 }

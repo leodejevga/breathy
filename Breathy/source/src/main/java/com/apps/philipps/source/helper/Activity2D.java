@@ -101,7 +101,8 @@ public abstract class Activity2D extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+
         startToDraw.start();
     }
 
