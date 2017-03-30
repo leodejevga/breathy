@@ -39,12 +39,10 @@ public class Game extends Activity2D {
         framerate = (TextView) findViewById(R.id.test_framerate);
         dataDisplay = (TextView) findViewById(R.id.test_data);
         frameCount = (TextView) findViewById(R.id.test_frameCount);
-
-        AppState.framelimit = AppState.Framelimit.Thirty;
     }
 
     @Override
-    protected void touched(MotionEvent event) {
+    protected void touch(MotionEvent event) {
 
     }
 

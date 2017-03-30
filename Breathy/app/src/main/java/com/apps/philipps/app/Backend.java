@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.apps.philipps.app.simulator.BreathSimulator;
 import com.apps.philipps.audiosurf.AudioSurf;
+import com.apps.philipps.fade.Fade;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.Coins;
@@ -63,10 +64,10 @@ public class Backend {
             Backend.games.add(new AudioSurf());
             Backend.games.add(new Test());
             Backend.games.add(new Race());
-            for(IGame game : Backend.games){
+            Backend.games.add(new Fade());
+            for(IGame game : Backend.games)
                 game.init(context, false);
-            }
-//            Backend.games.add(new Fade(context)); //TODO Richtig initialisieren bitte!!! Schauen wie es bei AudioSurf gemacht wurde
+
             BreathData.init(context, 400);
             Coins.init(Backend.cacheManager.getCreditFromCache());
             breathSimulator = BreathSimulator.getBreathSimulator();

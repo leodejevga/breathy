@@ -12,16 +12,27 @@ public class Vector implements Comparable<Vector>, Cloneable{
 
     private List<Float> coordinates;
 
+    public Vector(Vector v, float... coordinates){
+        this.coordinates = new ArrayList<>();
+        for(float coordinate : v.get())
+            this.coordinates.add(coordinate);
+
+        for(float coordinate : coordinates)
+            this.coordinates.add(coordinate);
+    }
     /**
      * Instantiates a new Vector.
      *
      * @param coordinates the coordinates
      */
-    public Vector(Float... coordinates){
+    public Vector(float... coordinates){
         this.coordinates = new ArrayList<>();
-        for(Float coordinate : coordinates)
-            if(coordinate!=null)
-                this.coordinates.add(coordinate);
+        for(float coordinate : coordinates)
+            this.coordinates.add(coordinate);
+    }
+
+    public int getDimensions(){
+        return coordinates.size();
     }
 
     /**
@@ -109,6 +120,12 @@ public class Vector implements Comparable<Vector>, Cloneable{
     public Vector norm(){
         return divide(getDistance());
     }
+    public Vector normCoords(){
+        float max=0;
+        for(float c : coordinates)
+            max = c>max?c:max;
+        return divide(max);
+    }
 
     /**
      * Get float.
@@ -116,10 +133,10 @@ public class Vector implements Comparable<Vector>, Cloneable{
      * @param coordinate the coordinate
      * @return the float
      */
-    public Float get(int coordinate){
+    public float get(int coordinate){
         if(coordinate<coordinates.size())
             return coordinates.get(coordinate);
-        else return null;
+        else return 0;
     }
 
     /**
@@ -127,9 +144,10 @@ public class Vector implements Comparable<Vector>, Cloneable{
      *
      * @return the float [ ]
      */
-    public Float[] get(){
-        Float[] result = new Float[coordinates.size()];
-        coordinates.toArray(result);
+    public float[] get(){
+        float[] result = new float[coordinates.size()];
+        for (int i = 0; i < coordinates.size(); i++)
+            result[i] = coordinates.get(i);
         return result;
     }
 
@@ -138,14 +156,9 @@ public class Vector implements Comparable<Vector>, Cloneable{
     }
     public float getDistance(Vector position){
         float result=0;
-        for (int i = 0; i < coordinates.size() || i < position.coordinates.size(); i++) {
-            if(i<coordinates.size() && i<position.coordinates.size())
-                result += Math.pow(position.get(i) - get(i), 2);
-            else if(i<coordinates.size())
-                result += get(i) * get(i);
-            else
-                result += position.get(i) * position.get(i);
-        }
+        for (int i = 0; i < coordinates.size() || i < position.coordinates.size(); i++)
+            result += Math.pow(position.get(i) - get(i), 2);
+
         result = ((float) Math.sqrt(result));
         return result;
     }
@@ -179,6 +192,13 @@ public class Vector implements Comparable<Vector>, Cloneable{
         Vector result = a.clone();
         return result.norm();
     }
+    public static Vector normCoords(Vector a){
+        Vector result = a.clone();
+        float max=0;
+        for(float c : result.coordinates)
+            max = c>max?c:max;
+        return result.divide(max);
+    }
 
 
     @Override
@@ -192,10 +212,10 @@ public class Vector implements Comparable<Vector>, Cloneable{
     public String toString() {
         String result="";
         for (int i = 0; i < coordinates.size(); i++) {
-            result += i==0?"X: ":i==1?"Y: ":i==2?"Z: ":(i+1) + ": ";
-            result += coordinates.get(i) + " ";
+            result += i==0?"X = ":i==1?"Y = ":i==2?"Z= ":(i+1) + " = ";
+            result += coordinates.get(i) + "  ";
         }
-        return result;
+        return result.length()==0?"0":result;
     }
 
     @Override
