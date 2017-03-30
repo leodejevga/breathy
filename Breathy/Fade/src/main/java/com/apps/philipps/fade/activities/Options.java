@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.apps.philipps.fade.R;
+
 public class Options extends Activity {
 
     @Override
