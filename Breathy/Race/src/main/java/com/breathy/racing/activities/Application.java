@@ -52,7 +52,7 @@ public class Application extends Activity2D {
     @Override
     protected void draw() {
         long delta = System.currentTimeMillis() - start;
-        if(faster >= 5000){
+        if(faster >= (60*15)){
             deltaSpeed += 10;
             faster = 0;
             gameScoreMultiplier += .1;
@@ -87,7 +87,7 @@ public class Application extends Activity2D {
         }
 
         car.update(delta);
-        score.setText("Highscore: " + safedhighscore + " + " + highscore);
+        score.setText("Highscore: " + (Math.round(100*safedhighscore)/100.0) + " + " + (Math.round(100*highscore)/100));
         start = System.currentTimeMillis();
         Integer testdata = BreathData.get(0) * GameUtil.getRandomNumber(0, 1);
         Integer breathdata = BreathData.get(0);
