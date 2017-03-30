@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.view.MotionEvent;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
@@ -19,7 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by Jürgen on 26.03.2017.
+ * This Class provides the Game Logic of the racing Game
  */
 
 public class Application extends Activity2D {
@@ -30,9 +32,16 @@ public class Application extends Activity2D {
     long nextCar;
     long start;
     Random random;
-    int[] xRoads;
+    float[] xRoads;
     float yCar;
-
+    double highscore = 0;
+    double safedhighscore = 0;
+    double gameScoreMultiplier = 1;
+    TextView score;
+    int bostPoints;
+    ProgressBar lvlUpBar;
+    int curXIndex;
+    int faster=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,39 +52,75 @@ public class Application extends Activity2D {
     @Override
     protected void draw() {
         long delta = System.currentTimeMillis() - start;
+        if(faster >= 5000){
+            deltaSpeed += 10;
+            faster = 0;
+            gameScoreMultiplier += .1;
+            for (int i = 0; i < slowCar.size(); i++) {
+                slowCar.get(i).move((int) deltaSpeed);
+            }
+        }else faster ++;
 
         if (System.currentTimeMillis() - nextCar > 1000) {
             int xIndex = GameUtil.getRandomNumber(0, 2);
-            slowCar.add(initObject(new ImageView(this), R.drawable.slow_car, 0, new Vector((float) xRoads[xIndex], (float) 10), new Vector((float) xRoads[xIndex], getScreenHeight()), 220));
+            slowCar.add(initObject(new ImageView(this), R.drawable.slow_car, 0, new Vector(xRoads[xIndex], (float) 10), new Vector(xRoads[xIndex], getScreenHeight()), (int) deltaSpeed));
             nextCar = System.currentTimeMillis();
         }
         for (int i = 0; i < slowCar.size(); i++) {
             boolean removed = false;
 
+            if (slowCar.get(i).intersect(car)) {
+                game.removeView(slowCar.get(i).getView());
+                slowCar.remove(slowCar.get(i));
+                removed = true;
+                i--;
+                highscore = 0;
+            }
             if (!removed && !slowCar.get(i).isMoving()) {
                 game.removeView(slowCar.get(i).getView());
                 slowCar.remove(slowCar.get(i));
+                highscore += 1 * gameScoreMultiplier;
+
             } else if (!removed)
                 slowCar.get(i).update(delta);
 
         }
 
         car.update(delta);
-
+        score.setText("Highscore: " + safedhighscore + " + " + highscore);
         start = System.currentTimeMillis();
+        Integer testdata = BreathData.get(0) * GameUtil.getRandomNumber(0, 1);
+        Integer breathdata = BreathData.get(0);
+        if (testdata.equals(breathdata)) { //ToDo toleranz
+            bostPoints += 10;
+        } else if (testdata + 100 < breathdata && testdata - 100 > breathdata) {
+            bostPoints = Math.max(bostPoints - 1, 0);
+        }
+        lvlUpBar.setProgress(bostPoints);
+
     }
+
 
     @Override
     protected void init() {
         AppState.framelimit = AppState.Framelimit.Sixty;
+
+
+        //RelativeLayout game = new RelativeLayout(getBaseContext());
         game = (RelativeLayout) findViewById(R.id.gameArea);
-        xRoads = new int[]{25, (int) getScreenWidth() / 2, (int) getScreenWidth() - 25};
+        score = (TextView) findViewById(R.id.score);
+        lvlUpBar = (ProgressBar) findViewById(R.id.progressBar);
+        lvlUpBar.setProgress(0);
+        lvlUpBar.setMax(10000);
+        xRoads = new float[]{250, (int) getScreenWidth() / 2, (int) getScreenWidth() - 250};
+
         yCar = getScreenHeight() - 264;
-        car = initObject(new ImageView(this), R.drawable.ship, 1, new Vector((float) xRoads[1], yCar), new Vector((float) xRoads[1], yCar), 1200);
+        car = initObject(new ImageView(this), R.drawable.car, 1, new Vector(xRoads[1], yCar), new Vector(xRoads[1], yCar), 1200);
+        curXIndex = 1;
         slowCar = new ArrayList<>();
         start = System.currentTimeMillis();
         nextCar = start;
-        deltaSpeed = 0.05;
+        deltaSpeed = 220;
         random = new Random(5);
         if (game == null)
             brakeDraw();
@@ -83,28 +128,43 @@ public class Application extends Activity2D {
 
     @Override
     protected void touched(MotionEvent event) {
-        int dx = (int) event.getX();
-        int dy = (int) event.getY();
-
-        // get the direction
-        if (getScreenWidth() / 2 < dx) {
-            movePlayer("right");
-        } else {
-            movePlayer("left");
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            int dx = (int) event.getX();
+            int dy = (int) event.getY();
+            // get the direction
+            if (dy < getScreenHeight()/2 && bostPoints>= lvlUpBar.getMax()){
+                safedhighscore += highscore * 1.2;
+                bostPoints = 0;
+                highscore = 0;
+            }else
+            if (getScreenWidth() / 2 < dx) {
+                movePlayer("right");
+            } else {
+                movePlayer("left");
+            }
         }
     }
 
     public void movePlayer(String direction) {
         switch (direction) {
             case "right":
-                if (car.getPosition().get(0) == xRoads[1])
-                    car.move(new Vector((float) xRoads[2], yCar));
-                else car.move(new Vector((float) xRoads[1], yCar));
+
+                if (curXIndex == 0) {
+                    car.move(new Vector(xRoads[1], yCar));
+                    curXIndex = 1;
+                } else if (curXIndex == 1) {
+                    car.move(new Vector(xRoads[2], yCar));
+                    curXIndex = 2;
+                }
                 break;
             case "left":
-                if (car.getPosition().get(0) == xRoads[1])
-                    car.move(new Vector((float) xRoads[0], yCar));
-                else car.move(new Vector((float) xRoads[1], yCar));
+                if (curXIndex == 2) {
+                    car.move(new Vector(xRoads[1], yCar));
+                    curXIndex = 1;
+                } else if (curXIndex == 1) {
+                    car.move(new Vector(xRoads[0], yCar));
+                    curXIndex = 0;
+                }
                 break;
         }
     }

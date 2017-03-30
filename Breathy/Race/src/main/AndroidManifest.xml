@@ -13,7 +13,7 @@
         <activity android:name=".activities.Application" />
         <activity
             android:name=".activities.Options"
-            android:label="@string/title_activity_options"/>
+            android:label="@string/title_activity_options" />
     </application>
 
 
