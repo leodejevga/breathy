@@ -3,6 +3,8 @@
 *.ipr
 .idea/
 .gradle/
+*.iml
+gen-external-apklibs/
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
@@ -14,3 +16,25 @@
 /BluetoothChat
 /Transparency-Test
 /Test
+
+#built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# Windows thumbnail db
+Thumbs.db
+
+# generated files
+bin/
+gen/
+out/
+build/
+build-eclipse/
+proguard_logs/
+test-output/
