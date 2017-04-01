@@ -7,7 +7,6 @@ package com.apps.philipps.source;
 import android.content.Context;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,12 +18,10 @@ import java.io.Serializable;
  */
 public class SaveData<T extends Serializable> {
     private Context context;
-    //TODO : rename the Class to "DataManager" ?
 
     public SaveData(Context context) {
         this.context = context;
     }
-
     public boolean writeObject(String key, T object) {
         FileOutputStream fos = null;
         try {
