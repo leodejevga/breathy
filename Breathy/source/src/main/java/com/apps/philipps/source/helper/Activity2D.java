@@ -24,6 +24,7 @@ public abstract class Activity2D extends Activity {
     private long start = System.currentTimeMillis();
     private boolean destroy = false;
     private DisplayMetrics displayMetrics;
+    private short ready=2;
 
     protected void brakeDraw(){
         draw = false;
@@ -49,7 +50,8 @@ public abstract class Activity2D extends Activity {
             while (!destroy) {
                 if(initialized){
                     delta = System.currentTimeMillis() - start;
-                    if (draw && delta >= millis) {
+                    if (draw && delta >= millis && ready>=2) {
+                        ready = 0;
                         executeDraw(delta);
                         start = System.currentTimeMillis();
                     }
@@ -79,22 +81,26 @@ public abstract class Activity2D extends Activity {
         return displayMetrics.heightPixels;
     }
 
+    private long sekond = System.currentTimeMillis();
     private synchronized void executeDraw(long delta){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
                     draw();
+                    ready++;
                 } catch (Exception e) {
                     Log.e(TAG, "Draw not successfull", e);
                 }
-                frame = ++frame % AppState.framelimit.getLimit();
+                frame = ++frame;
             }
         });
-        if(delta == 0)
-            frameRate = Integer.MAX_VALUE;
-        else
-            frameRate = (int)(1000 / delta);
+        if(sekond+1000<=System.currentTimeMillis()){
+            frameRate = frame;
+            frame = 0;
+            sekond = System.currentTimeMillis();
+        }
+        ready++;
     }
 
     @Override

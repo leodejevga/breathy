@@ -103,9 +103,6 @@ public class Application extends Activity2D {
 
     @Override
     protected void init() {
-        AppState.framelimit = AppState.Framelimit.Sixty;
-
-
         //RelativeLayout game = new RelativeLayout(getBaseContext());
         game = (RelativeLayout) findViewById(R.id.gameArea);
         score = (TextView) findViewById(R.id.score);

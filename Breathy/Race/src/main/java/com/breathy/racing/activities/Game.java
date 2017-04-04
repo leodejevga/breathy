@@ -37,7 +37,6 @@ public class Game extends Activity2D {
     protected void init() {
         dataDisplay = (TextView) findViewById(R.id.test_data);
         highscore = (TextView) findViewById(R.id.RacingScore);
-        AppState.framelimit = AppState.Framelimit.Thirty;
     }
 
     @Override
