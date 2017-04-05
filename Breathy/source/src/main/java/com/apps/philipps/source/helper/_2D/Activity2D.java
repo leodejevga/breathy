@@ -1,4 +1,4 @@
-package com.apps.philipps.source.helper;
+package com.apps.philipps.source.helper._2D;
 
 import android.app.Activity;
 import android.graphics.Movie;

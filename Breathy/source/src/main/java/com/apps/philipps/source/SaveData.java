@@ -5,8 +5,12 @@ package com.apps.philipps.source;
  */
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -37,18 +41,39 @@ public class SaveData<T extends Serializable> {
         }
     }
 
-    public T readObject(String key){
+    public T readObject(String key) {
         FileInputStream fis = null;
         try {
             fis = context.openFileInput(key);
             ObjectInputStream ois = new ObjectInputStream(fis);
             Object object = ois.readObject();
             return (T) object;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;
+    }
+    public static byte[] readFile(@NonNull String path){
+        File file = new File(path);
+        byte[] data = new byte[(int) file.length()];
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream.read(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    public static void writeFile(@NonNull String path, byte[] data){
+        File file = new File(path);
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

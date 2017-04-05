@@ -1,5 +1,7 @@
 package com.apps.philipps.source.implementations;
 
+import android.content.Context;
+
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.interfaces.IGame;
@@ -58,8 +60,10 @@ public abstract class BreathyGame implements IGame {
     @Override
     public boolean startGame() {
         AppState.inGame = true;
-        if(bought)
-            game.start();
+        if(bought) {
+            if(!game.start())
+                game.message("Game " + name + " could not started");
+        }
         else
             game.message("The game " + name + " was not bought");
         return bought;

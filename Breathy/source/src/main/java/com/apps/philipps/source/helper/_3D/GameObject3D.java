@@ -1,15 +1,20 @@
-package com.apps.philipps.source.helper;
+package com.apps.philipps.source.helper._3D;
 
-import android.icu.text.RelativeDateTimeFormatter;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.apps.philipps.source.SaveData;
+import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.interfaces.IGameObject;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jevgenij Huebert on 23.03.2017. Project Breathy
@@ -17,7 +22,7 @@ import java.nio.FloatBuffer;
 public class GameObject3D implements IGameObject {
 
     private Shape shape;
-    private Vector rotation = new Vector();
+    private Vector rotation = new Vector(0,0,1);
 
     /**
      * Instantiates a new Game object 3 d.
@@ -36,6 +41,14 @@ public class GameObject3D implements IGameObject {
     @Override
     public void setRotation(Vector rotation) {
         this.rotation = rotation;
+    }
+
+    /**
+     * Gets rotation.
+     */
+    @Override
+    public Vector getRotation() {
+        return rotation;
     }
 
     @Override
@@ -74,7 +87,7 @@ public class GameObject3D implements IGameObject {
         // Note that the mMVPMatrix factor *must be first* in order
         // for the matrix multiplication product to be correct.
         if(Renderer3D.camera3D!=null) {
-            Matrix.multiplyMM(result, 0, Renderer3D.camera3D.getcMVPMatrix(), 0, temp, 0);
+            Matrix.multiplyMM(result, 0, Renderer3D.camera3D.getMVPMatrix(), 0, temp, 0);
             shape.draw(result);
         }
     }
@@ -258,9 +271,11 @@ public class GameObject3D implements IGameObject {
 
             // get handle to shape's transformation matrix
             int mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "uMVPMatrix");
+            Renderer3D.checkGlError("glGetUniformLocation");
 
             // Pass the projection and view transformation to the shader
             GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+            Renderer3D.checkGlError("glUniformMatrix4fv");
 
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0,  coords.length / dimensions);
             GLES20.glDisableVertexAttribArray(positionHandle);
@@ -275,5 +290,58 @@ public class GameObject3D implements IGameObject {
             this.mvpMatrix = mvpMatrix;
             draw();
         }
+    }
+
+
+//    std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
+//    std::vector< glm::vec3 > temp_vertices;
+//    std::vector< glm::vec2 > temp_uvs;
+//    std::vector< glm::vec3 > temp_normals;
+
+    public static Shape loadObject(String name){
+        byte[] data = SaveData.readFile(Environment.getExternalStorageDirectory() + "/" + name);
+        List<Vector> vertices = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
+        String line="";
+        float max = 0;
+        for(int i = 0;i<data.length; i++){
+            char c = (char)data[i];
+            if(c != '\n' && c != '\r')
+                line += c;
+            else if(line.length()!=0){
+                if(line.startsWith("v ")){
+                    String[] v = line.replaceAll(" +", " ").substring(2).split(" ");
+                    if(v[0].length()==0 || v[1].length()==0 || v[2].length()==0)
+                        Log.d("error", "vector " + v);
+                    Vector vec = new Vector(Float.parseFloat(v[0]),
+                            Float.parseFloat(v[1]),
+                            Float.parseFloat(v[2]));
+                    vertices.add(vec);
+                    if(vec.get(0)>max || -vec.get(0)>max)
+                        max = Math.abs(vec.get(0));
+                    if(vec.get(1)>max || -vec.get(1)>max)
+                        max = Math.abs(vec.get(1));
+                    if(vec.get(2)>max || -vec.get(2)>max)
+                        max = Math.abs(vec.get(2));
+                }
+                if(line.startsWith("f ")){
+                    String[] v = line.replaceAll(" +", " ").substring(2).split("/\\d+/\\d+ *");
+                    indices.add(Integer.parseInt(v[0])-1);
+                    indices.add(Integer.parseInt(v[1])-1);
+                    indices.add(Integer.parseInt(v[2])-1);
+                }
+                line = "";
+            }
+
+        }
+        float[] coordinates = new float[indices.size()*3];
+        for(int i=0; i<indices.size(); i++){
+            Vector v = vertices.get(indices.get(i));
+            coordinates[i*3] = v.get(0)/max;
+            coordinates[i*3+1] = v.get(1)/max;
+            coordinates[i*3+2] = v.get(2)/max;
+        }
+
+        return new Shape(new Vector(1,1,1,1), 3, new Vector(), coordinates);
     }
 }

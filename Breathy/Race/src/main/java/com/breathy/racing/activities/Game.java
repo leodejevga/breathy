@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
-import com.apps.philipps.source.helper.Activity2D;
+import com.apps.philipps.source.helper._2D.Activity2D;
 import com.breathy.racing.R;
 
 public class Game extends Activity2D {

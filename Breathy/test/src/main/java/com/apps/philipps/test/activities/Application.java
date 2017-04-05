@@ -8,10 +8,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apps.philipps.test.R;
-import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
-import com.apps.philipps.source.helper.Activity2D;
-import com.apps.philipps.source.helper.GameObject2D;
+import com.apps.philipps.source.helper._2D.Activity2D;
+import com.apps.philipps.source.helper._2D.GameObject2D;
 import com.apps.philipps.source.helper.Vector;
 
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ public class Application extends Activity2D{
     private long start;
     private Random random;
     private TextView rate;
+    private TextView views;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +37,10 @@ public class Application extends Activity2D{
 
     @Override
     protected void draw() {
+        views.setText("Views on screen: " + (enemies.size() + lasers.size() + 3));
         rate.setText("Frame rate: " + frameRate);
         long delta = System.currentTimeMillis() - start;
-        if(System.currentTimeMillis() - enemySpawn>50){
+        if(System.currentTimeMillis() - enemySpawn>10){
             int y = Math.abs(random.nextInt())%(int)getScreenHeight(); // Über 500 bewegliche Objekte können gezeichnet werden sodass HTC M8 immer noch bei 30 frames per Seconds läuft. Über 700 bei 20 fps
             enemies.add(initObject(new ImageView(this), R.drawable.enemy, 0, new Vector(1000f, (float)y), new Vector(50f, (float)y), 320));
             enemySpawn = System.currentTimeMillis();
@@ -78,6 +79,8 @@ public class Application extends Activity2D{
 
     @Override
     protected void init() {
+
+        views = (TextView) findViewById(R.id.app_views);
         rate = (TextView) findViewById(R.id.app_framelimit);
         game = (RelativeLayout) findViewById(R.id.test_game_area);
         ship = initObject(new ImageView(this), R.drawable.ship, 1, new Vector(50f, getScreenHeight()/2f), new Vector(50f, getScreenHeight()), 1200);

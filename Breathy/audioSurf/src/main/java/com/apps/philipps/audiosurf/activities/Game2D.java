@@ -16,7 +16,7 @@ import com.apps.philipps.audiosurf.R;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.GameUtil;
-import com.apps.philipps.source.helper.Activity2D;
+import com.apps.philipps.source.helper._2D.Activity2D;
 
 import java.util.ArrayList;
 

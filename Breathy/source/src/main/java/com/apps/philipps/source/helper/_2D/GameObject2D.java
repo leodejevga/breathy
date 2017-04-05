@@ -1,8 +1,10 @@
-package com.apps.philipps.source.helper;
+package com.apps.philipps.source.helper._2D;
 
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.apps.philipps.source.helper.Animated;
+import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.interfaces.IGameObject;
 import com.apps.philipps.source.interfaces.IObserver;
 
@@ -98,6 +100,14 @@ public class GameObject2D implements IObserver, IGameObject{
     @Override
     public void setRotation(Vector rotation) {
         //TODO: rotation umsetzen.
+    }
+
+    /**
+     * Gets rotation.
+     */
+    @Override
+    public Vector getRotation() {
+        return null;
     }
 
     @Override

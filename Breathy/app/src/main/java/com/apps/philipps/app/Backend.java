@@ -65,6 +65,7 @@ public class Backend {
             Backend.games.add(new Test());
             Backend.games.add(new Race());
             Backend.games.add(new Fade());
+            Backend.games.add(new com.apps.philipps.opengltest.Test());
 
             for(IGame game : Backend.games){
                 game.init(context, Backend.cacheManager.isIGameBought(game.getName()));
