@@ -8,10 +8,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Fade" />
             <option value="$PROJECT_DIR$/Race" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/audioSurf" />
-            <option value="$PROJECT_DIR$/fade" />
             <option value="$PROJECT_DIR$/opengltest" />
             <option value="$PROJECT_DIR$/source" />
             <option value="$PROJECT_DIR$/test" />
