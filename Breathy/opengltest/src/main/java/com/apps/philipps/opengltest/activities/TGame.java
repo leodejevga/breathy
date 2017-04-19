@@ -14,7 +14,6 @@ public class TGame extends Activity3D {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppState.framelimit = AppState.FrameLimit.Movie;
         openGL = new MyGLSurfaceView(this, new MyGLRenderer());
     }
 

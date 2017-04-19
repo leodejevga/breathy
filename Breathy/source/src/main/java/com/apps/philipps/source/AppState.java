@@ -11,7 +11,8 @@ import android.util.Log;
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
 public class AppState {
-    public final static boolean simulateBreathy = true;
+    public final static boolean simulateBreathy = false; //Debug purpose
+
     public static boolean inGame = false;
     public static boolean recordData = false;
     public static boolean btAsked=false;
