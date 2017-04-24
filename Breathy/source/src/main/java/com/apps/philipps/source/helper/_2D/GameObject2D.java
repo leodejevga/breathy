@@ -1,6 +1,7 @@
 package com.apps.philipps.source.helper._2D;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 
 import com.apps.philipps.source.helper.Animated;
@@ -81,6 +82,7 @@ public class GameObject2D implements IObserver, IGameObject{
     }
     @Override
     public void move(Vector destination){
+        Log.d("Destination", "" + destination);
         position.animate(destination, null);
     }
 

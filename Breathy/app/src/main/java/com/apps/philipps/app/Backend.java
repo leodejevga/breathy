@@ -72,11 +72,12 @@ public class Backend {
             }
             BreathData.init(context, 400);
             Coins.init(Backend.cacheManager.getCreditFromCache());
-            breathSimulator = BreathSimulator.getBreathSimulator();
-            breathSimulator.init(context, 4);
-            breathSimulator.removeRecordings(true);
+            if(AppState.simulateBreathy) {
+                breathSimulator = BreathSimulator.getBreathSimulator();
+                breathSimulator.init(context, 4);
+                breathSimulator.removeRecordings(true);
 //            BreathSimulator.recordData(500);
-
+            }
             initialized = true;
             return true;
         }

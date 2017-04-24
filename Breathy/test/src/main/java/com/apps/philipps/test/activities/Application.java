@@ -2,6 +2,7 @@ package com.apps.philipps.test.activities;
 
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
