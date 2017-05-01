@@ -8,4 +8,11 @@
     <string name="notification_stop">Stop</string>
     <string name="notification_exercise_runnung">Übung läuft</string>
     <string name="notification_exercise_paused">Übung pausiert</string>
+    <string name="custom_color">Benutzerdefinierte Farbe</string>
+    <string name="color_of_fog">Farbe des Nebels</string>
+    <string name="red">Rot</string>
+    <string name="green">Grün</string>
+    <string name="blue">Blau</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="submit">Übernehmen</string>
 </resources>

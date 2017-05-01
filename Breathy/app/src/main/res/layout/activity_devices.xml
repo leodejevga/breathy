@@ -30,7 +30,7 @@
         android:dividerHeight="1dp"
         android:drawSelectorOnTop="false"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/button2" />
+        android:layout_below="@+id/btnCancel" />
 
 
 
