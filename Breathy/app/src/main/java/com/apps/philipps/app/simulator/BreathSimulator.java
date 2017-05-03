@@ -1,7 +1,6 @@
 package com.apps.philipps.app.simulator;
 
 import android.content.Context;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.apps.philipps.source.AppState;
