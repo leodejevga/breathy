@@ -1,4 +1,4 @@
-package com.apps.philipps.app;
+package com.apps.philipps.source.cachemanager;
 
 import java.io.Serializable;
 

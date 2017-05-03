@@ -12,28 +12,17 @@ import com.apps.philipps.audiosurf.Backend;
 import com.apps.philipps.audiosurf.R;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.GameOptions;
-import com.apps.philipps.source.SaveData;
-
-import java.util.ArrayList;
 
 /**
  * GameOptions Activity
  */
 public class Options extends Activity {
     private TextView coinsText;
-    SaveData<ArrayList> saveOptions;
-    SaveData<Integer> saveCredit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.as_options);
-        saveOptions = new SaveData<>(Options.this);
-        saveCredit = new SaveData<>(Options.this);
-
-        ArrayList audiosurfOptions = saveOptions.readObject("audiosurfOptions");
-        if (audiosurfOptions != null)
-            Backend.options.setOptions(audiosurfOptions);
         initOptions();
         initLabels();
     }
@@ -62,13 +51,13 @@ public class Options extends Activity {
                     boolean bought = false;
                     if (!Backend.options.getValue(id)) {
                         bought = Coins.buy(option.Price);
-                        saveCredit.writeObject("credit", Coins.getAmount());
+                        Backend.saveCredit();
                         Backend.options.set(id, bought);
                     }
                     int color = b.getSolidColor();
                     b.setBackgroundColor(Backend.options.getValue(id) ? 0xff00ff00 : color);
                     coinsText.setText(Coins.getAmount() + " Coins");
-                    saveOptions.writeObject("audiosurfOptions", Backend.options.getOptions());
+                    Backend.saveGameOptions();
                 }
             });
             layout.addView(btn);

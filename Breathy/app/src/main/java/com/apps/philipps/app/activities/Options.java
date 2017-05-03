@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.BluetoothService;
 import com.apps.philipps.app.R;
-import com.apps.philipps.app.UserData;
+import com.apps.philipps.source.cachemanager.UserData;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.SaveData;
 import com.apps.philipps.source.interfaces.IObserver;

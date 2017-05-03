@@ -20,6 +20,7 @@ public class AudioSurf extends BreathyGame {
 
     @Override
     public void init(Context context, boolean bought) {
+        Backend.setContext(context);
         Backend.init();
         this.bought = bought;
         game = new AudioSurfGame(context);
