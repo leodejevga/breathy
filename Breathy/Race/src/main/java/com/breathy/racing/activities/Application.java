@@ -108,7 +108,7 @@ public class Application extends Activity2D {
         lvlUpBar = (ProgressBar) findViewById(R.id.progressBar);
         lvlUpBar.setProgress(0);
         lvlUpBar.setMax(10000);
-        xRoads = new float[]{250, (int) getScreenWidth() / 2, (int) getScreenWidth() - 250};
+        xRoads = new float[]{(int)getScreenWidth()/5, (int) getScreenWidth() / 2, (int) getScreenWidth()/5*4};
 
         yCar = getScreenHeight() - 264;
         car = initObject(new ImageView(this), R.drawable.car, 1, new Vector(xRoads[1], yCar), new Vector(xRoads[1], yCar), 1200);

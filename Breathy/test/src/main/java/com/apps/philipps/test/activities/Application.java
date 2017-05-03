@@ -2,6 +2,7 @@ package com.apps.philipps.test.activities;
 
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -40,7 +41,7 @@ public class Application extends Activity2D{
         views.setText("Views on screen: " + (enemies.size() + lasers.size() + 3));
         rate.setText("Frame rate: " + frameRate);
         long delta = System.currentTimeMillis() - start;
-        if(System.currentTimeMillis() - enemySpawn>10){
+        if(System.currentTimeMillis() - enemySpawn>500){
             int y = Math.abs(random.nextInt())%(int)getScreenHeight(); // Über 500 bewegliche Objekte können gezeichnet werden sodass HTC M8 immer noch bei 30 frames per Seconds läuft. Über 700 bei 20 fps
             enemies.add(initObject(new ImageView(this), R.drawable.enemy, 0, new Vector(1000f, (float)y), new Vector(50f, (float)y), 320));
             enemySpawn = System.currentTimeMillis();

@@ -156,6 +156,8 @@ public abstract class BreathData {
         @Override
         public boolean add(Integer t) {
             super.add(0,t);
+
+            Log.d("Data", t + "");
             if(saveData!=null && size()>ramSize) {
                 Object[] data = subList(size()-blockSize, size()-1).toArray();
                 saveData.writeObject("DataKey_" + block, data);
