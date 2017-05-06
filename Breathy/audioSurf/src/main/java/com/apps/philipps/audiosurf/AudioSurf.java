@@ -13,13 +13,16 @@ import com.apps.philipps.source.implementations.BreathyGame;
  * Initializes the Audio Surf game
  */
 public class AudioSurf extends BreathyGame {
+    public AudioSurf(){
+        price = 0;
+        name = "Audio Surf";
+    }
 
     @Override
     public void init(Context context, boolean bought) {
+        Backend.setContext(context);
         Backend.init();
         this.bought = bought;
-        price = 0;
-        name = "Audio Surf";
         game = new AudioSurfGame(context);
         options = new AudioSurfOptions(context);
     }

@@ -9,6 +9,11 @@ import com.apps.philipps.source.implementations.BreathyGame;
  */
 
 public class Test extends BreathyGame {
+    public Test() {
+        this.name = "OpenGl Test";
+        this.price = 20;
+    }
+
     /**
      * Start the preview.
      *
@@ -22,8 +27,6 @@ public class Test extends BreathyGame {
     @Override
     public void init(Context context, boolean bought) {
         this.bought = bought;
-        this.name = "OpenGl Test";
-        this.price = 20;
         game = new TestGame(context);
         options = new TestOptions(context);
     }
