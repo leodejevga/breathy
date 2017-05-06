@@ -52,7 +52,7 @@ public class Application extends Activity2D {
     protected void draw() {
         long delta = System.currentTimeMillis() - start;
         if(faster >= (60*15)){
-            deltaSpeed += 10;
+            deltaSpeed += 20;
             faster = 0;
             gameScoreMultiplier += .1;
             for (int i = 0; i < slowCar.size(); i++) {
@@ -116,7 +116,7 @@ public class Application extends Activity2D {
         slowCar = new ArrayList<>();
         start = System.currentTimeMillis();
         nextCar = start;
-        deltaSpeed = 220;
+        deltaSpeed = 400*SCREEN_FACTOR;
         random = new Random(5);
         if (game == null)
             brakeDraw();
