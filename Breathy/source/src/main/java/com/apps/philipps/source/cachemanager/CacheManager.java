@@ -1,13 +1,10 @@
-package com.apps.philipps.app;
+package com.apps.philipps.source.cachemanager;
 
 import android.content.Context;
 
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.SaveData;
 
-/**
- * Created by qwert on 27/03/2017.
- */
 
 public class CacheManager {
     private final int START_CREDIT = 2600;
