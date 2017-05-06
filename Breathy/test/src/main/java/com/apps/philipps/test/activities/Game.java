@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.test.R;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
@@ -30,7 +31,7 @@ public class Game extends Activity2D {
         String data = BreathData.getAsString(0, 5);
         dataDisplay.setText(data);
         framerate.setText(frameRate + " fps");
-        frameCount.setText("frame " + frame);
+        frameCount.setText("frame " + frame + "\n" + PlanManager.getStatus());
     }
 
     @Override
@@ -38,6 +39,8 @@ public class Game extends Activity2D {
         framerate = (TextView) findViewById(R.id.test_framerate);
         dataDisplay = (TextView) findViewById(R.id.test_data);
         frameCount = (TextView) findViewById(R.id.test_frameCount);
+        PlanManager.addPlan(new PlanManager.Plan(6,0,10).addOption(0,6,10));
+        PlanManager.startPlan(0);
     }
 
     @Override
