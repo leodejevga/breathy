@@ -19,7 +19,7 @@ public abstract class BreathyGame implements IGame {
      */
     protected BreathyGameComponent game;
     /**
-     * The GameOptions.
+     * The OptionManager.
      */
     protected BreathyGameComponent options;
     /**

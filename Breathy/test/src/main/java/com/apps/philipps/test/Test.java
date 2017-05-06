@@ -10,7 +10,7 @@ import com.apps.philipps.source.implementations.BreathyGame;
  */
 public class Test extends BreathyGame {
     public Test() {
-        price = 1;
+        price = 0;
         name = "2D Minispiel zum Testen";
     }
 

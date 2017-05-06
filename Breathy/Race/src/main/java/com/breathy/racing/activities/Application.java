@@ -9,10 +9,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apps.philipps.source.BreathData;
-import com.apps.philipps.source.GameUtil;
 import com.apps.philipps.source.helper._2D.Activity2D;
 import com.apps.philipps.source.helper._2D.GameObject2D;
 import com.apps.philipps.source.helper.Vector;
+import com.breathy.racing.GameUtil;
 import com.breathy.racing.R;
 
 import java.util.ArrayList;
@@ -174,5 +174,6 @@ public class Application extends Activity2D {
         return result;
     }
 }
+
 
 

@@ -10,12 +10,12 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 import com.apps.philipps.audiosurf.Barricade;
+import com.apps.philipps.audiosurf.GameUtil;
 import com.apps.philipps.audiosurf.GameView;
 import com.apps.philipps.audiosurf.Player;
 import com.apps.philipps.audiosurf.R;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
-import com.apps.philipps.source.GameUtil;
 import com.apps.philipps.source.helper._2D.Activity2D;
 
 import java.util.ArrayList;
