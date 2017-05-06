@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.apps.philipps.fade.activities.Options">
+    tools:context="com.apps.philipps.fade.activities.OptionsFade">
 
     <TextView
         android:id="@+id/txtColorOfFog"
@@ -21,9 +21,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -132,20 +130,20 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView"
+                            android:id="@+id/min1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0" />
 
                         <SeekBar
                             android:id="@+id/sbRed"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:max="255" />
 
                         <TextView
-                            android:id="@+id/textView3"
+                            android:id="@+id/max1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="255" />
@@ -155,7 +153,7 @@
                     <TextView
                         android:id="@+id/txtGreen"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_weight="1"
                         android:text="@string/green" />
 
@@ -165,20 +163,20 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView"
+                            android:id="@+id/min2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0" />
 
                         <SeekBar
                             android:id="@+id/sbGreen"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:max="255" />
 
                         <TextView
-                            android:id="@+id/textView3"
+                            android:id="@+id/max2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="255" />
@@ -196,20 +194,20 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView"
+                            android:id="@+id/min3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0" />
 
                         <SeekBar
                             android:id="@+id/sbBlue"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:max="255" />
 
                         <TextView
-                            android:id="@+id/textView3"
+                            android:id="@+id/max3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="255" />
@@ -232,7 +230,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal"
         tools:gravity="bottom">

@@ -11,7 +11,7 @@ import android.widget.ToggleButton;
 
 import com.apps.philipps.fade.R;
 
-public class Options extends Activity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class OptionsFade extends Activity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private Button btnStandardColor1, btnStandardColor2, btnStandardColor3, btnStandardColor4, btnStandardColor5;
 
