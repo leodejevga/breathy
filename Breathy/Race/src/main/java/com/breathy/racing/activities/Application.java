@@ -9,10 +9,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apps.philipps.source.BreathData;
-import com.apps.philipps.source.GameUtil;
 import com.apps.philipps.source.helper._2D.Activity2D;
 import com.apps.philipps.source.helper._2D.GameObject2D;
 import com.apps.philipps.source.helper.Vector;
+import com.breathy.racing.GameUtil;
 import com.breathy.racing.R;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class Application extends Activity2D {
     protected void draw() {
         long delta = System.currentTimeMillis() - start;
         if(faster >= (60*15)){
-            deltaSpeed += 10;
+            deltaSpeed += 20;
             faster = 0;
             gameScoreMultiplier += .1;
             for (int i = 0; i < slowCar.size(); i++) {
@@ -116,7 +116,7 @@ public class Application extends Activity2D {
         slowCar = new ArrayList<>();
         start = System.currentTimeMillis();
         nextCar = start;
-        deltaSpeed = 220;
+        deltaSpeed = 400*SCREEN_FACTOR;
         random = new Random(5);
         if (game == null)
             brakeDraw();
@@ -174,5 +174,6 @@ public class Application extends Activity2D {
         return result;
     }
 }
+
 
 
