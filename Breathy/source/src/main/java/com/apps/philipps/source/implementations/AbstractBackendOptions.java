@@ -1,6 +1,10 @@
-package com.apps.philipps.source;
+package com.apps.philipps.source.implementations;
 
 import android.content.Context;
+
+import com.apps.philipps.source.Coins;
+import com.apps.philipps.source.OptionManager;
+import com.apps.philipps.source.SaveData;
 
 import java.util.ArrayList;
 

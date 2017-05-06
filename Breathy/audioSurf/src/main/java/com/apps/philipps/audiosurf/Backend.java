@@ -1,7 +1,7 @@
 package com.apps.philipps.audiosurf;
 
 
-import com.apps.philipps.source.AbstractBackendOptions;
+import com.apps.philipps.source.implementations.AbstractBackendOptions;
 import com.apps.philipps.source.OptionManager;
 
 /**
