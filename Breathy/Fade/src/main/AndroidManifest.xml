@@ -19,7 +19,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.OptionsFade"></activity>
+        <activity android:name=".activities.Options"></activity>
     </application>
 
 </manifest>
