@@ -28,9 +28,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':source')
-    compile project(':audioSurf')
-    compile project(':fade')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2') {
         // Necessary if your app targets Marshmallow (since Espresso
         // hasn't moved to Marshmallow yet)
@@ -41,8 +38,11 @@ dependencies {
         // hasn't moved to Marshmallow yet)
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+    compile project(':source')
+    compile project(':audioSurf')
+    compile project(':fade')
     compile project(':test')
-    compile project(':Race')
+    compile project(':race')
     compile project(':opengltest')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

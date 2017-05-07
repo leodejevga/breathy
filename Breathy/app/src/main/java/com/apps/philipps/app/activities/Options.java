@@ -41,7 +41,7 @@ public class Options extends AppCompatActivity implements IObserver {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.activitiy = this;
-        setContentView(R.layout.activity_options);
+        setContentView(R.layout.fade_options);
         final Button sendAnEmailToDoctor = (Button) findViewById(R.id.sendemailtodoctor);
         final Button saveAndBack = (Button) findViewById(R.id.saveandback);
         BluetoothService.observe(this);

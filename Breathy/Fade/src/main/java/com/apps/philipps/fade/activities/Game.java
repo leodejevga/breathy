@@ -34,7 +34,7 @@ public class Game extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.fade_game);
 
         if (!checkOverlayPermission()){
             askForOverlayPermission();

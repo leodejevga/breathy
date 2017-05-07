@@ -26,7 +26,7 @@ public class Options extends Activity implements SeekBar.OnSeekBarChangeListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_options);
+        setContentView(R.layout.fade_options);
 
         // Load Stored Values
         loadOptions();
