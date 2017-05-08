@@ -41,27 +41,18 @@ public class Options extends AppCompatActivity implements IObserver {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.activitiy = this;
-        setContentView(R.layout.fade_options);
+        setContentView(R.layout.activity_options);
         final Button sendAnEmailToDoctor = (Button) findViewById(R.id.sendemailtodoctor);
         final Button saveAndBack = (Button) findViewById(R.id.saveandback);
         BluetoothService.observe(this);
-        sendAnEmailToDoctor.setOnClickListener(new View.OnClickListener() {
-                                                   @Override
-                                                   public void onClick(View v) {
-                                                       sendAnEmailToDoctor();
-                                                   }
-                                               }
-        );
-        saveAndBack.setOnClickListener(new View.OnClickListener() {
-                                           @Override
-                                           public void onClick(View v) {
-                                               try {
-                                                   saveandback();
-                                               } catch (IOException e) {
-                                                   Toast.makeText(activitiy.getApplicationContext(), "Can not store data to Cache", Toast.LENGTH_LONG).show();
-                                               }
-                                           }
-                                       }
+        sendAnEmailToDoctor.setOnClickListener(v -> sendAnEmailToDoctor());
+        saveAndBack.setOnClickListener(v -> {
+                    try {
+                        saveandback();
+                    } catch (IOException e) {
+                        Toast.makeText(activitiy.getApplicationContext(), "Can not store data to Cache", Toast.LENGTH_LONG).show();
+                    }
+                }
         );
         initControls();
         getUserData();
