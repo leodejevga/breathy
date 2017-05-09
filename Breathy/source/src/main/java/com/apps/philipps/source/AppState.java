@@ -20,7 +20,10 @@ public class AppState {
     public static AppState.BtState btState = BtState.Disabled;
     public static FrameLimit framelimit = FrameLimit.Unlimited;
 
-    public static int breathyNormState = 700; //Standardwert
+    public static int breathyNormState = 700;
+    public static int breathyDataFrequency = 3;
+    public static int breathyUserMax = 1010;
+    public static int breathyUserMin = 200;
 
     public final static BroadcastReceiver btStateChanger = new BroadcastReceiver() {
         @Override

@@ -44,10 +44,9 @@ public class PlanManager implements IObserver {
 
     @Nullable
     public static Plan.Option getStatus(){
-        if(currentPlan!=-1){
+        if(currentPlan!=-1 && plans.get(currentPlan).getCurrentDuration()!=0){
             Plan p = plans.get(currentPlan);
-
-            return new Plan.Option(p.getStrengthIn(), p.getStrengthOut(), p.getCurrentDuration());
+            return new Plan.Option(p.getStrengthIn(), p.getStrengthOut(), p.getFrequency(), p.getCurrentDuration());
         }
         return null;
     }
@@ -70,21 +69,24 @@ public class PlanManager implements IObserver {
         public Plan(){
             options = new ArrayList<>();
         }
-        public Plan(int in, int out, int duration){
+        public Plan(float in, float out, float frequency, int duration){
             options = new ArrayList<>();
-            options.add(new Option(in, out, duration*1000));
+            options.add(new Option(in, out, frequency, duration*1000));
         }
-        public Plan addOption(int in, int out, int duration){
-            options.add(new Option(in, out, duration*1000));
+        public Plan addOption(float in, float out, float frequency, int duration){
+            options.add(new Option(in, out, frequency, duration*1000));
             return this;
         }
 
-        public int getStrengthIn(){
+        public float getStrengthIn(){
             return options.get(currentOption).in;
         }
 
-        public int getStrengthOut(){
+        public float getStrengthOut(){
             return options.get(currentOption).out;
+        }
+        public float getFrequency(){
+            return options.get(currentOption).frequency;
         }
 
         public int getCurrentDuration(){
@@ -134,30 +136,41 @@ public class PlanManager implements IObserver {
         }
 
         public static class Option{
-            private int out;
-            private int in;
+            private float out;
+            private float in;
+            private float frequency;
             private long duration;
-            public Option(int in, int out, long duration){
+            public Option(float in, float out, float frequency, long duration){
+                float max = Math.max(in, out);
                 this.in = in;
                 this.out = out;
+                if(max>1){
+                    this.in /= max;
+                    this.out /= max;
+                }
+                this.frequency = frequency;
                 this.duration = duration;
             }
             public long getDuration(){
                 return duration;
             }
 
-            public long getIn(){
+            public float getIn(){
                 return in;
             }
 
-            public long getOut(){
+            public float getOut(){
                 return out;
+            }
+
+            public float getFrequency(){
+                return frequency;
             }
 
             @Override
             public String toString() {
 
-                return "in: " + in + ", out: " + out + ", time: " + duration;
+                return "in: " + in + ", out: " + out + ", frequency: " + frequency + ", time: " + duration;
             }
         }
 

@@ -74,9 +74,9 @@ public class Backend {
             Coins.init(Backend.cacheManager.getCreditFromCache());
             if(AppState.simulateBreathy) {
                 breathSimulator = BreathSimulator.getBreathSimulator();
-                breathSimulator.init(context, 4);
-                breathSimulator.removeRecordings(true);
-//            BreathSimulator.recordData(500);
+                breathSimulator.init(context, AppState.breathyDataFrequency);
+//              breathSimulator.removeRecordings(true);
+//              BreathSimulator.recordData(500);
             }
             initialized = true;
             return true;
