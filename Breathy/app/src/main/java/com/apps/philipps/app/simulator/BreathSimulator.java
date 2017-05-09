@@ -1,7 +1,6 @@
 package com.apps.philipps.app.simulator;
 
 import android.content.Context;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.apps.philipps.source.AppState;
@@ -122,7 +121,7 @@ public class BreathSimulator {
                 while (AppState.btState == AppState.BtState.Connected) {
                     delta = System.currentTimeMillis() - start;
                     if(data == null || data.length==0 || index>=data.length){
-                        generateData();
+                        generate();
                         index = 0;
                     }
                     if (!recording && delta >= millis) {
@@ -137,11 +136,19 @@ public class BreathSimulator {
         }, "Breath Data Simulator").start();
     }
 
+    private Random r = new Random(0);
+    private void generate(){
+        int kind = r.nextInt(3)%3;
+        if(kind==0)
+            breath();
+        else if(kind==1)
+            breathIn();
+        else breathOut();
+    }
 
-    private void generateData() {
-        Random r = new Random(0);
+    private void breath() {
         data = new Integer[20];
-        data[0] = 700 + r.nextInt(5);
+        data[0] = 700;
         data[1] = 750 + r.nextInt(5);
         data[2] = 800 + r.nextInt(5);
         data[3] = 900 + r.nextInt(5);
@@ -157,9 +164,47 @@ public class BreathSimulator {
         data[13] = 500 + r.nextInt(5);
         data[14] = 450 + r.nextInt(5);
         data[15] = 400 + r.nextInt(5);
-        data[16] = 350 + r.nextInt(5);
+        data[16] = 300 + r.nextInt(5);
         data[17] = 400 + r.nextInt(5);
         data[18] = 550 + r.nextInt(5);
-        data[19] = 700 + r.nextInt(5);
+        data[19] = 700 + r.nextInt(2);
+    }
+    private void pause() {
+        data = new Integer[10];
+        data[0] = 700 + r.nextInt(2);
+        data[1] = 700 + r.nextInt(2);
+        data[2] = 700 + r.nextInt(2);
+        data[3] = 700 + r.nextInt(2);
+        data[4] = 700 + r.nextInt(2);
+        data[5] = 700 + r.nextInt(2);
+        data[6] = 700 + r.nextInt(2);
+        data[7] = 700 + r.nextInt(2);
+        data[8] = 700 + r.nextInt(2);
+        data[9] = 700 + r.nextInt(2);
+    }
+    private void breathIn() {
+        data = new Integer[10];
+        data[0] = 700;
+        data[1] = 750 + r.nextInt(6);
+        data[2] = 800 + r.nextInt(6);
+        data[3] = 900 + r.nextInt(6);
+        data[4] = 1000 + r.nextInt(6);
+        data[4] = data[4]>1023?1023:data[4];
+        data[5] = 950 + r.nextInt(6);
+        data[6] = 850 + r.nextInt(6);
+        data[7] = 750 + r.nextInt(6);
+        data[8] = 700 + r.nextInt(6);
+        data[9] = 700 + r.nextInt(2);
+    }
+    private void breathOut() {
+        data = new Integer[8];
+        data[0] = 700;
+        data[1] = 600 + r.nextInt(6);
+        data[2] = 500 + r.nextInt(6);
+        data[3] = 400 + r.nextInt(6);
+        data[4] = 300 + r.nextInt(6);
+        data[5] = 400 + r.nextInt(6);
+        data[6] = 550 + r.nextInt(6);
+        data[7] = 700 + r.nextInt(2);
     }
 }

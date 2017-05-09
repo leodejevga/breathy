@@ -7,12 +7,16 @@ import com.apps.philipps.source.implementations.BreathyGame;
 public class Fade extends BreathyGame {
     Context context;
 
+    public Fade() {
+        price = 1;
+        name = "Fade";
+    }
+
     @Override
     public void init(Context context, boolean bought) {
+        game = new FadeGame(context);
+        options = new FadeOptions(context);
         this.bought = bought;
-        this.context = context;
-        price = 2500;
-        name = "Fade";
     }
 
     /**
@@ -22,6 +26,6 @@ public class Fade extends BreathyGame {
      */
     @Override
     public @RawRes Integer getPreview(){
-        return null;
+        return R.raw.preview;
     }
 }

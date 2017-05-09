@@ -11,13 +11,14 @@ import android.util.Log;
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
 public class AppState {
-    public final static boolean simulateBreathy = true;
+    public final static boolean simulateBreathy = true; //Debug purpose
+
     public static boolean inGame = false;
     public static boolean recordData = false;
     public static boolean btAsked=false;
 
     public static AppState.BtState btState = BtState.Disabled;
-    public static Framelimit framelimit = Framelimit.Unlimited;
+    public static FrameLimit framelimit = FrameLimit.Unlimited;
 
     public static int breathyNormState = 700; //Standardwert
 
@@ -65,19 +66,23 @@ public class AppState {
         Connected
     }
 
-    public enum Framelimit{
+    public enum FrameLimit{
         Movie(24),
         Thirty(30),
         Sixty(60),
         HundredTwenty(120),
-        Unlimited(Integer.MAX_VALUE);
+        Unlimited(1000, "Unlimited");
 
         int frameLimit;
-        Framelimit(int frames){
+        String[] data;
+        FrameLimit(int frames, String... data){
             frameLimit = frames;
         }
         public int getLimit(){
             return frameLimit;
+        }
+        public String getData(){
+            return data.length>0?data[0]:"limit: " + framelimit;
         }
     }
 }

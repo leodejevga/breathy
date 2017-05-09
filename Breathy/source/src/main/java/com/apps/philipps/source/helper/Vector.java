@@ -124,7 +124,7 @@ public class Vector implements Comparable<Vector>, Cloneable{
         float max=0;
         for(float c : coordinates)
             max = c>max?c:max;
-        return divide(max);
+        return divide(max==0?1:max);
     }
 
     /**
@@ -137,6 +137,23 @@ public class Vector implements Comparable<Vector>, Cloneable{
         if(coordinate<coordinates.size())
             return coordinates.get(coordinate);
         else return 0;
+    }
+
+    public void set(Vector v){
+        for(int i=0; i<v.getDimensions(); i++) {
+            if(i<coordinates.size())
+                coordinates.set(i, v.get(i));
+            else
+                coordinates.add(v.get(i));
+        }
+    }
+    public void set(float... floats){
+        for(int i=0; i<floats.length; i++) {
+            if(i<coordinates.size())
+                coordinates.set(i, floats[i]);
+            else
+                coordinates.add(floats[i]);
+        }
     }
 
     /**
@@ -212,7 +229,7 @@ public class Vector implements Comparable<Vector>, Cloneable{
     public String toString() {
         String result="";
         for (int i = 0; i < coordinates.size(); i++) {
-            result += i==0?"X = ":i==1?"Y = ":i==2?"Z= ":(i+1) + " = ";
+            result += i==0?"X = ":i==1?"Y = ":i==2?"Z = ":(i+1) + " = ";
             result += coordinates.get(i) + "  ";
         }
         return result.length()==0?"0":result;

@@ -21,6 +21,11 @@ public interface IGameObject {
     void setRotation(Vector rotation);
 
     /**
+     * Gets rotation.
+     */
+    Vector getRotation();
+
+    /**
      * Gets position.
      *
      * @return the position

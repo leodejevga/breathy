@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.BluetoothService;
 import com.apps.philipps.app.R;
-import com.apps.philipps.app.UserData;
+import com.apps.philipps.source.cachemanager.UserData;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.SaveData;
 import com.apps.philipps.source.interfaces.IObserver;
@@ -45,23 +45,14 @@ public class Options extends AppCompatActivity implements IObserver {
         final Button sendAnEmailToDoctor = (Button) findViewById(R.id.sendemailtodoctor);
         final Button saveAndBack = (Button) findViewById(R.id.saveandback);
         BluetoothService.observe(this);
-        sendAnEmailToDoctor.setOnClickListener(new View.OnClickListener() {
-                                                   @Override
-                                                   public void onClick(View v) {
-                                                       sendAnEmailToDoctor();
-                                                   }
-                                               }
-        );
-        saveAndBack.setOnClickListener(new View.OnClickListener() {
-                                           @Override
-                                           public void onClick(View v) {
-                                               try {
-                                                   saveandback();
-                                               } catch (IOException e) {
-                                                   Toast.makeText(activitiy.getApplicationContext(), "Can not store data to Cache", Toast.LENGTH_LONG).show();
-                                               }
-                                           }
-                                       }
+        sendAnEmailToDoctor.setOnClickListener(v -> sendAnEmailToDoctor());
+        saveAndBack.setOnClickListener(v -> {
+                    try {
+                        saveandback();
+                    } catch (IOException e) {
+                        Toast.makeText(activitiy.getApplicationContext(), "Can not store data to Cache", Toast.LENGTH_LONG).show();
+                    }
+                }
         );
         initControls();
         getUserData();
