@@ -17,15 +17,19 @@ import com.apps.philipps.source.OptionManager;
 //     * The constant highscore.
 //     */
 //    public static int highscore;
-public class Backend extends AbstractBackendOptions{
-    private static boolean init=false;
+public class Backend extends AbstractBackendOptions {
+    private static boolean init = false;
+    private static int defaut_music_resource_id = R.raw.asmario;
+
+
     /**
      * Reinitialize <code>Backend</code> of the game.
      */
-    public static void reinit(){
+    public static void reinit() {
         init = false;
         init();
     }
+
     /**
      * Initialize <code>Backend</code> of the game.
      */
@@ -43,5 +47,13 @@ public class Backend extends AbstractBackendOptions{
             return true;
         }
         return false;
+    }
+
+    public static int getDefaut_music_resource_id() {
+        return defaut_music_resource_id;
+    }
+
+    public static void setDefaut_music_resource_id(int defaut_music_resource_id) {
+        Backend.defaut_music_resource_id = defaut_music_resource_id;
     }
 }
