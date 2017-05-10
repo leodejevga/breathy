@@ -170,7 +170,7 @@ public class PlanManager implements IObserver {
             @Override
             public String toString() {
 
-                return "in: " + in + ", out: " + out + ", frequency: " + frequency + ", time: " + duration;
+                return "in: " + (int)(in*100) + "%, out: " + (int)(out*100) + "%, frequency: " + frequency + ", time: " + duration;
             }
         }
 

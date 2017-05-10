@@ -57,8 +57,7 @@ public abstract class BreathInterpreter {
             float iValue = Math.abs(option.getIn()-strengthIn<0?0:option.getIn()-strengthIn);
             float oValue = Math.abs(option.getOut()-strengthOut<0?0:option.getOut()-strengthOut);
             float min = (fValue + iValue + oValue) / 3;
-            BreathError result = min<0.1?VeryGood:min<0.15?Good:min<0.17?Ok:min<0.2?NotOk:min<0.25?NotGood:min<0.3?Bad:VeryBad;
-            return result;
+            return min<0.1?VeryGood:min<0.15?Good:min<0.17?Ok:min<0.2?NotOk:min<0.25?NotGood:min<0.3?Bad:VeryBad;
         }
     }
 //    public static int strength=0; // ist jetzt as a Prozent definiert!
@@ -193,7 +192,7 @@ public abstract class BreathInterpreter {
 
         @Override
         public String toString() {
-            return "status: " + moment + ", strength: " + strength + ", frequency: " + frequency + ", how good: " + error;
+            return "status: " + moment + ", strength: " + (int)(strength*100) + "%, frequency: " + frequency + " per second, how good: " + error;
         }
     }
 
