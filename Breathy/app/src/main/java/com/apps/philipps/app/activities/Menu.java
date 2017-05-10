@@ -126,4 +126,9 @@ public class Menu extends Activity {
             Backend.connectDevice(device, secure);
         }
     }
+
+    public void createPlan(View view) {
+        Intent i = new Intent(this, CreatePlan.class);
+        startActivity(i);
+    }
 }
