@@ -124,7 +124,9 @@ public class BreathInterpreter{
                     m_out = 0;
                     m_none = 0;
                 }
-            } else  {BreathInfo t1 = new BreathInfo(in, out, none,mm,strength_in,strength_out);}
+            } else  {
+                BreathInfo t1 = new BreathInfo(in, out, none,mm,strength_in,strength_out);
+            }
 
         }
     }

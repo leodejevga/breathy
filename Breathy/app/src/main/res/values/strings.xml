@@ -22,4 +22,9 @@
     <string name="select_game">Spiel auswählen</string>
     <string name="main_options">Haupteinstellungen</string>
     <string name="main_plan">Plan erstellen</string>
+    <string name="create_plan_purpose_of_training">Purpose of the Training</string>
+    <string name="create_plan_inhalation">Inhalation</string>
+    <string name="create_plan_exhalation">Exhalation</string>
+    <string name="create_plan_target_duration">Target duration per exercise</string>
+    <string name="minutes">Minutes</string>
 </resources>
