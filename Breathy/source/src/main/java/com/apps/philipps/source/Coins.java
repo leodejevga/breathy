@@ -1,5 +1,7 @@
 package com.apps.philipps.source;
 
+import android.content.Context;
+
 /**
  * Created by Jevgenij Huebert on 28.01.2017. Project Breathy
  */
@@ -13,9 +15,12 @@ public class Coins {
      * @param coins the privce of the Object to buy
      * @return true for object is bought. Amount of coins is subptracted
      */
-    public static boolean buy(int coins) {
-        if (Coins.amount >= coins)
+    public static boolean buy(int coins, Context context) {
+        SaveData<Integer> credits = new SaveData<>(context);
+        if (Coins.amount >= coins) {
             amount -= coins;
+            credits.writeObject("credits", amount);
+        }
         else return false;
         return true;
     }
@@ -23,9 +28,10 @@ public class Coins {
     /**
      * Init.
      */
-    public static void init(int amount) {
+    public static void init(Context context) {
+        SaveData<Integer> credits = new SaveData<>(context);
         if (!initialized) {
-            Coins.amount = amount;
+            amount = credits.readObject("credits");
         }
         initialized = true;
     }

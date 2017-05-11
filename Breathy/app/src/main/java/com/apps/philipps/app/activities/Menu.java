@@ -3,6 +3,7 @@ package com.apps.philipps.app.activities;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -32,7 +33,6 @@ public class Menu extends Activity {
         registerReceiver(AppState.btStateChanger, connected);
         registerReceiver(AppState.btStateChanger, disconnected);
         AppState.initBtState();
-
         Backend.init(this);
         initActivity();
     }

@@ -17,9 +17,7 @@ public class PlanManager implements IObserver {
     private static PlanManager manager = new PlanManager();
     private static int currentPlan;
 
-    private PlanManager(){
-
-    }
+    private PlanManager(){}
 
     public static PlanManager getInstance(){
         return manager;
@@ -40,6 +38,10 @@ public class PlanManager implements IObserver {
             return true;
         }
         return false;
+    }
+
+    public static Plan getPlan(float in, float out, float freq, int duration){
+        return new Plan(in, out, freq, duration);
     }
 
     @Nullable
@@ -170,7 +172,7 @@ public class PlanManager implements IObserver {
             @Override
             public String toString() {
 
-                return "in: " + (int)(in*100) + "%, out: " + (int)(out*100) + "%, frequency: " + frequency + ", time: " + duration;
+                return "in: " + (int)(in*100) + "%, out: " + (int)(out*100) + "%, frequency: " + (int)(frequency*60) + " per minute, time: " + duration;
             }
         }
 
