@@ -39,7 +39,7 @@ public class Options extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.as_options);
-        initOptions();
+        initOptions(getApplicationContext());
         initLabels();
         initControls();
     }
@@ -49,7 +49,7 @@ public class Options extends Activity {
         coinsText.setText(Coins.getAmount() + " Coins");
     }
 
-    private void initOptions() {
+    private void initOptions(final Context context) {
         TableRow row = new TableRow(this);
         LinearLayout layout = (LinearLayout) findViewById(R.id.optionsButtons);
         for (int i = 0; i < Backend.options.size(); i++) {
@@ -67,14 +67,13 @@ public class Options extends Activity {
                     OptionManager.Option option = Backend.options.getOption(id);
                     boolean bought = false;
                     if (!Backend.options.getValue(id)) {
-                        bought = Coins.buy(option.Price);
-                        Backend.saveCredit();
+                        bought = Coins.buy(option.Price, context);
                         Backend.options.set(id, bought);
                     }
                     int color = b.getSolidColor();
                     b.setBackgroundColor(Backend.options.getValue(id) ? 0xff00ff00 : color);
                     coinsText.setText(Coins.getAmount() + " Coins");
-                    Backend.saveGameOptions();
+                    Backend.saveGameOptions(context);
                 }
             });
             layout.addView(btn);

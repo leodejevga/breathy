@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Fade</string>
     <string name="title_activity_transparent">TransparentActivity</string>
     <string name="transparency_notification_title_template">Transparency (Titel): %1$s</string>
     <string name="notification_pause">Pause</string>

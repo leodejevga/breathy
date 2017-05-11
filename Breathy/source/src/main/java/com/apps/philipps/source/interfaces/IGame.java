@@ -42,7 +42,7 @@ public interface IGame {
      *
      * @return true if player had enough amount of coins
      */
-    boolean buy();
+    boolean buy(Context context);
 
     /**
      * Name of the game.
