@@ -6,6 +6,8 @@
     <color name="colorPrimary">#7182d1</color>
     <color name="colorPrimaryDark">#556aa9</color>
     <color name="colorAccent">#ffca5a</color>
+    <color name="colorBtnPlus">#27cc8d</color>
+    <color name="colorBtnMinus">#f16f68</color>
 
     <public name="textbg" type="color"/>
     <public name="text" type="color"/>
@@ -13,4 +15,6 @@
     <public name="colorPrimary" type="color"/>
     <public name="colorPrimaryDark" type="color"/>
     <public name="colorAccent" type="color"/>
+    <public name="colorBtnPlus" type="color"/>
+    <public name="colorBtnMinus" type="color"/>
 </resources>

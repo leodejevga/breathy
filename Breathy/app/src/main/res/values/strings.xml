@@ -21,4 +21,16 @@
     <string name="pro">Erfahren</string>
     <string name="select_game">Spiel auswählen</string>
     <string name="main_options">Haupteinstellungen</string>
+    <string name="create_plan_purpose_of_training">Purpose of the Training</string>
+    <string name="create_plan_inhalation">Inhalation</string>
+    <string name="create_plan_exhalation">Exhalation</string>
+    <string name="create_plan_training_intensity">Training Intensity</string>
+    <string name="very_high">Very high</string>
+    <string name="high">High</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
+    <string name="very_low">Very low</string>
+    <string name="create_plan_target_duration">Target duration per exercise</string>
+    <string name="minutes">Minutes</string>
+    <string name="title_activity_plan_manager">Plan Manager</string>
 </resources>
