@@ -20,32 +20,27 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="72dp">
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="72dp"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/txtAvailableBreathPlans"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="@string/plan_manager_available_plans" />
 
-            <TextView
-                android:id="@+id/txtAvailableBreathPlans"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/plan_manager_available_plans" />
+        <ExpandableListView
+            android:id="@+id/elvPlans"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-            <ExpandableListView
-                android:id="@+id/elvPlans"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAddPlan"

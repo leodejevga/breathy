@@ -5,6 +5,13 @@ package com.apps.philipps.app;
  */
 
 public class BreathPlan {
+    public static final int INTENSITY_VERY_HIGH = 100;
+    public static final int INTENSITY_HIGH = 80;
+    public static final int INTENSITY_MEDIUM = 60;
+    public static final int INTENSITY_LOW = 40;
+    public static final int INTENSITY_VERY_LOW = 20;
+
+
     private int planId;
     private String name;
     private boolean breatheIn;

@@ -21,11 +21,46 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/txtCreatePlanTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_plan_plan_description"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textColor="@color/text" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/txtPlanDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_plan_plan_description"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
+
+            <EditText
+                android:id="@+id/etPlanDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/create_plan_plan_description_hint"
+                android:inputType="textPersonName" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_weight="1" />
+
+            <TextView
                 android:id="@+id/txtPurposeOfTraining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_plan_purpose_of_training"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -36,6 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:text="@string/create_plan_inhalation" />
 
                 <RadioButton
@@ -58,42 +94,44 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/create_plan_training_intensity"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
 
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <RadioButton
-                    android:id="@+id/radioButton5"
+                    android:id="@+id/rbVeryHigh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/very_high" />
 
                 <RadioButton
-                    android:id="@+id/radioButton3"
+                    android:id="@+id/rbHigh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/high" />
 
                 <RadioButton
-                    android:id="@+id/radioButton4"
+                    android:id="@+id/rbMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:text="@string/medium" />
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/rbLow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/low" />
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/rbVeryLow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -111,7 +149,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_plan_target_breathing_rate"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -123,6 +162,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TextView"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text"
                     tools:text="2" />
 
                 <SeekBar
@@ -130,13 +171,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:max="28" />
+                    android:max="28"
+                    android:progress="10" />
 
                 <TextView
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TextView"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text"
                     tools:text="30" />
             </LinearLayout>
 
@@ -154,7 +198,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TextView"
-                    tools:text="2" />
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text"
+                    tools:text="10" />
 
                 <Space
                     android:layout_width="5dp"
@@ -164,7 +210,9 @@
                     android:id="@+id/txtBreathsPerMinute2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/create_plan_target_breaths_per_minute" />
+                    android:text="@string/create_plan_target_breaths_per_minute"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text" />
             </LinearLayout>
 
             <Space
@@ -177,7 +225,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_plan_target_duration"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -205,7 +254,7 @@
                         android:layout_gravity="center"
                         android:ems="10"
                         android:inputType="number"
-                        android:text="5"
+                        android:text="10"
                         android:textAlignment="center" />
 
                     <Button
@@ -224,7 +273,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/minutes"
-                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text" />
 
                 <Space
                     android:layout_width="wrap_content"
