@@ -21,6 +21,8 @@
     <string name="pro">Erfahren</string>
     <string name="select_game">Spiel auswählen</string>
     <string name="main_options">Haupteinstellungen</string>
+    <string name="select_breath_plan">Atemplan auswählen</string>
+    <string name="plan_manager_available_plans">Available Breath Plans</string>
     <string name="create_plan_purpose_of_training">Purpose of the Training</string>
     <string name="create_plan_inhalation">Inhalation</string>
     <string name="create_plan_exhalation">Exhalation</string>
@@ -30,7 +32,12 @@
     <string name="medium">Medium</string>
     <string name="low">Low</string>
     <string name="very_low">Very low</string>
+    <string name="create_plan_target_breathing_rate">Target Breathing Rate</string>
+    <string name="create_plan_target_breaths_per_minute">breaths per minute</string>
     <string name="create_plan_target_duration">Target duration per exercise</string>
     <string name="minutes">Minutes</string>
     <string name="title_activity_plan_manager">Plan Manager</string>
+    <string name="activate">Activate</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
