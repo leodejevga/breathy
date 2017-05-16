@@ -31,7 +31,11 @@ public class Coins {
     public static void init(Context context) {
         SaveData<Integer> credits = new SaveData<>(context);
         if (!initialized) {
+            try{
             amount = credits.readObject("credits");
+            }catch (Exception e){
+                amount = 1000;
+            }
         }
         initialized = true;
     }
