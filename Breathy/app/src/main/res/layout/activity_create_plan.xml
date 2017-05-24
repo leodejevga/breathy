@@ -12,7 +12,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
+<<<<<<< HEAD
         android:layout_height="wrap_content">
+=======
+        android:layout_height="0dp"
+        android:layout_weight="1">
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,15 +25,60 @@
             android:orientation="vertical">
 
             <TextView
+<<<<<<< HEAD
+=======
+                android:id="@+id/txtCreatePlanTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textColor="@color/text" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/txtPlanDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_plan_plan_description"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
+
+            <EditText
+                android:id="@+id/etPlanDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/create_plan_plan_description_hint"
+                android:inputType="textPersonName" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_weight="1" />
+
+            <TextView
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
                 android:id="@+id/txtPurposeOfTraining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_plan_purpose_of_training"
+<<<<<<< HEAD
                 android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
+=======
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
 
                 <RadioButton
                     android:id="@+id/rbInhalation"
@@ -44,18 +94,162 @@
                     android:layout_weight="1"
                     android:text="@string/create_plan_exhalation" />
 
+<<<<<<< HEAD
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:layout_weight="1" />
             </RadioGroup>
 
+=======
+            </RadioGroup>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/txtIntensityOfTraining"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/create_plan_training_intensity"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:id="@+id/rbVeryHigh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/very_high" />
+
+                <RadioButton
+                    android:id="@+id/rbHigh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/high" />
+
+                <RadioButton
+                    android:id="@+id/rbMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/medium" />
+
+                <RadioButton
+                    android:id="@+id/rbLow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/low" />
+
+                <RadioButton
+                    android:id="@+id/rbVeryLow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/very_low" />
+
+            </RadioGroup>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/txtBreathingRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_plan_target_breathing_rate"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/two"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text" />
+
+                <SeekBar
+                    android:id="@+id/sbBreathsPerMinute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="28"
+                    android:progress="10" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/thirty"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtBreathsPerMinute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text"
+                    tools:text="10" />
+
+                <Space
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtBreathsPerMinute2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_plan_target_breaths_per_minute"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_weight="1" />
+
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
             <TextView
                 android:id="@+id/txtTargetDuration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_plan_target_duration"
+<<<<<<< HEAD
                 android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+=======
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/text" />
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,7 +267,11 @@
                         android:layout_width="60dp"
                         android:layout_height="35dp"
                         android:layout_gravity="center"
+<<<<<<< HEAD
                         android:backgroundTint="@color/standardColor3"
+=======
+                        android:backgroundTint="@color/colorBtnPlus"
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
                         android:text="+" />
 
                     <EditText
@@ -83,7 +281,11 @@
                         android:layout_gravity="center"
                         android:ems="10"
                         android:inputType="number"
+<<<<<<< HEAD
                         android:text="5"
+=======
+                        android:text="10"
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
                         android:textAlignment="center" />
 
                     <Button
@@ -92,7 +294,11 @@
                         android:layout_width="60dp"
                         android:layout_height="35dp"
                         android:layout_gravity="center"
+<<<<<<< HEAD
                         android:backgroundTint="@color/standardColor3"
+=======
+                        android:backgroundTint="@color/colorBtnMinus"
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
                         android:text="-" />
                 </LinearLayout>
 
@@ -102,7 +308,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/minutes"
+<<<<<<< HEAD
                     android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+=======
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="@color/text" />
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
 
                 <Space
                     android:layout_width="wrap_content"
@@ -115,8 +326,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+<<<<<<< HEAD
         android:layout_height="0dp"
         android:layout_weight="1"
+=======
+        android:layout_height="wrap_content"
+>>>>>>> 7064da0c73802b99f08d64e65e1c6cf210c3f5e1
         android:orientation="horizontal"
         tools:gravity="bottom">
 

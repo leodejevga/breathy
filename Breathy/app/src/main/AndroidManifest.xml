@@ -26,7 +26,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.Devices" />
-        <activity android:name=".activities.CreatePlan"></activity>
+        <activity android:name=".activities.CreatePlan" />
+        <activity
+            android:name=".activities.PlanManager"
+            android:label="@string/title_activity_plan_manager"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

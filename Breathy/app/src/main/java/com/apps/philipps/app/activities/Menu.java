@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.BluetoothService;
+import com.apps.philipps.app.BreathPlan;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.AppState;
 
@@ -59,6 +60,14 @@ public class Menu extends Activity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Menu.this, Options.class);
+                startActivity(i);
+            }
+        });
+        Button breathPlan = (Button) findViewById(R.id.mainBreathPlan);
+        breathPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Menu.this, PlanManager.class);
                 startActivity(i);
             }
         });
