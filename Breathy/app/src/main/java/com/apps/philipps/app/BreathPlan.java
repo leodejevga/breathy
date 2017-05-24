@@ -11,6 +11,11 @@ public class BreathPlan {
     public static final int INTENSITY_LOW = 40;
     public static final int INTENSITY_VERY_LOW = 20;
 
+    public static final int MIN_BREATHS_PER_MINUTE = 2;
+    public static final int MAX_BREATHS_PER_MINUTE = 30;
+
+    public static final int MIN_DURATION_OF_EXERCISE = 2;
+    public static final int MAX_DURATION_OF_EXERCISE = 60;
 
     private int planId;
     private String name;

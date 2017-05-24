@@ -23,6 +23,7 @@
     <string name="main_options">Haupteinstellungen</string>
     <string name="select_breath_plan">Atemplan auswählen</string>
     <string name="plan_manager_available_plans">Available Breath Plans</string>
+    <string name="plan_manager_sample_plan">Sample Plan (1)</string>
     <string name="create_plan_plan_description">Plan Description</string>
     <string name="create_plan_plan_description_hint">Evening Plan (1)</string>
     <string name="create_plan_purpose_of_training">Purpose of the Training</string>
@@ -44,4 +45,6 @@
     <string name="editing_plan">Editing Plan #</string>
     <string name="creating_plan">Creating Plan #</string>
     <string name="delete">Delete</string>
+    <string name="two">2</string>
+    <string name="thirty">30</string>
 </resources>

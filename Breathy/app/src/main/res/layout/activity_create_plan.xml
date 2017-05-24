@@ -24,7 +24,6 @@
                 android:id="@+id/txtCreatePlanTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_plan_plan_description"
                 android:textAppearance="@android:style/TextAppearance.Material.Medium"
                 android:textColor="@color/text" />
 
@@ -71,7 +70,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:checked="true"
                     android:text="@string/create_plan_inhalation" />
 
                 <RadioButton
@@ -120,7 +118,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:checked="true"
                     android:text="@string/medium" />
 
                 <RadioButton
@@ -161,10 +158,9 @@
                     android:id="@+id/textView11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text="@string/two"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:textColor="@color/text"
-                    tools:text="2" />
+                    android:textColor="@color/text" />
 
                 <SeekBar
                     android:id="@+id/sbBreathsPerMinute"
@@ -178,10 +174,9 @@
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text="@string/thirty"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:textColor="@color/text"
-                    tools:text="30" />
+                    android:textColor="@color/text" />
             </LinearLayout>
 
             <LinearLayout

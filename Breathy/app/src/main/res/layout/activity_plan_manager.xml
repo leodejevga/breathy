@@ -37,8 +37,14 @@
 
         <ExpandableListView
             android:id="@+id/elvPlans"
+            style="@android:style/Widget.DeviceDefault.ExpandableListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:divider="#FF8800"
+            android:dividerHeight="2px"
+            android:footerDividersEnabled="true"
+            android:headerDividersEnabled="true" />
 
     </LinearLayout>
 

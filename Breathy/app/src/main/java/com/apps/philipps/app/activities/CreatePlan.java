@@ -3,6 +3,9 @@ package com.apps.philipps.app.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +16,9 @@ import android.widget.TextView;
 import com.apps.philipps.app.BreathPlan;
 import com.apps.philipps.app.R;
 
-public class CreatePlan extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener{
+public class CreatePlan extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+
+    private BreathPlan breathPlan;
 
     private int planId;
     private boolean newPlan;
@@ -27,6 +32,9 @@ public class CreatePlan extends AppCompatActivity implements View.OnClickListene
 
     private boolean activated;
 
+    private Button btnSubmitPlan;
+    private Button btnCancelPlan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,15 +46,17 @@ public class CreatePlan extends AppCompatActivity implements View.OnClickListene
         activated = false;
 
         int requestCode = intent.getIntExtra(PlanManager.EXTRA_REQUEST_CODE, PlanManager.REQUEST_CODE_CREATE_PLAN);
-        if (requestCode == PlanManager.REQUEST_CODE_CREATE_PLAN){ // New Plan
+        if (requestCode == PlanManager.REQUEST_CODE_CREATE_PLAN) { // New Plan
             this.newPlan = true;
+            this.breathPlan = new BreathPlan(planId, "", true,
+                    BreathPlan.INTENSITY_MEDIUM, BreathPlan.MIN_BREATHS_PER_MINUTE, BreathPlan.MIN_DURATION_OF_EXERCISE, false);
             initGUIComponents(newPlan, getString(R.string.creating_plan) + planId);
         } else if (requestCode == PlanManager.REQUEST_CODE_EDIT_PLAN) { // Existing Plan
             this.newPlan = false;
+            this.breathPlan = PlanManager.getBreathPlan(planId - 1);
             initGUIComponents(newPlan, getString(R.string.editing_plan) + planId);
         }
     }
-
 
 
     private void initGUIComponents(boolean newPlan, String title) {
@@ -55,64 +65,76 @@ public class CreatePlan extends AppCompatActivity implements View.OnClickListene
         etPlanDescription = (EditText) findViewById(R.id.etPlanDescription);
 
         sbBreathsPerMinute = (SeekBar) findViewById(R.id.sbBreathsPerMinute);
+        sbBreathsPerMinute.setMax(BreathPlan.MAX_BREATHS_PER_MINUTE - BreathPlan.MIN_BREATHS_PER_MINUTE);
+
         txtBreathsPerMinute = (TextView) findViewById(R.id.txtBreathsPerMinute);
 
         etDurationOfExercise = (EditText) findViewById(R.id.etDurationOfExercise);
 
-        if (!newPlan){ // Editing Plan
-            BreathPlan bp = PlanManager.getBreathPlan(planId - 1);
+        btnSubmitPlan = (Button) findViewById(R.id.btnSubmitPlan);
+        btnCancelPlan = (Button) findViewById(R.id.btnCancelPlan);
 
-            etPlanDescription.setText(bp.getName());
-
-            if (bp.isBreatheIn()){
-                ((RadioButton) findViewById(R.id.rbInhalation)).setChecked(true);
-            } else {
-                ((RadioButton) findViewById(R.id.rbExhalation)).setChecked(true);
-            }
-
-            int intensity = bp.getIntensity();
-            switch (intensity) {
-                case BreathPlan.INTENSITY_VERY_LOW :
-                    ((RadioButton) findViewById(R.id.rbVeryLow)).setChecked(true);
-                case BreathPlan.INTENSITY_LOW :
-                    ((RadioButton) findViewById(R.id.rbLow)).setChecked(true);
-                case BreathPlan.INTENSITY_MEDIUM :
-                    ((RadioButton) findViewById(R.id.rbMedium)).setChecked(true);
-                case BreathPlan.INTENSITY_HIGH :
-                    ((RadioButton) findViewById(R.id.rbHigh)).setChecked(true);
-                case BreathPlan.INTENSITY_VERY_HIGH :
-                    ((RadioButton) findViewById(R.id.rbVeryHigh)).setChecked(true);
-            }
-
-            int breathsPerMinute = bp.getBreathsPerMinute();
-            if (breathsPerMinute >= 2 && breathsPerMinute <= 30){
-                txtBreathsPerMinute.setText(breathsPerMinute);
-                sbBreathsPerMinute.setProgress(breathsPerMinute);
-            }
-
-            etDurationOfExercise.setText(bp.getMinutesPerExercise());
-
-            activated = bp.isActivated();
-
+        if (breathPlan.getName().equals("")) {
+            btnSubmitPlan.setEnabled(false);
+        } else {
+            etPlanDescription.setText(breathPlan.getName());
         }
+
+        if (breathPlan.isBreatheIn()) {
+            ((RadioButton) findViewById(R.id.rbInhalation)).setChecked(true);
+        } else {
+            ((RadioButton) findViewById(R.id.rbExhalation)).setChecked(true);
+        }
+
+        int intensity = breathPlan.getIntensity();
+
+        switch (intensity) {
+            case BreathPlan.INTENSITY_VERY_LOW:
+                ((RadioButton) findViewById(R.id.rbVeryLow)).setChecked(true);
+                break;
+            case BreathPlan.INTENSITY_LOW:
+                ((RadioButton) findViewById(R.id.rbLow)).setChecked(true);
+                break;
+            case BreathPlan.INTENSITY_MEDIUM:
+                ((RadioButton) findViewById(R.id.rbMedium)).setChecked(true);
+                break;
+            case BreathPlan.INTENSITY_HIGH:
+                ((RadioButton) findViewById(R.id.rbHigh)).setChecked(true);
+                break;
+            case BreathPlan.INTENSITY_VERY_HIGH:
+                ((RadioButton) findViewById(R.id.rbVeryHigh)).setChecked(true);
+                break;
+            default:
+                ((RadioButton) findViewById(R.id.rbMedium)).setChecked(true);
+                break;
+        }
+
+        int breathsPerMinute = breathPlan.getBreathsPerMinute();
+        if (breathsPerMinute >= BreathPlan.MIN_BREATHS_PER_MINUTE && breathsPerMinute <= BreathPlan.MAX_BREATHS_PER_MINUTE) {
+            txtBreathsPerMinute.setText(breathsPerMinute + "");
+            sbBreathsPerMinute.setProgress(breathsPerMinute - BreathPlan.MIN_BREATHS_PER_MINUTE);
+        }
+
+        etDurationOfExercise.setText(breathPlan.getMinutesPerExercise() + "");
+
+        activated = breathPlan.isActivated();
+
+        etPlanDescription.addTextChangedListener(getPlanDescriptionTextWatcher());
+
+        etDurationOfExercise.addTextChangedListener(getDurationOfExercise());
 
         sbBreathsPerMinute.setOnSeekBarChangeListener(this);
 
-        ((Button) findViewById(R.id.btnSubmitPlan)).setOnClickListener(this);
-        ((Button) findViewById(R.id.btnCancelPlan)).setOnClickListener(this);
+        btnSubmitPlan.setOnClickListener(this);
+        btnCancelPlan.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnSubmitPlan) {
-            // TODO Werte übermitteln
-            if (checkRequiredValues()) {
-                submitPlan();
-                setResult(PlanManager.RESULT_CODE_PLAN_SUBMITTED);
-                finish();
-            } else {
-                // TODO Benutzer auf Fehler bei der Eingabe hinweisen
-            }
+            submitPlan();
+            setResult(PlanManager.RESULT_CODE_PLAN_SUBMITTED);
+            finish();
         } else if (v.getId() == R.id.btnCancelPlan) {
             finish();
         }
@@ -120,8 +142,8 @@ public class CreatePlan extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser){
-            txtBreathsPerMinute.setText((progress + 2) + "");
+        if (fromUser) {
+            txtBreathsPerMinute.setText((progress + BreathPlan.MIN_BREATHS_PER_MINUTE) + "");
         }
     }
 
@@ -129,41 +151,104 @@ public class CreatePlan extends AppCompatActivity implements View.OnClickListene
     public void onStartTrackingTouch(SeekBar seekBar) {
 
     }
+
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
 
-    private boolean checkRequiredValues(){
-        String planDescription = etPlanDescription.getText() + "";
-        int durationOfExercise = Integer.parseInt(etDurationOfExercise.getText() + "");
-
-        if (!planDescription.equals("") && durationOfExercise >= 1 && durationOfExercise <= 60) {
-            return true;
-        }
-        return false;
-    }
     private void submitPlan() {
-        String name = etPlanDescription.getText() + "";
-        boolean inhalate = ((RadioButton) findViewById(R.id.rbInhalation)).isChecked();
+        breathPlan.setName(etPlanDescription.getText() + "");
+
+        breathPlan.setBreatheIn(((RadioButton) findViewById(R.id.rbInhalation)).isChecked());
+
         int intensity;
-        if (((RadioButton) findViewById(R.id.rbVeryHigh)).isChecked()){
+        if (((RadioButton) findViewById(R.id.rbVeryHigh)).isChecked()) {
             intensity = BreathPlan.INTENSITY_VERY_HIGH;
-        } else if (((RadioButton) findViewById(R.id.rbHigh)).isChecked()){
+        } else if (((RadioButton) findViewById(R.id.rbHigh)).isChecked()) {
             intensity = BreathPlan.INTENSITY_HIGH;
-        } else if (((RadioButton) findViewById(R.id.rbMedium)).isChecked()){
+        } else if (((RadioButton) findViewById(R.id.rbMedium)).isChecked()) {
             intensity = BreathPlan.INTENSITY_MEDIUM;
-        } else if (((RadioButton) findViewById(R.id.rbLow)).isChecked()){
+        } else if (((RadioButton) findViewById(R.id.rbLow)).isChecked()) {
             intensity = BreathPlan.INTENSITY_LOW;
         } else {
             intensity = BreathPlan.INTENSITY_VERY_LOW;
         }
+        breathPlan.setIntensity(intensity);
 
-        int breathsPerMinute = sbBreathsPerMinute.getProgress() + 2;
-        int minutesPerExercise = Integer.parseInt(etDurationOfExercise.getText() + "");
+        breathPlan.setBreathsPerMinute(sbBreathsPerMinute.getProgress() + BreathPlan.MIN_BREATHS_PER_MINUTE); // getProgress() startet bei 0
+        breathPlan.setMinutesPerExercise(Integer.parseInt(etDurationOfExercise.getText() + ""));
 
-        if (newPlan){
-            PlanManager.addBreathPlan(new BreathPlan(this.planId, name, inhalate, intensity, breathsPerMinute, minutesPerExercise, this.activated));
+        if (newPlan) {
+            PlanManager.addBreathPlan(breathPlan);
+        } else {
+            PlanManager.setBreathPlan(this.planId, breathPlan);
         }
+    }
+
+    private TextWatcher getPlanDescriptionTextWatcher() {
+        TextWatcher tw = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (validatePlanDescription(s + "")) {
+                    enableSubmitButton(true);
+                } else {
+                    enableSubmitButton(false);
+                }
+            }
+        };
+        return tw;
+    }
+
+    private boolean validatePlanDescription(String etPlanDescription) {
+        if (etPlanDescription.equals("")) {
+            // TODO Benutzer auf benoetigtes Feld hinweisen
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void enableSubmitButton(boolean enable) {
+        btnSubmitPlan.setEnabled(enable);
+    }
+
+    private TextWatcher getDurationOfExercise() {
+        TextWatcher tw = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateDurationOfExercise(s + "");
+            }
+        };
+        return tw;
+    }
+
+    private boolean validateDurationOfExercise(String etDurationOfExerciseString) {
+        if (!etDurationOfExerciseString.equals("")) {
+            if (Integer.parseInt(etDurationOfExerciseString) > BreathPlan.MAX_DURATION_OF_EXERCISE) {
+                etDurationOfExercise.setText(BreathPlan.MAX_DURATION_OF_EXERCISE + "");
+            } else if (Integer.parseInt(etDurationOfExerciseString) < BreathPlan.MIN_BREATHS_PER_MINUTE) {
+                etDurationOfExercise.setText(BreathPlan.MIN_DURATION_OF_EXERCISE + "");
+            }
+        } else {
+            etDurationOfExercise.setText(BreathPlan.MIN_DURATION_OF_EXERCISE + "");
+        }
+        return true;
     }
 }
