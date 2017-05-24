@@ -25,16 +25,11 @@
     <string name="create_plan_purpose_of_training">Purpose of the Training</string>
     <string name="create_plan_inhalation">Inhalation</string>
     <string name="create_plan_exhalation">Exhalation</string>
-    <string name="create_plan_target_duration">Target duration per exercise</string>
-    <string name="minutes">Minutes</string>
     <string name="select_breath_plan">Atemplan auswählen</string>
     <string name="plan_manager_available_plans">Available Breath Plans</string>
     <string name="plan_manager_sample_plan">Sample Plan (1)</string>
     <string name="create_plan_plan_description">Plan Description</string>
     <string name="create_plan_plan_description_hint">Evening Plan (1)</string>
-    <string name="create_plan_purpose_of_training">Purpose of the Training</string>
-    <string name="create_plan_inhalation">Inhalation</string>
-    <string name="create_plan_exhalation">Exhalation</string>
     <string name="create_plan_training_intensity">Training Intensity</string>
     <string name="very_high">Very high</string>
     <string name="high">High</string>
