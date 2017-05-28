@@ -5,8 +5,6 @@ import android.opengl.Matrix;
 
 import com.apps.philipps.source.helper.Vector;
 
-import javax.microedition.khronos.opengles.GL10;
-
 /**
  * Created by Jevgenij Huebert on 30.03.2017. Project Breathy
  */
@@ -19,9 +17,9 @@ public class Camera3D {
     private Vector up = new Vector(0,1,0);
     private Vector rotation = new Vector(0,0,1,0);
 
-    private float[] mMVPMatrix = new float[16];
-    private float[] mProjectionMatrix = new float[16];
-    private float[] mViewMatrix = new float[16];
+    public static float[] mMVPMatrix = new float[16];
+    public static float[] mProjectionMatrix = new float[16];
+    public static float[] mViewMatrix = new float[16];
     private float[] mRotationMatrix = new float[16];
 
     private static boolean init = false;
@@ -79,7 +77,7 @@ public class Camera3D {
 
     private void updateMatrices(){
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         Matrix.setLookAtM(mViewMatrix, 0, position.get(0), position.get(1), position.get(2),
                 direction.get(0), direction.get(1), direction.get(2),
                 up.get(0), up.get(1), up.get(2));

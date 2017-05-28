@@ -80,6 +80,12 @@ public class GameObject2D implements IObserver, IGameObject{
     public void move(Vector destination, int speed){
         position.animate(destination, speed);
     }
+
+    @Override
+    public void rotate(Vector destination) {
+
+    }
+
     @Override
     public void move(Vector destination){
         Log.d("Destination", "" + destination);
