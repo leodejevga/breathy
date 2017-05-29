@@ -2,6 +2,9 @@ package com.apps.philipps.source.helper._2D;
 
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 
 import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Vector;
@@ -15,6 +18,7 @@ public class GameObject2D implements IObserver, IGameObject{
 
     private View object;
     private Animated position;
+    private double curRotation;
 
     public GameObject2D(@NonNull View object){
         this(object, null, null);
@@ -64,6 +68,9 @@ public class GameObject2D implements IObserver, IGameObject{
     }
 
 
+    public Animated getAnimated(){
+        return position;
+    }
     @Override
     public void call(Object... messages) {
         if (messages != null && messages.length == 1 && messages[0] instanceof Vector) {
@@ -98,8 +105,33 @@ public class GameObject2D implements IObserver, IGameObject{
     }
 
     @Override
-    public void setRotation(Vector rotation) {
-        //TODO: rotation umsetzen.
+    public void setRotation(Vector vector){};
+
+
+    public void setRotation(double alpha) {
+        curRotation += alpha;
+        //Animation rotationAnimation = new RotateAnimation(0.0f, -90.0f, 0.5f, 0.5f);
+        //rotationAnimation.setDuration(1000);
+        //rotationAnimation.setFillAfter(true);
+        //rotationAnimation.setInterpolator(new LinearInterpolator());
+        //getView().startAnimation( rotationAnimation );
+        calcNewTarget(alpha);
+        getView().setRotation( (float) curRotation );
+
+    }
+
+    public void calcNewTarget(double alpha){
+
+        float x = position.getDestination().get( 0 );
+        float y = position.getDestination().get( 1 );
+        float xD = position.getPosition().get( 0 );
+        float yD = position.getPosition().get( 1 );
+        float newX = (float) (xD + (x-xD)* Math.cos( alpha ) - (y - yD) * Math.sin(alpha));;
+        float newY = (float) (yD + (x-xD)* Math.sin( alpha ) + (y - yD) * Math.cos(alpha));;
+
+        //ToDo dafür sorgen das Bild unter bestimmten umständen aus dem Screen verschwindet
+
+        position.setDestination(new Vector( x,y ));
     }
 
     /**

@@ -1,5 +1,8 @@
 package com.apps.philipps.source;
 
+import android.view.View;
+import android.view.ViewGroup;
+
 /**
  * This class provides some useful methods for your game
  */
@@ -26,6 +29,14 @@ public class GameUtil {
     public static int getRandomNumber(int Min, int Max){
 
         return Min + (int)(Math.random() * ((Max - Min) + 1));
+    }
+
+    public static void sendViewToBack(final View child) {
+        final ViewGroup parent = (ViewGroup)child.getParent();
+        if (null != parent) {
+            parent.removeView(child);
+            parent.addView(child, 0);
+        }
     }
 
 }
