@@ -1,11 +1,14 @@
 package com.apps.philipps.fade.activities;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +34,11 @@ public class Game extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.fade_game);
+
+        if (!checkOverlayPermission()){
+            askForOverlayPermission();
+        }
 
         initGUIComponents();
 
@@ -44,6 +51,24 @@ public class Game extends Activity implements OnClickListener {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_R_INTENT_FILTER_ACTION);
         registerReceiver(mainBroadcastReceiver, intentFilter);
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean checkOverlayPermission() {
+        if (!Settings.canDrawOverlays(this)){ // Permission is denied
+            return false;
+        }
+        return true;
+    }
+    private void askForOverlayPermission(){
+        // Check if Android M or higher
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Show alert dialog to the user saying a separate permission is needed
+            // Launch the settings activity if the user prefers
+            Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            startActivity(myIntent);
+        }
     }
 
     private void initGUIComponents() {
@@ -72,10 +97,10 @@ public class Game extends Activity implements OnClickListener {
         } else if (v.getId() == R.id.btnAutoChangeTransparency) {
             if (TransparencyService.isThreadRunning()) {
                 TransparencyService.setThreadRunning(false);
-                btnAutoChangeTransparency.setText("Transparenz automatisch �ndern");
+                btnAutoChangeTransparency.setText("Transparenz automatisch Ändern");
             } else {
                 TransparencyService.setThreadRunning(true);
-                btnAutoChangeTransparency.setText("Transparenz nicht �ndern");
+                btnAutoChangeTransparency.setText("Transparenz nicht Ändern");
             }
             Log.i(TAG, "TransparencyService.setNewAlpha()");
         } else if (v.getId() == R.id.btnStopActivity2) {
@@ -84,8 +109,16 @@ public class Game extends Activity implements OnClickListener {
     }
 
     private void startTranspearencyServiceAndNotification() {
-        startService(svc);
-        setGUIElementsToStartedService();
+        if (checkOverlayPermission()){
+            startService(svc);
+            setGUIElementsToStartedService();
+        }else {
+            // OverlayPermission fehlt. Rechte Anfragen.
+            askForOverlayPermission();
+            // TODO Benutzer auf Erforderlichkeit der Rechte hinweisen
+        }
+
+
     }
 
     private void setGUIElementsToStartedService() {
@@ -107,7 +140,7 @@ public class Game extends Activity implements OnClickListener {
         btnStartService.setEnabled(true);
         btnStopService.setEnabled(false);
         btnAutoChangeTransparency.setEnabled(false);
-        btnAutoChangeTransparency.setText("Transparenz nicht �ndern");
+        btnAutoChangeTransparency.setText("Transparenz nicht Ändern");
     }
 
     public static class MainBroadcastReceiver extends BroadcastReceiver {

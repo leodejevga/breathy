@@ -1,6 +1,6 @@
 package com.apps.philipps.source.helper._2D;
-
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Movie;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,7 +8,6 @@ import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
-
 import com.apps.philipps.source.AppState;
 
 /**
@@ -16,6 +15,8 @@ import com.apps.philipps.source.AppState;
  */
 
 public abstract class Activity2D extends Activity {
+    protected final float SCREEN_FACTOR = (getScreenHeight()+getScreenWidth()) / (1080+1920);
+
     private static final String TAG = "Activity 2D";
     protected boolean draw;
     protected int frameRate = 0;
@@ -23,7 +24,6 @@ public abstract class Activity2D extends Activity {
     private boolean initialized = false;
     private long start = System.currentTimeMillis();
     private boolean destroy = false;
-    private DisplayMetrics displayMetrics;
     private short ready=2;
 
     protected void brakeDraw(){
@@ -75,10 +75,10 @@ public abstract class Activity2D extends Activity {
     protected abstract void touch(MotionEvent event);
 
     protected float getScreenWidth(){
-        return displayMetrics.widthPixels;
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
     protected float getScreenHeight(){
-        return displayMetrics.heightPixels;
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
     private long sekond = System.currentTimeMillis();
@@ -106,8 +106,6 @@ public abstract class Activity2D extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
 
         startToDraw.start();
     }

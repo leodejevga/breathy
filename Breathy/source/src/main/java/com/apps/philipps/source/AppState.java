@@ -11,7 +11,8 @@ import android.util.Log;
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
 public class AppState {
-    public final static boolean simulateBreathy = true;
+    public final static boolean simulateBreathy = true; //Debug purpose
+
     public static boolean inGame = false;
     public static boolean recordData = false;
     public static boolean btAsked=false;
@@ -19,7 +20,10 @@ public class AppState {
     public static AppState.BtState btState = BtState.Disabled;
     public static FrameLimit framelimit = FrameLimit.Unlimited;
 
-    public static int breathyNormState = 700; //Standardwert
+    public static int breathyNormState = 700;
+    public static int breathyDataFrequency = 3;
+    public static int breathyUserMax = 1024;
+    public static int breathyUserMin = 200;
 
     public final static BroadcastReceiver btStateChanger = new BroadcastReceiver() {
         @Override

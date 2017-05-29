@@ -1,6 +1,7 @@
 package com.apps.philipps.source.helper._2D;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -86,8 +87,15 @@ public class GameObject2D implements IObserver, IGameObject{
     public void move(Vector destination, int speed){
         position.animate(destination, speed);
     }
+
+    @Override
+    public void rotate(Vector destination) {
+
+    }
+
     @Override
     public void move(Vector destination){
+        Log.d("Destination", "" + destination);
         position.animate(destination, null);
     }
 

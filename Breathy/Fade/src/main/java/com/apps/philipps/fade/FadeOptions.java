@@ -11,6 +11,7 @@ import com.apps.philipps.source.implementations.BreathyGameComponent;
  */
 
 public class FadeOptions extends BreathyGameComponent {
+
     /**
      * Instantiates a new Fade options.
      *

@@ -4,21 +4,19 @@ import android.content.Context;
 import android.support.annotation.RawRes;
 
 import com.apps.philipps.source.implementations.BreathyGame;
-
 public class Fade extends BreathyGame {
     Context context;
 
     public Fade() {
-        price = 0;
+        price = 1;
         name = "Fade";
     }
 
     @Override
     public void init(Context context, boolean bought) {
-        this.bought = bought;
-        this.context = context;
-        options = new FadeOptions(context);
         game = new FadeGame(context);
+        options = new FadeOptions(context);
+        this.bought = bought;
     }
 
     /**
@@ -27,9 +25,7 @@ public class Fade extends BreathyGame {
      * @return true if the preview successfully started
      */
     @Override
-    public
-    @RawRes
-    Integer getPreview() {
-        return R.raw.preview3;
+    public @RawRes Integer getPreview(){
+        return R.raw.preview;
     }
 }

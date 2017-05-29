@@ -2,7 +2,6 @@ package com.apps.philipps.source.helper._3D;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.apps.philipps.source.AppState;
@@ -31,8 +30,10 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        if (camera3D == null)
+        if (camera3D == null){
             camera3D = new Camera3D(width, height);
+            Light.init();
+        }
         else camera3D.changeSurface(width, height);
     }
 
