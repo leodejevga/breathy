@@ -2,24 +2,20 @@ package com.apps.philipps.app.activities;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.BluetoothService;
+import com.apps.philipps.app.BreathPlan;
 import com.apps.philipps.app.R;
-import com.apps.philipps.audiosurf.AudioSurf;
 import com.apps.philipps.source.AppState;
-import com.apps.philipps.source.Coins;
 
 /**
  * Main Activity.
@@ -38,7 +34,6 @@ public class Menu extends Activity {
         registerReceiver(AppState.btStateChanger, connected);
         registerReceiver(AppState.btStateChanger, disconnected);
         AppState.initBtState();
-
         Backend.init(this);
         initActivity();
     }
@@ -65,6 +60,14 @@ public class Menu extends Activity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Menu.this, Options.class);
+                startActivity(i);
+            }
+        });
+        Button breathPlan = (Button) findViewById(R.id.mainBreathPlan);
+        breathPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Menu.this, PlanManager.class);
                 startActivity(i);
             }
         });
@@ -131,5 +134,10 @@ public class Menu extends Activity {
             // Attempt to connect to the device
             Backend.connectDevice(device, secure);
         }
+    }
+
+    public void createPlan(View view) {
+        Intent i = new Intent(this, CreatePlan.class);
+        startActivity(i);
     }
 }

@@ -10,6 +10,7 @@ import com.apps.philipps.fade.Fade;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.Coins;
+import com.apps.philipps.source.cachemanager.CacheManager;
 import com.apps.philipps.source.interfaces.IGame;
 import com.apps.philipps.test.Test;
 import com.breathy.racing.Race;
@@ -38,7 +39,6 @@ public class Backend {
     private static BluetoothService bluetoothService = null;
     private static BluetoothAdapter adapter;
     private static BreathSimulator breathSimulator;
-    //TODO: Hier kommen weitere Daten hin die von überall zugreifbar sein müssen. In der Methode init werden sie initialisiert
     public static CacheManager cacheManager;
 
     /**
@@ -71,12 +71,13 @@ public class Backend {
                 game.init(context, Backend.cacheManager.isIGameBought(game.getName()));
             }
             BreathData.init(context, 400);
-            Coins.init(Backend.cacheManager.getCreditFromCache());
-            breathSimulator = BreathSimulator.getBreathSimulator();
-            breathSimulator.init(context, 4);
-            breathSimulator.removeRecordings(true);
-//            BreathSimulator.recordData(500);
-
+            Coins.init(context);
+            if(AppState.simulateBreathy) {
+                breathSimulator = BreathSimulator.getBreathSimulator();
+                breathSimulator.init(context, AppState.breathyDataFrequency);
+//              breathSimulator.removeRecordings(true);
+//              BreathSimulator.recordData(500);
+            }
             initialized = true;
             return true;
         }

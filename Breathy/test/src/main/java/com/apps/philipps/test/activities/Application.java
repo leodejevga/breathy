@@ -2,6 +2,7 @@ package com.apps.philipps.test.activities;
 
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -40,9 +41,9 @@ public class Application extends Activity2D{
         views.setText("Views on screen: " + (enemies.size() + lasers.size() + 3));
         rate.setText("Frame rate: " + frameRate);
         long delta = System.currentTimeMillis() - start;
-        if(System.currentTimeMillis() - enemySpawn>10){
+        if(System.currentTimeMillis() - enemySpawn>50){
             int y = Math.abs(random.nextInt())%(int)getScreenHeight(); // Über 500 bewegliche Objekte können gezeichnet werden sodass HTC M8 immer noch bei 30 frames per Seconds läuft. Über 700 bei 20 fps
-            enemies.add(initObject(new ImageView(this), R.drawable.enemy, 0, new Vector(1000f, (float)y), new Vector(50f, (float)y), 320));
+            enemies.add(initObject(new ImageView(this), R.drawable.enemy, 0, new Vector(1000f, (float)y), new Vector(50f, (float)y), (int)(320*SCREEN_FACTOR)));
             enemySpawn = System.currentTimeMillis();
         }
         for (int i = 0; i < enemies.size(); i++) {
@@ -59,7 +60,7 @@ public class Application extends Activity2D{
             }
             if(!removed && !enemies.get(i).isMoving()){
                 enemies.get(i).setPosition(new Vector(1000f, enemies.get(i).getPosition().get(1)));
-                enemies.get(i).move(new Vector(50f, enemies.get(i).getPosition().get(1)), 320);
+                enemies.get(i).move(new Vector(50f, enemies.get(i).getPosition().get(1)), (int)(320*SCREEN_FACTOR));
             } else if(!removed)
                 enemies.get(i).update(delta);
 
@@ -83,7 +84,7 @@ public class Application extends Activity2D{
         views = (TextView) findViewById(R.id.app_views);
         rate = (TextView) findViewById(R.id.app_framelimit);
         game = (RelativeLayout) findViewById(R.id.test_game_area);
-        ship = initObject(new ImageView(this), R.drawable.ship, 1, new Vector(50f, getScreenHeight()/2f), new Vector(50f, getScreenHeight()), 1200);
+        ship = initObject(new ImageView(this), R.drawable.ship, 1, new Vector(50f, getScreenHeight()/2f), new Vector(50f, getScreenHeight()), (int)(1200*SCREEN_FACTOR));
         enemies = new ArrayList<>();
         lasers = new ArrayList<>();
         start = System.currentTimeMillis();
@@ -97,7 +98,7 @@ public class Application extends Activity2D{
     @Override
     protected void touch(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN)
-            lasers.add(initObject(new ImageView(this), R.drawable.laser, 2, ship.getPosition().clone(), new Vector(getScreenWidth(), ship.getPosition().get(1)), 5000));
+            lasers.add(initObject(new ImageView(this), R.drawable.laser, 2, ship.getPosition().clone(), new Vector(getScreenWidth(), ship.getPosition().get(1)), (int)(10000*SCREEN_FACTOR)));
     }
 
     private GameObject2D initObject(ImageView view, @DrawableRes int content, int id, Vector position, Vector destination, int move){

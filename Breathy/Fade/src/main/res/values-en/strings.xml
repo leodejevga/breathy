@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_transparent">Transparent Activity</string>
+    <string name="transparency_notification_title_template">Transparency (Titel): %1$s</string>
+    <string name="notification_pause">Pause</string>
+    <string name="notification_play">Play</string>
+    <string name="notification_stop">Stop</string>
+    <string name="notification_exercise_runnung">Exercise is running</string>
+    <string name="notification_exercise_paused">Exercies paused</string>
+    <string name="custom_color">Costum color</string>
+    <string name="color_of_fog">Color of the fok</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="blue">Blue</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+</resources>

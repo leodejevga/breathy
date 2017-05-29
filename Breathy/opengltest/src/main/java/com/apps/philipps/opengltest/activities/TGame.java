@@ -2,7 +2,6 @@ package com.apps.philipps.opengltest.activities;
 
 import android.os.Bundle;
 
-import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.helper._3D.Activity3D;
 
 /**
@@ -14,8 +13,7 @@ public class TGame extends Activity3D {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppState.framelimit = AppState.FrameLimit.Movie;
-        openGL = new MyGLSurfaceView(this, new MyGLRenderer());
+        openGL = new MyGLSurfaceView(this, new MyGLRenderer(this));
     }
 
     @Override

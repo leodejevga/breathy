@@ -46,13 +46,11 @@ public class SelectGame extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Backend.selected = Backend.games.get(position);
-                Toast.makeText(SelectGame.this, "Game " + Backend.selected + " is selected", Toast.LENGTH_LONG).show();
                 buy.setVisibility(Backend.selected.isBought() ? View.INVISIBLE : View.VISIBLE);
                 Integer previewData = Backend.selected.getPreview();
                 if(previewData!=null) {
                     //TODO: Das Video muss richtig geladen zurzeit zeigt er eine nachricht an in der steht: "Video kann nicht wiedergegeben werden"
                     String videoPath = "android.resource://" + getResources().getResourcePackageName(R.raw.preview) + "/" + previewData;
-//                preview.setMediaController(new MediaController(SelectGame.this));
                     Uri uri = Uri.parse(videoPath);
                     preview.setVisibility(View.VISIBLE);
                     preview.setVideoURI(uri);
@@ -63,7 +61,7 @@ public class SelectGame extends AppCompatActivity {
     }
 
     /**
-     * Start GameOptions Listener
+     * Start OptionManager Listener
      *
      * @param view the Button that was clicked
      */
@@ -93,7 +91,7 @@ public class SelectGame extends AppCompatActivity {
      * @param view the Button that was clicked
      */
     public void buyGame(View view) {
-        Backend.selected.buy();
+        Backend.selected.buy(getApplicationContext());
         coins.setText(Coins.getAmount() + " Coins");
         Backend.cacheManager.saveCreditToCache();
         Backend.cacheManager.saveIGameStatusToCache(Backend.selected.getName(), Backend.selected.isBought());

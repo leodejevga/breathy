@@ -16,10 +16,9 @@
 
         <service
             android:name=".TransparencyService"
-            android:enabled="true"
-            android:exported="true" />
+            android:enabled="true"/>
 
-        <activity android:name=".activities.Options"></activity>
+        <activity android:name=".activities.Options"/>
     </application>
 
 </manifest>
