@@ -50,8 +50,8 @@ public class Shapes {
                     new Vector(1.0f, 1.0f, 1.0f, 1.0f), new Vector(1.0f, 1.0f, 1.0f, 1.0f), new Vector(1.0f, 1.0f, 1.0f, 1.0f),
                     new Vector(1.0f, 1.0f, 1.0f, 1.0f), new Vector(1.0f, 1.0f, 1.0f, 1.0f), new Vector(1.0f, 1.0f, 1.0f, 1.0f),
                     // texture
-                    new Vector(0.0f, 1.0f), new Vector(0.0f, 0.0f), new Vector(1.0f, 1.0f),
-                    new Vector(0.0f, 0.0f), new Vector(1.0f, 0.0f), new Vector(1.0f, 1.0f)
+                    new Vector(0.0f, 1.0f), new Vector(0.0f, 0.0f), new Vector(1.0f, 0.0f),
+                    new Vector(0.0f, 1.0f), new Vector(1.0f, 0.0f), new Vector(1.0f, 1.0f)
             );
         }
 
