@@ -247,6 +247,9 @@ public class GameObject3D implements IGameObject {
          * @param position   the position
          * @param coords     the coords
          */
+        int vertexShaderHandle;
+        int fragmentShaderHandle;
+
         public Shape(Context context, Vector color, int dimensions, Vector position,
                      int vertexCount, int colorCount, int textureCount, int textureID,
                      float... coords) {
@@ -280,8 +283,8 @@ public class GameObject3D implements IGameObject {
                     .order(ByteOrder.nativeOrder()).asFloatBuffer();
             textureCoordinates_Buffer.put(textureCoordinateData).position(0);
 
-            final int vertexShaderHandle = Helper_Utils.compileShader(GLES20.GL_VERTEX_SHADER, Helper_Utils.vertex_texture_shader);
-            final int fragmentShaderHandle = Helper_Utils.compileShader(GLES20.GL_FRAGMENT_SHADER, Helper_Utils.fragment_texture_shader);
+            vertexShaderHandle = Helper_Utils.compileShader(GLES20.GL_VERTEX_SHADER, Helper_Utils.vertex_texture_shader);
+            fragmentShaderHandle = Helper_Utils.compileShader(GLES20.GL_FRAGMENT_SHADER, Helper_Utils.fragment_texture_shader);
 
             programHandle = Helper_Utils.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle,
                     new String[]{"a_Position", "a_Color", "a_Normal", "a_TexCoordinate"});
@@ -313,7 +316,7 @@ public class GameObject3D implements IGameObject {
                     list.add(temp[j]);
             }
             float[] result = new float[list.size()];
-            for (int i = 0; i< list.size(); i++)
+            for (int i = 0; i < list.size(); i++)
                 result[i] = list.get(i);
             return result;
         }
@@ -364,6 +367,9 @@ public class GameObject3D implements IGameObject {
          * Draw.
          */
         public void draw() {
+            programHandle = Helper_Utils.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle,
+                    new String[]{"a_Position", "a_Color", "a_Normal", "a_TexCoordinate"});
+
             // Set our per-vertex lighting program.
             GLES20.glUseProgram(programHandle);
 
