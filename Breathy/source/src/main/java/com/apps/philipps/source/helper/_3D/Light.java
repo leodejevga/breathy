@@ -13,49 +13,50 @@ public class Light {
      * Used to hold a light centered on the origin in model space. We need a 4th coordinate so we can get translations to work when
      * we multiply this by our transformation matrices.
      */
-    private static float[] lightPosInModelSpace = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
+    private float[] lightPosInModelSpace = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
 
     /**
      * Used to hold the current position of the light in world space (after transformation via model matrix).
      */
-    private static float[] lightPosInWorldSpace = new float[4];
+    private float[] lightPosInWorldSpace = new float[4];
 
     /**
      * Used to hold the transformed position of the light in eye space (after transformation via modelview matrix)
      */
-    private static float[] lightPosInEyeSpace = new float[4];
+    private float[] lightPosInEyeSpace = new float[4];
 
     /**
      * Stores a copy of the model matrix specifically for the light position.
      */
-    private static float[] lightModel_Matrix = new float[16];
+    private float[] lightModel_Matrix = new float[16];
 
     /**
      * This is a handle to our light point program.
      */
-    private static int pointProgramHandle;
+    private int pointProgramHandle;
 
     /**
      * Store the view matrix. This can be thought of as our camera. This matrix transforms world space to eye space;
      * it positions things relative to our eye.
      */
-    private static float[] view_Matrix = Camera3D.mViewMatrix;
+    private float[] view_Matrix = Camera3D.mViewMatrix;
 
     /**
      * Allocate storage for the final combined matrix. This will be passed into the shader program.
      */
-    private static float[] model_view_Matrix = new float[16];
+    private float[] model_view_Matrix = new float[16];
 
     /**
      * Store the projection matrix. This is used to project the scene onto a 2D viewport.
      */
-    private static float[] projection_Matrix = Camera3D.mProjectionMatrix;
+    private float[] projection_Matrix = Camera3D.mProjectionMatrix;
 
-    private static float speed = 1f;
-    private static float angle = 0;
-    private static boolean increase = true;
+    private float speed = 1f;
+    private float angle = 0;
+    private boolean increase = true;
 
-    public static void init() {
+    public Light() {
+        angle = 0;
         final int pointVertexShaderHandle = Helper_Utils.compileShader(GLES20.GL_VERTEX_SHADER, Helper_Utils.point_vertex_shader);
         final int pointFragmentShaderHandle = Helper_Utils.compileShader(GLES20.GL_FRAGMENT_SHADER, Helper_Utils.point_fragment_shader);
         pointProgramHandle = Helper_Utils.createAndLinkProgram(pointVertexShaderHandle, pointFragmentShaderHandle,
@@ -63,7 +64,7 @@ public class Light {
 
     }
 
-    private static void lightMovementSimulation() {
+    private void lightMovementSimulation() {
         if (angle > 85)
             increase = false;
         if (angle < -85)
@@ -74,7 +75,7 @@ public class Light {
 
     }
 
-    public static void setUpLight() {
+    public void setUpLight() {
         lightMovementSimulation();
         // Calculate position of the light. Rotate and then push into the distance.
         Matrix.setIdentityM(lightModel_Matrix, 0);
@@ -86,7 +87,7 @@ public class Light {
         Matrix.multiplyMV(lightPosInEyeSpace, 0, view_Matrix, 0, lightPosInWorldSpace, 0);
     }
 
-    public static void drawLight() {
+    public void drawLight() {
         GLES20.glUseProgram(pointProgramHandle);
         final int pointMVPMatrixHandle = GLES20.glGetUniformLocation(pointProgramHandle, "u_MVPMatrix");
         final int pointPositionHandle = GLES20.glGetAttribLocation(pointProgramHandle, "a_Position");
@@ -103,11 +104,11 @@ public class Light {
         GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 1);
     }
 
-    public static float[] getLightPosInEyeSpace() {
+    public float[] getLightPosInEyeSpace() {
         return lightPosInEyeSpace;
     }
 
-    public static void setLightPosInEyeSpace(float[] lightPosInEyeSpace) {
-        Light.lightPosInEyeSpace = lightPosInEyeSpace;
+    public void setLightPosInEyeSpace(float[] lightPosInEyeSpace) {
+        this.lightPosInEyeSpace = lightPosInEyeSpace;
     }
 }

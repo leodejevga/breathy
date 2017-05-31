@@ -142,7 +142,6 @@ public class GameObject3D implements IGameObject {
         /**
          * Store the projection matrix. This is used to project the scene onto a 2D viewport.
          */
-        private float[] projection_Matrix = Camera3D.mProjectionMatrix;
 
         /**
          * Allocate storage for the final combined matrix. This will be passed into the shader program.
@@ -238,6 +237,8 @@ public class GameObject3D implements IGameObject {
 
         float[] textureCoordinateData;
         float[] colorData;
+        int vertexShaderHandle;
+        int fragmentShaderHandle;
 
         /**
          * Instantiates a new Shape.
@@ -288,7 +289,6 @@ public class GameObject3D implements IGameObject {
 
             programHandle = Helper_Utils.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle,
                     new String[]{"a_Position", "a_Color", "a_Normal", "a_TexCoordinate"});
-
             // Load the texture
             textureDataHandle = TextureHelper.loadTexture(context, textureID);
         }
@@ -375,15 +375,18 @@ public class GameObject3D implements IGameObject {
 
             // Set program handles for cube drawing.
             Model_View_Projection_MatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVPMatrix");
+            Renderer3D.checkGlError("glGetUniformLocation");
             Model_View_MatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVMatrix");
+            Renderer3D.checkGlError("glGetUniformLocation");
             mLightPosHandle = GLES20.glGetUniformLocation(programHandle, "u_LightPos");
+            Renderer3D.checkGlError("glGetUniformLocation");
             textureUniformHandle = GLES20.glGetUniformLocation(programHandle, "u_Texture");
+            Renderer3D.checkGlError("glGetUniformLocation");
             positionHandle = GLES20.glGetAttribLocation(programHandle, "a_Position");
             colorHandle = GLES20.glGetAttribLocation(programHandle, "a_Color");
             normalHandle = GLES20.glGetAttribLocation(programHandle, "a_Normal");
             TextureCoordinateHandle = GLES20.glGetAttribLocation(programHandle, "a_TexCoordinate");
 
-            Renderer3D.checkGlError("glGetUniformLocation");
             // Set the active texture unit to texture unit 0.
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 
@@ -436,7 +439,8 @@ public class GameObject3D implements IGameObject {
             Renderer3D.checkGlError("glUniformMatrix4fv");
 
             // Pass in the light position in eye space.
-            GLES20.glUniform3f(mLightPosHandle, Light.getLightPosInEyeSpace()[0], Light.getLightPosInEyeSpace()[1], Light.getLightPosInEyeSpace()[2]);
+            GLES20.glUniform3f(mLightPosHandle, Renderer3D.light.getLightPosInEyeSpace()[0],
+                    Renderer3D.light.getLightPosInEyeSpace()[1], Renderer3D.light.getLightPosInEyeSpace()[2]);
             Renderer3D.checkGlError("glUniform3f");
             // Draw a fragment
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, coords.length / dimensions);

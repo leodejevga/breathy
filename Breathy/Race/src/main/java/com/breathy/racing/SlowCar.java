@@ -13,11 +13,12 @@ import com.apps.philipps.source.helper._2D.GameObject2D;
 public class SlowCar extends GameObject2D {
 
     int curXStreet;
-    int groundSpeed;
+    double groundSpeed;
 
-    public SlowCar( @NonNull View object, Vector position, Vector destination, int curXStreet) {
+    public SlowCar( @NonNull View object, Vector position, Vector destination, int curXStreet, double groundspeed) {
         super( object, position, destination );
         this.curXStreet = curXStreet;
+        this.groundSpeed = groundspeed;
     }
 
     public int getCurXStreet(){
@@ -28,5 +29,7 @@ public class SlowCar extends GameObject2D {
         this.curXStreet = xStreet;
     }
 
-
+    public double getGroundSpeed(){
+        return groundSpeed;
+    }
 }

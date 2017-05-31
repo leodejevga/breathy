@@ -22,19 +22,23 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
     protected long deltaTime;
 
     public static Camera3D camera3D;
+    public static Light light;
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        if (light == null ){
+            light = new Light();
+        }
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         if (camera3D == null){
             camera3D = new Camera3D(width, height);
-            Light.init();
         }
         else camera3D.changeSurface(width, height);
+
     }
 
     @Override
