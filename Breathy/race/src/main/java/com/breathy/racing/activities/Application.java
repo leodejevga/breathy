@@ -215,7 +215,6 @@ public class Application extends Activity2D {
 
         for ( int i = 0; i < slowCars.size(); i++ ) {
             boolean removed = false;
-            Log.i("background", "8."+System.currentTimeMillis());
 
             if ( slowCars.get( i ).intersect( car ) ) {
                 game.removeView( slowCars.get( i ).getView() );
@@ -285,7 +284,9 @@ public class Application extends Activity2D {
         if (  slowCars.size() != 0 && xIndex == slowCars.get( slowCars.size() - 1 ).getPosition().get( 0 ) ) {
             xIndex = GameUtil.getRandomNumber( 0, 2 );
         }
-        slowCars.add( initSlowCar( new ImageView( this ), R.drawable.slow_car, 0, new Vector( xRoads[xIndex], (float) 10 ), new Vector( xRoads[xIndex], getScreenHeight() ), (int) deltaSpeed , xIndex) );
+        double speed = GameUtil.triangularDistribution( 0.1, 1.4, 1 );
+        slowCars.add( initSlowCar( new ImageView( this ), R.drawable.slow_car, 0, new Vector( xRoads[xIndex], (float) 10 ),
+                new Vector( xRoads[xIndex], getScreenHeight() ), (int) deltaSpeed , xIndex, speed) );
         slowCars.get( slowCars.size()-1).getView().getLayoutParams().height = (int) (getScreenWidth()*0.15);
         slowCars.get( slowCars.size()-1).getView().getLayoutParams().width = (int) (getScreenWidth()*0.15);
         nextCar = System.currentTimeMillis() + (long) GameUtil.triangularDistribution( 1500., 2300., 2000. );
@@ -313,7 +314,7 @@ public class Application extends Activity2D {
             faster = 0;
             gameScoreMultiplier += .1;
             for ( int i = 0; i < slowCars.size(); i++ ) {
-                slowCars.get( i ).move( (int) deltaSpeed );
+                slowCars.get( i ).move( (int) (deltaSpeed*slowCars.get( i ).getGroundSpeed()) );
             }
             background.getFirst().move( (int) (BACKGROUNDSPEED + deltaSpeed) );
             background.getLast().move( (int) (BACKGROUNDSPEED + deltaSpeed) );
@@ -369,12 +370,12 @@ public class Application extends Activity2D {
         return result;
     }
 
-    private SlowCar initSlowCar( ImageView view, @DrawableRes int content, int id, Vector position, Vector destination, int move, int curXStreet ) {
+    private SlowCar initSlowCar( ImageView view, @DrawableRes int content, int id, Vector position, Vector destination, int move, int curXStreet, double groundspeed ) {
         view.setId( id );
         view.setImageResource( content );
         game.addView( view );
-        SlowCar result = new SlowCar( view, position, destination, curXStreet );
-        result.move( move );
+        SlowCar result = new SlowCar( view, position, destination, curXStreet, groundspeed );
+        result.move( (int)(move*groundspeed) );
         return result;
     }
 }
