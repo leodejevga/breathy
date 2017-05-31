@@ -72,7 +72,8 @@ public class Camera3D {
     public void changeSurface(int width, int height) {
         GLES20.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio,  -1, 1, 2, 50000);
+        updateMatrices();
     }
 
     private void updateMatrices(){

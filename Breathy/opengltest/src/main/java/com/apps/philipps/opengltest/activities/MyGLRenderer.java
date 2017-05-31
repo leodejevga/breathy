@@ -5,7 +5,6 @@ import android.content.Context;
 import com.apps.philipps.opengltest.Shapes;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._3D.GameObject3D;
-import com.apps.philipps.source.helper._3D.Light;
 import com.apps.philipps.source.helper._3D.Renderer3D;
 
 import java.util.ArrayList;
@@ -44,10 +43,11 @@ public class MyGLRenderer extends Renderer3D {
     public void onDrawFrame(GL10 unused) {
         super.onDrawFrame(unused);
         refreshCameraPosition();
-        Light.setUpLight();
+
+        Renderer3D.light.setUpLight();
         drawStreet();
    //     triangle.update(deltaTime);
-        Light.drawLight();
+        Renderer3D.light.drawLight();
     }
 
 
