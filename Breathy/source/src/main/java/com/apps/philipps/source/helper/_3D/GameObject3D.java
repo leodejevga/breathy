@@ -269,6 +269,9 @@ public class GameObject3D implements IGameObject {
             int colorHandle = GLES20.glGetUniformLocation(program, "vColor");
             GLES20.glUniform4fv(colorHandle, 1, color.get(), 0);
 
+            int lightHandle = GLES20.glGetUniformLocation(program, "vLight");
+            GLES20.glUniform4fv(lightHandle, 1, color.get(), 0);
+
             // get handle to shape's transformation matrix
             int mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "uMVPMatrix");
             Renderer3D.checkGlError("glGetUniformLocation");

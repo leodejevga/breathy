@@ -79,12 +79,15 @@ public class Camera3D {
 
     private void updateMatrices(){
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
         Matrix.setLookAtM(mViewMatrix, 0, position.get(0), position.get(1), position.get(2),
                 direction.get(0), direction.get(1), direction.get(2),
                 up.get(0), up.get(1), up.get(2));
+
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
         Matrix.setRotateM(mRotationMatrix, 0, rotation.get(3), rotation.get(0), rotation.get(1), rotation.get(2));
+
         Matrix.multiplyMM(mMVPMatrix, 0, mMVPMatrix, 0, mRotationMatrix, 0);
     }
 

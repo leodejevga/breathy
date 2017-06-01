@@ -57,11 +57,10 @@ public abstract class BreathInterpreter {
             float iValue = Math.abs(option.getIn()-strengthIn<0?0:option.getIn()-strengthIn);
             float oValue = Math.abs(option.getOut()-strengthOut<0?0:option.getOut()-strengthOut);
             float min = (fValue + iValue + oValue) / 3;
-            BreathError result = min<0.1?VeryGood:min<0.15?Good:min<0.17?Ok:min<0.2?NotOk:min<0.25?NotGood:min<0.3?Bad:VeryBad;
-            return result;
+            return min<0.1?VeryGood:min<0.15?Good:min<0.17?Ok:min<0.2?NotOk:min<0.25?NotGood:min<0.3?Bad:VeryBad;
         }
     }
-
+    
     public static void addObserver(IObserver o) {
         observer.add(o);
     }
@@ -77,27 +76,24 @@ public abstract class BreathInterpreter {
         float in = 0;
         float out = 0;
         float frequency = 0;
-        boolean ready = false;
         boolean readyToAdd=false;
         int mean=0;
         int founds = 0;
         for (int i=0; i<data.length-1 && data[i]!=null; i++) {
             int d = data[i];
-            if (!ready) {
+            if (founds<2) {
                 if (d - norm > 0) {
                     if (moment==BreathMoment.None)
                         moment = BreathMoment.In;
-                    if(out!=0 && in > d-norm)
-                        ready=true;
-                    else if (in < d - norm) {
+
+                    if (in < d - norm) {
                         in = d - norm;
                     }
                 } else if (d - norm < 0) {
                     if (moment==BreathMoment.None)
                         moment = BreathMoment.Out;
-                    if(in!=0 && out > norm-d)
-                        ready=true;
-                    else if (out < norm - d) {
+
+                    if (out < norm - d) {
                         out = norm - d;
                     }
                 }
@@ -153,7 +149,7 @@ public abstract class BreathInterpreter {
 
         @Override
         public String toString() {
-            return "status: " + moment + ", strength: " + strength + ", frequency: " + frequency + ", how good: " + error;
+            return "status: " + moment + ", strength: " + (int)(strength*100) + "%, frequency: " + (int)(frequency*60) + " per minute, how good: " + error;
         }
     }
 

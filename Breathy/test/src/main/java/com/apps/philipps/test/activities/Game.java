@@ -40,7 +40,7 @@ public class Game extends Activity2D {
         framerate = (TextView) findViewById(R.id.test_framerate);
         dataDisplay = (TextView) findViewById(R.id.test_data);
         frameCount = (TextView) findViewById(R.id.test_frameCount);
-        PlanManager.addPlan(new PlanManager.Plan(0.5f, 0.2f, 0.5f, 10).addOption(0.3f, 0.6f, 0.7f, 15));
+        PlanManager.addPlan(PlanManager.getPlan(0.5f, 0.2f, 0.5f, 15).addOption(0.3f, 0.6f, 0.7f, 25).addOption(0.3f, 0.3f, 0.1f, 5));
         PlanManager.startPlan(0);
     }
 

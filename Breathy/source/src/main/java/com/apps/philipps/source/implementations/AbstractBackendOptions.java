@@ -13,16 +13,13 @@ import java.util.ArrayList;
  */
 
 public abstract class AbstractBackendOptions {
-    public static String gameName = "";
+    protected static String gameName = "";
     private static String key = gameName + "Options";
-    private static Context context;
     /**
      * The GameOptions.
      */
     public static OptionManager<String, Boolean> options;
 
-    static SaveData<ArrayList> saveOptions;
-    static SaveData<Integer> saveCredit;
     /**
      * The constant highscore.
      */
@@ -46,24 +43,15 @@ public abstract class AbstractBackendOptions {
         }
     }
 
-    public static void loadGameOptions(){
-        saveOptions =  new SaveData<>(context);
+    protected static void loadGameOptions(Context context){
+        SaveData<ArrayList> saveOptions =  new SaveData<>(context);
         ArrayList gameOptions = saveOptions.readObject(key);
         if (gameOptions != null)
             options.setOptions(gameOptions);
     }
 
-    public static void saveGameOptions(){
-        saveOptions =  new SaveData<>(context);
+    public static void saveGameOptions(Context context){
+        SaveData<ArrayList> saveOptions =  new SaveData<>(context);
         saveOptions.writeObject(key , options.getOptions());
-    }
-
-    public static void saveCredit(){
-        saveCredit =  new SaveData<>(context);
-        saveCredit.writeObject("credit" , Coins.getAmount());
-    }
-
-    public static void setContext(Context context) {
-        AbstractBackendOptions.context = context;
     }
 }

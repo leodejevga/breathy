@@ -22,7 +22,7 @@ public class AppState {
 
     public static int breathyNormState = 700;
     public static int breathyDataFrequency = 3;
-    public static int breathyUserMax = 1010;
+    public static int breathyUserMax = 1024;
     public static int breathyUserMin = 200;
 
     public final static BroadcastReceiver btStateChanger = new BroadcastReceiver() {
