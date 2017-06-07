@@ -24,13 +24,13 @@ public class Shapes {
         public Triangle(Context context, Vector color, int dimensions, Vector position,
                         int vertexCount, int colorCount, int textureCount, int textureID,
                         float... coords) {
-            super(context, color, dimensions, position, vertexCount,  colorCount,  textureCount,  textureID, coords);
+            super(context,false, dimensions, position, vertexCount,  colorCount,  textureCount,  textureID, coords);
         }
 
         public Triangle(Context context, Vector color, Vector position,
                         int vertexCount, int colorCount, int textureCount, int textureID,
                         Vector... coords) {
-            super(context, color, position, vertexCount,  colorCount,  textureCount,  textureID, coords);
+            super(context,false, position, vertexCount,  colorCount,  textureCount,  textureID, coords);
         }
     }
 }

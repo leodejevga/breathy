@@ -2,6 +2,8 @@ package com.apps.philipps.opengltest.activities;
 
 import android.content.Context;
 
+import com.apps.philipps.opengltest.Car;
+import com.apps.philipps.opengltest.R;
 import com.apps.philipps.opengltest.Shapes;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._3D.GameObject3D;
@@ -23,7 +25,8 @@ public class MyGLRenderer extends Renderer3D {
     private float SPEED = 0.01f;
 
     ArrayList<GameObject3D> street = new ArrayList<>();
-    GameObject3D triangle;
+
+    public Car car;
 
     public MyGLRenderer(Context context) {
         this.mActivityContext = context;
@@ -33,20 +36,21 @@ public class MyGLRenderer extends Renderer3D {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         super.onSurfaceCreated(unused, config);
         createStreet();
-//        triangle = new GameObject3D(new Shapes.Triangle(mActivityContext));
-        //drawStreet();
-        //cube = new GameObject3D(GameObject3D.loadObject(mActivityContext, "Download/cube.OBJ"));
-        //banana = new GameObject3D(GameObject3D.loadObject(mActivityContext, "Download/banana.obj"));
+        car = new Car(mActivityContext, R.raw.newcar, R.drawable.cartexture);
+        car.setPosition(new Vector(0, -1f, -0.2f));
     }
 
     @Override
     public void onDrawFrame(GL10 unused) {
         super.onDrawFrame(unused);
         refreshCameraPosition();
-
         Renderer3D.light.setUpLight();
+
         drawStreet();
-   //     triangle.update(deltaTime);
+
+        car.runSimulation();
+        car.draw(deltaTime);
+
         Renderer3D.light.drawLight();
     }
 
@@ -67,7 +71,7 @@ public class MyGLRenderer extends Renderer3D {
     }
 
     private void createStreet() {
-        for (int i = -3; i < 4; i++) {
+        for (int i = -9; i < 10; i++) {
             GameObject3D square = new GameObject3D(new Shapes.Square(mActivityContext));
             square.setPosition(new Vector(0, i * 1.0f, 0));
             street.add(square);
