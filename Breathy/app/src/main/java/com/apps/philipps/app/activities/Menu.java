@@ -3,7 +3,6 @@ package com.apps.philipps.app.activities;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.BluetoothService;
-import com.apps.philipps.app.BreathPlan;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.AppState;
 
@@ -67,7 +65,7 @@ public class Menu extends Activity {
         breathPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Menu.this, PlanManager.class);
+                Intent i = new Intent(Menu.this, PlansManager.class);
                 startActivity(i);
             }
         });
@@ -137,7 +135,7 @@ public class Menu extends Activity {
     }
 
     public void createPlan(View view) {
-        Intent i = new Intent(this, CreatePlan.class);
+        Intent i = new Intent(this, CreatePlanPart.class);
         startActivity(i);
     }
 }
