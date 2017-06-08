@@ -60,7 +60,7 @@ public abstract class BreathInterpreter {
             return min<0.1?VeryGood:min<0.15?Good:min<0.17?Ok:min<0.2?NotOk:min<0.25?NotGood:min<0.3?Bad:VeryBad;
         }
     }
-    
+
     public static void addObserver(IObserver o) {
         observer.add(o);
     }

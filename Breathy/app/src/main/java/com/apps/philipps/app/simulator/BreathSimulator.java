@@ -79,7 +79,6 @@ public class BreathSimulator {
                 AppState.recordData = true;
                 simulator.saveData.writeObject(DATA_NAME, data);
                 simulator.recording = false;
-                data = data;
                 Log.d(TAG, "Data collected!");
             }
         }
