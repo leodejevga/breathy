@@ -68,7 +68,7 @@ public class GameObject3D implements IGameObject {
     @Override
     public void rotate(Vector destination) {
         init();
-        setRotation(destination 6+);
+        setRotation(destination);
         float[] temp = new float[16];
         Matrix.setRotateM(temp, 0, rotation.get(3), rotation.get(0), rotation.get(1), rotation.get(2));
         Matrix.multiplyMM(result, 0, result, 0, temp, 0);
