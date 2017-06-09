@@ -23,7 +23,7 @@
             android:id="@+id/txtAvailableBreathPlansParts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/plan_manager_available_plans" />
+            android:text="@string/plan_parts" />
 
         <ExpandableListView
             android:id="@+id/elvPlanParts"

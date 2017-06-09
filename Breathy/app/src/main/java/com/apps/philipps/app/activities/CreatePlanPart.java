@@ -7,28 +7,28 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.apps.philipps.app.R;
+import com.apps.philipps.source.PlanManager;
 
 public class CreatePlanPart extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
-    private BreathPlan breathPlan;
+    private PlanManager.Plan.Option part;
+    private PlanManager.Plan.Option newPart;
 
-    private int planId;
-    private boolean newPlan;
+    private boolean create;
 
-    private EditText etPlanDescription;
-
-    private TextView txtBreathsPerMinute;
-    private SeekBar sbBreathsPerMinute;
-
-    private EditText etDurationOfExercise;
-
-    private boolean activated;
+    private SeekBar frequency;
+    private TextView frequencyText;
+    private TextView duration;
+    private SeekBar in;
+    private SeekBar out;
 
     private Button btnSubmitPlan;
     private Button btnCancelPlan;
@@ -38,53 +38,31 @@ public class CreatePlanPart extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan_part);
 
-        Intent intent = getIntent();
-        this.planId = intent.getIntExtra(PlansManager.EXTRA_PLAN_ID, 0);
+        part = (PlanManager.Plan.Option) getIntent().getSerializableExtra("planPart");
+        create = part==null;
+        initViews();
+        if(!create)
+            initData();
+    }
 
-        activated = false;
+    private void initData() {
+        in.setProgress(part.getIn().id);
+        out.setProgress(part.getOut().id);
 
-        int requestCode = intent.getIntExtra(PlansManager.EXTRA_REQUEST_CODE, PlansManager.REQUEST_CODE_CREATE_PLAN);
-        if (requestCode == PlansManager.REQUEST_CODE_CREATE_PLAN) { // New Plan
-            this.newPlan = true;
-            this.breathPlan = new BreathPlan(planId, "", true,
-                    BreathPlan.INTENSITY_MEDIUM, BreathPlan.MIN_BREATHS_PER_MINUTE, BreathPlan.MIN_DURATION_OF_EXERCISE, false);
-            initGUIComponents(newPlan, getString(R.string.creating_plan) + planId);
-        } else if (requestCode == PlansManager.REQUEST_CODE_EDIT_PLAN) { // Existing Plan
-            this.newPlan = false;
-            this.breathPlan = PlansManager.getBreathPlan(planId - 1);
-            initGUIComponents(newPlan, getString(R.string.editing_plan) + planId);
-        }
     }
 
 
-    private void initGUIComponents(boolean newPlan, String title) {
-        ((TextView) findViewById(R.id.txtCreatePlanTitle)).setText(title);
+    private void initViews() {
+        ((TextView) findViewById(R.id.txtCreatePlanTitle)).setText(create?"Create new part": "Edit part of plan");
 
-        etPlanDescription = (EditText) findViewById(R.id.etPlanDescription);
-
-        sbBreathsPerMinute = (SeekBar) findViewById(R.id.sbBreathsPerMinute);
-        sbBreathsPerMinute.setMax(BreathPlan.MAX_BREATHS_PER_MINUTE - BreathPlan.MIN_BREATHS_PER_MINUTE);
-
-        txtBreathsPerMinute = (TextView) findViewById(R.id.txtBreathsPerMinute);
-
-        etDurationOfExercise = (EditText) findViewById(R.id.etDurationOfExercise);
+        frequency = (SeekBar) findViewById(R.id.sbBreathsPerMinute);
+        frequencyText = (TextView) findViewById(R.id.txtBreathsPerMinute);
+        duration = (EditText) findViewById(R.id.etDurationOfExercise);
 
         btnSubmitPlan = (Button) findViewById(R.id.btnSubmitPlan);
         btnCancelPlan = (Button) findViewById(R.id.btnCancelPlan);
-
-        if (breathPlan.getName().equals("")) {
-            btnSubmitPlan.setEnabled(false);
-        } else {
-            etPlanDescription.setText(breathPlan.getName());
-        }
-
-        if (breathPlan.isBreatheIn()) {
-            ((RadioButton) findViewById(R.id.rbInhalation)).setChecked(true);
-        } else {
-            ((RadioButton) findViewById(R.id.rbExhalation)).setChecked(true);
-        }
-
-        int intensity = breathPlan.getIntensity();
+        in = (SeekBar) findViewById(R.id.seekIn);
+        out = (SeekBar) findViewById(R.id.seekOut);
 
         switch (intensity) {
             case BreathPlan.INTENSITY_VERY_LOW:
@@ -248,5 +226,10 @@ public class CreatePlanPart extends AppCompatActivity implements View.OnClickLis
             etDurationOfExercise.setText(BreathPlan.MIN_DURATION_OF_EXERCISE + "");
         }
         return true;
+    }
+
+    public void addMinute(View view) {
+    }
+    public void subMinute(View view) {
     }
 }

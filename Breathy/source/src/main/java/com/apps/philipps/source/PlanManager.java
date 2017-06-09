@@ -1,10 +1,9 @@
 package com.apps.philipps.source;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.apps.philipps.source.interfaces.IObserver;
+import com.apps.philipps.source.interfaces.IIdentifiable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,16 +36,11 @@ public class PlanManager implements IObserver {
         plans.remove(plan);
     }
 
-    public static List<Plan> getPlans(){
-        List<Plan> result = new ArrayList<>();
+    public static List<IIdentifiable> getPlans(){
+        final List<IIdentifiable> result = new ArrayList<>();
         for (Plan p :
                 plans) {
-            try{
-                result.add((Plan)p.clone());
-            }
-            catch (CloneNotSupportedException e){
-                return null;
-            }
+            result.add(p);
         }
         return result;
     }
@@ -81,7 +75,7 @@ public class PlanManager implements IObserver {
         return plans.remove(id);
     }
 
-    public static Plan newPlan(float in, float out, float freq, int duration){
+    public static Plan newPlan(Plan.BreathIntensity in, Plan.BreathIntensity out, float freq, int duration){
         return new Plan(in, out, freq, duration);
     }
 
@@ -105,8 +99,7 @@ public class PlanManager implements IObserver {
         }
     }
 
-
-    public static class Plan implements Cloneable, Serializable {
+    public static class Plan implements Cloneable, Serializable, IIdentifiable {
         private List<Option> options;
         private long currentTime;
         private int currentOption;
@@ -117,33 +110,56 @@ public class PlanManager implements IObserver {
         public Plan(){
             options = new ArrayList<>();
         }
-        public Plan(float in, float out, float frequency, int duration){
+        public Plan(BreathIntensity in, BreathIntensity out, float frequency, int duration){
             this();
             options.add(new Option(in, out, frequency, duration*1000));
         }
-        public Plan(String name, float in, float out, float frequency, int duration){
+        public Plan(String name, BreathIntensity in, BreathIntensity out, float frequency, int duration){
             this(in, out, frequency, duration);
             this.name = name;
         }
 
-        public Plan addOption(float in, float out, float frequency, int duration){
-            options.add(new Option(in, out, frequency, duration*1000));
+        public Plan addOption(BreathIntensity in, BreathIntensity out, float frequency, int duration){
+            Option o = new Option(in, out, frequency, duration*1000);
+            o.setId(options.size(), name);
+            options.add(o);
             return this;
+        }
+        public Plan addOption(Option o){
+            o.setId(options.size(), name);
+            options.add(o);
+            return this;
+        }
+        public Plan removeOption(Option o){
+            options.remove(o);
+            return this;
+        }
+        public Plan removeOption(int id){
+            options.remove(id);
+            return this;
+        }
+        public Option getOption(int id){
+            return options.get(id);
+        }
+
+        public List<IIdentifiable> getOptions(){
+            List<IIdentifiable> result = new ArrayList<>();
+            for (Option o :
+                    options) {
+                result.add(o);
+            }
+            return result;
         }
 
         public boolean isActivated(){
             return PlanManager.isActive(this);
         }
 
-        public String getName(){
-            return name;
-        }
-
-        public float getStrengthIn(){
+        public BreathIntensity getStrengthIn(){
             return options.get(currentOption).in;
         }
 
-        public float getStrengthOut(){
+        public BreathIntensity getStrengthOut(){
             return options.get(currentOption).out;
         }
 
@@ -153,10 +169,6 @@ public class PlanManager implements IObserver {
 
         public int getCurrentDuration(){
             return (int)(currentTime/1000);
-        }
-
-        public int getId(){
-            return plans.indexOf(this);
         }
 
         private boolean startPlan() {
@@ -193,6 +205,16 @@ public class PlanManager implements IObserver {
         }
 
         @Override
+        public String getName(){
+            return name;
+        }
+
+        @Override
+        public int getId(){
+            return plans.indexOf(this);
+        }
+
+        @Override
         protected Object clone() throws CloneNotSupportedException {
             Plan result = new Plan();
             result.currentOption = currentOption;
@@ -216,24 +238,55 @@ public class PlanManager implements IObserver {
             return result;
         }
 
+        public enum BreathIntensity{
+            VeryHigh(1, 5),
+            High(0.8, 4),
+            Medium(0.5, 3),
+            Low(0.4, 2),
+            VeryLow(0.2, 1),
+            None(0, 0);
+            public final double value;
+            public final int id;
+            BreathIntensity(double value, int id){
+                this.value = value;
+                this.id = id;
+            }
+            public static BreathIntensity get(int id){
+                for(BreathIntensity i : values())
+                    if(i.id == id)
+                        return i;
+                return null;
+            }
+            public static BreathIntensity get(double value){
+                BreathIntensity prev = None;
+                for(BreathIntensity i : values())
+                    if(i.value <= value && i.value > prev.value)
+                        return i;
+                    else
+                        prev = i;
+                return null;
+            }
+        }
+
         @Override
         public int hashCode() {
             return options.size() * name.hashCode();
         }
 
-        public static class Option implements Cloneable, Serializable {
-            private float out;
-            private float in;
+
+
+        public static class Option implements Cloneable, Serializable, IIdentifiable {
+            private BreathIntensity out;
+            private BreathIntensity in;
             private float frequency;
             private long duration;
-            public Option(float in, float out, float frequency, long duration){
-                float max = Math.max(in, out);
+            private int id;
+            private String name;
+
+            public Option(BreathIntensity in, BreathIntensity out, float frequency, long duration){
+
                 this.in = in;
                 this.out = out;
-                if(max>1){
-                    this.in /= max;
-                    this.out /= max;
-                }
                 this.frequency = frequency;
                 this.duration = duration;
             }
@@ -241,16 +294,31 @@ public class PlanManager implements IObserver {
                 return duration;
             }
 
-            public float getIn(){
+            public BreathIntensity getIn(){
                 return in;
             }
 
-            public float getOut(){
+            public BreathIntensity getOut(){
                 return out;
             }
 
             public float getFrequency(){
                 return frequency;
+            }
+
+            private void setId(int id, String name){
+                this.id = id;
+                this.name = name;
+            }
+
+            @Override
+            public String getName() {
+                return name + " " + id;
+            }
+
+            @Override
+            public int getId(){
+                return id;
             }
 
             @Override
@@ -261,7 +329,7 @@ public class PlanManager implements IObserver {
             @Override
             public String toString() {
 
-                return "in: " + (int)(in*100) + "%, out: " + (int)(out*100) + "%, frequency: " + (int)(frequency*60) + " per minute, time: " + duration;
+                return "in: " + in + "%, out: " + out + "%, frequency: " + (int)(frequency*60) + " per minute, time: " + duration;
             }
         }
 
