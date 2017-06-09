@@ -34,23 +34,12 @@ public class GameObject3D implements IGameObject {
 
     @Override
     public void setPosition(Vector position) {
-        init();
         shape.setPosition(position);
-        float[] temp = new float[16];
-        Matrix.setIdentityM(temp, 0);
-        Matrix.translateM(temp, 0, getPosition().get(0), getPosition().get(1), getPosition().get(2));
-        Matrix.multiplyMM(result, 0, result, 0, temp, 0);
-        Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
     }
 
     @Override
     public void setRotation(Vector rotation) {
-        init();
         this.rotation = rotation;
-        float[] temp = new float[16];
-        Matrix.setRotateM(temp, 0, rotation.get(3), rotation.get(0), rotation.get(1), rotation.get(2));
-        Matrix.multiplyMM(result, 0, result, 0, temp, 0);
-        Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
     }
 
     /**
@@ -78,18 +67,23 @@ public class GameObject3D implements IGameObject {
 
     @Override
     public void rotate(Vector destination) {
-        setRotation(getRotation().add(destination));
+        init();
+        setRotation(destination 6+);
+        float[] temp = new float[16];
+        Matrix.setRotateM(temp, 0, rotation.get(3), rotation.get(0), rotation.get(1), rotation.get(2));
+        Matrix.multiplyMM(result, 0, result, 0, temp, 0);
+        Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
     }
 
     @Override
     public void move(Vector destination) {
-        //init();
-        setPosition(getPosition().add(destination));
-        //float[] temp = new float[16];
-        //Matrix.setIdentityM(temp, 0);
-        //Matrix.translateM(temp, 0, destination.get(0), destination.get(1), destination.get(2));
-        //Matrix.multiplyMM(result, 0, result, 0, temp, 0);
-        //Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
+        init();
+        shape.setPosition(getPosition().add(destination));
+        float[] temp = new float[16];
+        Matrix.setIdentityM(temp, 0);
+        Matrix.translateM(temp, 0, getPosition().get(0), getPosition().get(1), getPosition().get(2));
+        Matrix.multiplyMM(result, 0, result, 0, temp, 0);
+        Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
     }
 
     @Override

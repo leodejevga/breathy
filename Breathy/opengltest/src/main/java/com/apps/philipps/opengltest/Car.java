@@ -49,8 +49,8 @@ public class Car {
 
     public void runSimulation() {
         car.move(new Vector(0, 0, 0));
-        car.setRotation(new Vector(1, 0, 0, -90));
-        car.setRotation(new Vector(0, 1, 0, angle * rotateSpeed));
+        car.rotate(new Vector(1, 0, 0, -90));
+        car.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
         resetRotation();
         //car.rotate(new Vector(0, 0, 1, angle));
     }
