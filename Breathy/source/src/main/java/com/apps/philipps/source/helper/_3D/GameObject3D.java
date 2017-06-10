@@ -113,7 +113,6 @@ public class GameObject3D implements IGameObject {
             if (!isResultMatrixSet) {
                 System.arraycopy(Renderer3D.camera3D.getMVPMatrix(), 0, result, 0, Renderer3D.camera3D.getMVPMatrix().length);
                 Matrix.setIdentityM(shape.model_Matrix, 0);
-
                 isResultMatrixSet = true;
             }
         }

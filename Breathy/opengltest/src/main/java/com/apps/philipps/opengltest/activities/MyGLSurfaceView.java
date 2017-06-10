@@ -59,9 +59,9 @@ public class MyGLSurfaceView extends SurfaceView3D {
                 float dy = y - mPreviousY;
 
                 if (dx < 0 )
-                    ((MyGLRenderer) renderer).car.turnRight(dx);
+                    ((MyGLRenderer) renderer).gameEngine.car.turnRight(dx);
                 else
-                    ((MyGLRenderer) renderer).car.turnLeft(dx);
+                    ((MyGLRenderer) renderer).gameEngine.car.turnLeft(dx);
         }
         mPreviousX = x;
         mPreviousY = y;
