@@ -33,13 +33,6 @@ public class CacheManager {
         saveCredit.writeObject("credit", Coins.getAmount());
     }
 
-    public int getCreditFromCache() {
-        if (saveCredit.readObject("credit") == null) {
-            return START_CREDIT;
-        }
-        return saveCredit.readObject("credit");
-    }
-
     public void saveUserdata(UserData userData){
         saveUserdata.writeObject("userData", userData);
     }

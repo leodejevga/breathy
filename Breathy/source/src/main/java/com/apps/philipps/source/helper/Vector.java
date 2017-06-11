@@ -217,6 +217,14 @@ public class Vector implements Comparable<Vector>, Cloneable{
         return result.divide(max);
     }
 
+    public static Vector cross(Vector u, Vector v){
+        float uvi, uvj, uvk;
+        uvi = u.get(1) * v.get(2) - v.get(1) * u.get(2);
+        uvj = v.get(0) * u.get(2) - u.get(0) * v.get(2);
+        uvk = u.get(0) * v.get(1) - v.get(0) * u.get(1);
+       return new Vector(uvi, uvj, uvk).norm();
+    }
+
 
     @Override
     public int compareTo(@NonNull Vector o) {

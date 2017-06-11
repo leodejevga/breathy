@@ -41,9 +41,9 @@ public abstract class BreathyGame implements IGame {
     }
 
     @Override
-    public boolean buy() {
+    public boolean buy(Context context) {
         if(!bought) {
-            bought = Coins.buy(price);
+            bought = Coins.buy(price, context);
             if(bought)
                 game.message("Congratulations! You bought " + name);
         }

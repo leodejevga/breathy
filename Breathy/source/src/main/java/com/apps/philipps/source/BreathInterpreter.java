@@ -1,30 +1,66 @@
 package com.apps.philipps.source;
 
 import android.hardware.fingerprint.FingerprintManager;
-//import java.time.*;
-
 import com.apps.philipps.source.interfaces.IObserver;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by Jevgenij Huebert on 20.03.2017. Project Breathy
  */
 
-public class BreathInterpreter{
+public abstract class BreathInterpreter {
 
     private static List<IObserver> observer = new ArrayList<>();
 
-
-    public enum Status {
+    public enum BreathMoment {
         In,
         Out,
+        Still,
         None
     }
-    public static int strength=0; // ist jetzt as a Prozent definiert!
-    public static Status status = Status.None; //TODO: wie oft schnelligkeit
+    public enum BreathError {
+        None(-1),
+        VeryGood(0),
+        Good(1),
+        Ok(2),
+        NotOk(3),
+        NotGood(4),
+        Bad(5),
+        VeryBad(6);
+
+        private int value;
+        BreathError(int value){
+            this.value = value;
+        }
+        public int getValue(){
+            return value;
+        }
+        public Comparator<BreathError> getComperator(){
+            return new Comparator<BreathError>() {
+                @Override
+                public int compare(BreathError o1, BreathError o2) {
+                    return o1.value==o2.value?0:o1.value<o2.value?-1:1;
+                }
+            };
+        }
+        public int compare(BreathError be){
+            return value==be.value?0:value<be.value?-1:1;
+        }
+
+        public static BreathError getErrorStatus(float strengthIn, float strengthOut, float frequenzy){
+            PlanManager.Plan.Option option = PlanManager.getStatus();
+            if(option == null)
+                return BreathError.None;
+            float fValue = Math.abs(option.getFrequency()-frequenzy)/option.getFrequency();
+            float iValue = Math.abs(option.getIn()-strengthIn<0?0:option.getIn()-strengthIn);
+            float oValue = Math.abs(option.getOut()-strengthOut<0?0:option.getOut()-strengthOut);
+            float min = (fValue + iValue + oValue) / 3;
+            return min<0.1?VeryGood:min<0.15?Good:min<0.17?Ok:min<0.2?NotOk:min<0.25?NotGood:min<0.3?Bad:VeryBad;
+        }
+    }
     public static void addObserver(IObserver o) {
         observer.add(o);
     }
@@ -33,100 +69,89 @@ public class BreathInterpreter{
         return observer.remove(o);
     }
 
-    public static void setStatus() {
+    public static BreathStatus getStatus() {
         int norm = AppState.breathyNormState;
+        Integer[] data = BreathData.get(0,50);
+        BreathMoment moment = BreathMoment.None;
+        float in = 0;
+        float out = 0;
+        float frequency = 0;
+        boolean readyToAdd=false;
+        int mean=0;
+        int founds = 0;
+        for (int i=0; i<data.length-1 && data[i]!=null; i++) {
+            int d = data[i];
+            if (founds<2) {
+                if (d - norm > 0) {
+                    if (moment==BreathMoment.None)
+                        moment = BreathMoment.In;
 
-        int i = 0;
-        int previ = 0;
+                    if (in < d - norm) {
+                        in = d - norm;
+                    }
+                } else if (d - norm < 0) {
+                    if (moment==BreathMoment.None)
+                        moment = BreathMoment.Out;
 
-        int none = 0;
-        int in = 0;
-        int out = 0;
-        int m_in = 0;
-        int m_out = 0;
-        int m_none = 0;
-
-        int mm = 0; // wird die Zeit pro Minute zeigen!
-
-        int temp =0;
-        int strength_in=0;
-        int strength_out=0;
-        int percent_in =0;
-        int percent_out =0;
-
-        int tolerance = 10; // was als none bewertet wird!
-        int index = 0;  // Anfang Index von Array!
-        int range = 10; // jedes mal wird von DataBreath.get gelesen!
-
-        boolean f = true;
-        /*LocalDateTime time1;
-
-*/
-        Calendar cal ;
-        int minute1 = 0;
-        int second1 = 0;
-        Integer[] data = BreathData.get(index,range);
-        while (i < range) {
-            if (f == true) {
-                cal = Calendar.getInstance();
-                minute1 = cal.get(Calendar.MINUTE);
-                second1 = cal.get(Calendar.SECOND);
-                f = false;
-            }
-            previ = i;
-            // Die none Daten werden hier herausgefunden!
-            while (i<data.length && data[i] >= norm - tolerance && data[i] <= norm + tolerance) {
-                i++;
-            }
-            if (i > previ) {
-                none++;
-                previ = i;
-            }
-            // Die Daten des Ausatmens wird hier herausgefunden und bewertet!
-            while (i<data.length && data[i] >= 1 && data[i] <= norm - tolerance) {
-                percent_out += data[i];
-                i++;
-            }
-            temp = 0;
-            if (i > previ) {
-                out++;
-                previ = i;
-                percent_out = (int) (percent_out/i);
-                strength_out = ((percent_out*100)/(norm-tolerance)) ;
-            }
-
-            // Die Daten des Einatmens wird hier herausgefunden und bewertet!
-            while (i < data.length && data[i] > norm+tolerance && data[i] <= 1023) {
-                percent_in += data[i];
-                i++;
-            }
-            if (i > previ){
-                in++;
-                percent_in = (int) (percent_in/i);
-                strength_in = ((percent_in*100)/(1023-norm-tolerance));
-            }
-
-            Calendar cal2 = Calendar.getInstance();
-            int minute2 = cal2.get(Calendar.MINUTE);
-            int second2 = cal2.get(Calendar.SECOND);
-            // Hier wird jedes mal nach einer Minute Zeit auch gespeichert!
-            if (minute2 == minute1 + 1) {
-                // wenn diese Kondition durchgeführt wird ist mm++ !
-                // das heißt wird zeigen, wie viel mal in einer Minute ein bzw. ausgeatmet wird !
-                if (second1 == second2) {
-                    mm++;
-                    m_in = in;
-                    m_out = out;
-                    m_none = none;
-                    BreathInfo t2 = new BreathInfo(in, out, none, m_in, m_out, m_none, mm ,strength_in,strength_out);
-                    f = true;
-                    m_in = 0;
-                    m_out = 0;
-                    m_none = 0;
+                    if (out < norm - d) {
+                        out = norm - d;
+                    }
                 }
-            } else  {BreathInfo t1 = new BreathInfo(in, out, none,mm,strength_in,strength_out);}
+            }
+            if (data[i+1]!=null && d<data[i+1])
+                readyToAdd = true;
+            if(data[i+1]!=null && d>data[i+1] && readyToAdd) {
+                mean = i;
+                founds++;
+                readyToAdd = false;
+            }
 
         }
+        in = in / (AppState.breathyUserMax-norm);
+        out = out / (norm-AppState.breathyUserMin);
+        if(founds!=0)
+            mean /= founds;
+        if(mean!=0)
+            frequency = 1f/(mean/AppState.breathyDataFrequency);
+
+        return new BreathStatus(moment==BreathMoment.In?in:out,frequency, moment, BreathError.getErrorStatus(in,out,frequency));
     }
+
+    public static class BreathStatus {
+        private float strength; //wie stark in prozent
+        private BreathMoment moment = BreathMoment.None;
+        private float frequency; //Wie oft pro sekunde
+        private BreathError error = BreathError.None;
+
+        public BreathStatus(float strength, float frequency, BreathMoment moment, BreathError error){
+            this.strength = strength;
+            this.frequency = frequency;
+            this.moment = moment;
+            this.error = error;
+        }
+
+
+        public float getStrength() {
+            return strength;
+        }
+
+        public BreathMoment getMoment() {
+            return moment;
+        }
+
+        public float getFrequency() {
+            return frequency;
+        }
+
+        public BreathError getError() {
+            return error;
+        }
+
+        @Override
+        public String toString() {
+            return "status: " + moment + ", strength: " + (int)(strength*100) + "%, frequency: " + (int)(frequency*60) + " per minute, how good: " + error;
+        }
+    }
+
 
 }

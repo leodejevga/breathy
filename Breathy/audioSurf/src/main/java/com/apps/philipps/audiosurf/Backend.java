@@ -1,6 +1,8 @@
 package com.apps.philipps.audiosurf;
 
 
+import android.content.Context;
+
 import com.apps.philipps.source.implementations.AbstractBackendOptions;
 import com.apps.philipps.source.OptionManager;
 
@@ -25,15 +27,15 @@ public class Backend extends AbstractBackendOptions {
     /**
      * Reinitialize <code>Backend</code> of the game.
      */
-    public static void reinit() {
+    public static void reinit(Context context) {
         init = false;
-        init();
+        init(context);
     }
 
     /**
      * Initialize <code>Backend</code> of the game.
      */
-    public static boolean init() {
+    public static boolean init(Context context) {
         if (!init) {
             //TODO: Die Werte (gekauft, nicht gekauft) sollten mit SaveData ausgelesen werden
 
@@ -43,7 +45,7 @@ public class Backend extends AbstractBackendOptions {
             options.add("Third Skin", false, 30);
             options.add("Fourth Skin", false, 70);
             init = true;
-            loadGameOptions();
+            loadGameOptions(context);
             return true;
         }
         return false;

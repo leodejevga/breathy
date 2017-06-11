@@ -15,6 +15,7 @@ import com.apps.philipps.source.helper._3D.SurfaceView3D;
 
 public class MyGLSurfaceView extends SurfaceView3D {
 
+    private static final float SPEED = (float)Math.PI/100;
     private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private float mPreviousX;
     private float mPreviousY;
@@ -26,13 +27,15 @@ public class MyGLSurfaceView extends SurfaceView3D {
             @Override
             public void onScaleEnd(ScaleGestureDetector detector) {
             }
+
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
                 return true;
             }
+
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                Renderer3D.camera3D.move(Renderer3D.camera3D.getPosition().add(new Vector(0,0,detector.getScaleFactor())));
+                Renderer3D.camera3D.move(Renderer3D.camera3D.getPosition().add(new Vector(0, 0, detector.getScaleFactor())));
                 Log.d("ZOOM", "zoom ongoing, scale: " + detector.getScaleFactor());
                 return false;
             }
@@ -52,15 +55,16 @@ public class MyGLSurfaceView extends SurfaceView3D {
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
-
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
-                Renderer3D.camera3D.move(new Vector(0,dy/500,0), new Vector(), new Vector(), new Vector(0,0,1,dx/20));
-        }
 
+                if (dx < 0 )
+                    ((MyGLRenderer) renderer).gameEngine.car.turnRight(dx);
+                else
+                    ((MyGLRenderer) renderer).gameEngine.car.turnLeft(dx);
+        }
         mPreviousX = x;
         mPreviousY = y;
         return true;
     }
-
 }

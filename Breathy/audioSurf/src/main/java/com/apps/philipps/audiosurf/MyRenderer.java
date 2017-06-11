@@ -18,7 +18,7 @@ public class MyRenderer extends Renderer3D {
     private GameObject3D triangle;
     public MyRenderer(Game game) {
         this.game = game;
-        this.triangle = new GameObject3D(new Shapes.Triangle());
+        //this.triangle = new GameObject3D(new Shapes.Triangle());
     }
 
     @Override
