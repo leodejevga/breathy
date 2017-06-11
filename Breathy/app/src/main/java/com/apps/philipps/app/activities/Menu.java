@@ -46,28 +46,19 @@ public class Menu extends Activity {
 
     private void initActivity() {
         Button games = (Button) findViewById(R.id.mainGames);
-        games.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Menu.this, SelectGame.class);
-                startActivity(i);
-            }
+        games.setOnClickListener(v -> {
+            Intent i = new Intent(Menu.this, SelectGame.class);
+            startActivity(i);
         });
         Button options = (Button) findViewById(R.id.mainOptions);
-        options.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Menu.this, Options.class);
-                startActivity(i);
-            }
+        options.setOnClickListener(v -> {
+            Intent i = new Intent(Menu.this, Options.class);
+            startActivity(i);
         });
         Button breathPlan = (Button) findViewById(R.id.mainBreathPlan);
-        breathPlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Menu.this, PlansManager.class);
-                startActivity(i);
-            }
+        breathPlan.setOnClickListener(v -> {
+            Intent i = new Intent(Menu.this, PlansManager.class);
+            startActivity(i);
         });
     }
 

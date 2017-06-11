@@ -43,38 +43,65 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
-                    android:textColor="@color/text"
-                    android:id="@+id/breathInDesc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:text="@string/inhalation" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/breathInDesc"
+                        android:layout_width="100dp"
+                        android:layout_height="30dp"
+                        android:gravity="bottom"
+                        android:text="@string/inhalation"
+                        android:textColor="@color/text" />
+
+                    <TextView
+                        android:id="@+id/inValue"
+                        android:layout_width="130dp"
+                        android:layout_height="30dp"
+                        android:gravity="bottom"
+                        android:text=""
+                        android:textColor="@color/text" />
+                </LinearLayout>
 
                 <SeekBar
                     android:id="@+id/seekIn"
                     style="@style/Widget.AppCompat.SeekBar.Discrete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="6"
+                    android:max="5"
                     android:progress="3" />
 
-                <TextView
-                    android:textColor="@color/text"
-                    android:id="@+id/textView9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:text="@string/exhalation" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:textColor="@color/text"
+                        android:id="@+id/textView9"
+                        android:layout_width="100dp"
+                        android:layout_height="30dp"
+                        android:gravity="bottom"
+                        android:text="@string/exhalation" />
+
+                    <TextView
+                        android:textColor="@color/text"
+                        android:id="@+id/outValue"
+                        android:layout_width="130dp"
+                        android:layout_height="30dp"
+                        android:gravity="bottom"
+                        android:text="" />
+                </LinearLayout>
 
                 <SeekBar
                     android:id="@+id/seekOut"
                     style="@style/Widget.AppCompat.SeekBar.Discrete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="6"
+                    android:max="5"
                     android:progress="3" />
 
             </RadioGroup>
@@ -105,7 +132,7 @@
                     android:gravity="center">
 
                     <Button
-                        android:id="@+id/btnMinutesPlus"
+                        android:id="@+id/minutesPlus"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="60dp"
                         android:layout_height="35dp"
@@ -114,18 +141,17 @@
                         android:onClick="addMinute"
                         android:text="+" />
 
-                    <EditText
-                        android:id="@+id/etDurationOfExercise"
+                    <TextView
+                        android:id="@+id/duration"
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:gravity="center"
-                        android:inputType="number"
                         android:text="10"
                         android:textAlignment="center" />
 
                     <Button
-                        android:id="@+id/btnMinutesMinus"
+                        android:id="@+id/minutesMinus"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="60dp"
                         android:layout_height="35dp"
@@ -166,12 +192,12 @@
                     android:id="@+id/textView11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="30"
+                    android:text="20"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:textColor="@color/text" />
 
                 <SeekBar
-                    android:id="@+id/sbBreathsPerMinute"
+                    android:id="@+id/frequency"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -192,7 +218,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/txtBreathsPerMinute"
+                    android:id="@+id/frequencyText"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:text="0"

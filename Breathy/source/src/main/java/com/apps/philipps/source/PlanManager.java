@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Jevgenij Huebert on 06.05.2017. Project Breathy
  */
 
-public class PlanManager implements IObserver {
+public class PlanManager implements IObserver, Serializable {
 
     private static List<Plan> plans;
     private static PlanManager manager = new PlanManager();
@@ -68,14 +68,16 @@ public class PlanManager implements IObserver {
     }
 
     public static Plan getPlan(int id){
-        return plans.get(id);
+        if(id>=0 && id<plans.size())
+            return plans.get(id);
+        return null;
     }
 
     public static Plan deletePlan(int id){
         return plans.remove(id);
     }
 
-    public static Plan newPlan(Plan.BreathIntensity in, Plan.BreathIntensity out, float freq, int duration){
+    public static Plan newPlan(Plan.BreathIntensity in, Plan.BreathIntensity out, int freq, int duration){
         return new Plan(in, out, freq, duration);
     }
 
@@ -90,6 +92,10 @@ public class PlanManager implements IObserver {
             return new Plan.Option(p.getStrengthIn(), p.getStrengthOut(), p.getFrequency(), p.getCurrentDuration());
         }
         return null;
+    }
+
+    public static void setPlans(List<Plan> plans) {
+        PlanManager.plans = plans;
     }
 
     @Override
@@ -110,23 +116,26 @@ public class PlanManager implements IObserver {
         public Plan(){
             options = new ArrayList<>();
         }
-        public Plan(BreathIntensity in, BreathIntensity out, float frequency, int duration){
+        public Plan(BreathIntensity in, BreathIntensity out, int frequency, int duration){
             this();
             options.add(new Option(in, out, frequency, duration*1000));
         }
-        public Plan(String name, BreathIntensity in, BreathIntensity out, float frequency, int duration){
+        public Plan(String name, BreathIntensity in, BreathIntensity out, int frequency, int duration){
             this(in, out, frequency, duration);
             this.name = name;
         }
 
-        public Plan addOption(BreathIntensity in, BreathIntensity out, float frequency, int duration){
-            Option o = new Option(in, out, frequency, duration*1000);
-            o.setId(options.size(), name);
+        public Plan addOption(BreathIntensity in, BreathIntensity out, int frequency, int seconds){
+            Option o = new Option(in, out, frequency, seconds*1000);
+            setId(o);
             options.add(o);
             return this;
         }
+        public void setName(String name){
+            this.name = name;
+        }
         public Plan addOption(Option o){
-            o.setId(options.size(), name);
+            setId(o);
             options.add(o);
             return this;
         }
@@ -139,7 +148,9 @@ public class PlanManager implements IObserver {
             return this;
         }
         public Option getOption(int id){
-            return options.get(id);
+            if(id>=0 && id<options.size())
+                return options.get(id);
+            return null;
         }
 
         public List<IIdentifiable> getOptions(){
@@ -163,7 +174,7 @@ public class PlanManager implements IObserver {
             return options.get(currentOption).out;
         }
 
-        public float getFrequency(){
+        public int getFrequency(){
             return options.get(currentOption).frequency;
         }
 
@@ -180,6 +191,19 @@ public class PlanManager implements IObserver {
                 delta = System.currentTimeMillis();
             }
             return running;
+        }
+        private void setId(Option o){
+            for (int i = 0; i <= options.size(); i++) {
+                boolean found = true;
+                for (int j = 0; j < options.size() && found; j++) {
+                    if(options.get(j).id==i)
+                        found = false;
+                }
+                if(found) {
+                    o.id = i;
+                    break;
+                }
+            }
         }
 
         private boolean update(){
@@ -239,15 +263,17 @@ public class PlanManager implements IObserver {
         }
 
         public enum BreathIntensity{
-            VeryHigh(1, 5),
-            High(0.8, 4),
-            Medium(0.5, 3),
-            Low(0.4, 2),
-            VeryLow(0.2, 1),
-            None(0, 0);
+            VeryHigh(1, 5, "Very high"),
+            High(0.8, 4, "High"),
+            Medium(0.5, 3, "Medium"),
+            Low(0.4, 2, "Low"),
+            VeryLow(0.2, 1, "Very low"),
+            None(0, 0, "");
             public final double value;
+            public final String name;
             public final int id;
-            BreathIntensity(double value, int id){
+            BreathIntensity(double value, int id, String name){
+                this.name = name;
                 this.value = value;
                 this.id = id;
             }
@@ -278,13 +304,12 @@ public class PlanManager implements IObserver {
         public static class Option implements Cloneable, Serializable, IIdentifiable {
             private BreathIntensity out;
             private BreathIntensity in;
-            private float frequency;
+            private int frequency;
             private long duration;
             private int id;
             private String name;
 
-            public Option(BreathIntensity in, BreathIntensity out, float frequency, long duration){
-
+            public Option(BreathIntensity in, BreathIntensity out, int frequency, long duration){
                 this.in = in;
                 this.out = out;
                 this.frequency = frequency;
@@ -302,13 +327,23 @@ public class PlanManager implements IObserver {
                 return out;
             }
 
-            public float getFrequency(){
+            public int getFrequency(){
                 return frequency;
             }
+            public void setDuration(int duration){
+                this.duration = duration<60*60*1000?duration:this.duration;
+            }
 
-            private void setId(int id, String name){
-                this.id = id;
-                this.name = name;
+            public void setIn(BreathIntensity in){
+                this.in = in;
+            }
+
+            public void setOut(BreathIntensity out){
+                this.out = out;
+            }
+
+            public void setFrequency(int frequency){
+                this.frequency = frequency;
             }
 
             @Override
@@ -329,7 +364,7 @@ public class PlanManager implements IObserver {
             @Override
             public String toString() {
 
-                return "in: " + in + "%, out: " + out + "%, frequency: " + (int)(frequency*60) + " per minute, time: " + duration;
+                return "in: " + in.name + " " + in.value*100 +  "%, out: " + out.name + " " + out.value*100 + "%, frequency: " + frequency + " per minute, time: " + duration/1000 + " seconds";
             }
         }
 

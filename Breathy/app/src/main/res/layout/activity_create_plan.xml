@@ -19,6 +19,14 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent">
 
+        <EditText
+            android:id="@+id/planName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
         <TextView
             android:id="@+id/txtAvailableBreathPlansParts"
             android:layout_width="match_parent"

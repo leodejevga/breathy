@@ -1,14 +1,11 @@
 package com.apps.philipps.app.activities;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -17,19 +14,24 @@ import android.widget.TextView;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.PlanManager;
 
-public class CreatePlanPart extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class CreatePlanPart extends AppCompatActivity {
 
     private PlanManager.Plan.Option part;
-    private PlanManager.Plan.Option newPart;
+    private int planId;
 
     private boolean create;
 
     private SeekBar frequency;
     private TextView frequencyText;
     private TextView duration;
+    private TextView inValue;
+    private TextView outValue;
+    private int durationValue;
     private SeekBar in;
     private SeekBar out;
 
+    private Button plus;
+    private Button minus;
     private Button btnSubmitPlan;
     private Button btnCancelPlan;
 
@@ -38,198 +40,101 @@ public class CreatePlanPart extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan_part);
 
-        part = (PlanManager.Plan.Option) getIntent().getSerializableExtra("planPart");
+        planId = getIntent().getIntExtra("planId", -1);
+        part = planId>=0?PlanManager.getPlan(planId).getOption(getIntent().getIntExtra("planPart", -1)):null;
         create = part==null;
         initViews();
         if(!create)
             initData();
+        durationValue = Integer.parseInt(duration.getText().toString());
     }
 
     private void initData() {
         in.setProgress(part.getIn().id);
         out.setProgress(part.getOut().id);
-
+        inValue.setText(part.getIn().name() + " " + part.getIn().value*100 + "%");
+        outValue.setText(part.getOut().name() + " " + part.getOut().value*100 + "%");
+        String temp = (part.getDuration()/60000)%60 + "";
+        duration.setText(temp);
+        frequency.setProgress(part.getFrequency());
+        frequencyText.setText(part.getFrequency() + "");
     }
 
 
     private void initViews() {
         ((TextView) findViewById(R.id.txtCreatePlanTitle)).setText(create?"Create new part": "Edit part of plan");
 
-        frequency = (SeekBar) findViewById(R.id.sbBreathsPerMinute);
-        frequencyText = (TextView) findViewById(R.id.txtBreathsPerMinute);
-        duration = (EditText) findViewById(R.id.etDurationOfExercise);
+        frequency = (SeekBar) findViewById(R.id.frequency);
+        frequencyText = (TextView) findViewById(R.id.frequencyText);
+        frequencyText.setText(20+frequency.getProgress() + "");
+        duration = (TextView) findViewById(R.id.duration);
 
         btnSubmitPlan = (Button) findViewById(R.id.btnSubmitPlan);
         btnCancelPlan = (Button) findViewById(R.id.btnCancelPlan);
+        minus = (Button) findViewById(R.id.minutesMinus);
+        plus = (Button) findViewById(R.id.minutesPlus);
         in = (SeekBar) findViewById(R.id.seekIn);
         out = (SeekBar) findViewById(R.id.seekOut);
-
-        switch (intensity) {
-            case BreathPlan.INTENSITY_VERY_LOW:
-                ((RadioButton) findViewById(R.id.rbVeryLow)).setChecked(true);
-                break;
-            case BreathPlan.INTENSITY_LOW:
-                ((RadioButton) findViewById(R.id.rbLow)).setChecked(true);
-                break;
-            case BreathPlan.INTENSITY_MEDIUM:
-                ((RadioButton) findViewById(R.id.rbMedium)).setChecked(true);
-                break;
-            case BreathPlan.INTENSITY_HIGH:
-                ((RadioButton) findViewById(R.id.rbHigh)).setChecked(true);
-                break;
-            case BreathPlan.INTENSITY_VERY_HIGH:
-                ((RadioButton) findViewById(R.id.rbVeryHigh)).setChecked(true);
-                break;
-            default:
-                ((RadioButton) findViewById(R.id.rbMedium)).setChecked(true);
-                break;
+        inValue = (TextView) findViewById(R.id.inValue);
+        outValue = (TextView) findViewById(R.id.outValue);
+        if(create) {
+            int i = in.getProgress();
+            int o = out.getProgress();
+            if (i>=0 && i<6)
+                inValue.setText(PlanManager.Plan.BreathIntensity.get(i).name() + " " +
+                        PlanManager.Plan.BreathIntensity.get(in.getProgress()).value * 100 + "%");
+            if(o>=0 && o<6)
+                outValue.setText(PlanManager.Plan.BreathIntensity.get(i).name() + " " +
+                        PlanManager.Plan.BreathIntensity.get(in.getProgress()).value* 100 + "%");
         }
+        frequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser)
+                    frequencyText.setText(20+progress + "");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
 
-        int breathsPerMinute = breathPlan.getBreathsPerMinute();
-        if (breathsPerMinute >= BreathPlan.MIN_BREATHS_PER_MINUTE && breathsPerMinute <= BreathPlan.MAX_BREATHS_PER_MINUTE) {
-            txtBreathsPerMinute.setText(breathsPerMinute + "");
-            sbBreathsPerMinute.setProgress(breathsPerMinute - BreathPlan.MIN_BREATHS_PER_MINUTE);
-        }
-
-        etDurationOfExercise.setText(breathPlan.getMinutesPerExercise() + "");
-
-        activated = breathPlan.isActivated();
-
-        etPlanDescription.addTextChangedListener(getPlanDescriptionTextWatcher());
-
-        etDurationOfExercise.addTextChangedListener(getDurationOfExercise());
-
-        sbBreathsPerMinute.setOnSeekBarChangeListener(this);
-
-        btnSubmitPlan.setOnClickListener(this);
-        btnCancelPlan.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btnSubmitPlan) {
-            submitPlan();
-            setResult(PlansManager.RESULT_CODE_PLAN_SUBMITTED);
+        btnCancelPlan.setOnClickListener(v -> finish());
+        btnSubmitPlan.setOnClickListener(v -> {
+            if(create)
+                PlanManager.getPlan(planId).addOption(PlanManager.Plan.BreathIntensity.get(in.getProgress()),
+                        PlanManager.Plan.BreathIntensity.get(out.getProgress()), frequency.getProgress()+20,
+                        durationValue*60);
+            else{
+                part.setIn(PlanManager.Plan.BreathIntensity.get(in.getProgress()));
+                part.setOut(PlanManager.Plan.BreathIntensity.get(out.getProgress()));
+                part.setFrequency(frequency.getProgress()+20);
+                part.setDuration(durationValue*60000);
+            }
             finish();
-        } else if (v.getId() == R.id.btnCancelPlan) {
-            finish();
-        }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
-            txtBreathsPerMinute.setText((progress + BreathPlan.MIN_BREATHS_PER_MINUTE) + "");
-        }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    private void submitPlan() {
-        breathPlan.setName(etPlanDescription.getText() + "");
-
-        breathPlan.setBreatheIn(((RadioButton) findViewById(R.id.rbInhalation)).isChecked());
-
-        int intensity;
-        if (((RadioButton) findViewById(R.id.rbVeryHigh)).isChecked()) {
-            intensity = BreathPlan.INTENSITY_VERY_HIGH;
-        } else if (((RadioButton) findViewById(R.id.rbHigh)).isChecked()) {
-            intensity = BreathPlan.INTENSITY_HIGH;
-        } else if (((RadioButton) findViewById(R.id.rbMedium)).isChecked()) {
-            intensity = BreathPlan.INTENSITY_MEDIUM;
-        } else if (((RadioButton) findViewById(R.id.rbLow)).isChecked()) {
-            intensity = BreathPlan.INTENSITY_LOW;
-        } else {
-            intensity = BreathPlan.INTENSITY_VERY_LOW;
-        }
-        breathPlan.setIntensity(intensity);
-
-        breathPlan.setBreathsPerMinute(sbBreathsPerMinute.getProgress() + BreathPlan.MIN_BREATHS_PER_MINUTE); // getProgress() startet bei 0
-        breathPlan.setMinutesPerExercise(Integer.parseInt(etDurationOfExercise.getText() + ""));
-
-        if (newPlan) {
-            PlansManager.addBreathPlan(breathPlan);
-        } else {
-            PlansManager.setBreathPlan(this.planId, breathPlan);
-        }
-    }
-
-    private TextWatcher getPlanDescriptionTextWatcher() {
-        TextWatcher tw = new TextWatcher() {
+        });
+        minus.setOnClickListener(v -> duration.setText(durationValue>0?--durationValue + "":0 + "") );
+        plus.setOnClickListener(v -> duration.setText(durationValue<120?++durationValue + "":0 + "") );
+        out.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                outValue.setText(PlanManager.Plan.BreathIntensity.get(progress).name() + " " + PlanManager.Plan.BreathIntensity.get(progress).value*100 + "%");
             }
-
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override
-            public void afterTextChanged(Editable s) {
-                if (validatePlanDescription(s + "")) {
-                    enableSubmitButton(true);
-                } else {
-                    enableSubmitButton(false);
-                }
-            }
-        };
-        return tw;
-    }
-
-    private boolean validatePlanDescription(String etPlanDescription) {
-        if (etPlanDescription.equals("")) {
-            // TODO Benutzer auf benoetigtes Feld hinweisen
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private void enableSubmitButton(boolean enable) {
-        btnSubmitPlan.setEnabled(enable);
-    }
-
-    private TextWatcher getDurationOfExercise() {
-        TextWatcher tw = new TextWatcher() {
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        in.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                inValue.setText(PlanManager.Plan.BreathIntensity.get(progress).name() + " " + PlanManager.Plan.BreathIntensity.get(progress).value*100 + "%");
             }
-
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override
-            public void afterTextChanged(Editable s) {
-                validateDurationOfExercise(s + "");
-            }
-        };
-        return tw;
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
-    private boolean validateDurationOfExercise(String etDurationOfExerciseString) {
-        if (!etDurationOfExerciseString.equals("")) {
-            if (Integer.parseInt(etDurationOfExerciseString) > BreathPlan.MAX_DURATION_OF_EXERCISE) {
-                etDurationOfExercise.setText(BreathPlan.MAX_DURATION_OF_EXERCISE + "");
-            } else if (Integer.parseInt(etDurationOfExerciseString) < BreathPlan.MIN_BREATHS_PER_MINUTE) {
-                etDurationOfExercise.setText(BreathPlan.MIN_DURATION_OF_EXERCISE + "");
-            }
-        } else {
-            etDurationOfExercise.setText(BreathPlan.MIN_DURATION_OF_EXERCISE + "");
-        }
-        return true;
-    }
-
-    public void addMinute(View view) {
-    }
-    public void subMinute(View view) {
-    }
 }

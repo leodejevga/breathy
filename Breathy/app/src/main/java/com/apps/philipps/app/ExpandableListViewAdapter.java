@@ -56,9 +56,6 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
             LinearLayout parentLayout = new LinearLayout(context);
             parentLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-
-
-
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(40, 0, 0, 0);

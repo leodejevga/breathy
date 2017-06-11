@@ -167,7 +167,6 @@ public abstract class BreathData {
             }
             for(IObserver o : observer)
                 o.call(t);
-            BreathInterpreter.setStatus();
             return false;
         }
 
@@ -176,7 +175,6 @@ public abstract class BreathData {
             if(index<size() && index>=0)
                 return super.get(index);
             else if(saveData!=null && index>=size()) {
-                //TODO read bluetooth data
                 int i = (index - size()) / blockSize + 1;
                 if (i < block) {
                     Object[] block = saveData.readObject("DataKey_" + i);
