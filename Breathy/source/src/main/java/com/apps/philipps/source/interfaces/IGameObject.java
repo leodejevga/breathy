@@ -52,6 +52,8 @@ public interface IGameObject {
      *
      * @param destination the destination
      */
+    void rotate(Vector destination);
+
     void move(Vector destination);
 
     /**

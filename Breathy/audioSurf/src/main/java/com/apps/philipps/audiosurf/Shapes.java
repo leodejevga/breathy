@@ -1,5 +1,7 @@
 package com.apps.philipps.audiosurf;
 
+import android.content.Context;
+
 import com.apps.philipps.source.helper._3D.GameObject3D;
 import com.apps.philipps.source.helper.Vector;
 
@@ -10,16 +12,25 @@ import com.apps.philipps.source.helper.Vector;
 public class Shapes {
     public static class Triangle extends GameObject3D.Shape{
 
-        public Triangle(){
-            this(new Vector(10,0,140), new Vector(0,0,0), new Vector(1,1,0), new Vector(), new Vector(2));
+        public Triangle(Context context){
+            this(context, new Vector(10,0,140), new Vector(0,0,0),
+                    3, 3, 3, R.drawable.background,
+                    new Vector(1,1,0), new Vector(), new Vector(2),
+                    new Vector(1.0f,1.0f,1.0f,1.0f), new Vector(1.0f,1.0f,1.0f,1.0f), new Vector(1.0f,1.0f,1.0f,1.0f),
+                    new Vector(0,0), new Vector(0,1), new Vector(1,1)
+            );
         }
 
-        public Triangle(Vector color, int dimensions, Vector position, float... coords) {
-            super(color, dimensions, position, coords);
+        public Triangle(Context context, Vector color, int dimensions, Vector position,
+                        int vertexCount, int colorCount, int textureCount, int textureID,
+                        float... coords) {
+            super(context,false, dimensions, position, vertexCount,  colorCount,  textureCount,  textureID, coords);
         }
 
-        public Triangle(Vector color, Vector position, Vector... coords) {
-            super(color, position, coords);
+        public Triangle(Context context, Vector color, Vector position,
+                        int vertexCount, int colorCount, int textureCount, int textureID,
+                        Vector... coords) {
+            super(context,false, position, vertexCount,  colorCount,  textureCount,  textureID, coords);
         }
     }
 }

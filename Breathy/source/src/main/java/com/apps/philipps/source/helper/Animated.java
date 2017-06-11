@@ -113,6 +113,26 @@ public class Animated {
         this.oberver.add(observer);
     }
 
+    /**
+     * Get destination vector
+     *
+     * @return the destination as vector
+     */
+    public Vector getDestination() { return destination;}
+
+    public int getSpeed(){
+        return speed;
+    }
+
+    /**
+     * Set destination vector
+     *
+     * @param vector destination as vector
+     */
+    public void setDestination(Vector vector) {
+        this.destination = vector;
+    }
+
     public void update(long deltaMilliseconds) {
         if (active) {
             if (position.compareTo(destination) == 0)

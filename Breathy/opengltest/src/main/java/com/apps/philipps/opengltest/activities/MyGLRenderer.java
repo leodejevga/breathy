@@ -1,12 +1,9 @@
 package com.apps.philipps.opengltest.activities;
 
-import android.opengl.Matrix;
+import android.content.Context;
 
-import com.apps.philipps.opengltest.Shapes;
-import com.apps.philipps.source.helper.Vector;
-import com.apps.philipps.source.helper._3D.GameObject3D;
+import com.apps.philipps.opengltest.GameEngine;
 import com.apps.philipps.source.helper._3D.Renderer3D;
-import com.apps.philipps.test.activities.Game;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -16,32 +13,34 @@ import javax.microedition.khronos.opengles.GL10;
  */
 
 public class MyGLRenderer extends Renderer3D {
+    private Context mActivityContext;
 
-    private GameObject3D triangle;
-    private GameObject3D square;
-    private GameObject3D cube;
-    private GameObject3D banana;
 
-    private float mAngle;
+    public GameEngine gameEngine;
 
+    public MyGLRenderer(Context context) {
+        this.mActivityContext = context;
+    }
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         super.onSurfaceCreated(unused, config);
-        triangle = new GameObject3D(new Shapes.Triangle());
-        square = new GameObject3D(new Shapes.Square());
-        cube = new GameObject3D(GameObject3D.loadObject("Download/cube.OBJ"));
-        banana = new GameObject3D(GameObject3D.loadObject("Download/banana.obj"));
+        gameEngine = new GameEngine(mActivityContext);
     }
 
     @Override
     public void onDrawFrame(GL10 unused) {
         super.onDrawFrame(unused);
+        refreshCameraPosition();
+        Renderer3D.light.setUpLight();
 
-        banana.update(deltaTime);
-        cube.update(deltaTime);
-        triangle.update(deltaTime);
-        square.getRotation().add(new Vector(0,1,0,2));
-        square.update(deltaTime);
+        gameEngine.drawStreet(deltaTime);
+        gameEngine.runSimulation(deltaTime);
+        Renderer3D.light.drawLight();
+    }
+
+
+    private void refreshCameraPosition() {
+        //Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, angle));
     }
 }
