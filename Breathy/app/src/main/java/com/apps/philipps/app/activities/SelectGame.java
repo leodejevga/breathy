@@ -49,7 +49,6 @@ public class SelectGame extends AppCompatActivity {
                 buy.setVisibility(Backend.selected.isBought() ? View.INVISIBLE : View.VISIBLE);
                 Integer previewData = Backend.selected.getPreview();
                 if(previewData!=null) {
-                    //TODO: Das Video muss richtig geladen zurzeit zeigt er eine nachricht an in der steht: "Video kann nicht wiedergegeben werden"
                     String videoPath = "android.resource://" + getResources().getResourcePackageName(R.raw.preview) + "/" + previewData;
                     Uri uri = Uri.parse(videoPath);
                     preview.setVisibility(View.VISIBLE);

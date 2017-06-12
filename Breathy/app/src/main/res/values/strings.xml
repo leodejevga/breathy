@@ -23,10 +23,11 @@
     <string name="main_options">Haupteinstellungen</string>
     <string name="main_plan">Plan erstellen</string>
     <string name="create_plan_purpose_of_training">Purpose of the Training</string>
-    <string name="create_plan_inhalation">Inhalation</string>
-    <string name="create_plan_exhalation">Exhalation</string>
+    <string name="inhalation">Inhalation</string>
+    <string name="exhalation">Exhalation</string>
     <string name="select_breath_plan">Atemplan auswählen</string>
     <string name="plan_manager_available_plans">Available Breath Plans</string>
+    <string name="plan_parts">Plan Struktur</string>
     <string name="plan_manager_sample_plan">Sample Plan (1)</string>
     <string name="create_plan_plan_description">Plan Description</string>
     <string name="create_plan_plan_description_hint">Evening Plan (1)</string>

@@ -50,17 +50,18 @@ public abstract class BreathInterpreter {
             return value==be.value?0:value<be.value?-1:1;
         }
 
-        public static BreathError getErrorStatus(float strengthIn, float strengthOut, float frequenzy){
+        public static BreathError getErrorStatus(double strengthIn, double strengthOut, float frequenzy){
             PlanManager.Plan.Option option = PlanManager.getStatus();
             if(option == null)
                 return BreathError.None;
             float fValue = Math.abs(option.getFrequency()-frequenzy)/option.getFrequency();
-            float iValue = Math.abs(option.getIn()-strengthIn<0?0:option.getIn()-strengthIn);
-            float oValue = Math.abs(option.getOut()-strengthOut<0?0:option.getOut()-strengthOut);
-            float min = (fValue + iValue + oValue) / 3;
+            double iValue = Math.abs(option.getIn().value-strengthIn<0?0:option.getIn().value-strengthIn);
+            double oValue = Math.abs(option.getOut().value-strengthOut<0?0:option.getOut().value-strengthOut);
+            double min = (fValue + iValue + oValue) / 3;
             return min<0.1?VeryGood:min<0.15?Good:min<0.17?Ok:min<0.2?NotOk:min<0.25?NotGood:min<0.3?Bad:VeryBad;
         }
     }
+
     public static void addObserver(IObserver o) {
         observer.add(o);
     }
