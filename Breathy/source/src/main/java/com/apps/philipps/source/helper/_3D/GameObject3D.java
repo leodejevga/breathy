@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class GameObject3D implements IGameObject {
 
     private Shape shape;
-    private Vector rotation = new Vector(0, 0, 1);
+    private Vector rotation = new Vector(0, 0, 0, 0);
     private float[] result = new float[16];
     private boolean isResultMatrixSet = false;
 
@@ -68,24 +68,22 @@ public class GameObject3D implements IGameObject {
     @Override
     public void rotate(Vector destination) {
         init();
-        setRotation(getRotation().add(destination));
+        setRotation(destination);
         float[] temp = new float[16];
         Matrix.setRotateM(temp, 0, rotation.get(3), rotation.get(0), rotation.get(1), rotation.get(2));
         Matrix.multiplyMM(result, 0, result, 0, temp, 0);
         Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
-        isResultMatrixSet = true;
     }
 
     @Override
     public void move(Vector destination) {
         init();
-        setPosition(getPosition().add(destination));
+        shape.setPosition(getPosition().add(destination));
         float[] temp = new float[16];
         Matrix.setIdentityM(temp, 0);
         Matrix.translateM(temp, 0, getPosition().get(0), getPosition().get(1), getPosition().get(2));
         Matrix.multiplyMM(result, 0, result, 0, temp, 0);
         Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
-        isResultMatrixSet = true;
     }
 
     @Override
@@ -96,8 +94,8 @@ public class GameObject3D implements IGameObject {
     @Override
     public void update(long deltaMilliseconds) {
         init();
-        isResultMatrixSet = false;
         shape.draw(result);
+        isResultMatrixSet = false;
     }
 
     @Override
@@ -130,10 +128,7 @@ public class GameObject3D implements IGameObject {
          * The Coords.
          */
         float[] coords;
-        /**
-         * The Color.
-         */
-        Vector color;
+
         /**
          * Store the view matrix. This can be thought of as our camera. This matrix transforms world space to eye space;
          * it positions things relative to our eye.
@@ -243,21 +238,19 @@ public class GameObject3D implements IGameObject {
         /**
          * Instantiates a new Shape.
          *
-         * @param color      the color
          * @param dimensions the dimensions
          * @param position   the position
          * @param coords     the coords
          */
-        int vertexShaderHandle;
-        int fragmentShaderHandle;
 
-        public Shape(Context context, Vector color, int dimensions, Vector position,
+        private boolean showNormalColor = false;
+
+        private boolean waveFrontObject = false;
+
+        public Shape(Context context, boolean isWaveFrontObj, int dimensions, Vector position,
                      int vertexCount, int colorCount, int textureCount, int textureID,
                      float... coords) {
             this.dimensions = dimensions;
-            this.color = color.clone().normCoords();
-            int d = this.color.getDimensions();
-            this.color = d == 3 ? new Vector(this.color, 1) : d == 2 ? new Vector(this.color, 0, 1) : d == 1 ? new Vector(this.color, 0, 0, 1) : d == 0 ? new Vector(0, 0, 0, 1) : this.color;
             this.position = position;
             this.coords = new float[vertexCount * dimensions];
             System.arraycopy(coords, 0, this.coords, 0, vertexCount * dimensions);
@@ -267,6 +260,7 @@ public class GameObject3D implements IGameObject {
             System.arraycopy(coords, vertexCount * dimensions + colorCount * 4, this.textureCoordinateData, 0, textureCount * 2);
 
             /*calculate normal matrix from model view matrix*/
+            this.waveFrontObject = isWaveFrontObj;
             calculateNormalVertex();
             normals_Buffer = ByteBuffer.allocateDirect(normalData.length * mBytesPerFloat)
                     .order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -276,6 +270,9 @@ public class GameObject3D implements IGameObject {
                     .order(ByteOrder.nativeOrder()).asFloatBuffer();
             positions_Buffer.put(this.coords).position(0);
 
+            if (showNormalColor) {
+                copyNormalToColor();
+            }
             colors_Buffer = ByteBuffer.allocateDirect(colorData.length * mBytesPerFloat)
                     .order(ByteOrder.nativeOrder()).asFloatBuffer();
             colors_Buffer.put(colorData).position(0);
@@ -293,17 +290,24 @@ public class GameObject3D implements IGameObject {
             textureDataHandle = TextureHelper.loadTexture(context, textureID);
         }
 
+        private void copyNormalToColor() {
+            for (int i = 0; i < this.colorData.length / 4; i++) {
+                this.colorData[i * 4] = Math.abs(this.normalData[i * 3]);
+                this.colorData[i * 4 + 1] = Math.abs(this.normalData[i * 3 + 1]);
+                this.colorData[i * 4 + 2] = Math.abs(this.normalData[i * 3 + 2]);
+            }
+        }
+
         /**
          * Instantiates a new Shape.
          *
-         * @param color    the color
          * @param position the position
          * @param coords   the coords
          */
-        public Shape(Context context, Vector color, Vector position,
+        public Shape(Context context, boolean isWaveFrontObj, Vector position,
                      int vertexCount, int colorCount, int textureCount, int textureID,
                      @NonNull Vector... coords) {
-            this(context, color, coords.length > 0 ? coords[0].getDimensions() : 0, position,
+            this(context, isWaveFrontObj, coords.length > 0 ? coords[0].getDimensions() : 0, position,
                     vertexCount, colorCount, textureCount, textureID,
                     transformVectors(coords));
         }
@@ -362,6 +366,7 @@ public class GameObject3D implements IGameObject {
          */
 
         private float[] model_view_projection_Matrix;
+
 
         /**
          * Draw.
@@ -457,8 +462,9 @@ public class GameObject3D implements IGameObject {
         }
 
         private void calculateNormalVertex() {
-            normalData = new float[coords.length];
-            Vector[] temp = transformArrays(dimensions, coords);
+            int counter = 0;
+            normalData = new float[this.coords.length];
+            Vector[] temp = transformArrays(dimensions, this.coords);
             int numberOfPlane = temp.length / 3;
             for (int i = 0; i < numberOfPlane; i++) {
                 Vector v1 = temp[i * 3];
@@ -468,67 +474,53 @@ public class GameObject3D implements IGameObject {
                 Vector v = Vector.sub(v1, v2);
 
                 Vector normal = Vector.cross(u, v);
+                if (normal == null) {
+                    normal = new Vector(0, 0, 0);
+                    counter++;
+                }
                 for (int j = 0; j < 3; j++) {
                     int index = (i * 9) + (j * 3);
-                    normalData[index] = normal.get(0);
-                    normalData[index + 1] = normal.get(1);
-                    normalData[index + 2] = normal.get(2);
-
+                    normalData[index] = waveFrontObject ? -normal.get(0) : normal.get(0);
+                    normalData[index + 1] = waveFrontObject ? -normal.get(1) : normal.get(1);
+                    normalData[index + 2] = waveFrontObject ? -normal.get(2) : normal.get(2);
                 }
             }
+        }
+
+        public boolean isWaveFrontObject() {
+            return waveFrontObject;
+        }
+
+        public void setWaveFrontObject(boolean waveFrontObject) {
+            this.waveFrontObject = waveFrontObject;
         }
     }
 
+    public static Shape loadObject(Context context, int objID, int textureID) {
+        ObjLoader objLoader = new ObjLoader(context, objID);
 
-//    std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
-//    std::vector< glm::vec3 > temp_vertices;
-//    std::vector< glm::vec2 > temp_uvs;
-//    std::vector< glm::vec3 > temp_normals;
+        float[] colorArray = generateColorArray(objLoader.positions.length * 4 / 3);
+        float[] coords = concatArrays(objLoader.positions, concatArrays(colorArray, objLoader.textureCoordinates));
 
-   /* public static Shape loadObject(Context context, String name ) {
-        byte[] data = SaveData.readFile(Environment.getExternalStorageDirectory() + "/" + name);
-        List<Vector> vertices = new ArrayList<>();
-        List<Integer> indices = new ArrayList<>();
-        String line = "";
-        float max = 0;
-        for (int i = 0; i < data.length; i++) {
-            char c = (char) data[i];
-            if (c != '\n' && c != '\r')
-                line += c;
-            else if (line.length() != 0) {
-                if (line.startsWith("v ")) {
-                    String[] v = line.replaceAll(" +", " ").substring(2).split(" ");
-                    if (v[0].length() == 0 || v[1].length() == 0 || v[2].length() == 0)
-                        Log.d("error", "vector " + v);
-                    Vector vec = new Vector(Float.parseFloat(v[0]),
-                            Float.parseFloat(v[1]),
-                            Float.parseFloat(v[2]));
-                    vertices.add(vec);
-                    if (vec.get(0) > max || -vec.get(0) > max)
-                        max = Math.abs(vec.get(0));
-                    if (vec.get(1) > max || -vec.get(1) > max)
-                        max = Math.abs(vec.get(1));
-                    if (vec.get(2) > max || -vec.get(2) > max)
-                        max = Math.abs(vec.get(2));
-                }
-                if (line.startsWith("f ")) {
-                    String[] v = line.replaceAll(" +", " ").substring(2).split("/\\d+/\\d+ *");
-                    indices.add(Integer.parseInt(v[0]) - 1);
-                    indices.add(Integer.parseInt(v[1]) - 1);
-                    indices.add(Integer.parseInt(v[2]) - 1);
-                }
-                line = "";
-            }
+        Shape waveFrontObj = new Shape(context, true, 3, new Vector(), objLoader.positions.length / 3, colorArray.length / 4,
+                objLoader.textureCoordinates.length / 2, textureID, coords);
+        waveFrontObj.setWaveFrontObject(true);
+        return waveFrontObj;
+    }
 
+    private static float[] generateColorArray(int length) {
+        float[] array = new float[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = 1.0f;
         }
-        float[] coordinates = new float[indices.size() * 3];
-        for (int i = 0; i < indices.size(); i++) {
-            Vector v = vertices.get(indices.get(i));
-            coordinates[i * 3] = v.get(0) / max;
-            coordinates[i * 3 + 1] = v.get(1) / max;
-            coordinates[i * 3 + 2] = v.get(2) / max;
-        }
+        return array;
+    }
 
-        return new Shape(context, new Vector(1, 1, 1, 1), 3, new Vector(), coordinates);
-    }*/
+    private static float[] concatArrays(float[] array1, float[] array2) {
+        float[] array1and2 = new float[array1.length + array2.length];
+        System.arraycopy(array1, 0, array1and2, 0, array1.length);
+        System.arraycopy(array2, 0, array1and2, array1.length, array2.length);
+        return array1and2;
+    }
+
 }

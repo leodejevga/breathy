@@ -1,5 +1,6 @@
 package com.apps.philipps.source;
 
+import android.hardware.fingerprint.FingerprintManager;
 import com.apps.philipps.source.interfaces.IObserver;
 
 import java.util.ArrayList;

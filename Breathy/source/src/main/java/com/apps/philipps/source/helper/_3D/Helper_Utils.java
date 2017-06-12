@@ -75,7 +75,8 @@ public class Helper_Utils {
 
         // Multiply the color by the diffuse illumination level and texture value to get final output color.
         "gl_FragColor = (v_Color * diffuse * texture2D(u_Texture, v_TexCoordinate));"+
-                  // "gl_FragColor = vColor * texture2D(u_Texture, v_TexCoordinate);"+
+        //"gl_FragColor = (vec4(v_Normal, 0.0) * diffuse * texture2D(u_Texture, v_TexCoordinate));"+
+                    // "gl_FragColor = vColor * texture2D(u_Texture, v_TexCoordinate);"+
                     "}";
 
     public static String point_vertex_shader =
