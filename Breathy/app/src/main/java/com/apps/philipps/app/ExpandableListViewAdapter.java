@@ -11,9 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
-import com.apps.philipps.app.activities.PlanManager;
+import com.apps.philipps.source.PlanManager;
+import com.apps.philipps.source.interfaces.IIdentifiable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Var on 13.05.2017.
@@ -31,7 +33,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
     private View.OnClickListener deleteButtonOnClickListener;
 
 
-    public ExpandableListViewAdapter(Context context, ArrayList<BreathPlan> planData,
+    public ExpandableListViewAdapter(Context context, List<IIdentifiable> data,
                                      View.OnClickListener activateButtonOnClickListener, View.OnClickListener editButtonOnClickListener, View.OnClickListener deleteButtonOnClickListener){
         this.context = context;
 
@@ -42,39 +44,25 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
         expandableListParents = new ArrayList<>();
         expandableListChildren = new ArrayList<>();
 
-        buildExpandableListItems(planData);
+        buildExpandableListItems(data);
     }
 
-    private void updatePlanDataAndViews(ArrayList<BreathPlan> planData){
-
-    }
-
-    private void buildExpandableListItems(ArrayList<BreathPlan> planData){
+    private void buildExpandableListItems(List<IIdentifiable> data){
         // remove all Items
         expandableListParents.clear();
         expandableListChildren.clear();
 
-        for (BreathPlan bp: planData) {
+        for (IIdentifiable element: data) {
             LinearLayout parentLayout = new LinearLayout(context);
             parentLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-
-
-            CheckBox cbPlanActivated = new CheckBox(context);
-            cbPlanActivated.setChecked(bp.isActivated());
-            cbPlanActivated.setClickable(false);
-            cbPlanActivated.setFocusable(false);
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(40, 0, 0, 0);
 
-            cbPlanActivated.setLayoutParams(layoutParams);
-
-            parentLayout.addView(cbPlanActivated);
 
             TextView txtPlanName = new TextView(context);
-            txtPlanName.setText(bp.getName());
+            txtPlanName.setText(element.getName());
             parentLayout.addView(txtPlanName);
 
             expandableListParents.add(parentLayout);
@@ -86,19 +74,28 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
 
             LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
 
-            Button btnActivatePlan = new Button(context);
-            btnActivatePlan.setId(PlanManager.ID_PLACEHOLDER + bp.getPlanId());
-            btnActivatePlan.setLayoutParams(buttonLayoutParams);
-            btnActivatePlan.setText(context.getString(R.string.activate));
-            btnActivatePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnPlus));
-            if (bp.isActivated()){
-                btnActivatePlan.setEnabled(false);
+            if (activateButtonOnClickListener!=null){
+                CheckBox cbPlanActivated = new CheckBox(context);
+                cbPlanActivated.setClickable(false);
+                cbPlanActivated.setFocusable(false);
+                cbPlanActivated.setLayoutParams(layoutParams);
+
+                Button btnActivatePlan = new Button(context);
+                btnActivatePlan.setId(element.getId());
+                btnActivatePlan.setLayoutParams(buttonLayoutParams);
+                btnActivatePlan.setText(context.getString(R.string.activate));
+                btnActivatePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnPlus));
+                if(PlanManager.isActive((PlanManager.Plan) element)) {
+                    cbPlanActivated.setChecked(true);
+                    btnActivatePlan.setEnabled(false);
+                }
+                btnActivatePlan.setOnClickListener(activateButtonOnClickListener);
+                childLayout.addView(btnActivatePlan);
+                parentLayout.addView(cbPlanActivated);
             }
-            btnActivatePlan.setOnClickListener(activateButtonOnClickListener);
-            childLayout.addView(btnActivatePlan);
 
             Button btnEditPlan = new Button(context);
-            btnEditPlan.setId(PlanManager.ID_PLACEHOLDER + bp.getPlanId());
+            btnEditPlan.setId(element.getId());
             btnEditPlan.setLayoutParams(buttonLayoutParams);
             btnEditPlan.setText(context.getString(R.string.edit));
             btnEditPlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorPrimary));
@@ -106,7 +103,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
             childLayout.addView(btnEditPlan);
 
             Button btnDeletePlan = new Button(context);
-            btnDeletePlan.setId(PlanManager.ID_PLACEHOLDER + bp.getPlanId());
+            btnDeletePlan.setId(element.getId());
             btnDeletePlan.setLayoutParams(buttonLayoutParams);
             btnDeletePlan.setText(context.getString(R.string.delete));
             btnDeletePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnMinus));
