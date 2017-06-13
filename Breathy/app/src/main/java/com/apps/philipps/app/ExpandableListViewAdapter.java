@@ -1,20 +1,15 @@
 package com.apps.philipps.app;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.TextView;
 
 import com.apps.philipps.source.PlanManager;
-import com.apps.philipps.source.interfaces.IIdentifiable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,116 +19,85 @@ import java.util.List;
 public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
 
     private Context context;
-
-    private ArrayList<LinearLayout> expandableListParents;
-    private ArrayList<LinearLayout> expandableListChildren;
+    public static int selected = -1;
+    private List<PlanManager.Part> data;
+    private LinearLayout childLayout;
+    private LinearLayout parentLayout;
 
     private View.OnClickListener activateButtonOnClickListener;
     private View.OnClickListener editButtonOnClickListener;
     private View.OnClickListener deleteButtonOnClickListener;
 
 
-    public ExpandableListViewAdapter(Context context, List<IIdentifiable> data,
+    public ExpandableListViewAdapter(Context context, List<PlanManager.Part> data,
                                      View.OnClickListener activateButtonOnClickListener, View.OnClickListener editButtonOnClickListener, View.OnClickListener deleteButtonOnClickListener){
         this.context = context;
-
+        this.data = data;
         this.activateButtonOnClickListener = activateButtonOnClickListener;
         this.editButtonOnClickListener = editButtonOnClickListener;
         this.deleteButtonOnClickListener = deleteButtonOnClickListener;
 
-        expandableListParents = new ArrayList<>();
-        expandableListChildren = new ArrayList<>();
+        childLayout = new LinearLayout(context);
+        childLayout.setOrientation(LinearLayout.HORIZONTAL);
+        childLayout.setBackgroundColor(context.getResources().getColor(R.color.background));
 
-        buildExpandableListItems(data);
+        buildExpandableListItems();
     }
 
-    private void buildExpandableListItems(List<IIdentifiable> data){
-        // remove all Items
-        expandableListParents.clear();
-        expandableListChildren.clear();
+    private void buildExpandableListItems(){
 
-        for (IIdentifiable element: data) {
-            LinearLayout parentLayout = new LinearLayout(context);
-            parentLayout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(40, 0, 0, 0);
+        LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+        Button btnEditPlan = new Button(context);
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(40, 0, 0, 0);
+        parentLayout = new LinearLayout(context);
+        parentLayout.setOrientation(LinearLayout.HORIZONTAL);
+        TextView txtPlanName = new TextView(context);
+        parentLayout.addView(txtPlanName);
 
+        if (activateButtonOnClickListener!=null){
+            Button btnActivatePlan = new Button(context);
+            btnActivatePlan.setLayoutParams(buttonLayoutParams);
+            btnActivatePlan.setText(context.getString(R.string.activate));
+            btnActivatePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnPlus));
+            btnActivatePlan.setOnClickListener(activateButtonOnClickListener);
 
-            TextView txtPlanName = new TextView(context);
-            txtPlanName.setText(element.getName());
-            parentLayout.addView(txtPlanName);
-
-            expandableListParents.add(parentLayout);
-
-
-            LinearLayout childLayout = new LinearLayout(context);
-            childLayout.setOrientation(LinearLayout.HORIZONTAL);
-            childLayout.setBackgroundColor(context.getResources().getColor(R.color.background));
-
-            LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
-
-            if (activateButtonOnClickListener!=null){
-                CheckBox cbPlanActivated = new CheckBox(context);
-                cbPlanActivated.setClickable(false);
-                cbPlanActivated.setFocusable(false);
-                cbPlanActivated.setLayoutParams(layoutParams);
-
-                Button btnActivatePlan = new Button(context);
-                btnActivatePlan.setId(element.getId());
-                btnActivatePlan.setLayoutParams(buttonLayoutParams);
-                btnActivatePlan.setText(context.getString(R.string.activate));
-                btnActivatePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnPlus));
-                if(PlanManager.isActive((PlanManager.Plan) element)) {
-                    cbPlanActivated.setChecked(true);
-                    btnActivatePlan.setEnabled(false);
-                }
-                btnActivatePlan.setOnClickListener(activateButtonOnClickListener);
-                childLayout.addView(btnActivatePlan);
-                parentLayout.addView(cbPlanActivated);
-            }
-
-            Button btnEditPlan = new Button(context);
-            btnEditPlan.setId(element.getId());
-            btnEditPlan.setLayoutParams(buttonLayoutParams);
-            btnEditPlan.setText(context.getString(R.string.edit));
-            btnEditPlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorPrimary));
-            btnEditPlan.setOnClickListener(editButtonOnClickListener);
-            childLayout.addView(btnEditPlan);
-
-            Button btnDeletePlan = new Button(context);
-            btnDeletePlan.setId(element.getId());
-            btnDeletePlan.setLayoutParams(buttonLayoutParams);
-            btnDeletePlan.setText(context.getString(R.string.delete));
-            btnDeletePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnMinus));
-            btnDeletePlan.setOnClickListener(deleteButtonOnClickListener);
-            childLayout.addView(btnDeletePlan);
-
-            expandableListChildren.add(childLayout);
-
+            childLayout.addView(btnActivatePlan);
         }
+        btnEditPlan.setLayoutParams(buttonLayoutParams);
+        btnEditPlan.setText(context.getString(R.string.edit));
+        btnEditPlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorPrimary));
+        btnEditPlan.setOnClickListener(editButtonOnClickListener);
+        childLayout.addView(btnEditPlan);
+
+        Button btnDeletePlan = new Button(context);
+        btnDeletePlan.setLayoutParams(buttonLayoutParams);
+        btnDeletePlan.setText(context.getString(R.string.delete));
+        btnDeletePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnMinus));
+        btnDeletePlan.setOnClickListener(deleteButtonOnClickListener);
+        childLayout.addView(btnDeletePlan);
     }
+
 
 
     @Override
     public int getGroupCount() {
-        return expandableListParents.size();
+        return data.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        // TODO
-        return expandableListChildren.size();
+        return 1;
     }
     @Override
     public Object getGroup(int groupPosition) {
-        return expandableListParents.get(groupPosition);
+        return data.get(groupPosition);
     }
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        Log.d("### APP", "getChild()  groupPosition: " + groupPosition + " childPosition: " + childPosition);
-        return expandableListChildren.get(groupPosition);
+        return data.get(groupPosition);
     }
     @Override
     public long getGroupId(int groupPosition) {
@@ -145,24 +109,25 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
     }
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        Log.d("### APP", "getGroupView()  groupPosition: " + groupPosition);
-        return expandableListParents.get(groupPosition);
+        selected = groupPosition;
+        TextView view = (TextView) parentLayout.getChildAt(0);
+        view.setText(data.get(groupPosition).getName());
+        return parentLayout;
     }
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        Log.d("### APP", "getChildView()  groupPosition: " + groupPosition + " childPosition: " + childPosition);
-        if (groupPosition != childPosition) {
-            return new Space(context);
-        } else {
-            return expandableListChildren.get(0);
-        }
+        selected = groupPosition;
+        if(groupPosition == PlanManager.getCurrentPlan())
+            childLayout.getChildAt(0).setEnabled(false);
+        else childLayout.getChildAt(0).setEnabled(true);
+        return childLayout;
     }
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 }

@@ -32,7 +32,7 @@ public class PlansManager extends AppCompatActivity {
     }
     private void initExpandableListView() {
         ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this,
-                PlanManager.getPlans(), active(), edit(), delete());
+                PlanManager.getParts(), active(), edit(), delete());
 
         ExpandableListView elvPlans = (ExpandableListView) findViewById(R.id.elvPlans);
         elvPlans.setAdapter(expandableListViewAdapter);
@@ -51,11 +51,13 @@ public class PlansManager extends AppCompatActivity {
     private View.OnClickListener edit(){
         return v -> {
             Intent i = new Intent(this, CreatePlan.class);
-            i.putExtra("plan", v.getId());
+            i.putExtra("plan", ExpandableListViewAdapter.selected);
             startActivity(i);
         };
     }
     private View.OnClickListener delete(){
-        return v -> { PlanManager.deletePlan(v.getId()); initExpandableListView(); };
+        return v -> {
+            PlanManager.deletePlan(ExpandableListViewAdapter.selected); initExpandableListView();
+        };
     }
 }

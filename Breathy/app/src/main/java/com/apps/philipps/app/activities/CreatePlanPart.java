@@ -56,8 +56,8 @@ public class CreatePlanPart extends AppCompatActivity {
         outValue.setText(part.getOut().name() + " " + part.getOut().value*100 + "%");
         String temp = (part.getDuration()/60000)%60 + "";
         duration.setText(temp);
-        frequency.setProgress(part.getFrequency());
-        frequencyText.setText(part.getFrequency() + "");
+        frequency.setProgress(part.getFrequency()-20);
+        frequencyText.setText(part.getFrequency()-20 + "");
     }
 
 

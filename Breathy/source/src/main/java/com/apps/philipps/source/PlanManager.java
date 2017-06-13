@@ -3,7 +3,6 @@ package com.apps.philipps.source;
 import android.support.annotation.Nullable;
 
 import com.apps.philipps.source.interfaces.IObserver;
-import com.apps.philipps.source.interfaces.IIdentifiable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,12 +35,10 @@ public class PlanManager implements IObserver, Serializable {
         plans.remove(plan);
     }
 
-    public static List<IIdentifiable> getPlans(){
-        final List<IIdentifiable> result = new ArrayList<>();
-        for (Plan p :
-                plans) {
-            result.add(p);
-        }
+    public static List<Part> getParts(){
+        ArrayList<Part> result = new ArrayList<>();
+        for(Plan plan : plans)
+            result.add(plan);
         return result;
     }
 
@@ -74,15 +71,16 @@ public class PlanManager implements IObserver, Serializable {
     }
 
     public static Plan deletePlan(int id){
-        return plans.remove(id);
-    }
-
-    public static Plan newPlan(Plan.BreathIntensity in, Plan.BreathIntensity out, int freq, int duration){
-        return new Plan(in, out, freq, duration);
+        if(id>=0 && id<plans.size())
+            return plans.remove(id);
+        return null;
     }
 
     public static boolean isActive(Plan plan){
         return currentPlan == plans.indexOf(plan);
+    }
+    public static int getCurrentPlan(){
+        return currentPlan;
     }
 
     @Nullable
@@ -98,6 +96,10 @@ public class PlanManager implements IObserver, Serializable {
         PlanManager.plans = plans;
     }
 
+    public static List<Plan> getPlans() {
+        return plans;
+    }
+
     @Override
     public void call(Object... messages) {
         for (Plan plan : plans) {
@@ -105,7 +107,7 @@ public class PlanManager implements IObserver, Serializable {
         }
     }
 
-    public static class Plan implements Cloneable, Serializable, IIdentifiable {
+    public static class Plan implements Cloneable, Serializable, Part {
         private List<Option> options;
         private long currentTime;
         private int currentOption;
@@ -115,10 +117,13 @@ public class PlanManager implements IObserver, Serializable {
 
         public Plan(){
             options = new ArrayList<>();
+
         }
         public Plan(BreathIntensity in, BreathIntensity out, int frequency, int duration){
             this();
-            options.add(new Option(in, out, frequency, duration*1000));
+            Option add = new Option(in, out, frequency, duration*1000);
+            add.parent = this;
+            options.add(add);
         }
         public Plan(String name, BreathIntensity in, BreathIntensity out, int frequency, int duration){
             this(in, out, frequency, duration);
@@ -127,21 +132,12 @@ public class PlanManager implements IObserver, Serializable {
 
         public Plan addOption(BreathIntensity in, BreathIntensity out, int frequency, int seconds){
             Option o = new Option(in, out, frequency, seconds*1000);
-            setId(o);
+            o.parent = this;
             options.add(o);
             return this;
         }
         public void setName(String name){
             this.name = name;
-        }
-        public Plan addOption(Option o){
-            setId(o);
-            options.add(o);
-            return this;
-        }
-        public Plan removeOption(Option o){
-            options.remove(o);
-            return this;
         }
         public Plan removeOption(int id){
             options.remove(id);
@@ -153,12 +149,10 @@ public class PlanManager implements IObserver, Serializable {
             return null;
         }
 
-        public List<IIdentifiable> getOptions(){
-            List<IIdentifiable> result = new ArrayList<>();
-            for (Option o :
-                    options) {
-                result.add(o);
-            }
+        public List<Part> getParts(){
+            List<Part> result = new ArrayList<>();
+            for(Option option : options)
+                result.add(option);
             return result;
         }
 
@@ -182,28 +176,16 @@ public class PlanManager implements IObserver, Serializable {
             return (int)(currentTime/1000);
         }
 
+
         private boolean startPlan() {
             if(running)
                 return false;
             else {
-                running = !running;
+                running = true;
                 currentTime = options.get(0).duration;
                 delta = System.currentTimeMillis();
             }
             return running;
-        }
-        private void setId(Option o){
-            for (int i = 0; i <= options.size(); i++) {
-                boolean found = true;
-                for (int j = 0; j < options.size() && found; j++) {
-                    if(options.get(j).id==i)
-                        found = false;
-                }
-                if(found) {
-                    o.id = i;
-                    break;
-                }
-            }
         }
 
         private boolean update(){
@@ -229,14 +211,15 @@ public class PlanManager implements IObserver, Serializable {
         }
 
         @Override
+        public int getId() {
+            return plans.indexOf(this);
+        }
+
+        @Override
         public String getName(){
             return name;
         }
 
-        @Override
-        public int getId(){
-            return plans.indexOf(this);
-        }
 
         @Override
         protected Object clone() throws CloneNotSupportedException {
@@ -301,13 +284,12 @@ public class PlanManager implements IObserver, Serializable {
 
 
 
-        public static class Option implements Cloneable, Serializable, IIdentifiable {
+        public static class Option implements Cloneable, Serializable, Part {
             private BreathIntensity out;
             private BreathIntensity in;
             private int frequency;
             private long duration;
-            private int id;
-            private String name;
+            private Plan parent;
 
             public Option(BreathIntensity in, BreathIntensity out, int frequency, long duration){
                 this.in = in;
@@ -347,13 +329,13 @@ public class PlanManager implements IObserver, Serializable {
             }
 
             @Override
-            public String getName() {
-                return name + " " + id;
+            public int getId() {
+                return parent.options.indexOf(this);
             }
 
             @Override
-            public int getId(){
-                return id;
+            public String getName() {
+                return parent.getName();
             }
 
             @Override
@@ -369,5 +351,10 @@ public class PlanManager implements IObserver, Serializable {
         }
 
 
+    }
+
+    public interface Part {
+        int getId();
+        String getName();
     }
 }
