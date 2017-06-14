@@ -31,12 +31,9 @@ public abstract class BreathInterpreter {
         Bad(5),
         VeryBad(6);
 
-        private int value;
+        public final int value;
         BreathError(int value){
             this.value = value;
-        }
-        public int getValue(){
-            return value;
         }
         public Comparator<BreathError> getComperator(){
             return new Comparator<BreathError>() {

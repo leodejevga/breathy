@@ -14,6 +14,7 @@ import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.BluetoothService;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.BreathInterpreter;
 
 /**
  * Main Activity.
@@ -24,7 +25,6 @@ public class Menu extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         IntentFilter enabled = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         IntentFilter connected = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
         IntentFilter disconnected = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);

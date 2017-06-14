@@ -19,79 +19,83 @@ public class PlanManager implements Serializable {
     private static PlanManager manager = new PlanManager();
     private static int currentPlan;
 
-    private PlanManager(){
+    private PlanManager() {
         currentPlan = -1;
         plans = new ArrayList<>();
     }
 
-    public static PlanManager getInstance(){
+    public static PlanManager getInstance() {
         return manager;
     }
 
-    public static void addPlan(Plan plan){
+    public static void addPlan(Plan plan) {
         plans.add(plan);
     }
-    public static void removePlan(Plan plan){
+
+    public static void removePlan(Plan plan) {
         plans.remove(plan);
     }
 
-    public static List<Part> getParts(){
+    public static List<Part> getParts() {
         ArrayList<Part> result = new ArrayList<>();
-        for(Plan plan : plans)
+        for (Plan plan : plans)
             result.add(plan);
         return result;
     }
 
-    public static boolean setActive(int id){
-        if(id>=0 && id<plans.size())
-            currentPlan = id;
-        else return false;
-        return true;
-    }
-    public static boolean setActive(Plan plan){
-        int id = plans.indexOf(plan);
-        if(id!=-1)
+    public static boolean setActive(int id) {
+        if (id >= 0 && id < plans.size())
             currentPlan = id;
         else return false;
         return true;
     }
 
-    public static boolean startPlan(){
-        if(currentPlan!=-1) {
+    public static boolean setActive(Plan plan) {
+        int id = plans.indexOf(plan);
+        if (id != -1)
+            currentPlan = id;
+        else return false;
+        return true;
+    }
+
+    public static boolean startPlan() {
+        if (currentPlan != -1) {
             plans.get(currentPlan).startPlan();
             return true;
         }
         return false;
     }
+
     public static void stop() {
-        if(currentPlan!=-1)
+        if (currentPlan != -1)
             plans.get(currentPlan).stop();
     }
 
-    public static Plan getPlan(int id){
-        if(id>=0 && id<plans.size())
+    public static Plan getPlan(int id) {
+        if (id >= 0 && id < plans.size())
             return plans.get(id);
         return null;
     }
 
-    public static Plan deletePlan(int id){
-        if(id>=0 && id<plans.size())
+    public static Plan deletePlan(int id) {
+        if (id >= 0 && id < plans.size())
             return plans.remove(id);
         return null;
     }
 
-    public static boolean isActive(Plan plan){
+    public static boolean isActive(Plan plan) {
         return currentPlan == plans.indexOf(plan);
     }
-    public static Plan getCurrentPlan(){
-        if(currentPlan != -1)
+
+    public static Plan getCurrentPlan() {
+        if (currentPlan != -1)
             return plans.get(currentPlan);
         return null;
     }
 
     @Nullable
-    public static String getStatus(){
-        if(currentPlan!=-1 && plans.get(currentPlan).getCurrentDuration()!=0)
+    public static String getStatus() {
+        if (currentPlan != -1 && plans.get(currentPlan).getCurrentDuration() != 0)
             return getCurrentOption() + "\nrest time: " + getCurrentPlan().getCurrentDuration();
         return null;
     }
@@ -105,12 +109,12 @@ public class PlanManager implements Serializable {
     }
 
     public static void update() {
-        if(currentPlan != -1)
+        if (currentPlan != -1)
             plans.get(currentPlan).update();
     }
 
     public static Plan.Option getCurrentOption() {
-        if(currentPlan!=-1 && plans.get(currentPlan).getCurrentDuration()!=0)
+        if (currentPlan != -1 && plans.get(currentPlan).getCurrentDuration() != 0)
             return plans.get(currentPlan).getOption(plans.get(currentPlan).currentOption);
         return null;
     }
@@ -124,74 +128,80 @@ public class PlanManager implements Serializable {
         private long delta;
         private String name;
 
-        public Plan(){
+        public Plan() {
             options = new ArrayList<>();
 
         }
-        public Plan(BreathIntensity in, BreathIntensity out, int frequency, int duration){
+
+        public Plan(BreathIntensity in, BreathIntensity out, int frequency, int duration) {
             this();
-            Option add = new Option(in, out, frequency, duration*1000);
+            Option add = new Option(in, out, frequency, duration * 1000);
             add.parent = this;
             options.add(add);
         }
-        public Plan(String name, BreathIntensity in, BreathIntensity out, int frequency, int duration){
+
+        public Plan(String name, BreathIntensity in, BreathIntensity out, int frequency, int duration) {
             this(in, out, frequency, duration);
             this.name = name;
         }
 
-        public Plan addOption(BreathIntensity in, BreathIntensity out, int frequency, int seconds){
+        public Plan addOption(BreathIntensity in, BreathIntensity out, int frequency, int seconds) {
             return addOption("", in, out, frequency, seconds);
         }
-        public Plan addOption(String name, BreathIntensity in, BreathIntensity out, int frequency, int seconds){
-            Option o = new Option(in, out, frequency, seconds*1000);
+
+        public Plan addOption(String name, BreathIntensity in, BreathIntensity out, int frequency, int seconds) {
+            Option o = new Option(in, out, frequency, seconds * 1000);
             o.parent = this;
             o.name = name;
             options.add(o);
             return this;
         }
-        public void setName(String name){
+
+        public void setName(String name) {
             this.name = name;
         }
-        public Plan removeOption(int id){
+
+        public Plan removeOption(int id) {
             options.remove(id);
             return this;
         }
-        public Option getOption(int id){
-            if(id>=0 && id<options.size())
+
+        public Option getOption(int id) {
+            if (id >= 0 && id < options.size())
                 return options.get(id);
             return null;
         }
 
-        public List<Part> getParts(){
+        public List<Part> getParts() {
             List<Part> result = new ArrayList<>();
-            for(Option option : options)
+            for (Option option : options)
                 result.add(option);
             return result;
         }
 
-        public boolean isActivated(){
+        public boolean isActivated() {
             return PlanManager.isActive(this);
         }
 
-        public BreathIntensity getStrengthIn(){
+        public BreathIntensity getStrengthIn() {
             return options.get(currentOption).in;
         }
 
-        public BreathIntensity getStrengthOut(){
+        public BreathIntensity getStrengthOut() {
             return options.get(currentOption).out;
         }
 
-        public int getFrequency(){
+        public int getFrequency() {
             return options.get(currentOption).frequency;
         }
 
-        public int getCurrentDuration(){
-            return (int)(currentTime/1000);
+        public int getCurrentDuration() {
+            return (int) (currentTime / 1000);
         }
 
 
         private boolean startPlan() {
-            if(running)
+            if (running)
                 return false;
             else {
                 running = true;
@@ -201,29 +211,30 @@ public class PlanManager implements Serializable {
             return running;
         }
 
-        private boolean update(){
+        private boolean update() {
             delta = System.currentTimeMillis() - delta;
-            if(running){
-                if(currentTime-delta<=0){
+            if (running) {
+                if (currentTime - delta <= 0) {
                     currentOption++;
-                    if(currentOption == options.size())
+                    if (currentOption == options.size())
                         stop();
                     else
                         currentTime = options.get(currentOption).getDuration();
-                }
-                else
+                } else
                     currentTime -= delta;
             }
             delta = System.currentTimeMillis();
             return true;
         }
-        private boolean stop(){
+
+        private boolean stop() {
             running = false;
             currentOption = 0;
             currentTime = 0;
             return false;
         }
-        public String getDescription(){
+
+        public String getDescription() {
             String result = "";
             for (Option o : options) {
                 result += o + "\n";
@@ -237,7 +248,7 @@ public class PlanManager implements Serializable {
         }
 
         @Override
-        public String getName(){
+        public String getName() {
             return name;
         }
 
@@ -259,10 +270,10 @@ public class PlanManager implements Serializable {
 
         @Override
         public String toString() {
-            return getId()+1 + ") " + name + "\n" + getDescription();
+            return getId() + 1 + ") " + name + "\n" + getDescription();
         }
 
-        public enum BreathIntensity{
+        public enum BreathIntensity {
             VeryHigh(1, 5, "Very high"),
             High(0.8, 4, "High"),
             Medium(0.5, 3, "Medium"),
@@ -272,21 +283,24 @@ public class PlanManager implements Serializable {
             public final double value;
             public final String name;
             public final int id;
-            BreathIntensity(double value, int id, String name){
+
+            BreathIntensity(double value, int id, String name) {
                 this.name = name;
                 this.value = value;
                 this.id = id;
             }
-            public static BreathIntensity get(int id){
-                for(BreathIntensity i : values())
-                    if(i.id == id)
+
+            public static BreathIntensity get(int id) {
+                for (BreathIntensity i : values())
+                    if (i.id == id)
                         return i;
                 return null;
             }
-            public static BreathIntensity get(double value){
+
+            public static BreathIntensity get(double value) {
                 BreathIntensity prev = None;
-                for(BreathIntensity i : values())
-                    if(i.value <= value && i.value > prev.value)
+                for (BreathIntensity i : values())
+                    if (i.value <= value && i.value > prev.value)
                         return i;
                     else
                         prev = i;
@@ -300,7 +314,6 @@ public class PlanManager implements Serializable {
         }
 
 
-
         public static class Option implements Cloneable, Serializable, Part {
             private BreathIntensity out;
             private BreathIntensity in;
@@ -309,44 +322,47 @@ public class PlanManager implements Serializable {
             private Plan parent;
             private String name;
 
-            public Option(BreathIntensity in, BreathIntensity out, int frequency, long duration){
+            public Option(BreathIntensity in, BreathIntensity out, int frequency, long duration) {
                 this.in = in;
                 this.out = out;
                 this.frequency = frequency;
                 this.duration = duration;
             }
-            public Option(String name, BreathIntensity in, BreathIntensity out, int frequency, long duration){
+
+            public Option(String name, BreathIntensity in, BreathIntensity out, int frequency, long duration) {
                 this(in, out, frequency, duration);
                 this.name = name;
             }
-            public long getDuration(){
+
+            public long getDuration() {
                 return duration;
             }
 
-            public BreathIntensity getIn(){
+            public BreathIntensity getIn() {
                 return in;
             }
 
-            public BreathIntensity getOut(){
+            public BreathIntensity getOut() {
                 return out;
             }
 
-            public int getFrequency(){
+            public int getFrequency() {
                 return frequency;
             }
-            public void setDuration(int duration){
-                this.duration = duration<60*60*1000?duration:this.duration;
+
+            public void setDuration(int duration) {
+                this.duration = duration < 60 * 60 * 1000 ? duration : this.duration;
             }
 
-            public void setIn(BreathIntensity in){
+            public void setIn(BreathIntensity in) {
                 this.in = in;
             }
 
-            public void setOut(BreathIntensity out){
+            public void setOut(BreathIntensity out) {
                 this.out = out;
             }
 
-            public void setFrequency(int frequency){
+            public void setFrequency(int frequency) {
                 this.frequency = frequency;
             }
 
@@ -368,7 +384,7 @@ public class PlanManager implements Serializable {
             @Override
             public String toString() {
 
-                return getId()+1 + ") " + getName() + ";\nin: " + in.name + " " + in.value*100 +  "%,\nout: " + out.name + " " + out.value*100 + "%,\nfrequency: " + frequency + " per minute,\ntime: " + duration/1000 + " seconds";
+                return getId() + 1 + ") " + getName() + ";\nin: " + in.name + " " + in.value * 100 + "%,\nout: " + out.name + " " + out.value * 100 + "%,\nfrequency: " + frequency + " per minute,\ntime: " + duration / 1000 + " seconds";
             }
 
             public void setName(String name) {
@@ -381,6 +397,7 @@ public class PlanManager implements Serializable {
 
     public interface Part {
         int getId();
+
         String getName();
     }
 }
