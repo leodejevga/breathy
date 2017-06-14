@@ -3,17 +3,17 @@ package com.apps.philipps.source;
 import android.support.annotation.Nullable;
 
 import com.apps.philipps.source.interfaces.IObserver;
-import com.apps.philipps.source.interfaces.IIdentifiable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 /**
  * Created by Jevgenij Huebert on 06.05.2017. Project Breathy
  */
 
-public class PlanManager implements IObserver, Serializable {
+public class PlanManager implements Serializable {
 
     private static List<Plan> plans;
     private static PlanManager manager = new PlanManager();
@@ -22,7 +22,6 @@ public class PlanManager implements IObserver, Serializable {
     private PlanManager(){
         currentPlan = -1;
         plans = new ArrayList<>();
-        BreathData.addObserver(manager);
     }
 
     public static PlanManager getInstance(){
@@ -36,12 +35,10 @@ public class PlanManager implements IObserver, Serializable {
         plans.remove(plan);
     }
 
-    public static List<IIdentifiable> getPlans(){
-        final List<IIdentifiable> result = new ArrayList<>();
-        for (Plan p :
-                plans) {
-            result.add(p);
-        }
+    public static List<Part> getParts(){
+        ArrayList<Part> result = new ArrayList<>();
+        for(Plan plan : plans)
+            result.add(plan);
         return result;
     }
 
@@ -66,6 +63,10 @@ public class PlanManager implements IObserver, Serializable {
         }
         return false;
     }
+    public static void stop() {
+        if(currentPlan!=-1)
+            plans.get(currentPlan).stop();
+    }
 
     public static Plan getPlan(int id){
         if(id>=0 && id<plans.size())
@@ -74,23 +75,24 @@ public class PlanManager implements IObserver, Serializable {
     }
 
     public static Plan deletePlan(int id){
-        return plans.remove(id);
-    }
-
-    public static Plan newPlan(Plan.BreathIntensity in, Plan.BreathIntensity out, int freq, int duration){
-        return new Plan(in, out, freq, duration);
+        if(id>=0 && id<plans.size())
+            return plans.remove(id);
+        return null;
     }
 
     public static boolean isActive(Plan plan){
         return currentPlan == plans.indexOf(plan);
     }
+    public static Plan getCurrentPlan(){
+        if(currentPlan != -1)
+            return plans.get(currentPlan);
+        return null;
+    }
 
     @Nullable
-    public static Plan.Option getStatus(){
-        if(currentPlan!=-1 && plans.get(currentPlan).getCurrentDuration()!=0){
-            Plan p = plans.get(currentPlan);
-            return new Plan.Option(p.getStrengthIn(), p.getStrengthOut(), p.getFrequency(), p.getCurrentDuration());
-        }
+    public static String getStatus(){
+        if(currentPlan!=-1 && plans.get(currentPlan).getCurrentDuration()!=0)
+            return getCurrentOption() + "\nrest time: " + getCurrentPlan().getCurrentDuration();
         return null;
     }
 
@@ -98,14 +100,23 @@ public class PlanManager implements IObserver, Serializable {
         PlanManager.plans = plans;
     }
 
-    @Override
-    public void call(Object... messages) {
-        for (Plan plan : plans) {
-            plan.update();
-        }
+    public static List<Plan> getPlans() {
+        return plans;
     }
 
-    public static class Plan implements Cloneable, Serializable, IIdentifiable {
+    public static void update() {
+        if(currentPlan != -1)
+            plans.get(currentPlan).update();
+    }
+
+    public static Plan.Option getCurrentOption() {
+        if(currentPlan!=-1 && plans.get(currentPlan).getCurrentDuration()!=0)
+            return plans.get(currentPlan).getOption(plans.get(currentPlan).currentOption);
+        return null;
+    }
+
+
+    public static class Plan implements Cloneable, Serializable, Part {
         private List<Option> options;
         private long currentTime;
         private int currentOption;
@@ -115,10 +126,13 @@ public class PlanManager implements IObserver, Serializable {
 
         public Plan(){
             options = new ArrayList<>();
+
         }
         public Plan(BreathIntensity in, BreathIntensity out, int frequency, int duration){
             this();
-            options.add(new Option(in, out, frequency, duration*1000));
+            Option add = new Option(in, out, frequency, duration*1000);
+            add.parent = this;
+            options.add(add);
         }
         public Plan(String name, BreathIntensity in, BreathIntensity out, int frequency, int duration){
             this(in, out, frequency, duration);
@@ -126,22 +140,17 @@ public class PlanManager implements IObserver, Serializable {
         }
 
         public Plan addOption(BreathIntensity in, BreathIntensity out, int frequency, int seconds){
+            return addOption("", in, out, frequency, seconds);
+        }
+        public Plan addOption(String name, BreathIntensity in, BreathIntensity out, int frequency, int seconds){
             Option o = new Option(in, out, frequency, seconds*1000);
-            setId(o);
+            o.parent = this;
+            o.name = name;
             options.add(o);
             return this;
         }
         public void setName(String name){
             this.name = name;
-        }
-        public Plan addOption(Option o){
-            setId(o);
-            options.add(o);
-            return this;
-        }
-        public Plan removeOption(Option o){
-            options.remove(o);
-            return this;
         }
         public Plan removeOption(int id){
             options.remove(id);
@@ -153,12 +162,10 @@ public class PlanManager implements IObserver, Serializable {
             return null;
         }
 
-        public List<IIdentifiable> getOptions(){
-            List<IIdentifiable> result = new ArrayList<>();
-            for (Option o :
-                    options) {
-                result.add(o);
-            }
+        public List<Part> getParts(){
+            List<Part> result = new ArrayList<>();
+            for(Option option : options)
+                result.add(option);
             return result;
         }
 
@@ -182,28 +189,16 @@ public class PlanManager implements IObserver, Serializable {
             return (int)(currentTime/1000);
         }
 
+
         private boolean startPlan() {
             if(running)
                 return false;
             else {
-                running = !running;
+                running = true;
                 currentTime = options.get(0).duration;
                 delta = System.currentTimeMillis();
             }
             return running;
-        }
-        private void setId(Option o){
-            for (int i = 0; i <= options.size(); i++) {
-                boolean found = true;
-                for (int j = 0; j < options.size() && found; j++) {
-                    if(options.get(j).id==i)
-                        found = false;
-                }
-                if(found) {
-                    o.id = i;
-                    break;
-                }
-            }
         }
 
         private boolean update(){
@@ -211,15 +206,10 @@ public class PlanManager implements IObserver, Serializable {
             if(running){
                 if(currentTime-delta<=0){
                     currentOption++;
-                    if(currentOption == options.size()){
-                        running = false;
-                        currentOption = 0;
-                        currentTime = 0;
-                        return false;
-                    }
-                    else{
+                    if(currentOption == options.size())
+                        stop();
+                    else
                         currentTime = options.get(currentOption).getDuration();
-                    }
                 }
                 else
                     currentTime -= delta;
@@ -227,16 +217,30 @@ public class PlanManager implements IObserver, Serializable {
             delta = System.currentTimeMillis();
             return true;
         }
+        private boolean stop(){
+            running = false;
+            currentOption = 0;
+            currentTime = 0;
+            return false;
+        }
+        public String getDescription(){
+            String result = "";
+            for (Option o : options) {
+                result += o + "\n";
+            }
+            return result;
+        }
+
+        @Override
+        public int getId() {
+            return plans.indexOf(this);
+        }
 
         @Override
         public String getName(){
             return name;
         }
 
-        @Override
-        public int getId(){
-            return plans.indexOf(this);
-        }
 
         @Override
         protected Object clone() throws CloneNotSupportedException {
@@ -255,11 +259,7 @@ public class PlanManager implements IObserver, Serializable {
 
         @Override
         public String toString() {
-            String result = "";
-            for (Option o : options) {
-                result += o + "\n";
-            }
-            return result;
+            return getId()+1 + ") " + name + "\n" + getDescription();
         }
 
         public enum BreathIntensity{
@@ -301,12 +301,12 @@ public class PlanManager implements IObserver, Serializable {
 
 
 
-        public static class Option implements Cloneable, Serializable, IIdentifiable {
+        public static class Option implements Cloneable, Serializable, Part {
             private BreathIntensity out;
             private BreathIntensity in;
             private int frequency;
             private long duration;
-            private int id;
+            private Plan parent;
             private String name;
 
             public Option(BreathIntensity in, BreathIntensity out, int frequency, long duration){
@@ -314,6 +314,10 @@ public class PlanManager implements IObserver, Serializable {
                 this.out = out;
                 this.frequency = frequency;
                 this.duration = duration;
+            }
+            public Option(String name, BreathIntensity in, BreathIntensity out, int frequency, long duration){
+                this(in, out, frequency, duration);
+                this.name = name;
             }
             public long getDuration(){
                 return duration;
@@ -347,13 +351,13 @@ public class PlanManager implements IObserver, Serializable {
             }
 
             @Override
-            public String getName() {
-                return name + " " + id;
+            public int getId() {
+                return parent.options.indexOf(this);
             }
 
             @Override
-            public int getId(){
-                return id;
+            public String getName() {
+                return name;
             }
 
             @Override
@@ -364,10 +368,19 @@ public class PlanManager implements IObserver, Serializable {
             @Override
             public String toString() {
 
-                return "in: " + in.name + " " + in.value*100 +  "%, out: " + out.name + " " + out.value*100 + "%, frequency: " + frequency + " per minute, time: " + duration/1000 + " seconds";
+                return getId()+1 + ") " + getName() + ";\nin: " + in.name + " " + in.value*100 +  "%,\nout: " + out.name + " " + out.value*100 + "%,\nfrequency: " + frequency + " per minute,\ntime: " + duration/1000 + " seconds";
+            }
+
+            public void setName(String name) {
+                this.name = name;
             }
         }
 
 
+    }
+
+    public interface Part {
+        int getId();
+        String getName();
     }
 }
