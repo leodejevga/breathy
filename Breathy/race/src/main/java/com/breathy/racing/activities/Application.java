@@ -40,6 +40,7 @@ public class Application extends Activity2D {
     ArrayList<SlowCar> slowCars;
     LinkedList<GameObject2D> background;
     RelativeLayout game;
+    int carNumber;
 
     // Highscore
     double highscore = 0;
@@ -280,6 +281,7 @@ public class Application extends Activity2D {
      * creates a new Emeny on a pseudo random line
      */
     private void createEmeny() {
+
         int xIndex = GameUtil.getRandomNumber( 0, 2 );
         if (  slowCars.size() != 0 && xIndex == slowCars.get( slowCars.size() - 1 ).getPosition().get( 0 ) ) {
             xIndex = GameUtil.getRandomNumber( 0, 2 );
