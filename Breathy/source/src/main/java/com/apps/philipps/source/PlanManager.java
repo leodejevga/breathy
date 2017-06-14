@@ -6,13 +6,14 @@ import com.apps.philipps.source.interfaces.IObserver;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 /**
  * Created by Jevgenij Huebert on 06.05.2017. Project Breathy
  */
 
-public class PlanManager implements IObserver, Serializable {
+public class PlanManager implements Serializable {
 
     private static List<Plan> plans;
     private static PlanManager manager = new PlanManager();
@@ -21,7 +22,6 @@ public class PlanManager implements IObserver, Serializable {
     private PlanManager(){
         currentPlan = -1;
         plans = new ArrayList<>();
-        BreathData.addObserver(manager);
     }
 
     public static PlanManager getInstance(){
@@ -63,6 +63,10 @@ public class PlanManager implements IObserver, Serializable {
         }
         return false;
     }
+    public static void stop() {
+        if(currentPlan!=-1)
+            plans.get(currentPlan).stop();
+    }
 
     public static Plan getPlan(int id){
         if(id>=0 && id<plans.size())
@@ -79,16 +83,16 @@ public class PlanManager implements IObserver, Serializable {
     public static boolean isActive(Plan plan){
         return currentPlan == plans.indexOf(plan);
     }
-    public static int getCurrentPlan(){
-        return currentPlan;
+    public static Plan getCurrentPlan(){
+        if(currentPlan != -1)
+            return plans.get(currentPlan);
+        return null;
     }
 
     @Nullable
-    public static Plan.Option getStatus(){
-        if(currentPlan!=-1 && plans.get(currentPlan).getCurrentDuration()!=0){
-            Plan p = plans.get(currentPlan);
-            return new Plan.Option(p.getStrengthIn(), p.getStrengthOut(), p.getFrequency(), p.getCurrentDuration());
-        }
+    public static String getStatus(){
+        if(currentPlan!=-1 && plans.get(currentPlan).getCurrentDuration()!=0)
+            return getCurrentOption() + "\nrest time: " + getCurrentPlan().getCurrentDuration();
         return null;
     }
 
@@ -100,12 +104,17 @@ public class PlanManager implements IObserver, Serializable {
         return plans;
     }
 
-    @Override
-    public void call(Object... messages) {
-        for (Plan plan : plans) {
-            plan.update();
-        }
+    public static void update() {
+        if(currentPlan != -1)
+            plans.get(currentPlan).update();
     }
+
+    public static Plan.Option getCurrentOption() {
+        if(currentPlan!=-1 && plans.get(currentPlan).getCurrentDuration()!=0)
+            return plans.get(currentPlan).getOption(plans.get(currentPlan).currentOption);
+        return null;
+    }
+
 
     public static class Plan implements Cloneable, Serializable, Part {
         private List<Option> options;
@@ -131,8 +140,12 @@ public class PlanManager implements IObserver, Serializable {
         }
 
         public Plan addOption(BreathIntensity in, BreathIntensity out, int frequency, int seconds){
+            return addOption("", in, out, frequency, seconds);
+        }
+        public Plan addOption(String name, BreathIntensity in, BreathIntensity out, int frequency, int seconds){
             Option o = new Option(in, out, frequency, seconds*1000);
             o.parent = this;
+            o.name = name;
             options.add(o);
             return this;
         }
@@ -193,21 +206,29 @@ public class PlanManager implements IObserver, Serializable {
             if(running){
                 if(currentTime-delta<=0){
                     currentOption++;
-                    if(currentOption == options.size()){
-                        running = false;
-                        currentOption = 0;
-                        currentTime = 0;
-                        return false;
-                    }
-                    else{
+                    if(currentOption == options.size())
+                        stop();
+                    else
                         currentTime = options.get(currentOption).getDuration();
-                    }
                 }
                 else
                     currentTime -= delta;
             }
             delta = System.currentTimeMillis();
             return true;
+        }
+        private boolean stop(){
+            running = false;
+            currentOption = 0;
+            currentTime = 0;
+            return false;
+        }
+        public String getDescription(){
+            String result = "";
+            for (Option o : options) {
+                result += o + "\n";
+            }
+            return result;
         }
 
         @Override
@@ -238,11 +259,7 @@ public class PlanManager implements IObserver, Serializable {
 
         @Override
         public String toString() {
-            String result = "";
-            for (Option o : options) {
-                result += o + "\n";
-            }
-            return result;
+            return getId()+1 + ") " + name + "\n" + getDescription();
         }
 
         public enum BreathIntensity{
@@ -290,12 +307,17 @@ public class PlanManager implements IObserver, Serializable {
             private int frequency;
             private long duration;
             private Plan parent;
+            private String name;
 
             public Option(BreathIntensity in, BreathIntensity out, int frequency, long duration){
                 this.in = in;
                 this.out = out;
                 this.frequency = frequency;
                 this.duration = duration;
+            }
+            public Option(String name, BreathIntensity in, BreathIntensity out, int frequency, long duration){
+                this(in, out, frequency, duration);
+                this.name = name;
             }
             public long getDuration(){
                 return duration;
@@ -335,7 +357,7 @@ public class PlanManager implements IObserver, Serializable {
 
             @Override
             public String getName() {
-                return parent.getName();
+                return name;
             }
 
             @Override
@@ -346,7 +368,11 @@ public class PlanManager implements IObserver, Serializable {
             @Override
             public String toString() {
 
-                return "in: " + in.name + " " + in.value*100 +  "%, out: " + out.name + " " + out.value*100 + "%, frequency: " + frequency + " per minute, time: " + duration/1000 + " seconds";
+                return getId()+1 + ") " + getName() + ";\nin: " + in.name + " " + in.value*100 +  "%,\nout: " + out.name + " " + out.value*100 + "%,\nfrequency: " + frequency + " per minute,\ntime: " + duration/1000 + " seconds";
+            }
+
+            public void setName(String name) {
+                this.name = name;
             }
         }
 

@@ -10,83 +10,99 @@ import android.widget.TextView;
 
 import com.apps.philipps.source.PlanManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Var on 13.05.2017.
  */
 
-public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
+public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     public static int selected = -1;
     private List<PlanManager.Part> data;
-    private LinearLayout childLayout;
-    private LinearLayout parentLayout;
+    private List<LinearLayout> childLayout;
+    private List<LinearLayout> parentLayout;
 
-    private View.OnClickListener activateButtonOnClickListener;
-    private View.OnClickListener editButtonOnClickListener;
-    private View.OnClickListener deleteButtonOnClickListener;
+    private View.OnClickListener active;
+    private View.OnClickListener edit;
+    private View.OnClickListener delete;
 
 
     public ExpandableListViewAdapter(Context context, List<PlanManager.Part> data,
-                                     View.OnClickListener activateButtonOnClickListener, View.OnClickListener editButtonOnClickListener, View.OnClickListener deleteButtonOnClickListener){
+                                     View.OnClickListener active, View.OnClickListener edit, View.OnClickListener delete){
         this.context = context;
         this.data = data;
-        this.activateButtonOnClickListener = activateButtonOnClickListener;
-        this.editButtonOnClickListener = editButtonOnClickListener;
-        this.deleteButtonOnClickListener = deleteButtonOnClickListener;
+        this.active = active;
+        this.edit = edit;
+        this.delete = delete;
 
-        childLayout = new LinearLayout(context);
-        childLayout.setOrientation(LinearLayout.HORIZONTAL);
-        childLayout.setBackgroundColor(context.getResources().getColor(R.color.background));
+        childLayout = new ArrayList<>();
+        parentLayout = new ArrayList<>();
 
         buildExpandableListItems();
     }
 
     private void buildExpandableListItems(){
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(40, 0, 0, 0);
         LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
-        Button btnEditPlan = new Button(context);
+        for (PlanManager.Part part : data){
+            LinearLayout child = new LinearLayout(context);
+            LinearLayout parent = new LinearLayout(context);
 
-        parentLayout = new LinearLayout(context);
-        parentLayout.setOrientation(LinearLayout.HORIZONTAL);
-        TextView txtPlanName = new TextView(context);
-        parentLayout.addView(txtPlanName);
+            if(active!=null){
+                Button btnActivatePlan = new Button(context);
+                btnActivatePlan.setLayoutParams(buttonLayoutParams);
+                btnActivatePlan.setText(context.getString(R.string.activate));
+                btnActivatePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnPlus));
+                btnActivatePlan.setOnClickListener(active);
+                if(part instanceof PlanManager.Plan)
+                    btnActivatePlan.setEnabled(!PlanManager.isActive((PlanManager.Plan) part));
+                child.addView(btnActivatePlan);
+            }
+            if(edit!=null){
+                Button btnEditPlan = new Button(context);
+                btnEditPlan.setLayoutParams(buttonLayoutParams);
+                btnEditPlan.setText(context.getString(R.string.edit));
+                btnEditPlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorPrimary));
+                btnEditPlan.setOnClickListener(edit);
+                child.addView(btnEditPlan);
+            }
+            if(delete!=null){
+                Button btnDeletePlan = new Button(context);
+                btnDeletePlan.setLayoutParams(buttonLayoutParams);
+                btnDeletePlan.setText(context.getString(R.string.delete));
+                btnDeletePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnMinus));
+                btnDeletePlan.setOnClickListener(delete);
+                child.addView(btnDeletePlan);
+            }
+            TextView txtPlanName = new TextView(context);
+            txtPlanName.setText(part.getName());
+            txtPlanName.setTextSize(18);
+            txtPlanName.setPadding(0,10,0,5);
+            parent.setOrientation(LinearLayout.VERTICAL);
+            parent.addView(txtPlanName);
+            if(part instanceof PlanManager.Plan){
+                PlanManager.Plan p = (PlanManager.Plan) part;
+                TextView txtPlanDesc = new TextView(context);
+                txtPlanDesc.setTextSize(14);
+                txtPlanDesc.setPadding(20,0,0,0);
+                txtPlanDesc.setText(p.getDescription());
+                parent.addView(txtPlanDesc);
+            }
 
-        if (activateButtonOnClickListener!=null){
-            Button btnActivatePlan = new Button(context);
-            btnActivatePlan.setLayoutParams(buttonLayoutParams);
-            btnActivatePlan.setText(context.getString(R.string.activate));
-            btnActivatePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnPlus));
-            btnActivatePlan.setOnClickListener(activateButtonOnClickListener);
-
-            childLayout.addView(btnActivatePlan);
+            parentLayout.add(parent);
+            childLayout.add(child);
         }
-        btnEditPlan.setLayoutParams(buttonLayoutParams);
-        btnEditPlan.setText(context.getString(R.string.edit));
-        btnEditPlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorPrimary));
-        btnEditPlan.setOnClickListener(editButtonOnClickListener);
-        childLayout.addView(btnEditPlan);
-
-        Button btnDeletePlan = new Button(context);
-        btnDeletePlan.setLayoutParams(buttonLayoutParams);
-        btnDeletePlan.setText(context.getString(R.string.delete));
-        btnDeletePlan.setBackgroundTintList(context.getResources().getColorStateList(R.color.colorBtnMinus));
-        btnDeletePlan.setOnClickListener(deleteButtonOnClickListener);
-        childLayout.addView(btnDeletePlan);
     }
 
 
 
     @Override
     public int getGroupCount() {
-        return data.size();
+        return parentLayout.size();
     }
-
     @Override
     public int getChildrenCount(int groupPosition) {
         return 1;
@@ -109,25 +125,20 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
     }
     @Override
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        selected = groupPosition;
-        TextView view = (TextView) parentLayout.getChildAt(0);
-        view.setText(data.get(groupPosition).getName());
-        return parentLayout;
+        if(isExpanded)
+            selected = groupPosition;
+        return parentLayout.get(groupPosition);
     }
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        selected = groupPosition;
-        if(groupPosition == PlanManager.getCurrentPlan())
-            childLayout.getChildAt(0).setEnabled(false);
-        else childLayout.getChildAt(0).setEnabled(true);
-        return childLayout;
+        return childLayout.get(groupPosition);
     }
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
+        return false;
     }
 }

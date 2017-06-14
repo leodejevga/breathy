@@ -38,9 +38,20 @@ public class CreatePlan extends AppCompatActivity {
 
     private void init(){
         planParts = (ExpandableListView) findViewById(R.id.elvPlanParts);
+        planParts.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            private int prev = -1;
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if(prev!=-1 && prev!=groupPosition)
+                    planParts.collapseGroup(prev);
+                prev = groupPosition;
+            }
+        });
         planName = (EditText) findViewById(R.id.planName);
-
-        plan.setName(planName.getText().toString());
+        if(create)
+            plan.setName(planName.getText().toString());
+        else
+            planName.setText(plan.getName());
         planName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

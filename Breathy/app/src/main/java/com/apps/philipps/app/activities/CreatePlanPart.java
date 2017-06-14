@@ -29,6 +29,7 @@ public class CreatePlanPart extends AppCompatActivity {
     private int durationValue;
     private SeekBar in;
     private SeekBar out;
+    private EditText partName;
 
     private Button plus;
     private Button minus;
@@ -58,6 +59,7 @@ public class CreatePlanPart extends AppCompatActivity {
         duration.setText(temp);
         frequency.setProgress(part.getFrequency()-20);
         frequencyText.setText(part.getFrequency()-20 + "");
+        partName.setText(part.getName());
     }
 
 
@@ -69,6 +71,7 @@ public class CreatePlanPart extends AppCompatActivity {
         frequencyText.setText(20+frequency.getProgress() + "");
         duration = (TextView) findViewById(R.id.duration);
 
+        partName = (EditText) findViewById(R.id.planPartName);
         btnSubmitPlan = (Button) findViewById(R.id.btnSubmitPlan);
         btnCancelPlan = (Button) findViewById(R.id.btnCancelPlan);
         minus = (Button) findViewById(R.id.minutesMinus);
@@ -101,20 +104,24 @@ public class CreatePlanPart extends AppCompatActivity {
 
         btnCancelPlan.setOnClickListener(v -> finish());
         btnSubmitPlan.setOnClickListener(v -> {
-            if(create)
-                PlanManager.getPlan(planId).addOption(PlanManager.Plan.BreathIntensity.get(in.getProgress()),
-                        PlanManager.Plan.BreathIntensity.get(out.getProgress()), frequency.getProgress()+20,
-                        durationValue*60);
+            if(create) {
+                PlanManager.Plan plan = PlanManager.getPlan(planId);
+                if(plan!=null)
+                    plan.addOption(partName.getText().toString(), PlanManager.Plan.BreathIntensity.get(in.getProgress()),
+                        PlanManager.Plan.BreathIntensity.get(out.getProgress()), frequency.getProgress() + 20,
+                        durationValue * 60);
+            }
             else{
                 part.setIn(PlanManager.Plan.BreathIntensity.get(in.getProgress()));
                 part.setOut(PlanManager.Plan.BreathIntensity.get(out.getProgress()));
                 part.setFrequency(frequency.getProgress()+20);
                 part.setDuration(durationValue*60000);
+                part.setName(partName.getText().toString());
             }
             finish();
         });
-        minus.setOnClickListener(v -> duration.setText(durationValue>0?--durationValue + "":0 + "") );
-        plus.setOnClickListener(v -> duration.setText(durationValue<120?++durationValue + "":0 + "") );
+        minus.setOnClickListener(v -> duration.setText(durationValue>1?--durationValue + "":1 + "") );
+        plus.setOnClickListener(v -> duration.setText(durationValue<120?++durationValue + "":120 + "") );
         out.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

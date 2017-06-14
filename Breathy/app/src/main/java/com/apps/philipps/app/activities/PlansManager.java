@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 
@@ -11,7 +12,11 @@ import com.apps.philipps.app.ExpandableListViewAdapter;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.PlanManager;
 
+import javax.security.auth.login.LoginException;
+
 public class PlansManager extends AppCompatActivity {
+
+    private static final String TAG = "PLANS_MANAGER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,6 @@ public class PlansManager extends AppCompatActivity {
             Intent i = new Intent(PlansManager.this, CreatePlan.class);
             startActivity(i);
         });
-//        initExpandableListView();
     }
     private void initExpandableListView() {
         ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this,
@@ -36,7 +40,15 @@ public class PlansManager extends AppCompatActivity {
 
         ExpandableListView elvPlans = (ExpandableListView) findViewById(R.id.elvPlans);
         elvPlans.setAdapter(expandableListViewAdapter);
-
+        elvPlans.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            private int prev = -1;
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if(prev!=-1 && prev!=groupPosition)
+                    elvPlans.collapseGroup(prev);
+                prev = groupPosition;
+            }
+        });
     }
 
     @Override
@@ -46,7 +58,10 @@ public class PlansManager extends AppCompatActivity {
     }
 
     private View.OnClickListener active(){
-        return v -> { PlanManager.setActive(v.getId()); initExpandableListView(); };
+        return v -> {
+            PlanManager.setActive(ExpandableListViewAdapter.selected);
+            initExpandableListView();
+        };
     }
     private View.OnClickListener edit(){
         return v -> {

@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.PlanManager;
 
 /**
  * Created by Jevgenij Huebert on 11.03.2017. Project Breathy
@@ -87,6 +88,7 @@ public abstract class Activity2D extends Activity {
             @Override
             public void run() {
                 try {
+                    PlanManager.update();
                     draw();
                     ready++;
                 } catch (Exception e) {
@@ -113,6 +115,7 @@ public abstract class Activity2D extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        PlanManager.stop();
         destroy = true;
 
     }
