@@ -75,9 +75,12 @@ public class CreatePlan extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this,
-                plan.getParts(), null, edit(), delete());
+        ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this, null, edit(), delete(), plan.getId());
         planParts.setAdapter(expandableListViewAdapter);
+
+        if(PlanManager.getCurrentPlan()==null && PlanManager.getOption(0,0)!=null){
+            PlanManager.setActive(0);
+        }
     }
 
     private View.OnClickListener edit(){

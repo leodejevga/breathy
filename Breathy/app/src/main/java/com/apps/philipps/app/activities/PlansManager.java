@@ -36,7 +36,7 @@ public class PlansManager extends AppCompatActivity {
     }
     private void initExpandableListView() {
         ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this,
-                PlanManager.getParts(), active(), edit(), delete());
+                active(), edit(), delete());
 
         ExpandableListView elvPlans = (ExpandableListView) findViewById(R.id.elvPlans);
         elvPlans.setAdapter(expandableListViewAdapter);
@@ -54,6 +54,10 @@ public class PlansManager extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        for(PlanManager.Plan plan : PlanManager.getPlans()){
+            if(plan.getName()==null || plan.getName().length()==0)
+                plan.setName("Test Plan");
+        }
         initExpandableListView();
     }
 
