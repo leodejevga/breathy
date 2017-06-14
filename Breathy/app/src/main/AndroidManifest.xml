@@ -5,7 +5,8 @@
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -26,11 +27,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.Devices" />
-        <activity android:name=".activities.CreatePlan" />
+        <activity android:name=".activities.CreatePlanPart" />
         <activity
-            android:name=".activities.PlanManager"
+            android:name=".activities.PlansManager"
             android:label="@string/title_activity_plan_manager"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.CreatePlan"></activity>
     </application>
 
 </manifest>

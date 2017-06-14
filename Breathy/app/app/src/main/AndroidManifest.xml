@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.Devices" />
-        <activity android:name=".activities.CreatePlan"></activity>
+        <activity android:name=".activities.CreatePlanPart"></activity>
     </application>
 
 </manifest>

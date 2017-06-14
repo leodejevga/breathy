@@ -10,6 +10,7 @@ import com.apps.philipps.fade.Fade;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.Coins;
+import com.apps.philipps.source.SaveData;
 import com.apps.philipps.source.cachemanager.CacheManager;
 import com.apps.philipps.source.interfaces.IGame;
 import com.apps.philipps.test.Test;
@@ -59,6 +60,7 @@ public class Backend {
      */
     public static boolean init(Context context) {
         if (!initialized) {
+            SaveData.loadPlanManager();
             cacheManager = new CacheManager(context);
             games = new ArrayList<>();
             Backend.games.add(new AudioSurf());
