@@ -8,11 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-<<<<<<< HEAD
-=======
-            <option value="$PROJECT_DIR$/Fade" />
->>>>>>> origin/Aufgaben
-            <option value="$PROJECT_DIR$/Race" />
+            <option value="$PROJECT_DIR$/race" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/audioSurf" />
             <option value="$PROJECT_DIR$/fade" />
