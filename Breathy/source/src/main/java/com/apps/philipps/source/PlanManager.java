@@ -69,20 +69,11 @@ public class PlanManager implements Serializable {
             plans.get(currentPlan).stop();
     }
 
-    public static Plan getPlan(int id) {
-        if (id >= 0 && id < plans.size())
-            return plans.get(id);
-        return null;
-    }
-
-    public static Plan deletePlan(int id) {
-        if (id >= 0 && id < plans.size())
-            return plans.remove(id);
-        return null;
-    }
-
     public static boolean isActive(Plan plan) {
         return currentPlan == plans.indexOf(plan);
+    }
+    public static boolean isActive(int id) {
+        return currentPlan == id;
     }
 
     public static Plan getCurrentPlan() {
@@ -114,11 +105,6 @@ public class PlanManager implements Serializable {
             plans.get(currentPlan).update();
     }
 
-    public static Plan getCurrentPlan() {
-        if (currentPlan != -1)
-            return plans.get(currentPlan);
-        return null;
-    }
     public static Plan.Option getCurrentOption() {
         if (currentPlan != -1 && plans.get(currentPlan).getCurrentDuration() != 0)
             return plans.get(currentPlan).getOption(plans.get(currentPlan).currentOption);

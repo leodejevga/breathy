@@ -16,14 +16,18 @@ public abstract class BreathInterpreter {
     private static List<IObserver> observer = new ArrayList<>();
 
     public enum BreathMoment {
-        In,
-        Out,
-        Still,
-        None
+        In("Einatmen"),
+        Out("Ausatmen"),
+        Still("Still"),
+        None("");
+
+        public final String name;
+        BreathMoment(String name){
+            this.name = name;
+        }
     }
 
     public enum BreathError {
-<<<<<<< HEAD
         None("", -1),
         VeryGood("Very good", 0),
         Good("Good", 1),
@@ -42,22 +46,6 @@ public abstract class BreathInterpreter {
         }
 
         public Comparator<BreathError> getComperator() {
-=======
-        None(-1),
-        VeryGood(0),
-        Good(1),
-        Ok(2),
-        NotOk(3),
-        NotGood(4),
-        Bad(5),
-        VeryBad(6);
-
-        public final int value;
-        BreathError(int value){
-            this.value = value;
-        }
-        public Comparator<BreathError> getComperator(){
->>>>>>> Aufgaben
             return new Comparator<BreathError>() {
                 @Override
                 public int compare(BreathError o1, BreathError o2) {
