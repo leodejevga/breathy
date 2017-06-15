@@ -88,7 +88,7 @@ public class PlanManager implements Serializable {
 
     public static void setPlans(List<Plan> plans, boolean... save) {
         PlanManager.plans = plans;
-        if(save[0])
+        if(save.length!=0)
             SaveData.savePlanManager();
     }
 
