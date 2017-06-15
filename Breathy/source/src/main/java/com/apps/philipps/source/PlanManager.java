@@ -69,13 +69,26 @@ public class PlanManager implements Serializable {
             plans.get(currentPlan).stop();
     }
 
+    public static Plan getPlan(int id) {
+        if (id >= 0 && id < plans.size())
+            return plans.get(id);
+        return null;
+    }
+
+    public static Plan deletePlan(int id) {
+        if (id >= 0 && id < plans.size())
+            return plans.remove(id);
+        return null;
+    }
 
     public static boolean isActive(Plan plan) {
         return currentPlan == plans.indexOf(plan);
     }
 
-    public static boolean isActive(int planId) {
-        return currentPlan == planId;
+    public static Plan getCurrentPlan() {
+        if (currentPlan != -1)
+            return plans.get(currentPlan);
+        return null;
     }
 
 
