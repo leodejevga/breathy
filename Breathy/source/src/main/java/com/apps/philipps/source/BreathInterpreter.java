@@ -63,11 +63,12 @@ public abstract class BreathInterpreter {
             return value == be.value ? 0 : value < be.value ? -1 : 1;
         }
 
-        public static BreathError getErrorStatus(double strengthIn, double strengthOut, double frequenzy) {
+        public static BreathError getErrorStatus(double strengthIn, double strengthOut, double frequency) {
+            //TODO: Experts should prove correctness of this Status
             PlanManager.Plan.Option option = PlanManager.getCurrentOption();
             if (option == null)
                 return BreathError.None;
-            double fValue = Math.abs(option.getFrequency()/60 - frequenzy) / option.getFrequency();
+            double fValue = Math.abs(option.getFrequency()/60 - frequency) / option.getFrequency();
             double iValue = Math.abs(option.getIn().value - strengthIn < 0 ? 0 : option.getIn().value - strengthIn);
             double oValue = Math.abs(option.getOut().value - strengthOut < 0 ? 0 : option.getOut().value - strengthOut);
             double min = (iValue + oValue) / 2 + fValue;
