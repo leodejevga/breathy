@@ -19,6 +19,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <EditText
+                android:id="@+id/planPartName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Plan part name"
+                android:inputType="textPersonName" />
+
             <TextView
                 android:id="@+id/txtCreatePlanTitle"
                 android:layout_width="match_parent"
@@ -132,14 +140,14 @@
                     android:gravity="center">
 
                     <Button
-                        android:id="@+id/minutesPlus"
+                        android:id="@+id/minutesMinus"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="60dp"
                         android:layout_height="35dp"
-                        android:backgroundTint="@color/colorBtnPlus"
+                        android:backgroundTint="@color/colorBtnMinus"
                         android:gravity="center"
-                        android:onClick="addMinute"
-                        android:text="+" />
+                        android:onClick="subMinute"
+                        android:text="-" />
 
                     <TextView
                         android:id="@+id/duration"
@@ -151,14 +159,14 @@
                         android:textAlignment="center" />
 
                     <Button
-                        android:id="@+id/minutesMinus"
+                        android:id="@+id/minutesPlus"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="60dp"
                         android:layout_height="35dp"
-                        android:backgroundTint="@color/colorBtnMinus"
+                        android:backgroundTint="@color/colorBtnPlus"
                         android:gravity="center"
-                        android:onClick="subMinute"
-                        android:text="-" />
+                        android:onClick="addMinute"
+                        android:text="+" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -192,7 +200,7 @@
                     android:id="@+id/textView11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20"
+                    android:text="10"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:textColor="@color/text" />
 
@@ -207,7 +215,7 @@
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="120"
+                    android:text="110"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:textColor="@color/text" />
             </LinearLayout>

@@ -29,6 +29,7 @@ public class CreatePlanPart extends AppCompatActivity {
     private int durationValue;
     private SeekBar in;
     private SeekBar out;
+    private EditText partName;
 
     private Button plus;
     private Button minus;
@@ -41,7 +42,8 @@ public class CreatePlanPart extends AppCompatActivity {
         setContentView(R.layout.activity_create_plan_part);
 
         planId = getIntent().getIntExtra("planId", -1);
-        part = planId>=0?PlanManager.getPlan(planId).getOption(getIntent().getIntExtra("planPart", -1)):null;
+        int optionId = getIntent().getIntExtra("planPart", -1);
+        part = planId>=0?PlanManager.getOption(planId, optionId):null;
         create = part==null;
         initViews();
         if(!create)
@@ -56,8 +58,9 @@ public class CreatePlanPart extends AppCompatActivity {
         outValue.setText(part.getOut().name() + " " + part.getOut().value*100 + "%");
         String temp = (part.getDuration()/60000)%60 + "";
         duration.setText(temp);
-        frequency.setProgress(part.getFrequency());
+        frequency.setProgress(part.getFrequency()-10);
         frequencyText.setText(part.getFrequency() + "");
+        partName.setText(part.getName());
     }
 
 
@@ -66,10 +69,23 @@ public class CreatePlanPart extends AppCompatActivity {
 
         frequency = (SeekBar) findViewById(R.id.frequency);
         frequencyText = (TextView) findViewById(R.id.frequencyText);
-        frequencyText.setText(20+frequency.getProgress() + "");
+        frequencyText.setText(10+frequency.getProgress() + "");
         duration = (TextView) findViewById(R.id.duration);
 
+        partName = (EditText) findViewById(R.id.planPartName);
+        partName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                btnSubmitPlan.setEnabled(count!=0);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
         btnSubmitPlan = (Button) findViewById(R.id.btnSubmitPlan);
+        btnSubmitPlan.setEnabled(!create);
         btnCancelPlan = (Button) findViewById(R.id.btnCancelPlan);
         minus = (Button) findViewById(R.id.minutesMinus);
         plus = (Button) findViewById(R.id.minutesPlus);
@@ -91,7 +107,29 @@ public class CreatePlanPart extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(fromUser)
-                    frequencyText.setText(20+progress + "");
+                    frequencyText.setText(10+progress + "");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        in.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(out.getProgress() == 0 && progress == 0 && fromUser)
+                    seekBar.setProgress(1);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        out.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(out.getProgress() == 0 && progress == 0 && fromUser)
+                    seekBar.setProgress(1);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -101,20 +139,24 @@ public class CreatePlanPart extends AppCompatActivity {
 
         btnCancelPlan.setOnClickListener(v -> finish());
         btnSubmitPlan.setOnClickListener(v -> {
-            if(create)
-                PlanManager.getPlan(planId).addOption(PlanManager.Plan.BreathIntensity.get(in.getProgress()),
-                        PlanManager.Plan.BreathIntensity.get(out.getProgress()), frequency.getProgress()+20,
-                        durationValue*60);
+            if(create) {
+                PlanManager.Plan plan = PlanManager.getPlan(planId);
+                if(plan!=null)
+                    plan.addOption(partName.getText().toString(), PlanManager.Plan.BreathIntensity.get(in.getProgress()),
+                        PlanManager.Plan.BreathIntensity.get(out.getProgress()), frequency.getProgress() + 10,
+                        durationValue * 60);
+            }
             else{
                 part.setIn(PlanManager.Plan.BreathIntensity.get(in.getProgress()));
                 part.setOut(PlanManager.Plan.BreathIntensity.get(out.getProgress()));
-                part.setFrequency(frequency.getProgress()+20);
+                part.setFrequency(frequency.getProgress()+10);
                 part.setDuration(durationValue*60000);
+                part.setName(partName.getText().toString());
             }
             finish();
         });
-        minus.setOnClickListener(v -> duration.setText(durationValue>0?--durationValue + "":0 + "") );
-        plus.setOnClickListener(v -> duration.setText(durationValue<120?++durationValue + "":0 + "") );
+        minus.setOnClickListener(v -> duration.setText(durationValue>1?--durationValue + "":1 + "") );
+        plus.setOnClickListener(v -> duration.setText(durationValue<110?++durationValue + "":110 + "") );
         out.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

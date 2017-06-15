@@ -372,6 +372,9 @@ public class GameObject3D implements IGameObject {
          * Draw.
          */
         public void draw() {
+            programHandle = Helper_Utils.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle,
+                    new String[]{"a_Position", "a_Color", "a_Normal", "a_TexCoordinate"});
+
             // Set our per-vertex lighting program.
             GLES20.glUseProgram(programHandle);
 

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,10 +38,30 @@ public class CreatePlan extends AppCompatActivity {
 
     private void init(){
         planParts = (ExpandableListView) findViewById(R.id.elvPlanParts);
+        planParts.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            private int prev = -1;
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if(prev!=-1 && prev!=groupPosition)
+                    planParts.collapseGroup(prev);
+                prev = groupPosition;
+            }
+        });
         planName = (EditText) findViewById(R.id.planName);
-        planName.setOnEditorActionListener((v, actionId, event) -> {
-            plan.setName(v.getText().toString());
-            return true;
+        if(create)
+            plan.setName(planName.getText().toString());
+        else
+            planName.setText(plan.getName());
+        planName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                plan.setName(s.toString());
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
         addPart = (FloatingActionButton) findViewById(R.id.fabAddPlanPart);
         addPart.setOnClickListener(v -> {
@@ -53,15 +75,18 @@ public class CreatePlan extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this,
-                plan.getOptions(), null, edit(), delete());
+        ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this, null, edit(), delete(), plan.getId());
         planParts.setAdapter(expandableListViewAdapter);
+
+        if(PlanManager.getCurrentPlan()==null && PlanManager.getOption(0,0)!=null){
+            PlanManager.setActive(0);
+        }
     }
 
     private View.OnClickListener edit(){
         return v -> {
             Intent i = new Intent(this, CreatePlanPart.class);
-            i.putExtra("planPart", v.getId());
+            i.putExtra("planPart", ExpandableListViewAdapter.selected);
             i.putExtra("planId", plan.getId());
             startActivity(i);
         };
@@ -69,8 +94,7 @@ public class CreatePlan extends AppCompatActivity {
 
     private View.OnClickListener delete(){
         return v -> {
-            Log.e("DELETE ---->", v.getId() + "");
-            plan.removeOption(v.getId()); onResume();
+            plan.removeOption(ExpandableListViewAdapter.selected); onResume();
         };
     }
 }

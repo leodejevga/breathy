@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.test.R;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.helper._2D.Activity2D;
@@ -80,7 +81,6 @@ public class Application extends Activity2D{
 
     @Override
     protected void init() {
-
         views = (TextView) findViewById(R.id.app_views);
         rate = (TextView) findViewById(R.id.app_framelimit);
         game = (RelativeLayout) findViewById(R.id.test_game_area);

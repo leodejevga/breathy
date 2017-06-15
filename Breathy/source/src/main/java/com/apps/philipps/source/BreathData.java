@@ -166,7 +166,8 @@ public abstract class BreathData {
                 return true;
             }
             for(IObserver o : observer)
-                o.call(t);
+                if(o!=null)
+                    o.call(t);
             return false;
         }
 

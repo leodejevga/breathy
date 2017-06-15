@@ -37,6 +37,7 @@ public class Game extends Activity2D {
 
     @Override
     protected void init() {
+        PlanManager.startPlan();
         framerate = (TextView) findViewById(R.id.test_framerate);
         dataDisplay = (TextView) findViewById(R.id.test_data);
         frameCount = (TextView) findViewById(R.id.test_frameCount);
