@@ -33,4 +33,9 @@ public abstract class Activity3D extends Activity {
         if(openGL!=null)
             openGL.onResume();
     }
+
+    public SurfaceView3D getSurfaceView(){
+        return openGL;
+    }
+
 }

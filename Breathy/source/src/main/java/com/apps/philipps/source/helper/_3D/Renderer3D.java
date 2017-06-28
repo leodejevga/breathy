@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.util.Log;
 
 import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.helper.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -20,6 +21,7 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
     private int frames;
     private long second;
     protected long deltaTime;
+    public static float start_cam_Angle=45f;
 
     public static Camera3D camera3D;
     public static Light light;
@@ -36,6 +38,7 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         if (camera3D == null){
             camera3D = new Camera3D(width, height);
+            Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, start_cam_Angle));
         }
         else camera3D.changeSurface(width, height);
 

@@ -79,7 +79,7 @@ public class Light {
         // Calculate position of the light. Rotate and then push into the distance.
         Matrix.setIdentityM(lightModel_Matrix, 0);
         Matrix.rotateM(lightModel_Matrix, 0, angle, 0.0f, 1.0f, 0.0f);
-        Matrix.translateM(lightModel_Matrix, 0, 0.0f, 0.0f, -0.7f);
+        Matrix.translateM(lightModel_Matrix, 0, 0.0f, 0.0f, -1f);
 
         Matrix.multiplyMV(lightPosInWorldSpace, 0, lightModel_Matrix, 0, lightPosInModelSpace, 0);
         Matrix.multiplyMV(lightPosInEyeSpace, 0, view_Matrix, 0, lightPosInWorldSpace, 0);

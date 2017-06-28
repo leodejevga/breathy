@@ -15,6 +15,7 @@ public class Car {
     private float delay = 2000f;
     float angle = 0;
     float rotateSpeed = 360f;
+    float constant = 0f;
 
     public Car(Context mActivityContext, int modelID, int textureId) {
         car = new GameObject3D(GameObject3D.loadObject(mActivityContext, modelID, textureId));
@@ -52,8 +53,17 @@ public class Car {
         car.rotate(new Vector(1, 0, 0, -90));
         car.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
         resetRotation();
+        constant = 0.0f;
         //car.rotate(new Vector(0, 0, 1, angle));
     }
+
+    public void crahes() {
+        constant += 5.0f;
+        car.move(new Vector(0, 0, 0));
+        car.rotate(new Vector(1, 0, 0, -90));
+        car.rotate(new Vector(0, 1, 0, constant));
+    }
+
 
     public void resetRotation() {
         if (Math.abs(angle) < speed)

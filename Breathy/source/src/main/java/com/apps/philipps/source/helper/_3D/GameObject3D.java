@@ -73,6 +73,7 @@ public class GameObject3D implements IGameObject {
         Matrix.setRotateM(temp, 0, rotation.get(3), rotation.get(0), rotation.get(1), rotation.get(2));
         Matrix.multiplyMM(result, 0, result, 0, temp, 0);
         Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
+        //getBoundingBox().rotate(destination);
     }
 
     @Override
@@ -105,8 +106,13 @@ public class GameObject3D implements IGameObject {
 
     @Override
     public Vector getBoundaries() {
-        return null;
+        return this.shape.boundingBox.getMax_min_value();
     }
+
+    public BoundingBox getBoundingBox() {
+        return this.shape.boundingBox;
+    }
+
 
     private void init() {
         if (Renderer3D.camera3D != null) {
@@ -124,6 +130,7 @@ public class GameObject3D implements IGameObject {
     public static class Shape {
         private Vector position;
         private int dimensions = 0;
+        BoundingBox boundingBox;
         /**
          * The Coords.
          */
@@ -261,7 +268,7 @@ public class GameObject3D implements IGameObject {
 
             /*calculate normal matrix from model view matrix*/
             this.waveFrontObject = isWaveFrontObj;
-            calculateNormalVertex();
+            calculateNormalAndBoundingVertex();
             normals_Buffer = ByteBuffer.allocateDirect(normalData.length * mBytesPerFloat)
                     .order(ByteOrder.nativeOrder()).asFloatBuffer();
             normals_Buffer.put(normalData).position(0);
@@ -348,6 +355,10 @@ public class GameObject3D implements IGameObject {
          */
         public void setPosition(Vector position) {
             this.position = position;
+            //Current position of Bounding Box
+            Vector currentPos = boundingBox.position;
+            Vector inversePos = new Vector(-currentPos.get(0), -currentPos.get(1), -currentPos.get(2));
+            this.boundingBox.translate(inversePos.add(position));
         }
 
         /**
@@ -458,22 +469,29 @@ public class GameObject3D implements IGameObject {
             draw();
         }
 
-        private void calculateNormalVertex() {
-            int counter = 0;
+        private void calculateNormalAndBoundingVertex() {
             normalData = new float[this.coords.length];
             Vector[] temp = transformArrays(dimensions, this.coords);
-            int numberOfPlane = temp.length / 3;
+            calculateNormals(temp);
+            calculateBounding(temp);
+        }
+
+        private void calculateBounding(Vector[] vertex) {
+            this.boundingBox = new BoundingBox(vertex);
+        }
+
+        private void calculateNormals(Vector[] vertex) {
+            int numberOfPlane = vertex.length / 3;
             for (int i = 0; i < numberOfPlane; i++) {
-                Vector v1 = temp[i * 3];
-                Vector v2 = temp[i * 3 + 1];
-                Vector v3 = temp[i * 3 + 2];
+                Vector v1 = vertex[i * 3];
+                Vector v2 = vertex[i * 3 + 1];
+                Vector v3 = vertex[i * 3 + 2];
                 Vector u = Vector.sub(v1, v3);
                 Vector v = Vector.sub(v1, v2);
 
                 Vector normal = Vector.cross(u, v);
                 if (normal == null) {
                     normal = new Vector(0, 0, 0);
-                    counter++;
                 }
                 for (int j = 0; j < 3; j++) {
                     int index = (i * 9) + (j * 3);
@@ -519,5 +537,4 @@ public class GameObject3D implements IGameObject {
         System.arraycopy(array2, 0, array1and2, array1.length, array2.length);
         return array1and2;
     }
-
 }

@@ -1,6 +1,7 @@
 package com.apps.philipps.opengltest.activities;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.apps.philipps.opengltest.GameEngine;
 import com.apps.philipps.source.helper._3D.Renderer3D;
@@ -31,16 +32,7 @@ public class MyGLRenderer extends Renderer3D {
     @Override
     public void onDrawFrame(GL10 unused) {
         super.onDrawFrame(unused);
-        refreshCameraPosition();
-        Renderer3D.light.setUpLight();
-
-        gameEngine.drawStreet(deltaTime);
-        gameEngine.runSimulation(deltaTime);
-        Renderer3D.light.drawLight();
-    }
-
-
-    private void refreshCameraPosition() {
-        //Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, angle));
+        gameEngine.runGame(deltaTime);
+        Log.i("Syn", "rendered");
     }
 }

@@ -23,6 +23,7 @@ public class MyGLSurfaceView extends SurfaceView3D {
 
     public MyGLSurfaceView(Context context, Renderer3D renderer3D) {
         super(context, renderer3D);
+
         mScaleDetector = new ScaleGestureDetector(context, new ScaleGestureDetector.OnScaleGestureListener() {
             @Override
             public void onScaleEnd(ScaleGestureDetector detector) {
@@ -60,8 +61,13 @@ public class MyGLSurfaceView extends SurfaceView3D {
 
                 if (dx < 0 )
                     ((MyGLRenderer) renderer).gameEngine.car.turnRight(dx);
-                else
+                else if (dx > 0 )
                     ((MyGLRenderer) renderer).gameEngine.car.turnLeft(dx);
+
+                if (dy > 0)
+                    ((MyGLRenderer) renderer).gameEngine.decreaseCarSpeed();
+                else if (dy<0)
+                    ((MyGLRenderer) renderer).gameEngine.increaseCarSpeed();
         }
         mPreviousX = x;
         mPreviousY = y;
