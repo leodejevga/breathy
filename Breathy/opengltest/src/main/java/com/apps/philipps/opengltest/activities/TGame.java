@@ -60,7 +60,7 @@ public class TGame extends Activity3D {
         @Override
         protected Boolean doInBackground(String... params) {
             while (TGame.this.renderer3D.gameEngine == null) {
-                //wait ultil object is loaded
+                //wait until object is loaded
             }
             TGame.this.pd.dismiss();
             return true;

@@ -8,8 +8,11 @@ import com.apps.philipps.source.helper._3D.Renderer3D;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * GameEngine
+ * this class controls and draw objects in game 3D
+ **/
 public class GameEngine {
     ArrayList<GameObject3D> street = new ArrayList<>();
     private float angle = 0f;
@@ -22,9 +25,8 @@ public class GameEngine {
     private float max_CamAngle = 0f;
     private float min_CamAngle = Renderer3D.start_cam_Angle;
 
-
     public Car car;
-    public CopyOnWriteArrayList<Enemy> enemies;
+    public ArrayList<Enemy> enemies;
     private float zOffset = -0.2f;
     private int numberOfEnemies = 5;
     private float relativeDistanceOfEnemies = 20.0f;
@@ -36,6 +38,9 @@ public class GameEngine {
 
     Context mActivityContext;
 
+    /**
+     * create street, car and enemies
+     */
     public GameEngine(Context mActivityContext) {
         this.mActivityContext = mActivityContext;
         createCar();
@@ -45,6 +50,9 @@ public class GameEngine {
         collisionDetectionThread.start();
     }
 
+    /**
+     * draws objects
+     */
     public void runGame(long deltaTime) {
         rotateCam();
         Renderer3D.light.setUpLight();
@@ -53,7 +61,9 @@ public class GameEngine {
         Renderer3D.light.drawLight();
     }
 
-
+    /**
+     * simulate enemies moving and calculate collisions
+     */
     public void runSimulation(long deltaTime) {
         if (!collisionDetectionThread.crashed) {
             car.runs();
@@ -77,7 +87,7 @@ public class GameEngine {
     }
 
     private void createEnemies() {
-        enemies = new CopyOnWriteArrayList<>();
+        enemies = new ArrayList<>();
         for (int i = 0; i < numberOfEnemies; i++) {
             enemies.add(createNewEnemy());
         }
@@ -147,19 +157,7 @@ public class GameEngine {
         return false;
     }
 
-    public float getAngle() {
-        return angle;
-    }
-
-    public void setAngle(float angle) {
-        this.angle = angle;
-    }
-
-
-    //########## SIMULATION STRET #################
-
-
-    public void drawStreet(long deltaTime) {
+    private void drawStreet(long deltaTime) {
         if (street.get(street.size() / 2).getPosition().get(1) > -1.0) {
             moveStreet();
         } else {
@@ -177,7 +175,7 @@ public class GameEngine {
         }
     }
 
-    public void refreshStreet() {
+    private void refreshStreet() {
         GameObject3D square = street.get(0);
         float f = street.get(street.size() - 1).getPosition().get(1);
         square.setPosition(new Vector(0, f + 1.0f, 0));
@@ -185,54 +183,60 @@ public class GameEngine {
         street.remove(0);
     }
 
-    public void moveStreet() {
+    private void moveStreet() {
         for (int i = 0; i < street.size(); i++) {
             street.get(i).move(new Vector(0, -SPEED, 0));
         }
     }
 
-    public void drawSquares(long deltaTime) {
+    private void drawSquares(long deltaTime) {
         for (int i = 0; i < street.size(); i++) {
             street.get(i).update(deltaTime);
         }
     }
 
-    public void increaseCarSpeed() {
-        if (SPEED < MAX_SPEED) {
-            SPEED += INCR_SPEED;
-        }
-    }
-
-    public void decreaseCarSpeed() {
-        if (SPEED > MIN_SPEED) {
-            SPEED -= INCR_SPEED;
-        }
-    }
-
-    public void increaseCamAngle() {
+    private void increaseCamAngle() {
         if (current_camAngle > max_CamAngle) {
             current_camAngle -= 2;
             Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, -2));
         }
     }
 
-    public void decreaseCamAngle() {
+    private void decreaseCamAngle() {
         if (current_camAngle < min_CamAngle) {
             current_camAngle += 1;
             Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, 1));
         }
     }
 
-    public void resetCamAngle() {
+    private void resetCamAngle() {
         decreaseCamAngle();
     }
 
-    public void rotateCam() {
+    private void rotateCam() {
         if (collisionDetectionThread.crashed) {
             increaseCamAngle();
 
         } else {
             resetCamAngle();
+        }
+    }
+
+    /**
+     * increase game speed
+     * */
+    public void increaseCarSpeed() {
+        if (SPEED < MAX_SPEED) {
+            SPEED += INCR_SPEED;
+        }
+    }
+
+    /**
+     * decrease game speed
+     * */
+    public void decreaseCarSpeed() {
+        if (SPEED > MIN_SPEED) {
+            SPEED -= INCR_SPEED;
         }
     }
 

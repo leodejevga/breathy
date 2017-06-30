@@ -6,9 +6,10 @@ import com.apps.philipps.source.helper.Vector;
 
 import java.util.ArrayList;
 
-
+/**
+ * This class generates a bounding box for 3D object
+ */
 public class BoundingBox {
-
     private Vector[] points = new Vector[8];
     private float[] max_min_value;
     private float maxX;
@@ -17,10 +18,16 @@ public class BoundingBox {
     private float minX;
     private float minY;
     private float minZ;
+    private ArrayList<Line> lines = new ArrayList<>();
+
+    /**
+     * actual position of bounding box
+     */
     Vector position = new Vector(0, 0, 0);
-    ArrayList<Line> lines = new ArrayList<>();
 
-
+    /**
+     * Constructor
+     */
     public BoundingBox(Vector[] vertex) {
         calculateMaxMinValue(vertex);
         this.max_min_value = new float[]{maxX, maxY, maxZ, minX, minY, minZ};
@@ -28,15 +35,18 @@ public class BoundingBox {
         generateLines();
     }
 
+    /**
+     * @return returns extreme values from bounding box
+     */
     public Vector getMax_min_value() {
         return new Vector(max_min_value);
     }
 
-    private boolean isSetToOrigin() {
-        return Math.abs(position.get(0)) < 0.0001f
-                && Math.abs(position.get(1)) < 0.0001f
-                && Math.abs(position.get(2)) < 0.0001f;
-    }
+    /**
+     * translates bounding box to position <code>vector</code>
+     *
+     * @param vector
+     */
 
     public void translate(Vector vector) {
         float[] temp = new float[16];
@@ -46,6 +56,11 @@ public class BoundingBox {
         position.add(vector);
     }
 
+    /**
+     * rotates bounding box to position <code>vector</code>
+     *
+     * @param vector
+     */
     public void rotate(Vector vector) {
         float[] temp = new float[16];
         Matrix.setIdentityM(temp, 0);
@@ -104,6 +119,12 @@ public class BoundingBox {
         this.points[7] = new Vector(maxX, minY, minZ);
     }
 
+    /**
+     * check collision between 2 bounding boxes
+     *
+     * @param box
+     * @return returns <code>true</code> if the boxes are intersected otherwise <code>false</code>
+     */
     public boolean collision(BoundingBox box) {
 
         return (minX <= box.maxX && maxX >= box.minX) &&
@@ -111,15 +132,18 @@ public class BoundingBox {
                 (minZ <= box.maxZ && maxZ >= box.minZ);
     }
 
-    public void generateLines() {
+    private void generateLines() {
         for (int i = 0; i < points.length - 1; i++)
             for (int j = i + 1; j < points.length; j++) {
                 Line l = new Line();
-                l.SetVerts(points[i], points[j]);
+                l.setVertices(points[i], points[j]);
                 lines.add(l);
             }
     }
 
+    /**
+     * draws bounding box
+     */
     public void drawLines() {
         renewLinesPosition();
         for (Line line : lines) {
@@ -127,11 +151,14 @@ public class BoundingBox {
         }
     }
 
+    /**
+     * recalculate the actual position of bounding box
+     * */
     public void renewLinesPosition() {
         int counter = 0;
         for (int i = 0; i < points.length - 1; i++)
             for (int j = i + 1; j < points.length; j++) {
-                lines.get(counter).SetVerts(points[i], points[j]);
+                lines.get(counter).setVertices(points[i], points[j]);
                 counter++;
             }
         calculateMaxMinValue(points);
