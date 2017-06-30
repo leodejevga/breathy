@@ -21,7 +21,7 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
     private int frames;
     private long second;
     protected long deltaTime;
-    public static float start_cam_Angle=45f;
+    public static float start_cam_Angle = 45f;
 
     public static Camera3D camera3D;
     public static Light light;
@@ -29,19 +29,17 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        if (light == null ){
-            light = new Light();
-        }
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        if (camera3D == null){
+        if (camera3D == null) {
             camera3D = new Camera3D(width, height);
-            Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, start_cam_Angle));
+            camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, start_cam_Angle));
+        } else {
+            camera3D.changeSurface(width, height);
         }
-        else camera3D.changeSurface(width, height);
-
+        light = new Light();
     }
 
     @Override
@@ -56,7 +54,7 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
                 e.printStackTrace();
             }
         frames++;
-        if(System.currentTimeMillis()-second>=1000){
+        if (System.currentTimeMillis() - second >= 1000) {
             second = System.currentTimeMillis();
             frameRate = frames;
             frames = 0;
@@ -78,14 +76,15 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
 
         return shader;
     }
+
     /**
      * Utility method for debugging OpenGL calls. Provide the name of the call
      * just after making it:
-     *
+     * <p>
      * <pre>
      * mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
      * MyGLRenderer.checkGlError("glGetUniformLocation");</pre>
-     *
+     * <p>
      * If the operation is not successful, the check throws an error.
      *
      * @param glOperation - Name of the OpenGL call to check.

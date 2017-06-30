@@ -218,7 +218,6 @@ public class GameEngine {
     private void rotateCam() {
         if (collisionDetectionThread.crashed) {
             increaseCamAngle();
-
         } else {
             resetCamAngle();
         }
@@ -248,11 +247,11 @@ public class GameEngine {
         @Override
         public void run() {
             while (true) {
-                collisionDectection();
+                collisionDetection();
             }
         }
 
-        private void collisionDectection() {
+        private void collisionDetection() {
             for (int i = 0; i < enemies.size(); i++) {
                 if (car.getObject3D() != null
                         && car.getObject3D().getBoundingBox().collision(enemies.get(i).getObject3D().getBoundingBox())) {
@@ -266,11 +265,6 @@ public class GameEngine {
                 }
             }
             crashed = false;
-            try {
-                sleep(1000 / 59);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

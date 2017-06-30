@@ -2,6 +2,7 @@ package com.apps.philipps.source.helper._3D;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 /**
  * Created by qwert on 26/05/2017.
@@ -56,7 +57,6 @@ public class Light {
     private boolean increase = true;
 
     public Light() {
-        angle = 0;
         final int pointVertexShaderHandle = Helper_Utils.compileShader(GLES20.GL_VERTEX_SHADER, Helper_Utils.point_vertex_shader);
         final int pointFragmentShaderHandle = Helper_Utils.compileShader(GLES20.GL_FRAGMENT_SHADER, Helper_Utils.point_fragment_shader);
         pointProgramHandle = Helper_Utils.createAndLinkProgram(pointVertexShaderHandle, pointFragmentShaderHandle,
@@ -88,7 +88,9 @@ public class Light {
     public void drawLight() {
         GLES20.glUseProgram(pointProgramHandle);
         final int pointMVPMatrixHandle = GLES20.glGetUniformLocation(pointProgramHandle, "u_MVPMatrix");
+        Renderer3D.checkGlError("glGetUniformLocation");
         final int pointPositionHandle = GLES20.glGetAttribLocation(pointProgramHandle, "a_Position");
+        Renderer3D.checkGlError("glGetAttribLocation");
 
         GLES20.glVertexAttrib3f(pointPositionHandle, lightPosInModelSpace[0], lightPosInModelSpace[1], lightPosInModelSpace[2]);
 

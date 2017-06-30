@@ -22,8 +22,6 @@ public class Camera3D {
     public static float[] mViewMatrix = new float[16];
     private float[] mRotationMatrix = new float[16];
 
-    private static boolean init = false;
-
     public Camera3D(int width, int height, Vector... vectors) {
         if (vectors.length > 0)
             direction = vectors[0];

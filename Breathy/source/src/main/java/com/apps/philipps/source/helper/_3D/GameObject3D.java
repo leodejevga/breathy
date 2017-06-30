@@ -73,7 +73,6 @@ public class GameObject3D implements IGameObject {
         Matrix.setRotateM(temp, 0, rotation.get(3), rotation.get(0), rotation.get(1), rotation.get(2));
         Matrix.multiplyMM(result, 0, result, 0, temp, 0);
         Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
-        //getBoundingBox().rotate(destination);
     }
 
     @Override
