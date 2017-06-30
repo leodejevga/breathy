@@ -14,29 +14,30 @@ import java.util.Random;
  * this class controls and draw objects in game 3D
  **/
 public class GameEngine {
-    ArrayList<GameObject3D> street = new ArrayList<>();
-    private float angle = 0f;
+    private ArrayList<GameObject3D> street = new ArrayList<>();
     private float SPEED = 0.01f;
     private float MIN_SPEED = 0.01f;
     private float MAX_SPEED = 0.1f;
     private float INCR_SPEED = 0.001f;
-
     private float current_camAngle = Renderer3D.start_cam_Angle;
     private float max_CamAngle = 0f;
     private float min_CamAngle = Renderer3D.start_cam_Angle;
+    private float zOffset = -0.2f;
+    private float relativeDistanceOfEnemies = 20.0f;
+    private float safeDistance = 1.0f;
+    private int numberOfEnemies = 5;
+
+    private CollisionDetectionThread collisionDetectionThread;
+    private Context mActivityContext;
 
     public Car car;
     public ArrayList<Enemy> enemies;
-    private float zOffset = -0.2f;
-    private int numberOfEnemies = 5;
-    private float relativeDistanceOfEnemies = 20.0f;
-    private float safeDistance = 1.0f;
+    public static float streetSize = 0.7f;
 
+    /**
+     * Set true to draw bounding box to debug
+     */
     private boolean DEBUG_MODE = false;
-
-    CollisionDetectionThread collisionDetectionThread;
-
-    Context mActivityContext;
 
     /**
      * create street, car and enemies
@@ -123,13 +124,14 @@ public class GameEngine {
             enemy.runs();
             enemy.draw(deltaTime);
 
-            //remove all create new enemy
-            if (enemies.get(i).getObject3D().getPosition().get(1) < -2.0f) {
-                enemies.get(i).setPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + 1f, zOffset));
-                while (enemesOverlapped(enemies.get(i))) {
-                    enemies.get(i).setPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + 1f, zOffset));
+            //set enemy, which is out of the screen to new position
+            if (enemy.getObject3D().getPosition().get(1) < -2.0f) {
+                enemy.setPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + 1f, zOffset));
+                while (enemiesOverlapped(enemy)) {
+                    enemy.setPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + 1f, zOffset));
                 }
             }
+
             if (DEBUG_MODE)
                 enemy.getObject3D().getBoundingBox().drawLines();
             else
@@ -141,13 +143,13 @@ public class GameEngine {
         Random random = new Random();
         Enemy newEnemy = new Enemy(mActivityContext, R.raw.enemycar, R.drawable.enemytexture);
         newEnemy.setPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + 1f, zOffset));
-        while (enemesOverlapped(newEnemy)) {
+        while (enemiesOverlapped(newEnemy)) {
             newEnemy = createNewEnemy();
         }
         return newEnemy;
     }
 
-    private boolean enemesOverlapped(Enemy newEnemy) {
+    private boolean enemiesOverlapped(Enemy newEnemy) {
         for (int i = 0; i < enemies.size(); i++) {
             if (newEnemy != enemies.get(i) &&
                     Math.abs(newEnemy.getObject3D().getPosition().get(1) - enemies.get(i).getObject3D().getPosition().get(1)) < safeDistance) {
@@ -158,7 +160,7 @@ public class GameEngine {
     }
 
     private void drawStreet(long deltaTime) {
-        if (street.get(street.size() / 2).getPosition().get(1) > -1.0) {
+        if (street.get(street.size() / 2).getPosition().get(1) > -(streetSize * 2)) {
             moveStreet();
         } else {
             moveStreet();
@@ -169,8 +171,8 @@ public class GameEngine {
 
     private void createStreet() {
         for (int i = -9; i < 10; i++) {
-            GameObject3D square = new GameObject3D(new Shapes.Square(mActivityContext));
-            square.setPosition(new Vector(0, i * Shapes.Square.size, 0));
+            GameObject3D square = new GameObject3D(new Shapes.Square(mActivityContext, streetSize));
+            square.setPosition(new Vector(0, i * streetSize * 2, 0));
             street.add(square);
         }
     }
@@ -224,7 +226,7 @@ public class GameEngine {
 
     /**
      * increase game speed
-     * */
+     */
     public void increaseCarSpeed() {
         if (SPEED < MAX_SPEED) {
             SPEED += INCR_SPEED;
@@ -233,7 +235,7 @@ public class GameEngine {
 
     /**
      * decrease game speed
-     * */
+     */
     public void decreaseCarSpeed() {
         if (SPEED > MIN_SPEED) {
             SPEED -= INCR_SPEED;

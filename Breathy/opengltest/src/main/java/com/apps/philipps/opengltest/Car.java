@@ -10,7 +10,7 @@ public class Car {
 
     private GameObject3D car;
     private float xPosition = 0.0f;
-    private float limit = 0.5f;
+    private float limit = GameEngine.streetSize/2;
     private float speed = 0f;
     private float delay = 2000f;
     float angle = 0;
