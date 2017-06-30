@@ -257,7 +257,7 @@ public class GameEngine {
                         && car.getObject3D().getBoundingBox().collision(enemies.get(i).getObject3D().getBoundingBox())) {
                     crashed = true;
                     try {
-                        sleep(1000 / 59);
+                        sleep(1000 / 40);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -265,6 +265,11 @@ public class GameEngine {
                 }
             }
             crashed = false;
+            try {
+                sleep(1000 / 40);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

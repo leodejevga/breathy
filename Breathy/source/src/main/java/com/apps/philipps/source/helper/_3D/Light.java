@@ -2,7 +2,6 @@ package com.apps.philipps.source.helper._3D;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
 /**
  * Created by qwert on 26/05/2017.
@@ -61,7 +60,6 @@ public class Light {
         final int pointFragmentShaderHandle = Helper_Utils.compileShader(GLES20.GL_FRAGMENT_SHADER, Helper_Utils.point_fragment_shader);
         pointProgramHandle = Helper_Utils.createAndLinkProgram(pointVertexShaderHandle, pointFragmentShaderHandle,
                 new String[]{"a_Position"});
-
     }
 
     private void lightMovementSimulation() {
