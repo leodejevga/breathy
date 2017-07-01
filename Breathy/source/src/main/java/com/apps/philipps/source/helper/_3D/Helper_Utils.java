@@ -5,10 +5,13 @@ import android.util.Log;
 
 
 public class Helper_Utils {
+    public static String number_of_light = "3";
 
     public static String vertex_texture_shader =
-            "uniform mat4 u_MVPMatrix;" +
+                    "uniform mat4 u_MVPMatrix;" +
                     "uniform mat4 u_MVMatrix;" +
+                    "uniform vec4 u_PointLightPositions["+ number_of_light +"];" +
+                    "uniform vec3 u_PointLightColors["+ number_of_light +"];" +
 
                     "attribute vec4 a_Position;" +  // Per-vertex position information we will pass in.
                     "attribute vec4 a_Color;" +      // Per-vertex color information we will pass in.
@@ -19,31 +22,43 @@ public class Helper_Utils {
                     "varying vec4 v_Color;" +       // This will be passed into the fragment shader.
                     "varying vec3 v_Normal;" +   // This will be passed into the fragment shader.
                     "varying vec2 v_TexCoordinate;" +// This will be passed into the fragment shader.
-
+                    "varying vec3 lighting;" +
+                    "vec3 getPointLighting();" +
                     // The entry point for our vertex shader.
                     "void main()" +
                     "{" +
                     // Transform the vertex into eye space.
                     "v_Position = vec3(u_MVMatrix * a_Position);" +
-
                     // Pass through the color.
                     "v_Color = a_Color;" +
-
                     // Pass through the texture coordinate.
                     "v_TexCoordinate = a_TexCoordinate;" +
-
                     // Transform the normal's orientation into eye space.
                     "v_Normal = vec3(u_MVMatrix * vec4(a_Normal, 0.0));" +
-
                     // gl_Position is a special variable used to store the final position.
                     // Multiply the vertex by the matrix to get the final point in normalized screen coordinates.
                     "gl_Position = u_MVPMatrix * a_Position;" +
+                    "lighting = getPointLighting();"+
+                    "}" +
+
+                    "vec3 getPointLighting()" +
+                    "{" +
+                        "vec3 lightingSum = vec3(0.0);" +
+                        "for (int i = 0; i < "+ number_of_light +"; i++) {" +
+                            "vec3 toPointLight = vec3(u_PointLightPositions[i]) - vec3(v_Position);" +
+                            "float distance = length(toPointLight);" +
+                            "toPointLight = normalize(toPointLight);" +
+                            "float diffuse = max(dot(v_Normal, toPointLight), 0.0);" +
+                            "diffuse = diffuse * (1.0 / (1.0 + (0.10 * distance)));" +
+                            "diffuse = diffuse + 0.3;" +
+                            "lightingSum += (u_PointLightColors[i] * diffuse);" +
+                        "}" +
+                        "return lightingSum;" +
                     "}";
 
     public static String fragment_texture_shader =
-            "precision mediump float;" +    // Set the default precision to medium. We don't need as high of a
+                    "precision mediump float;" +    // Set the default precision to medium. We don't need as high of a
                     // precision in the fragment shader.
-                    "uniform vec3 u_LightPos;" +     // The position of the light in eye space.
                     "uniform sampler2D u_Texture;" + // The input texture.
 
                     "varying vec3 v_Position;" +      // Interpolated position for this fragment.
@@ -51,34 +66,19 @@ public class Helper_Utils {
                     // triangle per fragment.
                     "varying vec3 v_Normal;" +   // Interpolated normal for this fragment.
                     "varying vec2 v_TexCoordinate;" + // Interpolated texture coordinate per fragment.
+                    "varying vec3 lighting;"+
 
                     // The entry point for our fragment shader.
                     "void main()" +
                     "{" +
-                    // Will be used for attenuation.
-                    "float distance = length(u_LightPos - v_Position);" +
-
-                    // Get a lighting direction vector from the light to the vertex.
-                    "vec3 lightVector = normalize(u_LightPos - v_Position);" +
-
-                    // Calculate the dot product of the light vector and vertex normal. If the normal and light vector are
-                    // pointing in the same direction then it will get max illumination.
-                    "float diffuse = max(dot(v_Normal, lightVector), 0.0);" +
-
-                    // Add attenuation.
-                    "diffuse = diffuse * (1.0 / (1.0 + (0.10 * distance)));" +
-
-                    // Add ambient lighting
-                    "diffuse = diffuse + 0.3;" +
-
                     // Multiply the color by the diffuse illumination level and texture value to get final output color.
-                    "gl_FragColor = (v_Color * diffuse * texture2D(u_Texture, v_TexCoordinate));" +
+                    "gl_FragColor = (v_Color * vec4(lighting,1.0) * texture2D(u_Texture, v_TexCoordinate));" +
                     //"gl_FragColor = (vec4(v_Normal, 0.0) * diffuse * texture2D(u_Texture, v_TexCoordinate));"+
                     // "gl_FragColor = vColor * texture2D(u_Texture, v_TexCoordinate);"+
                     "}";
 
     public static String point_vertex_shader =
-            "uniform mat4 u_MVPMatrix;" +
+                    "uniform mat4 u_MVPMatrix;" +
                     "attribute vec4 a_Position;" +
 
                     "void main()" +
@@ -88,7 +88,7 @@ public class Helper_Utils {
                     "}";
 
     public static String point_fragment_shader =
-            "precision mediump float;" +
+                    "precision mediump float;" +
 
                     "void main()" +
                     "{" +
@@ -98,7 +98,7 @@ public class Helper_Utils {
     public static String line_vertex_shader =
             // This matrix member variable provides a hook to manipulate
             // the coordinates of the objects that use this vertex shader
-            "uniform mat4 uMVPMatrix;" +
+                    "uniform mat4 uMVPMatrix;" +
 
                     "attribute vec4 vPosition;" +
                     "void main() {" +
@@ -107,7 +107,7 @@ public class Helper_Utils {
                     "}";
 
     public static String line_fragment_shader =
-            "precision mediump float;" +
+                    "precision mediump float;" +
                     "uniform vec4 vColor;" +
                     "void main() {" +
                     "  gl_FragColor = vColor;" +

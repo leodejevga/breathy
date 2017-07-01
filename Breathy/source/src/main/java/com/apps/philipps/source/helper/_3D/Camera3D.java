@@ -42,6 +42,14 @@ public class Camera3D {
         return mMVPMatrix;
     }
 
+    public float[] getViewMatrix() {
+        return mViewMatrix;
+    }
+
+    public float[] getProjectionMatrixMatrix() {
+        return mProjectionMatrix;
+    }
+
     public void set(Vector... vectors) {
         if (vectors.length > 0)
             direction = vectors[0];

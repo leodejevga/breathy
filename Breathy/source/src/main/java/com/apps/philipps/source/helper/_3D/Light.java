@@ -8,22 +8,10 @@ import android.opengl.Matrix;
  */
 
 public class Light {
-
-    /**
-     * Used to hold a light centered on the origin in model space. We need a 4th coordinate so we can get translations to work when
-     * we multiply this by our transformation matrices.
-     */
-    private float[] lightPosInModelSpace = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
-
     /**
      * Used to hold the current position of the light in world space (after transformation via model matrix).
      */
     private float[] lightPosInWorldSpace = new float[4];
-
-    /**
-     * Used to hold the transformed position of the light in eye space (after transformation via modelview matrix)
-     */
-    private float[] lightPosInEyeSpace = new float[4];
 
     /**
      * Stores a copy of the model matrix specifically for the light position.
@@ -55,7 +43,22 @@ public class Light {
     private float angle = 0;
     private boolean increase = true;
 
+    public static final float[] pointLightPositions = new float[]
+            {0f, 0.0f, 5f, 1f,
+                    0f, 4f, -1f, 1f,
+                    0f, 3.0f, -1f, 1f};
+
+    public static final float[] pointLightColors = new float[]
+            {0.3f, 0.3f, 0.3f,
+                    0.3f, 0.3f, 0.3f,
+                    0.3f, 0.3f, 0.3f};
+    /**
+     * Used to hold the transformed position of the light in eye space (after transformation via modelview matrix)
+     */
+    public static float[] lightPosInEyeSpace = new float[pointLightPositions.length];
+
     public Light() {
+        Helper_Utils.number_of_light = (pointLightPositions.length / 4) + "";
         final int pointVertexShaderHandle = Helper_Utils.compileShader(GLES20.GL_VERTEX_SHADER, Helper_Utils.point_vertex_shader);
         final int pointFragmentShaderHandle = Helper_Utils.compileShader(GLES20.GL_FRAGMENT_SHADER, Helper_Utils.point_fragment_shader);
         pointProgramHandle = Helper_Utils.createAndLinkProgram(pointVertexShaderHandle, pointFragmentShaderHandle,
@@ -77,29 +80,32 @@ public class Light {
         // Calculate position of the light. Rotate and then push into the distance.
         Matrix.setIdentityM(lightModel_Matrix, 0);
         Matrix.rotateM(lightModel_Matrix, 0, angle, 0.0f, 1.0f, 0.0f);
-        Matrix.translateM(lightModel_Matrix, 0, 0.0f, 0.0f, -1f);
 
-        Matrix.multiplyMV(lightPosInWorldSpace, 0, lightModel_Matrix, 0, lightPosInModelSpace, 0);
-        Matrix.multiplyMV(lightPosInEyeSpace, 0, view_Matrix, 0, lightPosInWorldSpace, 0);
+        for (int i = 0; i < pointLightPositions.length; i += 4) {
+            Matrix.multiplyMV(lightPosInEyeSpace, i, lightModel_Matrix, 0, pointLightPositions, i);
+            Matrix.multiplyMV(lightPosInEyeSpace, i, Renderer3D.camera3D.getViewMatrix(), 0, lightPosInEyeSpace, i);
+        }
     }
 
     public void drawLight() {
-        GLES20.glUseProgram(pointProgramHandle);
-        final int pointMVPMatrixHandle = GLES20.glGetUniformLocation(pointProgramHandle, "u_MVPMatrix");
-        Renderer3D.checkGlError("glGetUniformLocation");
-        final int pointPositionHandle = GLES20.glGetAttribLocation(pointProgramHandle, "a_Position");
-        Renderer3D.checkGlError("glGetAttribLocation");
+        for (int i = 0; i < pointLightPositions.length / 4; i++) {
+            GLES20.glUseProgram(pointProgramHandle);
+            final int pointMVPMatrixHandle = GLES20.glGetUniformLocation(pointProgramHandle, "u_MVPMatrix");
+            Renderer3D.checkGlError("glGetUniformLocation");
+            final int pointPositionHandle = GLES20.glGetAttribLocation(pointProgramHandle, "a_Position");
+            Renderer3D.checkGlError("glGetAttribLocation");
 
-        GLES20.glVertexAttrib3f(pointPositionHandle, lightPosInModelSpace[0], lightPosInModelSpace[1], lightPosInModelSpace[2]);
+            GLES20.glVertexAttrib3f(pointPositionHandle, pointLightPositions[i * 4], pointLightPositions[i * 4 + 1], pointLightPositions[i * 4 + 2]);
 
-        GLES20.glDisableVertexAttribArray(pointPositionHandle);
+            GLES20.glDisableVertexAttribArray(pointPositionHandle);
 
-        Matrix.multiplyMM(model_view_Matrix, 0, view_Matrix, 0, lightModel_Matrix, 0);
-        Matrix.multiplyMM(model_view_Matrix, 0, projection_Matrix, 0, model_view_Matrix, 0);
-        GLES20.glUniformMatrix4fv(pointMVPMatrixHandle, 1, false, model_view_Matrix, 0);
+            //Matrix.multiplyMM(model_view_Matrix, 0, view_Matrix, 0, lightModel_Matrix, 0);
+            Matrix.multiplyMM(model_view_Matrix, 0, Renderer3D.camera3D.getMVPMatrix(), 0, lightModel_Matrix, 0);
+            GLES20.glUniformMatrix4fv(pointMVPMatrixHandle, 1, false, model_view_Matrix, 0);
 
-        // Draw the point.
-        GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 1);
+            // Draw the point.
+            GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 1);
+        }
     }
 
     public float[] getLightPosInEyeSpace() {

@@ -175,6 +175,16 @@ public class GameObject3D implements IGameObject {
         private int mLightPosHandle;
 
         /**
+         * This will be used to pass in the light positions
+         */
+        private int uPointLightPositionsLocation;
+
+        /**
+         * This will be used to pass in the light colors.
+         */
+        private int uPointLightColorsLocation;
+
+        /**
          * This will be used to pass in the texture.
          */
         private int textureUniformHandle;
@@ -390,10 +400,14 @@ public class GameObject3D implements IGameObject {
             Renderer3D.checkGlError("glGetUniformLocation");
             Model_View_MatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVMatrix");
             Renderer3D.checkGlError("glGetUniformLocation");
-            mLightPosHandle = GLES20.glGetUniformLocation(programHandle, "u_LightPos");
-            Renderer3D.checkGlError("glGetUniformLocation");
+
             textureUniformHandle = GLES20.glGetUniformLocation(programHandle, "u_Texture");
             Renderer3D.checkGlError("glGetUniformLocation");
+            uPointLightPositionsLocation = GLES20.glGetUniformLocation(programHandle, "u_PointLightPositions");
+            Renderer3D.checkGlError("glGetUniformLocation");
+            uPointLightColorsLocation = GLES20.glGetUniformLocation(programHandle, "u_PointLightColors");
+            Renderer3D.checkGlError("glGetUniformLocation");
+
             positionHandle = GLES20.glGetAttribLocation(programHandle, "a_Position");
             colorHandle = GLES20.glGetAttribLocation(programHandle, "a_Color");
             normalHandle = GLES20.glGetAttribLocation(programHandle, "a_Normal");
@@ -416,13 +430,14 @@ public class GameObject3D implements IGameObject {
             positions_Buffer.position(0);
             GLES20.glVertexAttribPointer(positionHandle, positionDataSize, GLES20.GL_FLOAT, false,
                     0, positions_Buffer);
-
+            Renderer3D.checkGlError("glVertexAttribPointer");
             GLES20.glEnableVertexAttribArray(positionHandle);
 
             // Pass in the color information
             colors_Buffer.position(0);
             GLES20.glVertexAttribPointer(colorHandle, colorDataSize, GLES20.GL_FLOAT, false,
                     0, colors_Buffer);
+            Renderer3D.checkGlError("glVertexAttribPointer");
 
             GLES20.glEnableVertexAttribArray(colorHandle);
 
@@ -433,27 +448,27 @@ public class GameObject3D implements IGameObject {
             normals_Buffer.position(0);
             GLES20.glVertexAttribPointer(normalHandle, normalDataSize, GLES20.GL_FLOAT, false,
                     0, normals_Buffer);
-
+            Renderer3D.checkGlError("glVertexAttribPointer");
             GLES20.glEnableVertexAttribArray(normalHandle);
-
+            Renderer3D.checkGlError("glEnableVertexAttribArray");
             // Pass in the texture coordinate information
             textureCoordinates_Buffer.position(0);
             GLES20.glVertexAttribPointer(TextureCoordinateHandle, TextureCoordinateDataSize, GLES20.GL_FLOAT, false,
                     0, textureCoordinates_Buffer);
-
+            Renderer3D.checkGlError("glVertexAttribPointer");
             GLES20.glEnableVertexAttribArray(TextureCoordinateHandle);
-
+            Renderer3D.checkGlError("glEnableVertexAttribArray");
             // Pass in the modelview matrix.
             GLES20.glUniformMatrix4fv(Model_View_MatrixHandle, 1, false, model_view_Matrix, 0);
-
+            Renderer3D.checkGlError("glUniformMatrix4fv");
             // Pass in the combined matrix.
             GLES20.glUniformMatrix4fv(Model_View_Projection_MatrixHandle, 1, false, model_view_projection_Matrix, 0);
             Renderer3D.checkGlError("glUniformMatrix4fv");
-
+            GLES20.glUniform3fv(uPointLightColorsLocation, Light.pointLightColors.length / 3, Light.pointLightColors, 0);
+            Renderer3D.checkGlError("glUniformMatrix3fv");
+            GLES20.glUniform4fv(uPointLightPositionsLocation, Light.lightPosInEyeSpace.length / 4, Light.lightPosInEyeSpace, 0);
+            Renderer3D.checkGlError("glUniformMatrix4fv");
             // Pass in the light position in eye space.
-            GLES20.glUniform3f(mLightPosHandle, Renderer3D.light.getLightPosInEyeSpace()[0],
-                    Renderer3D.light.getLightPosInEyeSpace()[1], Renderer3D.light.getLightPosInEyeSpace()[2]);
-            Renderer3D.checkGlError("glUniform3f");
             // Draw a fragment
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, coords.length / dimensions);
         }
