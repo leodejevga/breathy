@@ -119,6 +119,7 @@ public abstract class BreathData {
 
     /**
      * Get stream of data as String from index with the amount of range
+     *
      * @param index start of stream
      * @param range amount of elements
      * @return stream of data as String
@@ -139,6 +140,11 @@ public abstract class BreathData {
      */
     public static DataBlock get(int index) {
         return ram.get(index);
+    }
+
+    public static void saveRest() {
+        ram.saveAll();
+        DataBlock.info.save();
     }
 
 
@@ -206,14 +212,21 @@ public abstract class BreathData {
                 return null;
             return block.get(i % blockSize);
         }
+
+        public void saveAll() {
+            for (DataBlock block : this)
+                saveData.writeObject(block.getName(), block);
+        }
     }
 
     public static class DataInfo implements Serializable {
         private List<String> names;
         public static final String TAG = "BreathDataInfo";
+        public SaveData<DataInfo> save;
 
         public DataInfo(Context context) {
-            DataInfo save = (DataInfo) new SaveData<>(context).readObject(TAG);
+            this.save = new SaveData<>(context);
+            DataInfo save = this.save.readObject(TAG);
             if (save == null)
                 names = new ArrayList<>();
             else
@@ -232,6 +245,9 @@ public abstract class BreathData {
             return names.remove(name);
         }
 
+        public void save() {
+            save.writeObject(TAG, this);
+        }
     }
 
     public static class DataBlock implements Serializable {
