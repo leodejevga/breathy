@@ -19,8 +19,8 @@ import java.util.List;
 public abstract class BreathData {
 
     private static RAM ram;
-    private static int ramSize = 1;
-    private static int blockSize = 1;
+    private static int ramSize = 2;
+    private static int blockSize = 10;
     private static boolean initialized = false;
     /**
      * Initialize BreathData to perform saving the integer values in RAM and hard drive. Choose your own size of RAM
@@ -69,40 +69,40 @@ public abstract class BreathData {
         return BreathData.observer.remove(observer);
     }
 
-    /**
-     * Adds a Value to ram. If the Limit of RAM size is reached, the ram will written on the hard drive.
-     *
-     * @param value the Value to add
-     */
-    public static void add(String value) {
+//    /**
+//     * Adds a Value to ram. If the Limit of RAM size is reached, the ram will written on the hard drive.
+//     *
+//     * @param value the Value to add
+//     */
+//    public static void add(String value) {
+//        if (AppState.recordData) {
+//            for (int i : convert(value))
+//                ram.addData(i);
+//        }
+//    }
+
+    public static void add(Element... elements) {
         if (AppState.recordData) {
-            for (int i : convert(value))
-                ram.addData(i);
+            for (Element element : elements)
+                ram.addData(element);
         }
     }
 
-    public static void add(int... values) {
-        if (AppState.recordData) {
-            for (int i : values)
-                ram.addData(i);
-        }
-    }
-
-    private static int[] convert(String value) {
-        String[] values = value.split("\r\n|\r|\n");
-        int[] result = new int[values.length];
-        for (int i = 0; i < result.length; i++) {
-            try {
-                result[i] = Integer.parseInt(values[i]);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                if (i > 0)
-                    result[i] = result[i - 1];
-                Log.d("Format Exception", "" + values[i]);
-            }
-        }
-        return result;
-    }
+//    private static int[] convert(String value) {
+//        String[] values = value.split("\r\n|\r|\n");
+//        int[] result = new int[values.length];
+//        for (int i = 0; i < result.length; i++) {
+//            try {
+//                result[i] = Integer.parseInt(values[i]);
+//            } catch (NumberFormatException e) {
+//                e.printStackTrace();
+//                if (i > 0)
+//                    result[i] = result[i - 1];
+//                Log.d("Format Exception", "" + values[i]);
+//            }
+//        }
+//        return result;
+//    }
 
     /**
      * Get list of values from <code>index</code> to <code>index+range</code>
@@ -192,7 +192,7 @@ public abstract class BreathData {
             if (index < size())
                 return super.get(index);
 
-            index = DataBlock.info.names.size() - 1 - index;
+            index = DataBlock.info.names.size() - index;
             if (index < 0)
                 return null;
 
@@ -202,16 +202,15 @@ public abstract class BreathData {
             return null;
         }
 
-        public synchronized void addData(final int i) {
-            Element save = new Element(i);
-            if (!get(0).add(save))
-                add(new DataBlock(save));
+        public synchronized void addData(final Element element) {
+            if (!get(0).add(element))
+                add(new DataBlock(element));
             Handler h = new Handler(Looper.getMainLooper());
             h.post(new Runnable() {
                 @Override
                 public void run() {
                     for (IObserver o : observer) {
-                        o.call(i);
+                        o.call(element);
                     }
                 }
             });

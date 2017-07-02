@@ -521,10 +521,10 @@ public class BluetoothService {
                     // construct a string from the valid bytes in the buffer
                     String read = new String(readBuf, 0, msg.arg1);
                     message+=read;
-                    if(message.endsWith("\r\n")){
-                        BreathData.add(message);
-                        message="";
-                    }
+                    String[] parts = message.split("\r\n");
+                    message = parts[parts.length-1];
+                    for(String part : parts)
+                        BreathData.add(new BreathData.Element(Integer.parseInt(part)));
 
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:

@@ -111,7 +111,7 @@ public class BreathSimulator {
 
         Thread simulator = new Thread(null, new Runnable() {
             private long start = System.currentTimeMillis();
-
+            private int value = 0;
             @Override
             public void run() {
                 Looper.prepare();
@@ -126,7 +126,7 @@ public class BreathSimulator {
                     }
                     if (!recording && delta >= millis) {
                         start = System.currentTimeMillis();
-                        BreathData.add(data[index]);
+                        BreathData.add(new BreathData.Element(value++));
                         index++;
                         index = index % data.length;
                         index++;
