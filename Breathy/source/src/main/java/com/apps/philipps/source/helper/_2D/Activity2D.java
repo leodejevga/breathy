@@ -9,13 +9,15 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.PlanManager;
+import com.apps.philipps.source.interfaces.IObserver;
 
 /**
  * Created by Jevgenij Huebert on 11.03.2017. Project Breathy
  */
 
-public abstract class Activity2D extends Activity {
+public abstract class Activity2D extends Activity implements IObserver {
     protected final float SCREEN_FACTOR = (getScreenHeight()+getScreenWidth()) / (1080+1920);
 
     private static final String TAG = "Activity 2D";
@@ -108,14 +110,16 @@ public abstract class Activity2D extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         startToDraw.start();
+        BreathData.addObserver(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AppState.recordData = AppState.inGame = false;
         PlanManager.stop();
+        BreathData.removeObserver(this);
         destroy = true;
 
     }
@@ -123,12 +127,15 @@ public abstract class Activity2D extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        BreathData.removeObserver(this);
         draw = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        AppState.recordData = AppState.inGame = true;
+        BreathData.addObserver(this);
         draw = true;
     }
 

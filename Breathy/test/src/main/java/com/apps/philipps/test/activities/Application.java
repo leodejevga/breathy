@@ -73,7 +73,7 @@ public class Application extends Activity2D{
             } else
                 lasers.get(i).update(delta);
         }
-        ship.move(new Vector(50f, getScreenHeight()-(BreathData.get(0)*getScreenHeight())/1024f));
+        ship.move(new Vector(50f, getScreenHeight()-(BreathData.get(0).data*getScreenHeight())/1024f));
         ship.update(delta);
 
         start = System.currentTimeMillis();
@@ -108,5 +108,10 @@ public class Application extends Activity2D{
         GameObject2D result = new GameObject2D(view, position, destination);
         result.move(move);
         return result;
+    }
+
+    @Override
+    public void call(Object... messages) {
+
     }
 }

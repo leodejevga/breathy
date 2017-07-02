@@ -72,7 +72,7 @@ public class Backend {
             for(IGame game : Backend.games){
                 game.init(context, Backend.cacheManager.isIGameBought(game.getName()));
             }
-            BreathData.init(context, 400);
+            BreathData.init(context);
             Coins.init(context);
             if(AppState.simulateBreathy) {
                 breathSimulator = BreathSimulator.getBreathSimulator();

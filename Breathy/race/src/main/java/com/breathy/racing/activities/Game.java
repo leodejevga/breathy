@@ -48,4 +48,9 @@ public class Game extends Activity2D {
         Intent i = new Intent(this, Application.class);
         startActivity(i);
     }
+
+    @Override
+    public void call(Object... messages) {
+
+    }
 }

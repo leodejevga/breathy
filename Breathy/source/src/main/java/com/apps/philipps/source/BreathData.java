@@ -112,8 +112,13 @@ public abstract class BreathData {
      */
     public static Element[] get(int index, int range) {
         Element[] result = new Element[range];
-        for (int i = index; i < index + range; i++)
+        for (int i = index; i < index + range; i++) {
             result[i - index] = ram.getData(i);
+            if(range<50)
+                Log.e("DATA", "    " + i + "---" + result[i - index] + " data");
+            if(result[i-index]==null)
+                return result;
+        }
         return result;
     }
 
@@ -128,7 +133,8 @@ public abstract class BreathData {
         String result = "";
         Element[] elements = get(index, range);
         for (Element element : elements)
-            result += ", " + element;
+            if (element != null)
+                result += ", " + element.data;
         return result.length() > 1 ? result.substring(2) : "";
     }
 
@@ -138,8 +144,8 @@ public abstract class BreathData {
      * @param index the index of the Value
      * @return the integer at index, null if IndexOutOfRange
      */
-    public static DataBlock get(int index) {
-        return ram.get(index);
+    public static Element get(int index) {
+        return ram.getData(index);
     }
 
     public static void saveRest() {
@@ -161,7 +167,13 @@ public abstract class BreathData {
             super();
             if (ramSize != 0) {
                 saveData = new SaveData<>(context);
+                add(new DataBlock());
             }
+        }
+
+        @Override
+        public void add(int index, DataBlock element) {
+            add(element);
         }
 
         @Override
@@ -171,6 +183,7 @@ public abstract class BreathData {
             if (size() > ramSize) {
                 DataBlock toSave = get(size() - 1);
                 saveData.writeObject(toSave.getName(), toSave);
+                remove(size() - 1);
                 return true;
             }
             return false;
@@ -179,12 +192,12 @@ public abstract class BreathData {
 
         @Override
         public DataBlock get(int index) {
+            if (index < size())
+                return super.get(index);
+
             index = DataBlock.info.names.size() - 1 - index;
             if (index < 0)
                 return null;
-
-            if (index < size())
-                return super.get(index);
 
             String name = DataBlock.getName(index);
             if (DataBlock.contains(name))
@@ -192,21 +205,24 @@ public abstract class BreathData {
             return null;
         }
 
-        public boolean addData(int i) {
+        public void addData(int i) {
             Element save = new Element(i, Calendar.getInstance());
-            if (get(0).add(save))
-                return false;
-            add(0, new DataBlock(save));
-            return true;
+            if (!get(0).add(save))
+                add(new DataBlock(save));
+            for(IObserver o : observer){
+                o.call(i);
+            }
         }
 
         public Element getData(int i) {
             if (i < blockSize) {
                 Element result = get(0).get(i);
                 if (result == null)
-                    i -= blockSize - get(0).index;
+                    i -= get(0).index;
                 else return result;
             }
+            if (i < 0)
+                return null;
             DataBlock block = get(i / blockSize + 1);
             if (block == null)
                 return null;
@@ -259,10 +275,14 @@ public abstract class BreathData {
 
 
         public DataBlock(Element element) {
+            this();
+            elements[index++] = element;
+        }
+
+        public DataBlock() {
             this.id = info.names.size();
             info.add(getName());
             elements = new Element[blockSize];
-            elements[index++] = element;
         }
 
         public static String getName(int id) {
@@ -300,7 +320,7 @@ public abstract class BreathData {
         }
     }
 
-    public static class Element {
+    public static class Element implements Serializable {
         public Integer data;
         public Calendar date;
 

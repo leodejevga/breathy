@@ -116,4 +116,9 @@ public class Game2D extends Activity2D {
     public int getDisplayWidth() {
         return displayWidth;
     }
+
+    @Override
+    public void call(Object... messages) {
+
+    }
 }

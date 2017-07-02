@@ -1,6 +1,5 @@
 package com.apps.philipps.source;
 
-import android.hardware.fingerprint.FingerprintManager;
 import com.apps.philipps.source.interfaces.IObserver;
 
 import java.util.ArrayList;
@@ -22,8 +21,14 @@ public abstract class BreathInterpreter {
         None("");
 
         public final String name;
-        BreathMoment(String name){
+
+        BreathMoment(String name) {
             this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 
@@ -68,7 +73,7 @@ public abstract class BreathInterpreter {
             PlanManager.Plan.Option option = PlanManager.getCurrentOption();
             if (option == null)
                 return BreathError.None;
-            double fValue = Math.abs(option.getFrequency()/60 - frequency) / option.getFrequency();
+            double fValue = Math.abs(option.getFrequency() / 60 - frequency) / option.getFrequency();
             double iValue = Math.abs(option.getIn().value - strengthIn < 0 ? 0 : option.getIn().value - strengthIn);
             double oValue = Math.abs(option.getOut().value - strengthOut < 0 ? 0 : option.getOut().value - strengthOut);
             double min = (iValue + oValue) / 2 + fValue;
@@ -86,16 +91,15 @@ public abstract class BreathInterpreter {
 
     public static BreathStatus getStatus() {
         int norm = AppState.breathyNormState;
-        Integer[] data = BreathData.get(0, 50);
+        BreathData.Element[] data = BreathData.get(0, 50);
         BreathMoment moment = BreathMoment.None;
         float in = 0;
         float out = 0;
         double frequency = 0;
         boolean readyToAdd = false;
-        double mean = 0;
-        int founds = 0;
+        float founds = 0;
         for (int i = 0; i < data.length - 1 && data[i] != null; i++) {
-            int d = data[i];
+            int d = data[i].data;
             if (founds < 2) {
                 if (d - norm > 0) {
                     if (moment == BreathMoment.None)
@@ -113,10 +117,10 @@ public abstract class BreathInterpreter {
                     }
                 }
             }
-            if (data[i + 1] != null && d < data[i + 1])
+            if (data[i + 1] != null && d < data[i + 1].data)
                 readyToAdd = true;
-            if (data[i + 1] != null && d > data[i + 1] && readyToAdd) {
-                mean = i;
+            if (data[i + 1] != null && d > data[i + 1].data && readyToAdd) {
+                frequency = data[i].date.getTimeInMillis();
                 founds++;
                 readyToAdd = false;
             }
@@ -124,30 +128,39 @@ public abstract class BreathInterpreter {
         }
         in = in / (AppState.breathyUserMax - norm);
         out = out / (norm - AppState.breathyUserMin);
-        if (founds != 0)
-            mean /= founds;
-        if (mean != 0)
-            frequency = 1 / (mean / AppState.breathyDataFrequency);
+        if (founds != 0) {
+            frequency -= data[0].date.getTimeInMillis();
+            frequency /= founds * 1000;
+        }
 
-        return new BreathStatus(moment == BreathMoment.In ? in : out, frequency, moment, BreathError.getErrorStatus(in, out, frequency));
+        return new BreathStatus(in, out, frequency, moment, BreathError.getErrorStatus(in, out, frequency));
     }
 
     public static class BreathStatus {
-        private float strength; //wie stark in prozent
+        private double in; //wie stark in prozent
+        private double out;
         private BreathMoment moment = BreathMoment.None;
         private double frequency; //Wie oft pro sekunde
         private BreathError error = BreathError.None;
 
-        public BreathStatus(float strength, double frequency, BreathMoment moment, BreathError error) {
-            this.strength = strength;
+        public BreathStatus(double in, double out, double frequency, BreathMoment moment, BreathError error) {
+            this.in = in;
+            this.out = out;
             this.frequency = frequency;
             this.moment = moment;
             this.error = error;
         }
 
+        public double getIn() {
+            return in;
+        }
 
-        public float getStrength() {
-            return strength;
+        public double getOut() {
+            return out;
+        }
+
+        public double getStrength() {
+            return moment == BreathMoment.Out ? out : in;
         }
 
         public BreathMoment getMoment() {
@@ -164,7 +177,7 @@ public abstract class BreathInterpreter {
 
         @Override
         public String toString() {
-            return "status: " + moment + ", strength: " + (int) (strength * 100) + "%, frequency: " + (int) (frequency * 60) + " per minute, how good: " + error;
+            return "status: " + moment + ", strength: " + (int) (getStrength() * 100) + "%, frequency: " + (int) (frequency * 60) + " per minute, how good: " + error;
         }
     }
 
