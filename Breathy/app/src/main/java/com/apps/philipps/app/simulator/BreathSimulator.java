@@ -109,7 +109,7 @@ public class BreathSimulator {
     private void startSimulation() {
         AppState.btState = AppState.BtState.Connected;
 
-        new Thread(null, new Runnable() {
+        Thread simulator = new Thread(null, new Runnable() {
             private long start = System.currentTimeMillis();
 
             @Override
@@ -133,7 +133,9 @@ public class BreathSimulator {
                     }
                 }
             }
-        }, "Breath Data Simulator").start();
+        }, "Breath Data Simulator");
+        simulator.setPriority(Thread.MIN_PRIORITY);
+        simulator.start();
     }
 
     private Random r = new Random(0);

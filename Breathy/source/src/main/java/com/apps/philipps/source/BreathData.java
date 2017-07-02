@@ -19,8 +19,8 @@ import java.util.List;
 public abstract class BreathData {
 
     private static RAM ram;
-    private static int ramSize = 10;
-    private static int blockSize = 5;
+    private static int ramSize = 1;
+    private static int blockSize = 1;
     private static boolean initialized = false;
     /**
      * Initialize BreathData to perform saving the integer values in RAM and hard drive. Choose your own size of RAM
@@ -152,7 +152,6 @@ public abstract class BreathData {
         DataBlock.info.save();
     }
 
-
     private static class RAM extends ArrayList<DataBlock> {
         /**
          * Instantiates a new Limited list.
@@ -171,12 +170,12 @@ public abstract class BreathData {
         }
 
         @Override
-        public void add(int index, DataBlock element) {
+        public synchronized void add(int index, DataBlock element) {
             add(element);
         }
 
         @Override
-        public boolean add(DataBlock t) {
+        public synchronized boolean add(DataBlock t) {
             super.add(0, t);
 
             if (size() > ramSize) {
@@ -188,7 +187,6 @@ public abstract class BreathData {
             return false;
 
         }
-
         @Override
         public DataBlock get(int index) {
             if (index < size())
@@ -204,7 +202,7 @@ public abstract class BreathData {
             return null;
         }
 
-        public void addData(final int i) {
+        public synchronized void addData(final int i) {
             Element save = new Element(i);
             if (!get(0).add(save))
                 add(new DataBlock(save));
@@ -234,7 +232,7 @@ public abstract class BreathData {
             return block.get(i % blockSize);
         }
 
-        public void saveAll() {
+        public synchronized void saveAll() {
             for (DataBlock block : this)
                 saveData.writeObject(block.getName(), block);
         }

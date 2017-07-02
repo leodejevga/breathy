@@ -110,6 +110,7 @@ public abstract class Activity2D extends Activity implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startToDraw.setPriority(Thread.MAX_PRIORITY);
         startToDraw.start();
         BreathData.addObserver(this);
     }

@@ -98,7 +98,7 @@ public abstract class BreathInterpreter {
         double frequency = 0;
         boolean readyToAdd = false;
         float founds = 0;
-        for (int i = 0; i < data.length - 1 && data[i] != null; i++) {
+        for (int i = 0; i < data.length - 2 && data[i] != null && data[i + 1] != null; i++) {
             int d = data[i].data;
             if (founds < 2) {
                 if (d - norm > 0) {
@@ -117,20 +117,17 @@ public abstract class BreathInterpreter {
                     }
                 }
             }
-            if (data[i + 1] != null && d < data[i + 1].data)
-                readyToAdd = true;
-            if (data[i + 1] != null && d > data[i + 1].data && readyToAdd) {
+            if (d > AppState.breathyNormState && data[i + 1].data <= AppState.breathyNormState) {
                 frequency = data[i].date.getTimeInMillis();
                 founds++;
-                readyToAdd = false;
             }
-
         }
         in = in / (AppState.breathyUserMax - norm);
         out = out / (norm - AppState.breathyUserMin);
         if (founds != 0) {
             frequency = data[0].date.getTimeInMillis() - frequency;
             frequency /= founds * 1000;
+            frequency = 1/frequency;
         }
 
         return new BreathStatus(in, out, frequency, moment, BreathError.getErrorStatus(in, out, frequency));
@@ -140,7 +137,7 @@ public abstract class BreathInterpreter {
         private double in; //wie stark in prozent
         private double out;
         private BreathMoment moment = BreathMoment.None;
-        private double frequency; //Wie oft pro sekunde
+        private double frequency; //wie lange dauert ein einatmen (Sekunden)
         private BreathError error = BreathError.None;
 
         public BreathStatus(double in, double out, double frequency, BreathMoment moment, BreathError error) {
@@ -177,7 +174,7 @@ public abstract class BreathInterpreter {
 
         @Override
         public String toString() {
-            return "status: " + moment + ", strength: " + (int) (getStrength() * 100) + "%, frequency: " + (int) (frequency * 60) + " per minute, how good: " + error;
+            return "status: " + moment + ", strength: " + (int) (getStrength() * 100) + "%, frequency: " + (int) (frequency*60) + " per minute, how good: " + error;
         }
     }
 
