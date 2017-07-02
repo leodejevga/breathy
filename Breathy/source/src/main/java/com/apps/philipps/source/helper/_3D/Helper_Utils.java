@@ -23,7 +23,6 @@ public class Helper_Utils {
                     "varying vec3 v_Normal;" +   // This will be passed into the fragment shader.
                     "varying vec2 v_TexCoordinate;" +// This will be passed into the fragment shader.
                     "varying vec3 lighting;" +
-                    "const vec3 ambientColor = vec3(0.1, 0.1, 0.1);"+
                     "vec3 getPointLighting();" +
                     // The entry point for our vertex shader.
                     "void main()" +
@@ -50,17 +49,16 @@ public class Helper_Utils {
                             "vec3 toPointLight = vec3(u_PointLightPositions[i]) - vec3(v_Position);" +
                             "float distance = length(toPointLight);" +
                             "toPointLight = normalize(toPointLight);" +
-                            "float lambertian =  max(dot(v_Normal, toPointLight), 0.0);"+
-                            "float diffuse = lambertian * (1.0 / (1.0 + (0.10 * distance)));" +
-                            "diffuse = diffuse + 0.3;" +
+                            "float lambertian =  max(dot(v_Normal, toPointLight), 0.1);"+
+                            "float diffuse = lambertian * (1.0 / (1.0 + (0.25 * distance * distance)));" +
                             "if(lambertian > 0.0) {"+
                                 "vec3 reflectDir = reflect(-toPointLight, v_Normal);"+
                                 "vec3 viewDir = normalize(-v_Position);"+
                                 "float specAngle = max(dot(reflectDir, viewDir), 0.0);" +
-                                "specular = pow(specAngle, 16.0);"+
+                                "specular = pow(specAngle, 4.0);"+
                             "}"+
 
-                            "lightingSum += ( ambientColor + (lambertian * diffuse*vec3(v_Color)) + (specular*u_PointLightColors[i]));" +
+                            "lightingSum += ( (lambertian * diffuse * vec3(v_Color)) + (specular * u_PointLightColors[i]));" +
                         "}" +
                         "return lightingSum;" +
                     "}";
