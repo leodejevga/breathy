@@ -44,14 +44,14 @@ public class Light {
     private boolean increase = true;
 
     public static final float[] pointLightPositions = new float[]
-            {0f, 0.0f, 5f, 1f,
-                    0f, 4f, -1f, 1f,
-                    0f, 3.0f, -1f, 1f};
+            {       0f,  1f, -1f, 1f,
+                    0f,  0f, -1f, 1f,
+                    0f, -1f, -1f, 1f};
 
     public static final float[] pointLightColors = new float[]
-            {0.3f, 0.3f, 0.3f,
-                    0.3f, 0.3f, 0.3f,
-                    0.3f, 0.3f, 0.3f};
+            {       1f, 0f, 0f,
+                    0f, 0f, 1f,
+                    0f, 1f, 0f};
     /**
      * Used to hold the transformed position of the light in eye space (after transformation via modelview matrix)
      */
