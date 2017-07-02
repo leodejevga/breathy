@@ -1,6 +1,7 @@
 package com.apps.philipps.app.simulator;
 
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 
 import com.apps.philipps.source.AppState;
@@ -113,7 +114,7 @@ public class BreathSimulator {
 
             @Override
             public void run() {
-
+                Looper.prepare();
                 int index = 0;
                 long delta = 0;
                 double millis = 1000 / rate;

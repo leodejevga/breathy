@@ -54,7 +54,6 @@ public class Game extends Activity2D {
 
     @Override
     public void call(Object... messages) {
-        Log.e("GAME ", "        " + messages);
         dataDisplay.setText(BreathData.getAsString(0, 5));
     }
 }

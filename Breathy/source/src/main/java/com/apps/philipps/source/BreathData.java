@@ -2,6 +2,8 @@ package com.apps.philipps.source;
 
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.apps.philipps.source.interfaces.IObserver;
@@ -17,10 +19,9 @@ import java.util.List;
 public abstract class BreathData {
 
     private static RAM ram;
-    private static int ramSize = 6;
-    private static int blockSize = 3;
+    private static int ramSize = 10;
+    private static int blockSize = 5;
     private static boolean initialized = false;
-
     /**
      * Initialize BreathData to perform saving the integer values in RAM and hard drive. Choose your own size of RAM
      *
@@ -114,9 +115,7 @@ public abstract class BreathData {
         Element[] result = new Element[range];
         for (int i = index; i < index + range; i++) {
             result[i - index] = ram.getData(i);
-            if(range<50)
-                Log.e("DATA", "    " + i + "---" + result[i - index] + " data");
-            if(result[i-index]==null)
+            if (result[i - index] == null)
                 return result;
         }
         return result;
@@ -205,20 +204,26 @@ public abstract class BreathData {
             return null;
         }
 
-        public void addData(int i) {
-            Element save = new Element(i, Calendar.getInstance());
+        public void addData(final int i) {
+            Element save = new Element(i);
             if (!get(0).add(save))
                 add(new DataBlock(save));
-            for(IObserver o : observer){
-                o.call(i);
-            }
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (IObserver o : observer) {
+                        o.call(i);
+                    }
+                }
+            });
         }
 
         public Element getData(int i) {
             if (i < blockSize) {
                 Element result = get(0).get(i);
                 if (result == null)
-                    i -= get(0).index;
+                    i -= get(0).elements.size();
                 else return result;
             }
             if (i < 0)
@@ -267,8 +272,7 @@ public abstract class BreathData {
     }
 
     public static class DataBlock implements Serializable {
-        private Element[] elements;
-        private int index = 0;
+        private List<Element> elements;
         private int id = 0;
         private static DataInfo info;
         private static final String TAG = "BreathDataBlock";
@@ -276,13 +280,13 @@ public abstract class BreathData {
 
         public DataBlock(Element element) {
             this();
-            elements[index++] = element;
+            elements.add(0,element);
         }
 
         public DataBlock() {
             this.id = info.names.size();
             info.add(getName());
-            elements = new Element[blockSize];
+            elements = new ArrayList<>();
         }
 
         public static String getName(int id) {
@@ -298,15 +302,15 @@ public abstract class BreathData {
         }
 
         public boolean add(Element element) {
-            if (index == elements.length)
+            if (elements.size() == blockSize)
                 return false;
-            elements[index++] = element;
+            elements.add(0, element);
             return true;
         }
 
         public Element get(int i) {
-            if (i < index)
-                return elements[i];
+            if (i < elements.size())
+                return elements.get(i);
             return null;
         }
 
@@ -316,7 +320,7 @@ public abstract class BreathData {
 
         @Override
         public String toString() {
-            return getName() + ": #" + index;
+            return getName() + ": #" + elements.size();
         }
     }
 
@@ -324,9 +328,9 @@ public abstract class BreathData {
         public Integer data;
         public Calendar date;
 
-        public Element(Integer data, Calendar date) {
+        public Element(Integer data) {
             this.data = data;
-            this.date = date;
+            this.date = Calendar.getInstance();
         }
 
         @Override

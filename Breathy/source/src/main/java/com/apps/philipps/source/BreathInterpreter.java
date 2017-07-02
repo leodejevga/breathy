@@ -129,7 +129,7 @@ public abstract class BreathInterpreter {
         in = in / (AppState.breathyUserMax - norm);
         out = out / (norm - AppState.breathyUserMin);
         if (founds != 0) {
-            frequency -= data[0].date.getTimeInMillis();
+            frequency = data[0].date.getTimeInMillis() - frequency;
             frequency /= founds * 1000;
         }
 
