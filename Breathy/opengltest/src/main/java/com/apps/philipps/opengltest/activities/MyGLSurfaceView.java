@@ -14,9 +14,6 @@ import com.apps.philipps.source.helper._3D.SurfaceView3D;
  */
 
 public class MyGLSurfaceView extends SurfaceView3D {
-
-    private static final float SPEED = (float)Math.PI/100;
-    private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private float mPreviousX;
     private float mPreviousY;
     private ScaleGestureDetector mScaleDetector;
@@ -59,15 +56,17 @@ public class MyGLSurfaceView extends SurfaceView3D {
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
 
-                if (dx < 0 )
+                if (dx > 0)
                     ((MyGLRenderer) renderer).gameEngine.car.turnRight(dx);
-                else if (dx > 0 )
+                else if(dx < 0)
                     ((MyGLRenderer) renderer).gameEngine.car.turnLeft(dx);
 
                 if (dy > 0)
                     ((MyGLRenderer) renderer).gameEngine.decreaseCarSpeed();
-                else if (dy<0)
+                else if(dy < 0)
                     ((MyGLRenderer) renderer).gameEngine.increaseCarSpeed();
+                break;
+
         }
         mPreviousX = x;
         mPreviousY = y;

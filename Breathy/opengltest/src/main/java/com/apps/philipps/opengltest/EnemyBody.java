@@ -7,30 +7,30 @@ import com.apps.philipps.source.helper._3D.GameObject3D;
 
 import java.util.Random;
 
-public class Enemy extends Car {
+public class EnemyBody extends CarBody {
 
 
-    private GameObject3D car;
+    private GameObject3D carBody;
     private int counter = 0;
     private boolean isTurningLeft = false;
     private boolean isTurningRight = false;
 
-    public Enemy(Context mActivityContext, int modelID, int textureId) {
+    public EnemyBody(Context mActivityContext, int modelID, int textureId) {
         super(mActivityContext, modelID, textureId);
-        car = super.getObject3D();
+        carBody = super.getObject3D();
         counter = new Random().nextInt(120);
     }
 
     @Override
     public void runs() {
-        car.rotate(new Vector(1, 0, 0, -90));
-        car.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
+        carBody.rotate(new Vector(1, 0, 0, -90));
+        carBody.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
         resetRotation();
         counter++;
     }
 
     public void runsWithSpeed(float speed) {
-        car.move(new Vector(0, -speed, 0));
+        carBody.move(new Vector(0, -speed, 0));
     }
 
     public int getCounter() {

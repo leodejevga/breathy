@@ -12,12 +12,18 @@ import java.util.ArrayList;
 public class BoundingBox {
     private Vector[] points = new Vector[8];
     private float[] max_min_value;
-    private float maxX;
-    private float maxY;
-    private float maxZ;
-    private float minX;
-    private float minY;
-    private float minZ;
+    public float maxX;
+    public float maxY;
+    public float maxZ;
+    public float minX;
+    public float minY;
+    public float minZ;
+    public float start_maxX;
+    public float start_maxY;
+    public float start_maxZ;
+    public float start_minX;
+    public float start_minY;
+    public float start_minZ;
     private ArrayList<Line> lines = new ArrayList<>();
 
     /**
@@ -30,7 +36,13 @@ public class BoundingBox {
      */
     public BoundingBox(Vector[] vertex) {
         calculateMaxMinValue(vertex);
-        this.max_min_value = new float[]{maxX, maxY, maxZ, minX, minY, minZ};
+        start_maxX = maxX;
+        start_maxY = maxY;
+        start_maxZ = maxZ;
+        start_minX = minX;
+        start_minY = minY;
+        start_minZ = minZ;
+        max_min_value = new float[]{maxX, maxY, maxZ, minX, minY, minZ};
         rotate(new Vector(1, 0, 0, -90));
         generateLines();
     }
