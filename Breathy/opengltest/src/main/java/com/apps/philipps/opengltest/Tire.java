@@ -1,6 +1,7 @@
 package com.apps.philipps.opengltest;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._3D.BoundingBox;
@@ -16,9 +17,11 @@ public class Tire {
     float constant = 0f;
     float count = 0f;
     Car car;
+    boolean isFrontTire;
 
-    public Tire(Context mActivityContext, Car car, int modelID, int textureId) {
+    public Tire(Context mActivityContext, Car car, int modelID, int textureId, boolean isFrontTire) {
         this.car = car;
+        this.isFrontTire = isFrontTire;
         tire = new GameObject3D(GameObject3D.loadObject(mActivityContext, modelID, textureId));
     }
 
@@ -57,14 +60,15 @@ public class Tire {
 
         tire.setPosition(new Vector(0, 0, 0));
         tire.move(centerOfObject);
-        count = count + 5;
-        tire.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
-        tire.rotate(new Vector(1, 0, 0, count + speed));
+        count = count + 5 + speed*360f;
+        if (isFrontTire)
+            tire.rotate(new Vector(0, 1, 0, angle * rotateSpeed / 2));
+        tire.rotate(new Vector(1, 0, 0, count));
         tire.setPosition(new Vector(0, 0, 0));
         tire.move(new Vector().sub(centerOfObject));
         constant = 0.0f;
         tire.setPosition(car.getCarBodyObject3D().getPosition().clone());
-    }   
+    }
 
     public void crashes() {
         constant += 5.0f;

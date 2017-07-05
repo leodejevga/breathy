@@ -20,8 +20,8 @@ public class Car {
         carBody = new CarBody(mActivityContext, modelID, textureId);
     }
 
-    public void setCarTireModel(Context mActivityContext, int modelID, int textureId) {
-        Tire tire = new Tire(mActivityContext, this, modelID, textureId);
+    public void setCarTireModel(Context mActivityContext, int modelID, int textureId, boolean isFrontTire) {
+        Tire tire = new Tire(mActivityContext, this, modelID, textureId, isFrontTire);
         tires.add(tire);
     }
 

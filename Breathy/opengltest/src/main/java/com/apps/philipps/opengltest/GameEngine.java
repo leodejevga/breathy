@@ -87,10 +87,10 @@ public class GameEngine {
         car.setCarBodyModel(mActivityContext, R.raw.newcar, R.drawable.cartexture);
         car.setCarBodyPosition(new Vector(0, -1.4f, zOffset));
 
-        car.setCarTireModel(mActivityContext, R.raw.tire1, R.drawable.tiretexture);
-        car.setCarTireModel(mActivityContext, R.raw.tire2, R.drawable.tiretexture);
-        car.setCarTireModel(mActivityContext, R.raw.tire3, R.drawable.tiretexture);
-        car.setCarTireModel(mActivityContext, R.raw.tire4, R.drawable.tiretexture);
+        car.setCarTireModel(mActivityContext, R.raw.tire1, R.drawable.tiretexture, true);
+        car.setCarTireModel(mActivityContext, R.raw.tire2, R.drawable.tiretexture, true);
+        car.setCarTireModel(mActivityContext, R.raw.tire3, R.drawable.tiretexture, false);
+        car.setCarTireModel(mActivityContext, R.raw.tire4, R.drawable.tiretexture, false);
         car.setTirePosition(new Vector(0, -1.4f, zOffset));
     }
 
