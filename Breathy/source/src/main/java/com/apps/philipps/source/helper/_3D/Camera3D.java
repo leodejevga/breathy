@@ -13,7 +13,7 @@ public class Camera3D {
 
 
     private Vector direction = new Vector(0, 0, 0);
-    private Vector position = new Vector(0, 0.2f, -10f);
+    private Vector position = new Vector(0, 0.2f, -3.5f);
     //private Vector position = new Vector(0, 0.2f, -10f);
     private Vector up = new Vector(0, 1, 0);
     private Vector rotation = new Vector(0, 0, 1, 0);

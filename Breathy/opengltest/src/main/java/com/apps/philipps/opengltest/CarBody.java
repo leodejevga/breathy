@@ -13,10 +13,8 @@ public class CarBody {
     float angle = 0;
     float rotateSpeed = 360f;
     float constant = 0f;
-    Car car;
 
     public CarBody(Context mActivityContext, int modelID, int textureId) {
-        this.car = car;
         carBody = new GameObject3D(GameObject3D.loadObject(mActivityContext, modelID, textureId));
     }
 
@@ -36,7 +34,7 @@ public class CarBody {
 
     public void turnLeft(float speed) {
         this.speed = speed;
-        carBody.getPosition().add(new Vector(speed, 0, 0));
+        carBody.getPosition().add(new Vector(+speed, 0, 0));
         angle += speed;
     }
 
@@ -47,7 +45,6 @@ public class CarBody {
         carBody.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
         resetRotation();
         constant = 0.0f;
-        //carBody.rotate(new Vector(0, 0, 1, angle));
     }
 
     public void crashes() {

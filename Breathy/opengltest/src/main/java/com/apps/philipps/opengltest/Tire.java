@@ -38,7 +38,7 @@ public class Tire {
 
     public void turnLeft(float speed) {
         this.speed = speed;
-        tire.getPosition().add(new Vector(speed, 0, 0));
+        tire.getPosition().add(new Vector(+speed, 0, 0));
         angle += speed;
     }
 
@@ -52,21 +52,19 @@ public class Tire {
                 (boundingBox.start_maxZ - boundingBox.start_minZ) / 2.0f + boundingBox.start_minZ);
 
         tire.rotate(new Vector(1, 0, 0, -90));
+        tire.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
         resetRotation();
 
         tire.setPosition(new Vector(0, 0, 0));
         tire.move(centerOfObject);
         count = count + 5;
-        if (angle != 0.0f)
-            tire.rotate(new Vector(0, 1, 0, angle * 2f * rotateSpeed));
+        tire.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
         tire.rotate(new Vector(1, 0, 0, count + speed));
         tire.setPosition(new Vector(0, 0, 0));
         tire.move(new Vector().sub(centerOfObject));
-
-
         constant = 0.0f;
-        tire.setPosition(car.getCarBodyObject3D().getPosition());
-    }
+        tire.setPosition(car.getCarBodyObject3D().getPosition().clone());
+    }   
 
     public void crashes() {
         constant += 5.0f;

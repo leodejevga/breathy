@@ -49,9 +49,9 @@ public class Light {
                     0f, -2f, -1f, 1f};
 
     public static final float[] pointLightColors = new float[]
-            {       1f, 0f, 0f,
-                    0f, 0f, 1f,
-                    0f, 1f, 0f};
+            {       1f, 1f, 1f,
+                    1f, 1f, 1f,
+                    1f, 1f, 1f};
     /**
      * Used to hold the transformed position of the light in eye space (after transformation via modelview matrix)
      */
