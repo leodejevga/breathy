@@ -26,13 +26,13 @@ public class CarBody {
         carBody.setRotation(rotation);
     }
 
-    public void turnRight(float speed) {
+    public void turnLeft(float speed) {
         this.speed = speed;
         carBody.getPosition().add(new Vector(-speed, 0, 0));
         angle -= speed;
     }
 
-    public void turnLeft(float speed) {
+    public void turnRight(float speed) {
         this.speed = speed;
         carBody.getPosition().add(new Vector(+speed, 0, 0));
         angle += speed;

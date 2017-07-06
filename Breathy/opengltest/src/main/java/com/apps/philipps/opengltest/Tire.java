@@ -1,7 +1,6 @@
 package com.apps.philipps.opengltest;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._3D.BoundingBox;
@@ -11,7 +10,6 @@ import com.apps.philipps.source.helper._3D.GameObject3D;
 public class Tire {
     private GameObject3D tire;
     public float speed = 0f;
-    private float delay = 2000f;
     float angle = 0;
     float rotateSpeed = 360f;
     float constant = 0f;

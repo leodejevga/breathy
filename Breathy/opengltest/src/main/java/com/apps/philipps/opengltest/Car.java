@@ -47,7 +47,7 @@ public class Car {
         if (xPosition < limit) {
             speed = Math.abs(dx) / delay;
             xPosition += speed;
-            carBody.turnRight(speed);
+            carBody.turnLeft(speed);
             for (Tire tire : tires)
                 tire.turnRight(speed);
         }
@@ -57,7 +57,7 @@ public class Car {
         if (xPosition > -limit) {
             speed = Math.abs(dx) / delay;
             xPosition -= speed;
-            carBody.turnLeft(speed);
+            carBody.turnRight(speed);
             for (Tire tire : tires)
                 tire.turnLeft(speed);
         }

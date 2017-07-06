@@ -23,15 +23,16 @@ public class GameEngine {
     private float max_CamAngle = 0f;
     private float min_CamAngle = Renderer3D.start_cam_Angle;
     private float zOffset = -0.2f;
-    private float relativeDistanceOfEnemies = 20.0f;
+    private float relativeDistanceOfEnemies = 10.0f;
     private float safeDistance = 1.0f;
-    private int numberOfEnemies = 5;
+    private int numberOfEnemies = 2;
+    private float minDistanceToMainCar = 2.0f;
 
     private CollisionDetectionThread collisionDetectionThread;
     private Context mActivityContext;
 
     public Car car;
-    public ArrayList<EnemyBody> enemies;
+    public ArrayList<Enemy> enemies;
     public static float streetSize = 0.7f;
 
     /**
@@ -84,14 +85,12 @@ public class GameEngine {
 
     private void createCar() {
         car = new Car();
-        car.setCarBodyModel(mActivityContext, R.raw.newcar, R.drawable.cartexture);
+        car.setCarBodyModel(mActivityContext, R.raw.carbody, R.drawable.cartexture);
         car.setCarBodyPosition(new Vector(0, -1.4f, zOffset));
-
         car.setCarTireModel(mActivityContext, R.raw.tire1, R.drawable.tiretexture, true);
         car.setCarTireModel(mActivityContext, R.raw.tire2, R.drawable.tiretexture, true);
         car.setCarTireModel(mActivityContext, R.raw.tire3, R.drawable.tiretexture, false);
         car.setCarTireModel(mActivityContext, R.raw.tire4, R.drawable.tiretexture, false);
-        car.setTirePosition(new Vector(0, -1.4f, zOffset));
     }
 
     private void createEnemies() {
@@ -103,63 +102,67 @@ public class GameEngine {
 
     private void enemiesRun(long deltaTime) {
         //generate random turn
-        Random random = new Random();
         for (int i = 0; i < enemies.size(); i++) {
-            float r = random.nextFloat();
-            EnemyBody enemyBody = enemies.get(i);
-            if (enemyBody.getCounter() > 120) {
-                if (r > 0.5f && !enemyBody.isTurningLeft() && !enemyBody.isTurningRight()) {
-                    enemyBody.setTurningLeft(true);
-                } else if (r <= 0.5f && !enemyBody.isTurningLeft() && !enemyBody.isTurningRight()) {
-                    enemyBody.setTurningRight(true);
-                } else if (enemyBody.isTurningLeft()) {
-                    enemyBody.turnRight(30f * r);
-                    if (enemyBody.getCounter() > 180) {
-                        enemyBody.setCounter(0);
-                        enemyBody.setTurningLeft(false);
+            Enemy enemy = enemies.get(i);
+            float r = collisionDetectionThread.generateRandomNumber();
+            if (enemy.getCounter() > 120) {
+                if (enemy.isTurningLeft()) {
+                    enemy.turnLeft(30f * r);
+                    if (enemy.getCounter() > 180) {
+                        enemy.setCounter(0);
+                        enemy.setTurningLeft(false);
                     }
-                } else if (enemyBody.isTurningRight()) {
-                    enemyBody.turnLeft(30f * r);
-                    if (enemyBody.getCounter() > 180) {
-                        enemyBody.setCounter(0);
-                        enemyBody.setTurningRight(false);
+                } else if (enemy.isTurningRight()) {
+                    enemy.turnRight(30f * r);
+                    if (enemy.getCounter() > 180) {
+                        enemy.setCounter(0);
+                        enemy.setTurningRight(false);
                     }
                 }
             }
-            //runsWithSpeed
-            enemyBody.runsWithSpeed(SPEED / 2.0f);
-            enemyBody.runs();
-            enemyBody.draw(deltaTime);
 
-            //set enemyBody, which is out of the screen to new position
-            if (enemyBody.getObject3D().getPosition().get(1) < -2.0f) {
-                enemyBody.setPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + 1f, zOffset));
-                while (enemiesOverlapped(enemyBody)) {
-                    enemyBody.setPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + 1f, zOffset));
+            //set enemy, which is out of the screen to new position
+            if (enemy.getCarBodyObject3D().getPosition().get(1) < -2.0f) {
+                enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + 1f, zOffset));
+                while (enemiesOverlapped(enemy)) {
+                    enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + 1f, zOffset));
                 }
             }
+
+            //runsWithSpeed
+
+            enemy.runsWithSpeed(SPEED / 2.0f);
+            enemy.draw(deltaTime);
 
             if (DEBUG_MODE)
-                enemyBody.getObject3D().getBoundingBox().drawLines();
+                enemy.drawBoundingBoxLines();
             else
-                enemyBody.getObject3D().getBoundingBox().renewLinesPosition();
+                enemy.renewBoundingBoxPosition();
         }
     }
 
-    private EnemyBody createNewEnemy() {
+    private Enemy createNewEnemy() {
         Random random = new Random();
-        EnemyBody newEnemyBody = new EnemyBody(mActivityContext, R.raw.enemycar, R.drawable.enemytexture);
-        newEnemyBody.setPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + 1f, zOffset));
-        while (enemiesOverlapped(newEnemyBody)) {
-            newEnemyBody = createNewEnemy();
+        Enemy newEnemy = new Enemy();
+        newEnemy.setCarBodyModel(mActivityContext, R.raw.enemycar, R.drawable.enemytexture);
+        newEnemy.setCarTireModel(mActivityContext, R.raw.tire1enemy, R.drawable.tiretexture, true);
+        newEnemy.setCarTireModel(mActivityContext, R.raw.tire2enemy, R.drawable.tiretexture, true);
+        newEnemy.setCarTireModel(mActivityContext, R.raw.tire3enemy, R.drawable.tiretexture, false);
+        newEnemy.setCarTireModel(mActivityContext, R.raw.tire4enemy, R.drawable.tiretexture, false);
+        newEnemy.setCarTireModel(mActivityContext, R.raw.tire5enemy, R.drawable.tiretexture, false);
+        newEnemy.setCarTireModel(mActivityContext, R.raw.tire6enemy, R.drawable.tiretexture, false);
+
+        newEnemy.setCarBodyPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
+        while (enemiesOverlapped(newEnemy)) {
+            newEnemy.setCarBodyPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
         }
-        return newEnemyBody;
+        return newEnemy;
     }
 
-    private boolean enemiesOverlapped(EnemyBody newEnemyBody) {
+    private boolean enemiesOverlapped(Enemy newEnemy) {
         for (int i = 0; i < enemies.size(); i++) {
-            if (newEnemyBody != enemies.get(i) &&
-                    Math.abs(newEnemyBody.getObject3D().getPosition().get(1) - enemies.get(i).getObject3D().getPosition().get(1)) < safeDistance) {
+            if (newEnemy != enemies.get(i) &&
+                    Math.abs(newEnemy.getCarBodyObject3D().getPosition().get(1) - enemies.get(i).getCarBodyObject3D().getPosition().get(1)) < safeDistance) {
                 return true;
             }
         }
@@ -250,18 +253,36 @@ public class GameEngine {
 
     class CollisionDetectionThread extends Thread {
         boolean crashed = false;
+        Random random = new Random();
 
         @Override
         public void run() {
             while (true) {
                 collisionDetection();
+                enemiesSimulation();
             }
+        }
+
+        public void enemiesSimulation() {
+            for (int i = 0; i < enemies.size(); i++) {
+                Enemy enemy = enemies.get(i);
+                float r = generateRandomNumber();
+                if (r > 0.5f && !enemy.isTurningLeft() && !enemy.isTurningRight()) {
+                    enemy.setTurningLeft(true);
+                } else if (r <= 0.5f && !enemy.isTurningLeft() && !enemy.isTurningRight()) {
+                    enemy.setTurningRight(true);
+                }
+            }
+        }
+
+        private float generateRandomNumber() {
+            return random.nextFloat();
         }
 
         private void collisionDetection() {
             for (int i = 0; i < enemies.size(); i++) {
                 if (car.getCarBodyObject3D() != null
-                        && car.getCarBodyObject3D().getBoundingBox().collision(enemies.get(i).getObject3D().getBoundingBox())) {
+                        && car.getCarBodyObject3D().getBoundingBox().collision(enemies.get(i).getCarBodyObject3D().getBoundingBox())) {
                     crashed = true;
                     try {
                         sleep(1000 / 40);
