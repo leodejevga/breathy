@@ -365,9 +365,11 @@ public class GameObject3D implements IGameObject {
         public void setPosition(Vector position) {
             this.position = position;
             //Current position of Bounding Box
-            Vector currentPos = boundingBox.position;
-            Vector inversePos = new Vector(-currentPos.get(0), -currentPos.get(1), -currentPos.get(2));
-            this.boundingBox.translate(inversePos.add(position));
+            if (boundingBox.isNeedToCalculateBB()) {
+                Vector currentPos = boundingBox.position;
+                Vector inversePos = new Vector(-currentPos.get(0), -currentPos.get(1), -currentPos.get(2));
+                this.boundingBox.translate(inversePos.add(position));
+            }
         }
 
         /**

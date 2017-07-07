@@ -16,11 +16,13 @@ public class Tire {
     float count = 0f;
     Car car;
     boolean isFrontTire;
+    private Vector centerOfObject = new Vector();
 
     public Tire(Context mActivityContext, Car car, int modelID, int textureId, boolean isFrontTire) {
         this.car = car;
         this.isFrontTire = isFrontTire;
         tire = new GameObject3D(GameObject3D.loadObject(mActivityContext, modelID, textureId));
+        tire.getBoundingBox().setNeedToCalculateBB(false);
     }
 
     public void setPosition(Vector position) {
@@ -46,11 +48,8 @@ public class Tire {
 
     public void runs(float speed) {
         tire.move(new Vector(0, 0, 0));
-        BoundingBox boundingBox = tire.getBoundingBox();
-        Vector centerOfObject = new Vector(
-                (boundingBox.start_maxX - boundingBox.start_minX) / 2.0f + boundingBox.start_minX,
-                (boundingBox.start_maxY - boundingBox.start_minY) / 2.0f + boundingBox.start_minY,
-                (boundingBox.start_maxZ - boundingBox.start_minZ) / 2.0f + boundingBox.start_minZ);
+        calculateCenterOfObject();
+        Vector centerOfObject = getCenterOfObject();
 
         tire.rotate(new Vector(1, 0, 0, -90));
         tire.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
@@ -92,6 +91,17 @@ public class Tire {
 
     public GameObject3D getObject3D() {
         return tire;
+    }
+
+    private void calculateCenterOfObject(){
+        BoundingBox boundingBox = getObject3D().getBoundingBox();
+        centerOfObject =  new Vector(
+                (boundingBox.start_maxX - boundingBox.start_minX) / 2.0f + boundingBox.start_minX,
+                (boundingBox.start_maxY - boundingBox.start_minY) / 2.0f + boundingBox.start_minY,
+                (boundingBox.start_maxZ - boundingBox.start_minZ) / 2.0f + boundingBox.start_minZ);
+    }
+    private Vector getCenterOfObject(){
+        return centerOfObject;
     }
 
 }

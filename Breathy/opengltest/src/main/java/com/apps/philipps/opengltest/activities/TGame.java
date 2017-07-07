@@ -32,6 +32,7 @@ public class TGame extends Activity3D {
         // you should consider de-allocating objects that
         // consume significant memory here.
         openGL.onPause();
+        renderer3D.gameEngine.collisionDetectionThread.onPause();
     }
 
     @Override

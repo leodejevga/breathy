@@ -26,9 +26,9 @@ public class GameEngine {
     private float relativeDistanceOfEnemies = 10.0f;
     private float safeDistance = 1.0f;
     private int numberOfEnemies = 2;
-    private float minDistanceToMainCar = 2.0f;
+    private float minDistanceToMainCar = 2.5f;
 
-    private CollisionDetectionThread collisionDetectionThread;
+    public CollisionDetectionThread collisionDetectionThread;
     private Context mActivityContext;
 
     public Car car;
@@ -74,6 +74,7 @@ public class GameEngine {
             SPEED = MIN_SPEED;
         }
         car.draw(deltaTime);
+
 
         if (DEBUG_MODE) {
             car.drawBoundingBoxLines();
@@ -147,8 +148,8 @@ public class GameEngine {
         newEnemy.setCarBodyModel(mActivityContext, R.raw.enemycar, R.drawable.enemytexture);
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire1enemy, R.drawable.tiretexture, true);
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire2enemy, R.drawable.tiretexture, true);
-        newEnemy.setCarTireModel(mActivityContext, R.raw.tire3enemy, R.drawable.tiretexture, false);
-        newEnemy.setCarTireModel(mActivityContext, R.raw.tire4enemy, R.drawable.tiretexture, false);
+        //newEnemy.setCarTireModel(mActivityContext, R.raw.tire3enemy, R.drawable.tiretexture, false);
+        //newEnemy.setCarTireModel(mActivityContext, R.raw.tire4enemy, R.drawable.tiretexture, false);
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire5enemy, R.drawable.tiretexture, false);
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire6enemy, R.drawable.tiretexture, false);
 
@@ -251,16 +252,21 @@ public class GameEngine {
         }
     }
 
-    class CollisionDetectionThread extends Thread {
+    public class CollisionDetectionThread extends Thread {
         boolean crashed = false;
         Random random = new Random();
+        boolean exec = true;
 
         @Override
         public void run() {
-            while (true) {
+            while (exec) {
                 collisionDetection();
                 enemiesSimulation();
             }
+        }
+
+        public void onPause() {
+            exec = false;
         }
 
         public void enemiesSimulation() {
@@ -272,6 +278,7 @@ public class GameEngine {
                 } else if (r <= 0.5f && !enemy.isTurningLeft() && !enemy.isTurningRight()) {
                     enemy.setTurningRight(true);
                 }
+                enemy.setCounter(enemy.getCounter() + 1);
             }
         }
 

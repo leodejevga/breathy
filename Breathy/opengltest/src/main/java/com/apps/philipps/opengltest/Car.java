@@ -96,13 +96,9 @@ public class Car {
 
     public void drawBoundingBoxLines() {
         carBody.getObject3D().getBoundingBox().drawLines();
-        for (Tire tire : tires)
-            tire.getObject3D().getBoundingBox().drawLines();
     }
 
     public void renewBoundingBoxPosition() {
         carBody.getObject3D().getBoundingBox().renewLinesPosition();
-        for (Tire tire : tires)
-            tire.getObject3D().getBoundingBox().renewLinesPosition();
     }
 }

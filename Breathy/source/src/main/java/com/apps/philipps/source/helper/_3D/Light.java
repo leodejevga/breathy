@@ -76,7 +76,7 @@ public class Light {
     }
 
     public void setUpLight() {
-        lightMovementSimulation();
+        //lightMovementSimulation();
         // Calculate position of the light. Rotate and then push into the distance.
         Matrix.setIdentityM(lightModel_Matrix, 0);
         Matrix.rotateM(lightModel_Matrix, 0, angle, 0.0f, 1.0f, 0.0f);

@@ -25,6 +25,7 @@ public class BoundingBox {
     public float start_minY;
     public float start_minZ;
     private ArrayList<Line> lines = new ArrayList<>();
+    private boolean needToCalculate = true;
 
     /**
      * actual position of bounding box
@@ -35,23 +36,28 @@ public class BoundingBox {
      * Constructor
      */
     public BoundingBox(Vector[] vertex) {
-        calculateMaxMinValue(vertex);
-        start_maxX = maxX;
-        start_maxY = maxY;
-        start_maxZ = maxZ;
-        start_minX = minX;
-        start_minY = minY;
-        start_minZ = minZ;
-        max_min_value = new float[]{maxX, maxY, maxZ, minX, minY, minZ};
-        rotate(new Vector(1, 0, 0, -90));
-        generateLines();
+        if (needToCalculate) {
+            calculateMaxMinValue(vertex);
+            start_maxX = maxX;
+            start_maxY = maxY;
+            start_maxZ = maxZ;
+            start_minX = minX;
+            start_minY = minY;
+            start_minZ = minZ;
+            max_min_value = new float[]{maxX, maxY, maxZ, minX, minY, minZ};
+            rotate(new Vector(1, 0, 0, -90));
+            generateLines();
+        }
     }
 
     /**
      * @return returns extreme values from bounding box
      */
     public Vector getMax_min_value() {
-        return new Vector(max_min_value);
+        if (needToCalculate)
+            return new Vector(max_min_value);
+        else
+            return new Vector();
     }
 
     /**
@@ -61,11 +67,13 @@ public class BoundingBox {
      */
 
     public void translate(Vector vector) {
-        float[] temp = new float[16];
-        Matrix.setIdentityM(temp, 0);
-        Matrix.translateM(temp, 0, vector.get(0), vector.get(1), vector.get(2));
-        multipleMatrix(temp);
-        position.add(vector);
+        if (needToCalculate) {
+            float[] temp = new float[16];
+            Matrix.setIdentityM(temp, 0);
+            Matrix.translateM(temp, 0, vector.get(0), vector.get(1), vector.get(2));
+            multipleMatrix(temp);
+            position.add(vector);
+        }
     }
 
     /**
@@ -74,10 +82,12 @@ public class BoundingBox {
      * @param vector
      */
     public void rotate(Vector vector) {
-        float[] temp = new float[16];
-        Matrix.setIdentityM(temp, 0);
-        Matrix.rotateM(temp, 0, temp, 0, vector.get(3), vector.get(0), vector.get(1), vector.get(2));
-        multipleMatrix(temp);
+        if (needToCalculate) {
+            float[] temp = new float[16];
+            Matrix.setIdentityM(temp, 0);
+            Matrix.rotateM(temp, 0, temp, 0, vector.get(3), vector.get(0), vector.get(1), vector.get(2));
+            multipleMatrix(temp);
+        }
     }
 
     private void multipleMatrix(float[] transformMatrix) {
@@ -138,42 +148,57 @@ public class BoundingBox {
      * @return returns <code>true</code> if the boxes are intersected otherwise <code>false</code>
      */
     public boolean collision(BoundingBox box) {
-
-        return (minX <= box.maxX && maxX >= box.minX) &&
-                (minY <= box.maxY && maxY >= box.minY) &&
-                (minZ <= box.maxZ && maxZ >= box.minZ);
+        if (needToCalculate)
+            return (minX <= box.maxX && maxX >= box.minX) &&
+                    (minY <= box.maxY && maxY >= box.minY) &&
+                    (minZ <= box.maxZ && maxZ >= box.minZ);
+        else
+            return false;
     }
 
     private void generateLines() {
-        for (int i = 0; i < points.length - 1; i++)
-            for (int j = i + 1; j < points.length; j++) {
-                Line l = new Line();
-                l.setVertices(points[i], points[j]);
-                lines.add(l);
-            }
+        if (needToCalculate) {
+            for (int i = 0; i < points.length - 1; i++)
+                for (int j = i + 1; j < points.length; j++) {
+                    Line l = new Line();
+                    l.setVertices(points[i], points[j]);
+                    lines.add(l);
+                }
+        }
     }
 
     /**
      * draws bounding box
      */
     public void drawLines() {
-        renewLinesPosition();
-        for (Line line : lines) {
-            line.draw();
+        if (needToCalculate) {
+            renewLinesPosition();
+            for (Line line : lines) {
+                line.draw();
+            }
         }
     }
 
     /**
      * recalculate the actual position of bounding box
-     * */
+     */
     public void renewLinesPosition() {
-        int counter = 0;
-        for (int i = 0; i < points.length - 1; i++)
-            for (int j = i + 1; j < points.length; j++) {
-                lines.get(counter).setVertices(points[i], points[j]);
-                counter++;
-            }
-        calculateMaxMinValue(points);
+        if (needToCalculate) {
+            int counter = 0;
+            for (int i = 0; i < points.length - 1; i++)
+                for (int j = i + 1; j < points.length; j++) {
+                    lines.get(counter).setVertices(points[i], points[j]);
+                    counter++;
+                }
+            calculateMaxMinValue(points);
+        }
+    }
+
+    public void setNeedToCalculateBB(boolean bool){
+        needToCalculate = bool;
+    }
+    public boolean isNeedToCalculateBB(){
+        return needToCalculate;
     }
 }
 
