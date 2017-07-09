@@ -3,7 +3,7 @@ package com.breathy.racing.activities;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,22 +12,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apps.philipps.source.BreathData;
+import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.source.helper._2D.Activity2D;
 import com.apps.philipps.source.helper._2D.GameObject2D;
 import com.apps.philipps.source.helper.Vector;
 import com.breathy.racing.GameUtil;
 import com.breathy.racing.R;
+import com.breathy.racing.RaceBreathInterpreter;
 import com.breathy.racing.RaceUtil;
 import com.breathy.racing.SlowCar;
+import com.breathy.racing.SlowerUpdate;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -46,7 +47,6 @@ public class Application extends Activity2D {
     double safedhighscore = 0;
     double gameScoreMultiplier = 1;
     TextView score;
-    int bostPoints;
     ProgressBar lvlUpBar;
 
     // Game stats
@@ -56,7 +56,7 @@ public class Application extends Activity2D {
     Random random;
     float[] xRoads;
     float yCar;
-    int faster = 0;
+    RaceBreathInterpreter raceBreathInterpreter;
 
     // Player
     int curXIndex;
@@ -68,9 +68,9 @@ public class Application extends Activity2D {
     private LineData chartData;
     private LineDataSet breathChartData;
     private LineDataSet breathPlaneChartData;
-    private Integer xIndex=0;
 
     final int BACKGROUNDSPEED = 20;
+    private SlowerUpdate oneCallPerMin;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -81,7 +81,16 @@ public class Application extends Activity2D {
     @Override
     protected void draw() {
         long delta = System.currentTimeMillis() - start;
-        calcSpeed();
+
+        if(oneCallPerMin.update()){
+            calcSpeed();
+            int target = (int) car.getAnimated().getDestination().get( 0 );
+            yCar = raceBreathInterpreter.getCurY();
+            car.setPosition( new Vector( car.getPosition().get( 0 ), yCar ) );
+            car.move( new Vector( target, yCar ) );
+        }
+
+        updateBreathStatus();
 
         calcEmeny( delta );
 
@@ -100,7 +109,6 @@ public class Application extends Activity2D {
 
         refreshChart();
 
-        calcBostPoints();
 
 
     }
@@ -109,14 +117,19 @@ public class Application extends Activity2D {
     @Override
     protected void init() {
         //RelativeLayout game = new RelativeLayout(getBaseContext());
+        PlanManager.addPlan(PlanManager.getPlan(0.5f, 0.2f, 0.5f, 15).addOption(0.3f, 0.6f, 0.7f, 25).addOption(0.3f, 0.3f, 0.1f, 5));
+        PlanManager.startPlan(0);
+
         game = (RelativeLayout) findViewById( R.id.gameArea );
         score = (TextView) findViewById( R.id.score );
         lvlUpBar = (ProgressBar) findViewById( R.id.progressBar );
         lvlUpBar.setProgress( 0 );
         lvlUpBar.setMax( 10000 );
         xRoads = new float[]{(int) (getScreenWidth() /100 * 25), (int) (getScreenWidth() / 100 * 42.5), (int) (getScreenWidth() / 5 * 3)};
+        raceBreathInterpreter = new RaceBreathInterpreter( new Pair<>( (int) getScreenHeight() / 2, (int) getScreenHeight() - 264) );
+        this.oneCallPerMin = new SlowerUpdate( this.frameRate, 1 );
+        yCar = raceBreathInterpreter.getCurY();
 
-        yCar = getScreenHeight() - 264;
         car = initObject( new ImageView( this ), R.drawable.car, 1, new Vector( xRoads[1], yCar ), new Vector( xRoads[1], yCar ), 1200 );
         car.getView().getLayoutParams().height = (int) (getScreenWidth()*0.15);
         car.getView().getLayoutParams().width = (int) (getScreenWidth()*0.15);
@@ -163,12 +176,11 @@ public class Application extends Activity2D {
         if ( event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
             int dx = (int) event.getX();
             int dy = (int) event.getY();
-            if(dy < getScreenHeight() / 2)
-            car.setRotation(0.1);
+
             // get the direction
-            if ( dy < getScreenHeight() / 2 && bostPoints >= lvlUpBar.getMax() ) {
+            if ( dy < getScreenHeight() / 2 && raceBreathInterpreter.getCurBostPoints() >= lvlUpBar.getMax() ) {
                 safedhighscore += highscore * 1.2;
-                bostPoints = 0;
+                raceBreathInterpreter.setCurBostPoints( 0 );
                 highscore = 0;
             } else if ( getScreenWidth() / 2 < dx ) {
                 movePlayer( "right" );
@@ -224,14 +236,18 @@ public class Application extends Activity2D {
                 highscore = 0;
             }
 
-            checkOvertake( i );
+
 
             if ( !removed && !slowCars.get( i ).isMoving() ) {
                 game.removeView( slowCars.get( i ).getView() );
                 slowCars.remove( slowCars.get( i ) );
                 highscore += 1 * gameScoreMultiplier;
+                i--;
+            } else if ( !removed ) {
+                slowCars.get( i ).update( delta );
+                checkOvertake( i );
+            }
 
-            } else if ( !removed ) slowCars.get( i ).update( delta );
 
         }
     }
@@ -245,6 +261,7 @@ public class Application extends Activity2D {
         boolean rightLane = true;
         int overtake = 0;
         int curStreet = curCar.getCurXStreet();
+
         for(j = i; j<slowCars.size(); j++){
             SlowCar carInFront = slowCars.get( j );
 
@@ -253,7 +270,7 @@ public class Application extends Activity2D {
             }
 
             if(overtake ==0 && (curStreet == carInFront.getCurXStreet() && carInFront.getPosition().get( 1 ) <
-                    curCar.getPosition().get( 1 ) - 4*(carSpeed-carInFront.getAnimated().getSpeed()) &&
+                    curCar.getPosition().get( 1 ) + 2*(carSpeed-carInFront.getAnimated().getSpeed()) &&
                     curCar.getAnimated().getSpeed() <= carInFront.getAnimated().getSpeed())){
                 overtake = j;
             }
@@ -295,30 +312,26 @@ public class Application extends Activity2D {
     /**
      * this method calculate the bostpoints of the player depended of the breathdata
      */
-    private void calcBostPoints() {
+    private void updateBreathStatus() {
 
-        if ( testdata.equals( breathdata ) ) { //ToDo toleranz
-            bostPoints += 10;
-        } else if ( testdata + 100 < breathdata && testdata - 100 > breathdata ) {
-            bostPoints = Math.max( bostPoints - 1, 0 );
-        }
-        lvlUpBar.setProgress( bostPoints );
+        raceBreathInterpreter.update();
+        lvlUpBar.setProgress( raceBreathInterpreter.getCurBostPoints() );
     }
 
     /**
      * this method calculate the deltaspeed for all emenys and backgrounds
      */
     private void calcSpeed() {
-        if ( faster >= (60 * 15) ) {
-            deltaSpeed += 10;
-            faster = 0;
-            gameScoreMultiplier += .1;
+
+            deltaSpeed += 1;
+
+            gameScoreMultiplier += .01;
             for ( int i = 0; i < slowCars.size(); i++ ) {
                 slowCars.get( i ).move( (int) (deltaSpeed*slowCars.get( i ).getGroundSpeed()) );
             }
             background.getFirst().move( (int) (BACKGROUNDSPEED + deltaSpeed) );
             background.getLast().move( (int) (BACKGROUNDSPEED + deltaSpeed) );
-        } else faster++;
+
     }
 
     /**
