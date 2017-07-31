@@ -26,7 +26,7 @@ public class GameEngine {
     private float relativeDistanceOfEnemies = 10.0f;
     private float safeDistance = 1.0f;
     private int numberOfEnemies = 2;
-    private float minDistanceToMainCar = 2.5f;
+    private float minDistanceToMainCar = 4f;
 
     public CollisionDetectionThread collisionDetectionThread;
     private Context mActivityContext;
@@ -124,9 +124,9 @@ public class GameEngine {
 
             //set enemy, which is out of the screen to new position
             if (enemy.getCarBodyObject3D().getPosition().get(1) < -2.0f) {
-                enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + 1f, zOffset));
+                enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
                 while (enemiesOverlapped(enemy)) {
-                    enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + 1f, zOffset));
+                    enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
                 }
             }
 
