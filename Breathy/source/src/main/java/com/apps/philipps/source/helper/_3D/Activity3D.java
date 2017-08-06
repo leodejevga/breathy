@@ -12,14 +12,6 @@ public abstract class Activity3D extends Activity {
      */
     protected SurfaceView3D openGL;
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(openGL!=null)
-            this.setContentView(openGL);
-    }
-
     @Override
     protected void onPause() {
         super.onPause();

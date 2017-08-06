@@ -2,6 +2,7 @@ package com.apps.philipps.opengltest;
 
 import android.content.Context;
 
+import com.apps.philipps.source.BreathInterpreter;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._3D.GameObject3D;
 import com.apps.philipps.source.helper._3D.Renderer3D;
@@ -27,6 +28,7 @@ public class GameEngine {
     private float safeDistance = 1.0f;
     private int numberOfEnemies = 2;
     private float minDistanceToMainCar = 4f;
+    private boolean isRunning = true;
 
     public CollisionDetectionThread collisionDetectionThread;
     private Context mActivityContext;
@@ -61,6 +63,17 @@ public class GameEngine {
         drawStreet(deltaTime);
         runSimulation(deltaTime);
         Renderer3D.light.drawLight();
+        validateBreath();
+    }
+
+    private void validateBreath() {
+        if (BreathInterpreter.getStatus().getError() == BreathInterpreter.BreathError.VeryBad
+                || BreathInterpreter.getStatus().getError() == BreathInterpreter.BreathError.NotGood
+                || BreathInterpreter.getStatus().getError() == BreathInterpreter.BreathError.Bad
+                || BreathInterpreter.getStatus().getError() == BreathInterpreter.BreathError.NotOk) {
+            increaseCarSpeed();
+            
+        }
     }
 
     /**
@@ -252,22 +265,27 @@ public class GameEngine {
         }
     }
 
+    public void onPause() {
+        isRunning = false;
+    }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
+
     public class CollisionDetectionThread extends Thread {
         boolean crashed = false;
         Random random = new Random();
-        boolean exec = true;
+
 
         @Override
         public void run() {
-            while (exec) {
+            while (isRunning) {
                 collisionDetection();
                 enemiesSimulation();
             }
         }
 
-        public void onPause() {
-            exec = false;
-        }
 
         public void enemiesSimulation() {
             for (int i = 0; i < enemies.size(); i++) {
