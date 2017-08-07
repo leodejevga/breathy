@@ -17,8 +17,8 @@ import java.util.Random;
 public class GameEngine {
     private ArrayList<GameObject3D> street = new ArrayList<>();
     private float SPEED = 0.01f;
-    private float MIN_SPEED = 0.01f;
-    private float MAX_SPEED = 0.1f;
+    private float MIN_SPEED = 0.03f;
+    private float MAX_SPEED = 0.15f;
     private float INCR_SPEED = 0.001f;
     private float current_camAngle = Renderer3D.start_cam_Angle;
     private float max_CamAngle = 0f;
@@ -67,12 +67,12 @@ public class GameEngine {
     }
 
     private void validateBreath() {
-        if (BreathInterpreter.getStatus().getError() == BreathInterpreter.BreathError.VeryBad
-                || BreathInterpreter.getStatus().getError() == BreathInterpreter.BreathError.NotGood
-                || BreathInterpreter.getStatus().getError() == BreathInterpreter.BreathError.Bad
-                || BreathInterpreter.getStatus().getError() == BreathInterpreter.BreathError.NotOk) {
+        if (BreathInterpreter.getStatus().getError() != BreathInterpreter.BreathError.VeryGood
+                && BreathInterpreter.getStatus().getError() != BreathInterpreter.BreathError.None) {
             increaseCarSpeed();
-            
+        }
+        else {
+            decreaseCarSpeed();
         }
     }
 
@@ -161,8 +161,6 @@ public class GameEngine {
         newEnemy.setCarBodyModel(mActivityContext, R.raw.enemycar, R.drawable.enemytexture);
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire1enemy, R.drawable.tiretexture, true);
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire2enemy, R.drawable.tiretexture, true);
-        //newEnemy.setCarTireModel(mActivityContext, R.raw.tire3enemy, R.drawable.tiretexture, false);
-        //newEnemy.setCarTireModel(mActivityContext, R.raw.tire4enemy, R.drawable.tiretexture, false);
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire5enemy, R.drawable.tiretexture, false);
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire6enemy, R.drawable.tiretexture, false);
 
@@ -223,15 +221,17 @@ public class GameEngine {
 
     private void increaseCamAngle() {
         if (current_camAngle > max_CamAngle) {
-            current_camAngle -= 2;
-            Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, -2));
+            float speed = 2f;
+            current_camAngle -= speed;
+            Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, -speed));
         }
     }
 
     private void decreaseCamAngle() {
         if (current_camAngle < min_CamAngle) {
-            current_camAngle += 1;
-            Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, 1));
+            float speed = 1f;
+            current_camAngle += speed;
+            Renderer3D.camera3D.move(new Vector(), new Vector(), new Vector(), new Vector(1, 0, 0, speed));
         }
     }
 

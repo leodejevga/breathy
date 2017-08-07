@@ -34,7 +34,10 @@ public class TGame extends Activity3D {
         pd = ProgressDialog.show(TGame.this, "Loading...",
                 "Loading. Please wait...", true, false);
         new BackGroundTask().execute();
+        init();
+    }
 
+    private void init() {
         renderer3D = new MyGLRenderer(this);
         openGL = (SurfaceView3D) findViewById(R.id.gl_surface_view);
         openGL.setRenderer(renderer3D);
@@ -83,15 +86,19 @@ public class TGame extends Activity3D {
                 //wait ultil object is loaded
             }
             TGame.this.pd.dismiss();
-            runThread();
-            PlanManager.startPlan();
+            initPlan();
             return true;
 
         }
 
+        private void initPlan(){
+            setTextViewHowGood();
+            PlanManager.startPlan();
+        }
+
     }
 
-    private void runThread() {
+    private void setTextViewHowGood() {
         new Thread() {
             public void run() {
                 while (renderer3D.gameEngine.isRunning()) {
@@ -103,7 +110,7 @@ public class TGame extends Activity3D {
                                 how_good.setText(PlanManager.getStatus() + "\n" + BreathInterpreter.getStatus());
                             }
                         });
-                        Thread.sleep(500);
+                        Thread.sleep(250);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
