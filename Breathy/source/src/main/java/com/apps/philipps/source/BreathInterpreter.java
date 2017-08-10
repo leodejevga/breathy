@@ -1,6 +1,5 @@
 package com.apps.philipps.source;
 
-import android.hardware.fingerprint.FingerprintManager;
 import com.apps.philipps.source.interfaces.IObserver;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public abstract class BreathInterpreter {
     }
 
     public enum BreathError {
-        None("", -1),
+        None("---", -1),
         VeryGood("Very good", 0),
         Good("Good", 1),
         Ok("Is ok", 2),
