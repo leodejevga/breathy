@@ -70,8 +70,7 @@ public class GameEngine {
         if (BreathInterpreter.getStatus().getError() != BreathInterpreter.BreathError.VeryGood
                 && BreathInterpreter.getStatus().getError() != BreathInterpreter.BreathError.None) {
             increaseCarSpeed();
-        }
-        else {
+        } else {
             decreaseCarSpeed();
         }
     }
@@ -99,12 +98,30 @@ public class GameEngine {
 
     private void createCar() {
         car = new Car();
-        car.setCarBodyModel(mActivityContext, R.raw.carbody, R.drawable.cartexture);
+        car.setCarBodyModel(mActivityContext, R.raw.carbody, getTextureID());
         car.setCarBodyPosition(new Vector(0, -1.4f, zOffset));
         car.setCarTireModel(mActivityContext, R.raw.tire1, R.drawable.tiretexture, true);
         car.setCarTireModel(mActivityContext, R.raw.tire2, R.drawable.tiretexture, true);
         car.setCarTireModel(mActivityContext, R.raw.tire3, R.drawable.tiretexture, false);
         car.setCarTireModel(mActivityContext, R.raw.tire4, R.drawable.tiretexture, false);
+    }
+
+    private int getTextureID() {
+        int index = -1;
+        for (int i = 0; i < Backend.options.size(); i++) {
+            if (Backend.options.getOption(i).isSet())
+                index = i;
+        }
+        switch (index) {
+            case 0:
+                return R.drawable.cartexture2;
+            case 1:
+                return R.drawable.cartexture3;
+            case 2:
+                return R.drawable.cartexture4;
+            default:
+                return R.drawable.cartexture;
+        }
     }
 
     private void createEnemies() {

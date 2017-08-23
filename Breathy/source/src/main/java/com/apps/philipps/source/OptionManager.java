@@ -159,8 +159,9 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
             Price = price;
         }
 
-        public V Value;
-        public int Price;
+        V Value;
+        int Price;
+        boolean isSet =  false;
         public Option(P parameter, V value, int cost){
             this.Parameter = parameter;
             this.Value = value;
@@ -171,5 +172,7 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
             this.Value = value;
             this.Price = 0;
         }
+        public void setIsSet(boolean isSet){ this.isSet =  isSet; }
+        public boolean isSet(){ return isSet; }
     }
 }
