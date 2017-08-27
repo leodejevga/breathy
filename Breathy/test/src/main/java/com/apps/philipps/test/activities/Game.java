@@ -27,7 +27,6 @@ public class Game extends Activity2D {
         AppState.recordData = AppState.inGame = true;
     }
 
-
     @Override
     protected void draw() {
         framerate.setText(frameRate + " fps");

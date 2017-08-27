@@ -22,6 +22,7 @@ public abstract class BreathData {
     private static int ramSize = 2;
     private static int blockSize = 10;
     private static boolean initialized = false;
+
     /**
      * Initialize BreathData to perform saving the integer values in RAM and hard drive. Choose your own size of RAM
      *
@@ -115,8 +116,8 @@ public abstract class BreathData {
         Element[] result = new Element[range];
         for (int i = index; i < index + range; i++) {
             result[i - index] = ram.getData(i);
-            if (result[i - index] == null)
-                return result;
+//            if (result[i - index] == null)  //TODO wieder einkommentieren
+//                return result;
         }
         return result;
     }
@@ -187,6 +188,7 @@ public abstract class BreathData {
             return false;
 
         }
+
         @Override
         public DataBlock get(int index) {
             if (index < size())
@@ -217,15 +219,12 @@ public abstract class BreathData {
         }
 
         public Element getData(int i) {
-            if (i < blockSize) {
-                Element result = get(0).get(i);
-                if (result == null)
-                    i -= get(0).elements.size();
-                else return result;
-            }
-            if (i < 0)
-                return null;
-            DataBlock block = get(i / blockSize + 1);
+            DataBlock block = get(0);
+            if (i < block.elements.size())
+                return block.get(i);
+            i+= blockSize - block.elements.size();
+
+            block = get(i / blockSize);
             if (block == null)
                 return null;
             return block.get(i % blockSize);
@@ -277,7 +276,7 @@ public abstract class BreathData {
 
         public DataBlock(Element element) {
             this();
-            elements.add(0,element);
+            elements.add(0, element);
         }
 
         public DataBlock() {
