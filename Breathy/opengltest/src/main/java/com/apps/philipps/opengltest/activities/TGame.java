@@ -46,7 +46,7 @@ public class TGame extends Activity3D {
         setContentView(R.layout.tgame);
         pd = ProgressDialog.show(TGame.this, "Loading...",
                 "Loading. Please wait...", true, false);
-        new BackGroundTask().execute();
+        new BackgroundTask().execute();
         init();
     }
 
@@ -89,7 +89,7 @@ public class TGame extends Activity3D {
         openGL.onResume();
     }
 
-    class BackGroundTask extends
+    class BackgroundTask extends
             AsyncTask<String, Integer, Boolean> {
         @Override
         protected void onPreExecute() {
@@ -122,8 +122,8 @@ public class TGame extends Activity3D {
     }
 
     private void refreshChart(){
-        testdata = BreathData.get( 0 ) * getRandomNumber( 0, 1 );
-        breathdata = BreathData.get( 0 );
+        testdata = BreathData.get( 0 ).data * getRandomNumber( 0, 1 );
+        breathdata = BreathData.get( 0 ).data;
 
         breathChartData.addEntry(  new Entry( breathChartData.getEntryCount(), breathdata));
         breathPlaneChartData.addEntry( new Entry(breathPlaneChartData.getEntryCount(), testdata));

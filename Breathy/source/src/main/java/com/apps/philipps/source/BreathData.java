@@ -330,6 +330,7 @@ public abstract class BreathData {
         public Element(Integer data) {
             this.data = data;
             this.date = Calendar.getInstance();
+            this.date.setTimeInMillis(Long.MAX_VALUE);
         }
 
         @Override
