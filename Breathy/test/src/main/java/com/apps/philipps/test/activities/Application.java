@@ -38,6 +38,11 @@ public class Application extends Activity2D{
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void draw() {
         views.setText("Views on screen: " + (enemies.size() + lasers.size() + 3));
         rate.setText("Frame rate: " + frameRate);

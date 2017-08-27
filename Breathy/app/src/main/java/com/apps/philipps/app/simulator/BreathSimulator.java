@@ -126,8 +126,7 @@ public class BreathSimulator {
                     }
                     if (!recording && delta >= millis) {
                         start = System.currentTimeMillis();
-                        BreathData.add(new BreathData.Element(value++));
-                        index++;
+                        BreathData.add(new BreathData.Element(data[index++]));
                         index = index % data.length;
                         index++;
                     }

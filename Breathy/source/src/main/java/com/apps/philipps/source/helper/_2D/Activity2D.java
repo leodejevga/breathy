@@ -26,19 +26,18 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected int frame = 0;
     private boolean initialized = false;
     private long start = System.currentTimeMillis();
-    private boolean destroy = false;
     private short ready=2;
+    private static int thread = 0;
 
     protected void brakeDraw(){
         draw = false;
     }
 
-    private final Thread startToDraw =  new Thread(null, new Runnable() {
 
+    private final Runnable drawing =  new Runnable() {
         private double millis;
         @Override
         public void run() {
-            draw = true;
             long delta = 0;
             runOnUiThread(new Runnable() {
                 @Override
@@ -50,7 +49,7 @@ public abstract class Activity2D extends Activity implements IObserver {
                     initialized = true;
                 }
             });
-            while (!destroy) {
+            while (draw) {
                 if(initialized){
                     delta = System.currentTimeMillis() - start;
                     if (draw && delta >= millis && ready>=2) {
@@ -69,7 +68,14 @@ public abstract class Activity2D extends Activity implements IObserver {
                 }
             }
         }
-    }, "Activity 2D");
+    };
+
+    private void startoDraw(){
+        draw = true;
+        Thread drawThread = new Thread(null, drawing, "Activity 2D " + thread++);
+        drawThread.setPriority(Thread.MAX_PRIORITY);
+        drawThread.start();
+    }
 
     protected abstract void draw();
 
@@ -85,6 +91,7 @@ public abstract class Activity2D extends Activity implements IObserver {
     }
 
     private long sekond = System.currentTimeMillis();
+
     private synchronized void executeDraw(long delta){
         runOnUiThread(new Runnable() {
             @Override
@@ -108,35 +115,22 @@ public abstract class Activity2D extends Activity implements IObserver {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        startToDraw.setPriority(Thread.MAX_PRIORITY);
-        startToDraw.start();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        AppState.recordData = AppState.inGame = false;
-        PlanManager.stop();
-        BreathData.removeObserver(this);
-        destroy = true;
-
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
+        Log.e(TAG, "OnPause");
+        AppState.recordData = AppState.inGame = false;
         BreathData.removeObserver(this);
+        BreathData.saveRest();
         draw = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e(TAG, "OnResume");
         AppState.recordData = AppState.inGame = true;
         BreathData.addObserver(this);
-        draw = true;
+        startoDraw();
     }
 
     @Override

@@ -19,8 +19,8 @@ import java.util.List;
 public abstract class BreathData {
 
     private static RAM ram;
-    private static int ramSize = 2;
-    private static int blockSize = 10;
+    private static int ramSize = 500;
+    private static int blockSize = 1000;
     private static boolean initialized = false;
 
     /**
@@ -153,6 +153,7 @@ public abstract class BreathData {
         DataBlock.info.save();
     }
 
+
     private static class RAM extends ArrayList<DataBlock> {
         /**
          * Instantiates a new Limited list.
@@ -233,6 +234,8 @@ public abstract class BreathData {
         public synchronized void saveAll() {
             for (DataBlock block : this)
                 saveData.writeObject(block.getName(), block);
+            clear();
+            add(new DataBlock());
         }
     }
 
