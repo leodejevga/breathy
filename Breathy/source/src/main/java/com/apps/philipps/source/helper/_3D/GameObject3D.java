@@ -105,8 +105,13 @@ public class GameObject3D implements IGameObject {
 
     @Override
     public Vector getBoundaries() {
-        return null;
+        return this.shape.boundingBox.getMax_min_value();
     }
+
+    public BoundingBox getBoundingBox() {
+        return this.shape.boundingBox;
+    }
+
 
     private void init() {
         if (Renderer3D.camera3D != null) {
@@ -124,6 +129,7 @@ public class GameObject3D implements IGameObject {
     public static class Shape {
         private Vector position;
         private int dimensions = 0;
+        BoundingBox boundingBox;
         /**
          * The Coords.
          */
@@ -167,6 +173,16 @@ public class GameObject3D implements IGameObject {
          * This will be used to pass in the light position.
          */
         private int mLightPosHandle;
+
+        /**
+         * This will be used to pass in the light positions
+         */
+        private int uPointLightPositionsLocation;
+
+        /**
+         * This will be used to pass in the light colors.
+         */
+        private int uPointLightColorsLocation;
 
         /**
          * This will be used to pass in the texture.
@@ -261,7 +277,7 @@ public class GameObject3D implements IGameObject {
 
             /*calculate normal matrix from model view matrix*/
             this.waveFrontObject = isWaveFrontObj;
-            calculateNormalVertex();
+            calculateNormalAndBoundingVertex();
             normals_Buffer = ByteBuffer.allocateDirect(normalData.length * mBytesPerFloat)
                     .order(ByteOrder.nativeOrder()).asFloatBuffer();
             normals_Buffer.put(normalData).position(0);
@@ -348,6 +364,12 @@ public class GameObject3D implements IGameObject {
          */
         public void setPosition(Vector position) {
             this.position = position;
+            //Current position of Bounding Box
+            if (boundingBox.isNeedToCalculateBB()) {
+                Vector currentPos = boundingBox.position;
+                Vector inversePos = new Vector(-currentPos.get(0), -currentPos.get(1), -currentPos.get(2));
+                this.boundingBox.translate(inversePos.add(position));
+            }
         }
 
         /**
@@ -380,10 +402,14 @@ public class GameObject3D implements IGameObject {
             Renderer3D.checkGlError("glGetUniformLocation");
             Model_View_MatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVMatrix");
             Renderer3D.checkGlError("glGetUniformLocation");
-            mLightPosHandle = GLES20.glGetUniformLocation(programHandle, "u_LightPos");
-            Renderer3D.checkGlError("glGetUniformLocation");
+
             textureUniformHandle = GLES20.glGetUniformLocation(programHandle, "u_Texture");
             Renderer3D.checkGlError("glGetUniformLocation");
+            uPointLightPositionsLocation = GLES20.glGetUniformLocation(programHandle, "u_PointLightPositions");
+            Renderer3D.checkGlError("glGetUniformLocation");
+            uPointLightColorsLocation = GLES20.glGetUniformLocation(programHandle, "u_PointLightColors");
+            Renderer3D.checkGlError("glGetUniformLocation");
+
             positionHandle = GLES20.glGetAttribLocation(programHandle, "a_Position");
             colorHandle = GLES20.glGetAttribLocation(programHandle, "a_Color");
             normalHandle = GLES20.glGetAttribLocation(programHandle, "a_Normal");
@@ -406,13 +432,14 @@ public class GameObject3D implements IGameObject {
             positions_Buffer.position(0);
             GLES20.glVertexAttribPointer(positionHandle, positionDataSize, GLES20.GL_FLOAT, false,
                     0, positions_Buffer);
-
+            Renderer3D.checkGlError("glVertexAttribPointer");
             GLES20.glEnableVertexAttribArray(positionHandle);
 
             // Pass in the color information
             colors_Buffer.position(0);
             GLES20.glVertexAttribPointer(colorHandle, colorDataSize, GLES20.GL_FLOAT, false,
                     0, colors_Buffer);
+            Renderer3D.checkGlError("glVertexAttribPointer");
 
             GLES20.glEnableVertexAttribArray(colorHandle);
 
@@ -423,27 +450,27 @@ public class GameObject3D implements IGameObject {
             normals_Buffer.position(0);
             GLES20.glVertexAttribPointer(normalHandle, normalDataSize, GLES20.GL_FLOAT, false,
                     0, normals_Buffer);
-
+            Renderer3D.checkGlError("glVertexAttribPointer");
             GLES20.glEnableVertexAttribArray(normalHandle);
-
+            Renderer3D.checkGlError("glEnableVertexAttribArray");
             // Pass in the texture coordinate information
             textureCoordinates_Buffer.position(0);
             GLES20.glVertexAttribPointer(TextureCoordinateHandle, TextureCoordinateDataSize, GLES20.GL_FLOAT, false,
                     0, textureCoordinates_Buffer);
-
+            Renderer3D.checkGlError("glVertexAttribPointer");
             GLES20.glEnableVertexAttribArray(TextureCoordinateHandle);
-
+            Renderer3D.checkGlError("glEnableVertexAttribArray");
             // Pass in the modelview matrix.
             GLES20.glUniformMatrix4fv(Model_View_MatrixHandle, 1, false, model_view_Matrix, 0);
-
+            Renderer3D.checkGlError("glUniformMatrix4fv");
             // Pass in the combined matrix.
             GLES20.glUniformMatrix4fv(Model_View_Projection_MatrixHandle, 1, false, model_view_projection_Matrix, 0);
             Renderer3D.checkGlError("glUniformMatrix4fv");
-
+            GLES20.glUniform3fv(uPointLightColorsLocation, Light.pointLightColors.length / 3, Light.pointLightColors, 0);
+            Renderer3D.checkGlError("glUniformMatrix3fv");
+            GLES20.glUniform4fv(uPointLightPositionsLocation, Light.lightPosInEyeSpace.length / 4, Light.lightPosInEyeSpace, 0);
+            Renderer3D.checkGlError("glUniformMatrix4fv");
             // Pass in the light position in eye space.
-            GLES20.glUniform3f(mLightPosHandle, Renderer3D.light.getLightPosInEyeSpace()[0],
-                    Renderer3D.light.getLightPosInEyeSpace()[1], Renderer3D.light.getLightPosInEyeSpace()[2]);
-            Renderer3D.checkGlError("glUniform3f");
             // Draw a fragment
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, coords.length / dimensions);
         }
@@ -458,22 +485,29 @@ public class GameObject3D implements IGameObject {
             draw();
         }
 
-        private void calculateNormalVertex() {
-            int counter = 0;
+        private void calculateNormalAndBoundingVertex() {
             normalData = new float[this.coords.length];
             Vector[] temp = transformArrays(dimensions, this.coords);
-            int numberOfPlane = temp.length / 3;
+            calculateNormals(temp);
+            calculateBounding(temp);
+        }
+
+        private void calculateBounding(Vector[] vertex) {
+            this.boundingBox = new BoundingBox(vertex);
+        }
+
+        private void calculateNormals(Vector[] vertex) {
+            int numberOfPlane = vertex.length / 3;
             for (int i = 0; i < numberOfPlane; i++) {
-                Vector v1 = temp[i * 3];
-                Vector v2 = temp[i * 3 + 1];
-                Vector v3 = temp[i * 3 + 2];
+                Vector v1 = vertex[i * 3];
+                Vector v2 = vertex[i * 3 + 1];
+                Vector v3 = vertex[i * 3 + 2];
                 Vector u = Vector.sub(v1, v3);
                 Vector v = Vector.sub(v1, v2);
 
                 Vector normal = Vector.cross(u, v);
                 if (normal == null) {
                     normal = new Vector(0, 0, 0);
-                    counter++;
                 }
                 for (int j = 0; j < 3; j++) {
                     int index = (i * 9) + (j * 3);
@@ -519,5 +553,4 @@ public class GameObject3D implements IGameObject {
         System.arraycopy(array2, 0, array1and2, array1.length, array2.length);
         return array1and2;
     }
-
 }

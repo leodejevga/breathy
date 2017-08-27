@@ -1,5 +1,4 @@
-package com.apps.philipps.audiosurf;
-
+package com.apps.philipps.opengltest;
 
 import android.content.Context;
 
@@ -18,8 +17,6 @@ public class Backend {
      * The constant highscore.
      */
     public static int highscore;
-
-
     /**
      * Reinitialize <code>Backend</code> of the game.
      */
@@ -34,12 +31,10 @@ public class Backend {
     public static boolean init(Context context, String name) {
         gName = name;
         if (!init) {
-            //TODO: Die Werte (gekauft, nicht gekauft) sollten mit SaveData ausgelesen werden
             options = new OptionManager<>();
-            options.add("First Skin", false, 20);
-            options.add("Second Skin", false, 40);
-            options.add("Third Skin", false, 30);
-            options.add("Fourth Skin", false, 70);
+            options.add("White Car", false, 20);
+            options.add("Police Car", false, 40);
+            options.add("Ambulance Car", false, 30);
             init = true;
             loadGameOptions(context, gName);
             return true;

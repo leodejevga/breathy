@@ -1,12 +1,9 @@
 package com.apps.philipps.opengltest.activities;
 
 import android.content.Context;
-import android.util.Log;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 
-import com.apps.philipps.source.helper.Vector;
-import com.apps.philipps.source.helper._3D.Renderer3D;
 import com.apps.philipps.source.helper._3D.SurfaceView3D;
 
 /**
@@ -14,32 +11,18 @@ import com.apps.philipps.source.helper._3D.SurfaceView3D;
  */
 
 public class MyGLSurfaceView extends SurfaceView3D {
-
-    private static final float SPEED = (float)Math.PI/100;
-    private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private float mPreviousX;
     private float mPreviousY;
-    private ScaleGestureDetector mScaleDetector;
 
-    public MyGLSurfaceView(Context context, Renderer3D renderer3D) {
-        super(context, renderer3D);
-        mScaleDetector = new ScaleGestureDetector(context, new ScaleGestureDetector.OnScaleGestureListener() {
-            @Override
-            public void onScaleEnd(ScaleGestureDetector detector) {
-            }
+    public MyGLSurfaceView(Context context) {
+        super(context);
+        setWillNotDraw(false);
+    }
 
-            @Override
-            public boolean onScaleBegin(ScaleGestureDetector detector) {
-                return true;
-            }
-
-            @Override
-            public boolean onScale(ScaleGestureDetector detector) {
-                Renderer3D.camera3D.move(Renderer3D.camera3D.getPosition().add(new Vector(0, 0, detector.getScaleFactor())));
-                Log.d("ZOOM", "zoom ongoing, scale: " + detector.getScaleFactor());
-                return false;
-            }
-        });
+    public MyGLSurfaceView(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+        setWillNotDraw(false);
     }
 
 
@@ -52,16 +35,17 @@ public class MyGLSurfaceView extends SurfaceView3D {
         float x = e.getX();
         float y = e.getY();
 //        mScaleDetector.onTouchEvent(e);
-
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
 
-                if (dx < 0 )
+                if (dx > 0)
                     ((MyGLRenderer) renderer).gameEngine.car.turnRight(dx);
-                else
+                else if (dx < 0)
                     ((MyGLRenderer) renderer).gameEngine.car.turnLeft(dx);
+                break;
+
         }
         mPreviousX = x;
         mPreviousY = y;

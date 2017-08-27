@@ -33,7 +33,7 @@ public abstract class BreathInterpreter {
     }
 
     public enum BreathError {
-        None("", -1),
+        None("---", -1),
         VeryGood("Very good", 0),
         Good("Good", 1),
         Ok("Is ok", 2),

@@ -266,8 +266,8 @@ public class BluetoothService {
     }
 
     /**
-     * This thread runs while listening for incoming connections. It behaves
-     * like a server-side client. It runs until a connection is accepted
+     * This thread runsWithSpeed while listening for incoming connections. It behaves
+     * like a server-side client. It runsWithSpeed until a connection is accepted
      * (or until cancelled).
      */
     private class AcceptThread extends Thread {
@@ -349,8 +349,8 @@ public class BluetoothService {
 
 
     /**
-     * This thread runs while attempting to make an outgoing connection
-     * with a device. It runs straight through; the connection either
+     * This thread runsWithSpeed while attempting to make an outgoing connection
+     * with a device. It runsWithSpeed straight through; the connection either
      * succeeds or fails.
      */
     private class ConnectThread extends Thread {
@@ -423,7 +423,7 @@ public class BluetoothService {
     }
 
     /**
-     * This thread runs during a connection with a remote device.
+     * This thread runsWithSpeed during a connection with a remote device.
      * It handles all incoming and outgoing transmissions.
      */
     private class ConnectedThread extends Thread {

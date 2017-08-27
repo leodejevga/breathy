@@ -1,75 +1,104 @@
 package com.apps.philipps.opengltest;
 
-
 import android.content.Context;
 
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._3D.GameObject3D;
 
-public class Car {
+import java.util.ArrayList;
 
-    private GameObject3D car;
-    private float xPosition = 0.0f;
-    private float limit = 0.5f;
+
+public class Car {
+    private CarBody carBody;
+    private ArrayList<Tire> tires = new ArrayList<>();
+    private float limit = GameEngine.streetSize / 2f;
     private float speed = 0f;
     private float delay = 2000f;
-    float angle = 0;
-    float rotateSpeed = 360f;
+    private float xPosition = 0.0f;
 
-    public Car(Context mActivityContext, int modelID, int textureId) {
-        car = new GameObject3D(GameObject3D.loadObject(mActivityContext, modelID, textureId));
+    public void setCarBodyModel(Context mActivityContext, int modelID, int textureId) {
+        carBody = new CarBody(mActivityContext, modelID, textureId);
     }
 
-    public void setPosition(Vector position) {
-        car.setPosition(position);
+    public void setCarTireModel(Context mActivityContext, int modelID, int textureId, boolean isFrontTire) {
+        Tire tire = new Tire(mActivityContext, this, modelID, textureId, isFrontTire);
+        tires.add(tire);
     }
 
-    public void setRotation(Vector rotation) {
-        car.setRotation(rotation);
+    public void setCarBodyPosition(Vector position) {
+        carBody.setPosition(position);
     }
 
-    public void turnLeft(float dx) {
-        if (xPosition > -limit) {
-            speed = Math.abs(dx) / delay;
-            xPosition -= speed;
-            car.getPosition().add(new Vector(-speed, 0, 0));
-            angle -= speed;
-        }
+    public void setCarBodyRotation(Vector rotation) {
+        carBody.setRotation(rotation);
+    }
+
+    public void setTirePosition(Vector position) {
+        for (Tire tire : tires)
+            tire.setPosition(position);
+    }
+
+    public void setTireRotation(Vector rotation) {
+        for (Tire tire : tires)
+            carBody.setRotation(rotation);
     }
 
     public void turnRight(float dx) {
         if (xPosition < limit) {
             speed = Math.abs(dx) / delay;
             xPosition += speed;
-            car.getPosition().add(new Vector(speed, 0, 0));
-            angle += speed;
+            carBody.turnLeft(speed);
+            for (Tire tire : tires)
+                tire.turnRight(speed);
+        }
+    }
+
+    public void turnLeft(float dx) {
+        if (xPosition > -limit) {
+            speed = Math.abs(dx) / delay;
+            xPosition -= speed;
+            carBody.turnRight(speed);
+            for (Tire tire : tires)
+                tire.turnLeft(speed);
         }
     }
 
 
-    public void runs() {
-        car.move(new Vector(0, 0, 0));
-        car.rotate(new Vector(1, 0, 0, -90));
-        car.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
-        resetRotation();
-        //car.rotate(new Vector(0, 0, 1, angle));
+    public void runsWithSpeed(float speed) {
+        carBody.runs();
+        for (Tire tire : tires)
+            tire.runs(speed);
     }
 
-    public void resetRotation() {
-        if (Math.abs(angle) < speed)
-            angle = 0f;
-        if (angle > 0)
-            angle -= speed;
-        else if (angle < 0)
-            angle += speed;
+    public void crashes() {
+        carBody.crashes();
+        for (Tire tire : tires)
+            tire.crashes();
     }
 
 
     public void draw(long deltaTime) {
-        car.update(deltaTime);
+        carBody.draw(deltaTime);
+        for (Tire tire : tires)
+            tire.draw(deltaTime);
     }
 
-    public GameObject3D getObject3D() {
-        return car;
+    public GameObject3D getCarBodyObject3D() {
+        return carBody.getObject3D();
+    }
+
+    public ArrayList<GameObject3D> getTiresObject3D() {
+        ArrayList<GameObject3D> tiresObject3D = new ArrayList<>();
+        for (Tire tire : tires)
+            tiresObject3D.add(tire.getObject3D());
+        return tiresObject3D;
+    }
+
+    public void drawBoundingBoxLines() {
+        carBody.getObject3D().getBoundingBox().drawLines();
+    }
+
+    public void renewBoundingBoxPosition() {
+        carBody.getObject3D().getBoundingBox().renewLinesPosition();
     }
 }

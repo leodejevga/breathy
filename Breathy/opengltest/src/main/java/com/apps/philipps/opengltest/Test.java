@@ -26,6 +26,7 @@ public class Test extends BreathyGame {
 
     @Override
     public void init(Context context, boolean bought) {
+        Backend.init(context, name);
         this.bought = bought;
         game = new TestGame(context);
         options = new TestOptions(context);

@@ -1,4 +1,4 @@
-package com.apps.philipps.audiosurf.activities;
+package com.apps.philipps.opengltest.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.apps.philipps.audiosurf.Backend;
-import com.apps.philipps.audiosurf.R;
+import com.apps.philipps.opengltest.Backend;
+import com.apps.philipps.opengltest.R;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.OptionManager;
 
@@ -32,7 +32,8 @@ public class Options extends Activity {
     Spinner music_spinner;
     String[] song_names = new String[0];
     SeekBar volumeSeekbar;
-
+    int yellow = 0xffffff00;
+    int green = 0xff00ff00;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,28 +54,44 @@ public class Options extends Activity {
         for (int i = 0; i < Backend.options.size(); i++) {
             OptionManager.Option option = Backend.options.getOption(i);
             Button btn = new Button(this);
-            btn.setId(i + 251);
             int color = btn.getSolidColor();
-            btn.setBackgroundColor((Boolean) option.getValue() ? 0xff00ff00 : color);
+            btn.setBackgroundColor((Boolean) option.getValue() ? yellow : color);
             btn.setText(option.Parameter.toString());
+            btn.setId(i + 251);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Button b = (Button) v;
                     int id = b.getId() - 251;
                     OptionManager.Option option = Backend.options.getOption(id);
+
                     boolean bought = false;
                     if (!Backend.options.getValue(id)) {
                         bought = Coins.buy(option.getPrice(), context);
                         Backend.options.set(id, bought);
                     }
-                    int color = b.getSolidColor();
-                    b.setBackgroundColor(Backend.options.getValue(id) ? 0xff00ff00 : color);
+                    unsetAllOptions(id);
                     coinsText.setText(Coins.getAmount() + " Coins");
                     Backend.saveGameOptions(context, Backend.gName);
                 }
             });
             layout.addView(btn);
+        }
+    }
+
+    private void unsetAllOptions(int exceptID) {
+        for (int i = 0; i < Backend.options.size(); i++) {
+            if (i == exceptID)
+                Backend.options.getOption(i).setIsSet(true);
+            else
+                Backend.options.getOption(i).setIsSet(false);
+            Button b = (Button) findViewById(i + 251);
+            OptionManager.Option<String, Boolean> opt = Backend.options.getOption(i);
+            int color = b.getSolidColor();
+            if (opt.isSet())
+                b.setBackgroundColor(green);
+            else
+                b.setBackgroundColor(Backend.options.getValue(i) ? yellow : color);
         }
     }
 
