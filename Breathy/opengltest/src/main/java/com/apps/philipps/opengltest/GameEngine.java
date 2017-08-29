@@ -1,6 +1,7 @@
 package com.apps.philipps.opengltest;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 
 import com.apps.philipps.source.BreathInterpreter;
 import com.apps.philipps.source.helper.Vector;
@@ -37,6 +38,9 @@ public class GameEngine {
     public ArrayList<Enemy> enemies;
     public static float streetSize = 0.7f;
 
+    private MediaPlayer myMediaPlayer;
+    private boolean isBackgroundMusicPlaying = false;
+
     /**
      * Set true to draw bounding box to debug
      */
@@ -52,6 +56,7 @@ public class GameEngine {
         createStreet();
         collisionDetectionThread = new CollisionDetectionThread();
         collisionDetectionThread.start();
+        playBackgroundMusic();
     }
 
     /**
@@ -64,6 +69,27 @@ public class GameEngine {
         runSimulation(deltaTime);
         Renderer3D.light.drawLight();
         validateBreath();
+        if ( !isBackgroundMusicPlaying && !collisionDetectionThread.crashed )
+            playBackgroundMusic();
+    }
+
+    private void playBackgroundMusic(){
+        myMediaPlayer = MediaPlayer.create(mActivityContext, Backend.getDefault_music_resource_id());
+        myMediaPlayer.setLooping(true);
+        myMediaPlayer.start();
+        isBackgroundMusicPlaying = true;
+    }
+
+    private void playCrashMusic(){
+        myMediaPlayer = MediaPlayer.create(mActivityContext, R.raw.aspower_ranger);
+        myMediaPlayer.setLooping(false);
+        myMediaPlayer.start();
+        isBackgroundMusicPlaying = false;
+    }
+
+    private void stopBackgroundMusic(){
+        myMediaPlayer.release();
+        isBackgroundMusicPlaying = false;
     }
 
     private void validateBreath() {
@@ -84,6 +110,7 @@ public class GameEngine {
         } else {
             car.crashes();
             SPEED = MIN_SPEED;
+            playCrashMusic();
         }
         car.draw(deltaTime);
 
@@ -283,6 +310,7 @@ public class GameEngine {
     }
 
     public void onPause() {
+        stopBackgroundMusic();
         isRunning = false;
     }
 
