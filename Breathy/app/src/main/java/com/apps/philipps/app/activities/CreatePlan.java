@@ -86,7 +86,6 @@ public class CreatePlan extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        SaveData.savePlanManager(this);
     }
 
     private View.OnClickListener edit(){

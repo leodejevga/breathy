@@ -2,9 +2,7 @@ package com.apps.philipps.source.helper._2D;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.nfc.Tag;
 import android.support.annotation.DrawableRes;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -17,78 +15,112 @@ import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.interfaces.IObserver;
 
 import java.util.Random;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Created by Jevgenij Huebert on 11.03.2017. Project Breathy
  */
 
 public abstract class Activity2D extends Activity implements IObserver {
-    protected final float SCREEN_FACTOR = ((float) (getScreenHeight() + getScreenWidth())) / (1080 + 1920);
+    protected final float SCREEN_FACTOR = (float) (getScreenHeight() + getScreenWidth()) / (1080 + 1920);
+
+    protected static final String TAG = "Activity 2D";
+    protected boolean draw;
     protected ViewGroup game;
-    protected long delta = 0;
-    Random random = new Random();
+    protected long delta;
+    private int coins;
 
-
-    int waitings = 0, whiles = 0;
-    private int coins = 0;
-
-    private static final String TAG = "Activity 2D";
-    private long time = System.currentTimeMillis();
-    private boolean draw;
     private int frameRate = 0;
     private int frame = 0;
     private boolean initialized = false;
-    public final long start = System.currentTimeMillis();
+    private long start = System.currentTimeMillis();
+    private boolean ready = true;
+    private static int thread = 0;
 
     protected void stopDrawing() {
         draw = false;
     }
 
+    public int getFrameRate() {
+        return frameRate;
+    }
+
+    public int getFrame() {
+        return frame;
+    }
+
+    protected void addCoin() {
+        coins++;
+    }
+
+    protected void subCoin() {
+        coins--;
+    }
+
+    protected void addCoin(int coins) {
+        this.coins += coins;
+    }
+
+    protected void subCoin(int coins) {
+        this.coins -= coins;
+        if (this.coins < 0)
+            this.coins = 0;
+    }
+
+    public int getCoins() {
+        return coins;
+    }
 
     private final Runnable drawing = new Runnable() {
-        private int millis;
+        private Long millis;
 
         @Override
         public void run() {
             runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
                     if (!initialized) {
                         init();
-                        Log.e(TAG, "Initialized");
-                        millis = 1000 / AppState.framelimit.value;
+                        millis = 1000L / 60L;
                     }
                     initialized = true;
                 }
             });
             while (draw) {
                 if (initialized) {
-                    delta = System.currentTimeMillis() - time;
-                    if (delta >= millis) {
+                    delta = System.currentTimeMillis() - start;
+                    if (ready) {
+                        ready = false;
                         executeDraw();
-                        time = System.currentTimeMillis();
-                    } else {
-                        waitings++;
+                        start = System.currentTimeMillis();
                     }
-                }
-                try {
-                    Thread t = Thread.currentThread();
-                    wait();
-                } catch (InterruptedException e) {
-                    Log.e(TAG, "Interrupted", e);
                 }
             }
         }
     };
 
+    private void starToDraw() {
+        draw = true;
+        Thread drawThread = new Thread(null, drawing, "Activity 2D " + thread++);
+        drawThread.start();
+    }
+
+    protected abstract void draw();
+
+    protected abstract void init();
+
+    protected abstract void touch(MotionEvent event);
+
+    protected int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    protected int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
 
     private long second = System.currentTimeMillis();
 
     private void executeDraw() {
-        Thread t = Thread.currentThread();
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -101,44 +133,13 @@ public abstract class Activity2D extends Activity implements IObserver {
                 frame++;
                 if (second + 1000 <= System.currentTimeMillis()) {
                     frameRate = frame;
-                    Log.e(TAG, "waitings " + waitings + ", drawings " + frame + ", whiles " + whiles);
-                    frame = waitings = whiles = 0;
+                    frame = 0;
                     second = System.currentTimeMillis();
                 }
-                drawing.notify();
+                ready = true;
             }
         });
     }
-
-    private void starToDraw() {
-        draw = true;
-        synchronized (drawing) {
-            Thread drawThread = new Thread(drawing, "Activity 2D ");
-            drawThread.start();
-        }
-    }
-
-    protected int getInt(int from, int to) {
-        int result = Math.abs(random.nextInt());
-        return (result + from) % to;
-    }
-
-    protected abstract void draw();
-
-    protected abstract void init();
-
-    protected abstract void touch(MotionEvent event);
-
-    protected int getScreenWidth() {
-        int result = Resources.getSystem().getDisplayMetrics().widthPixels;
-        return result;
-    }
-
-    protected int getScreenHeight() {
-        int result = Resources.getSystem().getDisplayMetrics().heightPixels;
-        return result;
-    }
-
 
     @Override
     protected void onPause() {
@@ -147,7 +148,6 @@ public abstract class Activity2D extends Activity implements IObserver {
         AppState.recordData = AppState.inGame = false;
         BreathData.removeObserver(this);
         BreathData.saveRest();
-        drawing.notify();
         draw = false;
     }
 
@@ -166,14 +166,6 @@ public abstract class Activity2D extends Activity implements IObserver {
         return super.onTouchEvent(event);
     }
 
-    private GameObject2D initObject(@DrawableRes int content) {
-        return initObject(content, new Vector(0, 0), new Vector(0, 0), 0);
-    }
-
-    protected GameObject2D initObject(@DrawableRes int content, Vector position) {
-        return initObject(content, position, new Vector(0, 0), 0);
-    }
-
     protected GameObject2D initObject(@DrawableRes int content, Vector position, Vector destination, int move) {
         ImageView view = new ImageView(this);
         view.setImageResource(content);
@@ -183,35 +175,8 @@ public abstract class Activity2D extends Activity implements IObserver {
         return result;
     }
 
-
-    public void addCoin() {
-        this.coins++;
-    }
-
-    public void addCoin(int amount) {
-        this.coins += amount;
-    }
-
-    public void subCoin() {
-        if (this.coins > 0)
-            this.coins--;
-    }
-
-    public void subCoin(int amount) {
-        if (this.coins - amount > 0)
-            this.coins -= amount;
-        else this.coins = 0;
-    }
-
-    public int getCoins() {
-        return coins;
-    }
-
-    public int getFrameRate() {
-        return frameRate;
-    }
-
-    public int getFrame() {
-        return frame;
+    protected int getInt(int from, int to) {
+        Random r = new Random();
+        return (from + r.nextInt()) % to;
     }
 }

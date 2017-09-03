@@ -2,7 +2,9 @@ package com.apps.philipps.test;
 
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
+import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.source.implementations.BreathyGameComponent;
 import com.apps.philipps.test.activities.Application;
 import com.apps.philipps.test.activities.Game;
@@ -19,8 +21,12 @@ public class TestGame extends BreathyGameComponent {
 
     @Override
     public boolean start() {
-        Intent i = new Intent(context, Game.class);
-        context.startActivity(i);
+        if(PlanManager.getCurrentPlan()!=null) {
+            Intent i = new Intent(context, Game.class);
+            context.startActivity(i);
+        }
+        else
+            message("Bitte einen Plan auswählen!");
         return true;
     }
 }

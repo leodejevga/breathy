@@ -34,7 +34,6 @@ public class AppState {
     public static boolean btAsked=false;
 
     public static AppState.BtState btState = BtState.Disabled;
-    public static FrameLimit framelimit = FrameLimit.Sixty;
 
     public static int breathyNormState = 700;
     public static int breathyDataFrequency = 3;
@@ -83,23 +82,6 @@ public class AppState {
         Disabled,
         Enabled,
         Connected
-    }
-
-    public enum FrameLimit{
-        Movie(24),
-        Thirty(30),
-        Sixty(60),
-        HundredTwenty(120),
-        Unlimited(1000, "Unlimited");
-
-        public final int value;
-        String[] data;
-        FrameLimit(int frames, String... data){
-            value = frames;
-        }
-        public String getData(){
-            return data.length>0?data[0]:"limit: " + framelimit;
-        }
     }
 
 

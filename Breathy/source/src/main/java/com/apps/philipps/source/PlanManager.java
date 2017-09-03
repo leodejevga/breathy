@@ -79,7 +79,9 @@ public abstract class PlanManager implements Serializable {
     }
 
     public static boolean isActive() {
-        return plans.get(currentPlan).running;
+        if (currentPlan != -1)
+            return plans.get(currentPlan).running;
+        return false;
     }
 
     public static boolean isActive(Plan plan) {

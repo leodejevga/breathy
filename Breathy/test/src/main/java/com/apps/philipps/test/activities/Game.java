@@ -2,6 +2,7 @@ package com.apps.philipps.test.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,7 @@ public class Game extends Activity2D {
         String left = (seconds / 60 != 0 ? (seconds / 60) + ":" : "")
                 + (seconds != 0 ? seconds % 60 + ":" : "")
                 + PlanManager.getDuration() % 1000;
-        secondsLeft.setText(left + "\n" + getCoins() + " Coins\n" + getFrameRate() + " Framerate");
+        secondsLeft.setText(left + "\n" + getCoins() + " Coins\n" + getFrameRate() + " Frame Rate");
 
         List<GameObject2D> toRemove = new ArrayList<>();
 
@@ -123,9 +124,9 @@ public class Game extends Activity2D {
     private static class Buffer implements Iterable<GameObject2D> {
         private int enemyCome = 565;
         private int cloudCome = 5502;
-        private int enemySpeed = 100;
-        private int shipSpeed = 2000;
-        private int laserSpeed = 3000;
+        private int enemySpeed = 200;
+        private int shipSpeed = 1000;
+        private int laserSpeed = 4000;
         private int cloudSpeed = 60;
 
         private List<Enemy> enemies = new ArrayList<>();
@@ -179,7 +180,7 @@ public class Game extends Activity2D {
                         else if (iS++ == 0)
                             next = ship;
                         else next = null;
-                    }
+                    } else next = null;
                     return next != null;
                 }
 
