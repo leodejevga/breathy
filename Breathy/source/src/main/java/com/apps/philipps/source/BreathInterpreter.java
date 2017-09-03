@@ -81,14 +81,6 @@ public abstract class BreathInterpreter {
         }
     }
 
-    public static void addObserver(IObserver o) {
-        observer.add(o);
-    }
-
-    public static boolean removeObserver(IObserver o) {
-        return observer.remove(o);
-    }
-
     public static BreathStatus getStatus() {
         int norm = AppState.breathyNormState;
         BreathData.Element[] data = BreathData.get(0, 50);
@@ -99,7 +91,7 @@ public abstract class BreathInterpreter {
         boolean readyToAdd = false;
         float founds = 0;
         for (int i = 0; i < data.length - 2 && data[i] != null && data[i + 1] != null; i++) {
-            int d = data[i].data;
+            float d = data[i].data;
             if (founds < 2) {
                 if (d - norm > 0) {
                     if (moment == BreathMoment.None)

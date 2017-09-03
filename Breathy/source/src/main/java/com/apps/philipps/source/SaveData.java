@@ -4,10 +4,16 @@ package com.apps.philipps.source;
  * Created by Jevgenij Huebert on 29.01.2017. Project Breathy
  */
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Path;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +35,7 @@ public class SaveData<T extends Serializable> {
     public SaveData(Context context) {
         this.context = context;
     }
+
     public boolean writeObject(String key, T object) {
         FileOutputStream fos = null;
         try {
@@ -38,7 +45,7 @@ public class SaveData<T extends Serializable> {
             oos.close();
             fos.close();
             return true;
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
@@ -58,7 +65,8 @@ public class SaveData<T extends Serializable> {
         }
         return null;
     }
-    public static byte[] readFile(@NonNull String path){
+
+    public static byte[] readFile(@NonNull String path) {
         File file = new File(path);
         byte[] data = new byte[(int) file.length()];
         try {
@@ -70,7 +78,7 @@ public class SaveData<T extends Serializable> {
         return data;
     }
 
-    public static void writeFile(@NonNull String path, byte[] data){
+    public static void writeFile(@NonNull String path, byte[] data) {
         File file = new File(path);
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -80,23 +88,29 @@ public class SaveData<T extends Serializable> {
         }
     }
 
-    public static void savePlanManager() {
-        try{
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(AppState.PLAN_STORAGE)));
-            oos.writeObject(PlanManager.getPlans());
-        } catch (IOException e){
+    public static void savePlanManager(Activity activity) {
+        try {
+            File file = new File(AppState.PLAN_STORAGE);
+            if (AppState.verifyStoragePermissions(activity)) {
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+                oos.writeObject(new PlanManager.PlanManagerInstance());
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void loadPlanManager() {
-        try{
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(AppState.PLAN_STORAGE)));
-            List<PlanManager.Plan> p = (List<PlanManager.Plan>) ois.readObject();
-            //TODO: testen ob p in diese liste gecastet werden kann
-            PlanManager.setPlans(p);
-        } catch (ClassNotFoundException | IOException e) {
+        try {
+            File file = new File(AppState.PLAN_STORAGE);
+            if(file.exists()) {
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+                PlanManager.PlanManagerInstance instance = (PlanManager.PlanManagerInstance) ois.readObject();
+                PlanManager.init(instance);
+            }
+        } catch (ClassNotFoundException | IOException | PlanManager.PlanManagerAlreadyInitialized e) {
             e.printStackTrace();
         }
     }
+
 }

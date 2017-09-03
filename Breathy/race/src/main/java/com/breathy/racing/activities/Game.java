@@ -30,7 +30,7 @@ public class Game extends Activity2D {
         String data = BreathData.getAsString(0, 5);
         dataDisplay.setText(data);
 
-        highscore.setText("frame " + frame);
+        highscore.setText("frame " + getFrame());
     }
 
     @Override

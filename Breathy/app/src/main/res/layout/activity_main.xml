@@ -51,6 +51,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/mainOptions"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:background="@color/colorPrimary"
         android:drawableTop="@drawable/settings"
         android:paddingBottom="5dp"

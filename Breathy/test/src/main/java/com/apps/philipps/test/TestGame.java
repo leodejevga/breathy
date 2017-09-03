@@ -19,7 +19,7 @@ public class TestGame extends BreathyGameComponent {
 
     @Override
     public boolean start() {
-        Intent i = new Intent(context, Application.class);
+        Intent i = new Intent(context, Game.class);
         context.startActivity(i);
         return true;
     }

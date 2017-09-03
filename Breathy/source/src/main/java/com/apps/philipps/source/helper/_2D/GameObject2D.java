@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 
 import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Vector;
@@ -54,6 +55,7 @@ public class GameObject2D implements IObserver, IGameObject{
         this.position = new Animated(position);
     }
 
+
     public View getView() {
         return object;
     }
@@ -95,7 +97,6 @@ public class GameObject2D implements IObserver, IGameObject{
 
     @Override
     public void move(Vector destination){
-        Log.d("Destination", "" + destination);
         position.animate(destination, null);
     }
 
@@ -165,5 +166,10 @@ public class GameObject2D implements IObserver, IGameObject{
                 bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(2) && b.get(2) <= bO.get(3) ||
                 bO.get(0) <= b.get(0) && b.get(0) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3) ||
                 bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " at " + position;
     }
 }

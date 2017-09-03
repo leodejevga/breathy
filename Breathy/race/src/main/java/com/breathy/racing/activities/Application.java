@@ -60,8 +60,8 @@ public class Application extends Activity2D {
     int curXIndex;
 
     //Breathgraph
-    private Integer breathdata;
-    private Integer testdata;
+    private Float breathdata;
+    private Float testdata;
     private LineChart myChart;
     private LineData chartData;
     private LineDataSet breathChartData;
@@ -144,11 +144,11 @@ public class Application extends Activity2D {
         nextCar = start;
 
 
-        if (game == null) brakeDraw();
+        if (game == null) stopDrawing();
         deltaSpeed = 400 * SCREEN_FACTOR;
         random = new Random(5);
         if (game == null)
-            brakeDraw();
+            stopDrawing();
     }
 
     /**

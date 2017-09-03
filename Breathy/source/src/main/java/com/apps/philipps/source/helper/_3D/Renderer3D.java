@@ -47,9 +47,9 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         deltaTime = System.currentTimeMillis() - start;
-        if (deltaTime <= (1000 / AppState.framelimit.getLimit()))
+        if (deltaTime <= (1000 / AppState.framelimit.value))
             try {
-                int millis = (int) (1000 / AppState.framelimit.getLimit() - 1 - deltaTime);
+                int millis = (int) (1000 / AppState.framelimit.value - 1 - deltaTime);
                 Thread.sleep(millis > 0 ? millis : 0);
             } catch (InterruptedException e) {
                 e.printStackTrace();

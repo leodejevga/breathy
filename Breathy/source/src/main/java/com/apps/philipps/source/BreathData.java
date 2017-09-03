@@ -18,6 +18,7 @@ import java.util.List;
  */
 public abstract class BreathData {
 
+    private static List<IObserver> observer = new ArrayList<>();
     private static RAM ram;
     private static int ramSize = 500;
     private static int blockSize = 1000;
@@ -55,7 +56,6 @@ public abstract class BreathData {
         return false;
     }
 
-    private static List<IObserver> observer = new ArrayList<>();
 
     /**
      * Sets observer.
@@ -213,7 +213,7 @@ public abstract class BreathData {
                 @Override
                 public void run() {
                     for (IObserver o : observer) {
-                        o.call(element);
+                        o.call(element, BreathInterpreter.getStatus());
                     }
                 }
             });
@@ -324,10 +324,13 @@ public abstract class BreathData {
     }
 
     public static class Element implements Serializable {
-        public Integer data;
+        public Float data;
         public Calendar date;
 
         public Element(Integer data) {
+            this(data.floatValue());
+        }
+        public Element(Float data) {
             this.data = data;
             this.date = Calendar.getInstance();
             this.date.setTimeInMillis(Long.MAX_VALUE);

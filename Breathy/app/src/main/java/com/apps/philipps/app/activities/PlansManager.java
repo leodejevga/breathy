@@ -11,6 +11,7 @@ import android.widget.ExpandableListView;
 import com.apps.philipps.app.ExpandableListViewAdapter;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.PlanManager;
+import com.apps.philipps.source.SaveData;
 
 import javax.security.auth.login.LoginException;
 
@@ -77,6 +78,19 @@ public class PlansManager extends AppCompatActivity {
     private View.OnClickListener delete(){
         return v -> {
             PlanManager.deletePlan(ExpandableListViewAdapter.selected); initExpandableListView();
+            SaveData.savePlanManager(this);
         };
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        SaveData.savePlanManager(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SaveData.savePlanManager(this);
     }
 }

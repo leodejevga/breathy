@@ -35,7 +35,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         this.context = context;
         this.active = active;
         this.edit = edit;
-        this.planId = planId.length==0?-1:planId[0];
+        this.planId = planId.length == 0 ? -1 : planId[0];
         this.delete = delete;
 
         childLayout = new ArrayList<>();
@@ -99,7 +99,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
             TextView txtPlanDesc = new TextView(context);
             txtPlanDesc.setTextSize(14);
             txtPlanDesc.setPadding(20, 0, 0, 0);
-            txtPlanDesc.setText(((PlanManager.Plan)part).getDescription());
+            txtPlanDesc.setText(((PlanManager.Plan) part).getDescription());
             parent.addView(txtPlanDesc);
         } else {
             PlanManager.Plan.Option p = PlanManager.getOption(planId, part.getId());

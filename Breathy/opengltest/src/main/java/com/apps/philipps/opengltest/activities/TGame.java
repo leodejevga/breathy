@@ -30,8 +30,8 @@ public class TGame extends Activity3D {
     private ProgressDialog pd = null;
     private MyGLRenderer renderer3D = null;
     private TextView how_good;
-    private Integer breathdata;
-    private Integer testdata;
+    private Float breathdata;
+    private Float testdata;
     private LineChart myChart;
     private LineData chartData;
     private LineDataSet breathChartData;

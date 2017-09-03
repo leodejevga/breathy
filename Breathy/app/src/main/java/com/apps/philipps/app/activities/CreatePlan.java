@@ -83,6 +83,12 @@ public class CreatePlan extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SaveData.savePlanManager(this);
+    }
+
     private View.OnClickListener edit(){
         return v -> {
             Intent i = new Intent(this, CreatePlanPart.class);
@@ -95,6 +101,13 @@ public class CreatePlan extends AppCompatActivity {
     private View.OnClickListener delete(){
         return v -> {
             plan.removeOption(ExpandableListViewAdapter.selected); onResume();
+            SaveData.savePlanManager(this);
         };
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        SaveData.savePlanManager(this);
     }
 }

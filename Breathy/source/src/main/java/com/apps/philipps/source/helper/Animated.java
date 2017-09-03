@@ -3,6 +3,7 @@ package com.apps.philipps.source.helper;
 import android.provider.Settings;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.interfaces.IObserver;
@@ -28,7 +29,7 @@ public class Animated {
      *
      * @param position the position
      */
-    public Animated(@NonNull Vector position){
+    public Animated(@NonNull Vector position) {
         this.position = position;
     }
 
@@ -39,12 +40,12 @@ public class Animated {
      * @param position    the position
      * @param destination the destination
      */
-    public Animated(@NonNull Vector position, @NonNull Vector destination){
+    public Animated(@NonNull Vector position, @NonNull Vector destination) {
         this.position = position;
         this.destination = destination;
     }
 
-    public boolean isMoving(){
+    public boolean isMoving() {
         return active;
     }
 
@@ -56,7 +57,7 @@ public class Animated {
      * @param speed       the speed
      * @param activate    the activate
      */
-    public Animated(@NonNull Vector position, @NonNull Vector destination, int speed, boolean activate){
+    public Animated(@NonNull Vector position, @NonNull Vector destination, int speed, boolean activate) {
         this.position = position;
         this.destination = destination;
         this.speed = speed;
@@ -66,18 +67,18 @@ public class Animated {
     /**
      * Stop.
      */
-    public void stop(){
+    public void stop() {
         active = false;
     }
 
     /**
      * Resume.
      */
-    public void resume(){
+    public void resume() {
         active = true;
     }
 
-    public void resume(int speed){
+    public void resume(int speed) {
         this.speed = speed;
         active = true;
     }
@@ -88,8 +89,8 @@ public class Animated {
      * @param destination the destination
      * @param speed       the speed
      */
-    public void animate(Vector destination, Integer speed){
-        if(speed!=null)
+    public void animate(Vector destination, Integer speed) {
+        if (speed != null)
             this.speed = speed;
         this.destination = destination;
         active = true;
@@ -100,7 +101,7 @@ public class Animated {
      *
      * @return the vector
      */
-    public Vector getPosition(){
+    public Vector getPosition() {
         return position;
     }
 
@@ -109,7 +110,7 @@ public class Animated {
      *
      * @param observer the observer
      */
-    public void addObserver(IObserver observer){
+    public void addObserver(IObserver observer) {
         this.oberver.add(observer);
     }
 
@@ -118,9 +119,11 @@ public class Animated {
      *
      * @return the destination as vector
      */
-    public Vector getDestination() { return destination;}
+    public Vector getDestination() {
+        return destination;
+    }
 
-    public int getSpeed(){
+    public int getSpeed() {
         return speed;
     }
 
@@ -138,7 +141,9 @@ public class Animated {
             if (position.compareTo(destination) == 0)
                 active = false;
             else {
-                Vector add = Vector.mult(Vector.sub(destination, position).norm(), speed * deltaMilliseconds / 1000f);
+                Vector div = Vector.sub(destination, position);
+                Vector norm = div.clone().norm();
+                Vector add = Vector.mult(norm, speed * deltaMilliseconds / 1000f);
                 if (position.getDistance(destination) < position.getDistance(Vector.add(position, add)))
                     destination = position.clone();
                 else {
@@ -148,5 +153,10 @@ public class Animated {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return position + " --> " + destination + "  at " + speed + (isMoving() ? "  moving" : "");
     }
 }
