@@ -27,7 +27,6 @@ public abstract class Activity2D extends Activity implements IObserver {
     Random random = new Random();
 
 
-
     private int coins = 0;
 
     private static final String TAG = "Activity 2D";
@@ -49,13 +48,17 @@ public abstract class Activity2D extends Activity implements IObserver {
 
         @Override
         public void run() {
-            runOnUiThread(() -> {
-                if (!initialized) {
-                    init();
-                    Log.e(TAG, "Initialized");
-                    millis = 1000 / AppState.framelimit.value;
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (!initialized) {
+                        init();
+                        Log.e(TAG, "Initialized");
+                        millis = 1000 / AppState.framelimit.value;
+                    }
+                    initialized = true;
                 }
-                initialized = true;
             });
             while (draw) {
                 if (initialized) {
@@ -63,12 +66,11 @@ public abstract class Activity2D extends Activity implements IObserver {
                     if (delta >= millis && ready >= 2) {
                         ready = 0;
                         executeDraw(delta);
-                        Log.e(TAG, "Draw");
                         delta = System.currentTimeMillis();
                     } else {
                         try {
                             long sleep = 1000 / AppState.framelimit.value - delta;
-                            if(sleep>2) {
+                            if (sleep > 2) {
                                 Log.e(TAG, "Sleep for " + sleep + " ms");
                                 Thread.sleep(sleep);
                             }
@@ -88,9 +90,9 @@ public abstract class Activity2D extends Activity implements IObserver {
         drawThread.start();
     }
 
-    protected int getInt(int from, int to){
+    protected int getInt(int from, int to) {
         int result = Math.abs(random.nextInt());
-        return (result+from)%to;
+        return (result + from) % to;
     }
 
     protected abstract void draw();
