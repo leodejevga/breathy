@@ -50,6 +50,9 @@ public class Game extends Activity2D {
                 + (seconds != 0 ? seconds % 60 + ":" : "")
                 + PlanManager.getDuration() % 1000;
         secondsLeft.setText(left + "\n" + getCoins() + " Coins\n" + getFrameRate() + " Framerate");
+
+        List<GameObject2D> toRemove = new ArrayList<>();
+
         for (GameObject2D object : buffer) {
             object.update(delta);
             if (object instanceof Ship && status != null && BreathData.get(0) != null) {
@@ -58,21 +61,21 @@ public class Game extends Activity2D {
             } else if (object instanceof Enemy && !object.isMoving()) {
                 game.removeView(object.getView());
                 subCoin(10);
-                buffer.remove(object);
+                toRemove.add(object);
             } else if (object instanceof Cloud && !object.isMoving()) {
                 game.removeView(object.getView());
-                buffer.remove(object);
+                toRemove.add(object);
             } else if (object instanceof Laser) {
                 if (!object.isMoving()) {
                     game.removeView(object.getView());
-                    buffer.remove(object);
+                    toRemove.add(object);
                 } else {
                     for (Enemy enemy : buffer.enemies) {
                         if (object.intersect(enemy)) {
                             game.removeView(enemy.getView());
                             game.removeView(object.getView());
-                            buffer.remove(enemy);
-                            buffer.remove(object);
+                            toRemove.add(object);
+                            toRemove.add(enemy);
                             addCoin();
                         }
                     }
@@ -80,9 +83,10 @@ public class Game extends Activity2D {
             }
             if (object instanceof Cloud && !object.isMoving()) {
                 game.removeView(object.getView());
-                buffer.remove(object);
+                toRemove.add(object);
             }
         }
+        buffer.removeAll(toRemove);
         if ((System.currentTimeMillis() - enemySpawned) > buffer.enemyCome) {
             enemySpawned = System.currentTimeMillis();
             buffer.enemies.add(new Enemy(this, new Vector(getScreenWidth(), getInt(0, getScreenHeight())), buffer.enemySpeed, game));
@@ -112,22 +116,17 @@ public class Game extends Activity2D {
 
     @Override
     public void call(Object... messages) {
-        if (messages.length == 2) {
+        if (messages.length == 2)
             status = (BreathInterpreter.BreathStatus) messages[1];
-            BreathData.Element element = (BreathData.Element) messages[0];
-            Float y = element.data / AppState.breathyUserMax * getScreenHeight();
-            buffer.ship.move(new Vector(50, y), buffer.shipSpeed);
-        }
     }
 
     private static class Buffer implements Iterable<GameObject2D> {
         private int enemyCome = 565;
-        private int cloudCome = 3502;
+        private int cloudCome = 5502;
         private int enemySpeed = 100;
         private int shipSpeed = 2000;
         private int laserSpeed = 3000;
-        private int cloudSpeed = 50;
-        private Iterator<GameObject2D> iterrator;
+        private int cloudSpeed = 60;
 
         private List<Enemy> enemies = new ArrayList<>();
         private List<Laser> laser = new ArrayList<>();
@@ -139,6 +138,7 @@ public class Game extends Activity2D {
             enemySpeed *= screenFactor;
             shipSpeed *= screenFactor;
             laserSpeed *= screenFactor;
+            this.ship.move(shipSpeed);
         }
 
 
@@ -152,6 +152,12 @@ public class Game extends Activity2D {
             return false;
         }
 
+        public void removeAll(List<GameObject2D> toRemove) {
+            for (GameObject2D object : toRemove) {
+                remove(object);
+            }
+        }
+
         @Override
         public Iterator<GameObject2D> iterator() {
             return new Iterator<GameObject2D>() {
@@ -159,26 +165,43 @@ public class Game extends Activity2D {
                 private int iC;
                 private int iL;
                 private int iS;
+                private GameObject2D next;
 
                 @Override
                 public boolean hasNext() {
-                    if (enemies.size() > iE || clouds.size() > iC || laser.size() > iL || iS == 0)
-                        return true;
-                    return false;
-
+                    if (enemies.size() > iE || clouds.size() > iC || laser.size() > iL || iS == 0) {
+                        if (iE < enemies.size())
+                            next = enemies.get(iE++);
+                        else if (iC < clouds.size())
+                            next = clouds.get(iC++);
+                        else if (iL < laser.size())
+                            next = laser.get(iL++);
+                        else if (iS++ == 0)
+                            next = ship;
+                        else next = null;
+                    }
+                    return next != null;
                 }
 
                 @Override
                 public GameObject2D next() {
-                    if (iE < enemies.size())
-                        return enemies.get(iE++);
-                    if (iC < clouds.size())
-                        return clouds.get(iC++);
-                    if (iL < laser.size())
-                        return laser.get(iL++);
-                    if (iS++ == 0)
-                        return ship;
-                    return null;
+                    return next;
+                }
+
+                @Override
+                public void remove() {
+                    if (next instanceof Laser) {
+                        laser.remove(next);
+                        iL--;
+                    }
+                    if (next instanceof Cloud) {
+                        clouds.remove(next);
+                        iC--;
+                    }
+                    if (next instanceof Enemy) {
+                        enemies.remove(next);
+                        iE--;
+                    }
                 }
             };
         }
@@ -202,7 +225,7 @@ public class Game extends Activity2D {
 
     private static class Cloud extends GameObject2D {
         public Cloud(Context context, Vector position, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(position, new Vector(-50, position.get(1)), speed, true));
+            super(new ImageView(context), new Animated(position, new Vector(-position.get(0), position.get(1)), speed, true));
             ((ImageView) getView()).setImageResource(R.drawable.cloud);
             game.addView(getView());
         }

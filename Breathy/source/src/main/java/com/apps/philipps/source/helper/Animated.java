@@ -80,7 +80,8 @@ public class Animated {
 
     public void resume(int speed) {
         this.speed = speed;
-        active = true;
+        if(destination!=null)
+            active = true;
     }
 
     /**
@@ -145,7 +146,7 @@ public class Animated {
                 Vector norm = div.clone().norm();
                 Vector add = Vector.mult(norm, speed * deltaMilliseconds / 1000f);
                 if (position.getDistance(destination) < position.getDistance(Vector.add(position, add)))
-                    destination = position.clone();
+                    position = destination.clone();
                 else {
                     position.add(add);
                     for (IObserver o : oberver)

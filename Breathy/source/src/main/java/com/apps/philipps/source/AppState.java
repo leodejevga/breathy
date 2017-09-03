@@ -34,7 +34,7 @@ public class AppState {
     public static boolean btAsked=false;
 
     public static AppState.BtState btState = BtState.Disabled;
-    public static FrameLimit framelimit = FrameLimit.Unlimited;
+    public static FrameLimit framelimit = FrameLimit.Sixty;
 
     public static int breathyNormState = 700;
     public static int breathyDataFrequency = 3;

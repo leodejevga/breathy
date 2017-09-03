@@ -2,7 +2,9 @@ package com.apps.philipps.source.helper._2D;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.nfc.Tag;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.interfaces.IObserver;
 
 import java.util.Random;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Created by Jevgenij Huebert on 11.03.2017. Project Breathy
@@ -27,16 +30,16 @@ public abstract class Activity2D extends Activity implements IObserver {
     Random random = new Random();
 
 
+    int waitings = 0, whiles = 0;
     private int coins = 0;
 
     private static final String TAG = "Activity 2D";
+    private long time = System.currentTimeMillis();
     private boolean draw;
     private int frameRate = 0;
     private int frame = 0;
     private boolean initialized = false;
     public final long start = System.currentTimeMillis();
-    private short ready = 2;
-    private static int thread = 0;
 
     protected void stopDrawing() {
         draw = false;
@@ -44,7 +47,7 @@ public abstract class Activity2D extends Activity implements IObserver {
 
 
     private final Runnable drawing = new Runnable() {
-        private double millis;
+        private int millis;
 
         @Override
         public void run() {
@@ -62,32 +65,57 @@ public abstract class Activity2D extends Activity implements IObserver {
             });
             while (draw) {
                 if (initialized) {
-                    delta = System.currentTimeMillis() - delta;
-                    if (delta >= millis && ready >= 2) {
-                        ready = 0;
-                        executeDraw(delta);
-                        delta = System.currentTimeMillis();
+                    delta = System.currentTimeMillis() - time;
+                    if (delta >= millis) {
+                        executeDraw();
+                        time = System.currentTimeMillis();
                     } else {
-                        try {
-                            long sleep = 1000 / AppState.framelimit.value - delta;
-                            if (sleep > 2) {
-                                Log.e(TAG, "Sleep for " + sleep + " ms");
-                                Thread.sleep(sleep);
-                            }
-                        } catch (InterruptedException e) {
-                            Log.e(TAG, "Fail to wait");
-                        }
+                        waitings++;
                     }
+                }
+                try {
+                    Thread t = Thread.currentThread();
+                    wait();
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "Interrupted", e);
                 }
             }
         }
     };
 
+
+    private long second = System.currentTimeMillis();
+
+    private void executeDraw() {
+        Thread t = Thread.currentThread();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PlanManager.update();
+                    draw();
+                } catch (Exception e) {
+                    Log.e(TAG, "Draw not successfull", e);
+                }
+                frame++;
+                if (second + 1000 <= System.currentTimeMillis()) {
+                    frameRate = frame;
+                    Log.e(TAG, "waitings " + waitings + ", drawings " + frame + ", whiles " + whiles);
+                    frame = waitings = whiles = 0;
+                    second = System.currentTimeMillis();
+                }
+                drawing.notify();
+            }
+        });
+    }
+
     private void starToDraw() {
         draw = true;
-        Thread drawThread = new Thread(null, drawing, "Activity 2D " + thread++);
-        drawThread.setPriority(Thread.MAX_PRIORITY);
-        drawThread.start();
+        synchronized (drawing) {
+            Thread drawThread = new Thread(drawing, "Activity 2D ");
+            drawThread.start();
+        }
     }
 
     protected int getInt(int from, int to) {
@@ -111,29 +139,6 @@ public abstract class Activity2D extends Activity implements IObserver {
         return result;
     }
 
-    private long second = System.currentTimeMillis();
-
-    private synchronized void executeDraw(long delta) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    PlanManager.update();
-                    draw();
-                    ready++;
-                } catch (Exception e) {
-                    Log.e(TAG, "Draw not successfull", e);
-                }
-                frame = ++frame;
-            }
-        });
-        if (second + 1000 <= System.currentTimeMillis()) {
-            frameRate = frame;
-            frame = 0;
-            second = System.currentTimeMillis();
-        }
-        ready++;
-    }
 
     @Override
     protected void onPause() {
@@ -142,6 +147,7 @@ public abstract class Activity2D extends Activity implements IObserver {
         AppState.recordData = AppState.inGame = false;
         BreathData.removeObserver(this);
         BreathData.saveRest();
+        drawing.notify();
         draw = false;
     }
 
