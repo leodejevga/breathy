@@ -110,11 +110,28 @@ public abstract class Activity2D extends Activity implements IObserver {
 
     protected abstract void touch(MotionEvent event);
 
-    protected int getScreenWidth() {
+    /**
+     *
+     * Returns the width of the game Layout if initialized, else the width of the screen
+     *
+     * @param absolute
+     * @return with of game Layout or screen in the second place
+     */
+    protected int getScreenWidth(boolean... absolute) {
+        if (game != null && (absolute.length==0 || !absolute[0]))
+            return game.getWidth();
         return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
 
-    protected int getScreenHeight() {
+    /**
+     * Returns the height of the game Layout if initialized, else the width of the screen
+     *
+     * @param absolute
+     * @return height of game Layout or screen in the second place
+     */
+    protected int getScreenHeight(boolean... absolute) {
+        if (game != null && (absolute.length==0 || !absolute[0]))
+            return game.getHeight();
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
@@ -166,7 +183,7 @@ public abstract class Activity2D extends Activity implements IObserver {
         return super.onTouchEvent(event);
     }
 
-    protected GameObject2D initObject(@DrawableRes int content, Vector position, Vector destination, int move) {
+    protected GameObject2D initObject(@DrawableRes int content, Vector position, Vector destination, double move) {
         ImageView view = new ImageView(this);
         view.setImageResource(content);
         game.addView(view);

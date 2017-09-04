@@ -3,6 +3,7 @@ package com.apps.philipps.source.helper._2D;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -90,7 +91,7 @@ public class GameObject2D implements IObserver, IGameObject {
     }
 
     @Override
-    public void move(Vector destination, int speed) {
+    public void move(Vector destination, double speed) {
         position.animate(destination, speed);
     }
 
@@ -101,13 +102,12 @@ public class GameObject2D implements IObserver, IGameObject {
 
     @Override
     public void move(Vector destination) {
-        position.animate(destination, null);
+        position.animate(destination,0);
     }
 
     @Override
-    public void move(int speed) {
-        if (speed != 0)
-            position.resume(speed);
+    public void move(double speed) {
+        position.resume(speed);
     }
 
     @Override
@@ -160,11 +160,21 @@ public class GameObject2D implements IObserver, IGameObject {
         return null;
     }
 
+    /**
+     * Get Boundaries in the form:<br>
+     * [x1 x2 y1 y2] This Coordinates describes edges in this kind:
+     * <pre>
+     * x1,y1   x2,y1
+     * x1,y2   x2,y2
+     * </pre>
+     *
+     * x1,y1 is the Position of this Game Object
+     *
+     * @return 4 Values that describes edges of a box
+     */
     @Override
     public Vector getBoundaries() {
         double[] pos = getPosition().get();
-        //02   12
-        //03   13
         return new Vector(pos[0], pos[0] + object.getMeasuredWidth(), pos[1], pos[1] + object.getMeasuredHeight());
     }
 
@@ -181,5 +191,11 @@ public class GameObject2D implements IObserver, IGameObject {
     @Override
     public String toString() {
         return getClass().getSimpleName() + " at " + position;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        ((ViewGroup)object.getParent()).removeView(object);
     }
 }

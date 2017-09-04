@@ -324,13 +324,13 @@ public abstract class BreathData {
     }
 
     public static class Element implements Serializable {
-        public Float data;
+        public double data;
         public Calendar date;
 
         public Element(Integer data) {
-            this(data.floatValue());
+            this(data.doubleValue());
         }
-        public Element(Float data) {
+        public Element(double data) {
             this.data = data;
             this.date = Calendar.getInstance();
             this.date.setTimeInMillis(Long.MAX_VALUE);

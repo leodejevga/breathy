@@ -20,7 +20,7 @@ public class Animated {
     private Vector position;
     private Vector destination;
     private List<IObserver> oberver = new ArrayList<>();
-    private int speed;
+    private double speed;
 
     private boolean active = false;
 
@@ -78,10 +78,19 @@ public class Animated {
         active = true;
     }
 
-    public void resume(int speed) {
+    public void resume(double speed) {
         this.speed = speed;
-        if(destination!=null)
-            active = true;
+        active = destination != null && speed != 0;
+    }
+
+    /**
+     * Animate with previeous speed
+     *
+     * @param destination
+     */
+    public void animate(Vector destination) {
+        this.destination = destination;
+        active = speed != 0;
     }
 
     /**
@@ -90,11 +99,9 @@ public class Animated {
      * @param destination the destination
      * @param speed       the speed
      */
-    public void animate(Vector destination, Integer speed) {
-        if (speed != null)
-            this.speed = speed;
-        this.destination = destination;
-        active = true;
+    public void animate(Vector destination, double speed) {
+        this.speed = speed;
+        animate(destination);
     }
 
     /**
@@ -124,7 +131,7 @@ public class Animated {
         return destination;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 

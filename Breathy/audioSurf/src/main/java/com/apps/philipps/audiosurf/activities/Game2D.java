@@ -35,8 +35,8 @@ public class Game2D extends Activity2D {
     GameView gameview;
 
     // Bitmaps
-    Bitmap playerbmp = BitmapFactory.decodeResource(getResources(), R.drawable.ship);
-    Bitmap barricadebmp = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
+    Bitmap playerbmp = BitmapFactory.decodeResource(getResources(), R.drawable.player);
+    Bitmap barricadebmp = BitmapFactory.decodeResource(getResources(), R.drawable.gegner);
 
     // Game stats
     Player player;

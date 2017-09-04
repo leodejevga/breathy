@@ -129,4 +129,9 @@ public class Menu extends Activity {
         Intent i = new Intent(this, CreatePlanPart.class);
         startActivity(i);
     }
+
+    public void calibrate(View view) {
+        Intent i = new Intent(this, Calibrate.class);
+        startActivity(i);
+    }
 }

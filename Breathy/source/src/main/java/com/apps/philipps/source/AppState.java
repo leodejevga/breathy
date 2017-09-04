@@ -35,6 +35,7 @@ public class AppState {
 
     public static AppState.BtState btState = BtState.Disabled;
 
+    public final static double MAX_BT_VALUE = 1024;
     public static int breathyNormState = 700;
     public static int breathyDataFrequency = 4;
     public static double breathyUserMax = 1024;

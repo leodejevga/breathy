@@ -61,7 +61,7 @@ public class GameObject3D implements IGameObject {
     }
 
     @Override
-    public void move(Vector destination, int speed) {
+    public void move(Vector destination, double speed) {
 
     }
 
@@ -87,7 +87,7 @@ public class GameObject3D implements IGameObject {
     }
 
     @Override
-    public void move(int speed) {
+    public void move(double speed) {
 
     }
 

@@ -21,4 +21,6 @@
     <string name="pro">Erfahren</string>
     <string name="select_game">Spiel auswählen</string>
     <string name="main_options">Haupteinstellungen</string>
+    <string name="select_calibrate">Kalibrieren</string>
+    <string name="accept">Akzeptieren</string>
 </resources>

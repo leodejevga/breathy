@@ -46,7 +46,7 @@
 
 
     <Button
-        android:id="@+id/mainBreathPlan"
+        android:id="@+id/mainCalibrate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mainOptions"
@@ -57,6 +57,20 @@
         android:drawableTop="@drawable/settings"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:text="@string/select_breath_plan"
+        android:onClick="calibrate"
+        android:text="@string/select_calibrate"
         android:textColor="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/mainBreathPlan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:drawableTop="@drawable/settings"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/select_breath_plan"
+        android:textColor="@color/colorAccent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

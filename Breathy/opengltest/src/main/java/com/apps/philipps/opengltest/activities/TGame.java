@@ -30,8 +30,8 @@ public class TGame extends Activity3D {
     private ProgressDialog pd = null;
     private MyGLRenderer renderer3D = null;
     private TextView how_good;
-    private Float breathdata;
-    private Float testdata;
+    private double breathdata;
+    private double testdata;
     private LineChart myChart;
     private LineData chartData;
     private LineDataSet breathChartData;
@@ -57,14 +57,14 @@ public class TGame extends Activity3D {
         how_good = (TextView) findViewById(R.id.how_good);
         how_good.setTextColor(Color.WHITE);
         myChart = ChartUtil.createLineChart(this);
-        addContentView( myChart, new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.MATCH_PARENT,400 ) );
+        addContentView(myChart, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 400));
         chartData = ChartUtil.createData();
-        myChart.setData( chartData );
+        myChart.setData(chartData);
         myChart.bringToFront();
-        breathChartData = ChartUtil.createDataSet("BreathData", Color.RED );
-        chartData.addDataSet( breathChartData );
-        breathPlaneChartData = ChartUtil.createDataSet( "PlanData", Color.GREEN );
-        chartData.addDataSet( breathPlaneChartData );
+        breathChartData = ChartUtil.createDataSet("BreathData", Color.RED);
+        chartData.addDataSet(breathChartData);
+        breathPlaneChartData = ChartUtil.createDataSet("PlanData", Color.GREEN);
+        chartData.addDataSet(breathPlaneChartData);
         chartData.notifyDataChanged();
         AppState.recordData = AppState.inGame = true;
     }
@@ -114,31 +114,31 @@ public class TGame extends Activity3D {
 
         }
 
-        private void initPlan(){
+        private void initPlan() {
             setTextViewHowGood();
             PlanManager.startPlan();
         }
 
     }
 
-    private void refreshChart(){
-        testdata = BreathData.get( 0 ).data * getRandomNumber( 0, 1 );
-        breathdata = BreathData.get( 0 ).data;
+    private void refreshChart() {
+        testdata = BreathData.get(0).data * getRandomNumber(0, 1);
+        breathdata = BreathData.get(0).data;
 
-        breathChartData.addEntry(  new Entry( breathChartData.getEntryCount(), breathdata));
-        breathPlaneChartData.addEntry( new Entry(breathPlaneChartData.getEntryCount(), testdata));
+        breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
+        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
         breathChartData.notifyDataSetChanged();
         chartData.notifyDataChanged();
         myChart.notifyDataSetChanged();
         myChart.refreshDrawableState();
         myChart.invalidate();
-        myChart.setVisibleXRange( 6, 60 );
-        myChart.moveViewToX( breathPlaneChartData.getEntryCount() - 60 );
+        myChart.setVisibleXRange(6, 60);
+        myChart.moveViewToX(breathPlaneChartData.getEntryCount() - 60);
     }
 
-    private int getRandomNumber(int Min, int Max){
+    private int getRandomNumber(int Min, int Max) {
 
-        return Min + (int)(Math.random() * ((Max - Min) + 1));
+        return Min + (int) (Math.random() * ((Max - Min) + 1));
     }
 
     private void setTextViewHowGood() {

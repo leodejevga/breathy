@@ -91,7 +91,7 @@ public class Game extends Activity2D {
         buffer.removeAll(toRemove);
         if ((System.currentTimeMillis() - enemySpawned) > buffer.enemyCome) {
             enemySpawned = System.currentTimeMillis();
-            buffer.enemies.add(new Enemy(this, new Vector(getScreenWidth()-50, getEnemyY()), buffer.enemySpeed, game));
+            buffer.enemies.add(new Enemy(this, new Vector(getScreenWidth(), getEnemyY()), buffer.enemySpeed, game));
         }
         if ((System.currentTimeMillis() - cloudSpawned) > buffer.cloudCome + getInt(0, 1000)) {
             cloudSpawned = System.currentTimeMillis();
@@ -123,7 +123,7 @@ public class Game extends Activity2D {
     }
 
     private static class Buffer implements Iterable<GameObject2D> {
-        private int enemyCome = 100;
+        private int enemyCome = 200;
         private int cloudCome = 5502;
         private int enemySpeed = 500;
         private int shipSpeed = 1000;
@@ -211,7 +211,7 @@ public class Game extends Activity2D {
 
     private static class Enemy extends GameObject2D {
         public Enemy(Context context, Vector position, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(position, new Vector(0, position.get(1)), speed, true));
+            super(new ImageView(context), new Animated(position, new Vector(-100, position.get(1)), speed, true));
             ((ImageView) getView()).setImageResource(R.drawable.enemy);
             getView().bringToFront();
             game.addView(getView());
@@ -220,7 +220,7 @@ public class Game extends Activity2D {
 
     private static class Laser extends GameObject2D {
         public Laser(Context context, Ship ship, int dest, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(ship.getPosition().clone(), new Vector(dest, ship.getPosition().get(1)), speed, true));
+            super(new ImageView(context), new Animated(ship.getPosition().clone().add(new Vector(0,3)), new Vector(dest, ship.getPosition().get(1)), speed, true));
             ((ImageView) getView()).setImageResource(R.drawable.laser);
             game.addView(getView());
         }
@@ -237,7 +237,7 @@ public class Game extends Activity2D {
     private static class Ship extends GameObject2D {
         public Ship(Context context, Animated animated, ViewGroup game) {
             super(new ImageView(context), animated);
-            ((ImageView) getView()).setImageResource(R.drawable.player);
+            ((ImageView) getView()).setImageResource(R.drawable.ship);
             game.addView(getView());
         }
     }
@@ -248,7 +248,8 @@ public class Game extends Activity2D {
             double frequency = PlanManager.getCurrentPlan().getFrequency() / 60f;
             double delta = System.currentTimeMillis() - start;
             double value = (delta / 1000 * Math.PI * frequency);
-            result = (Math.sin(value) + 1) / 2 * (double) getScreenHeight();
+            int height = buffer.enemies.size()!=0?buffer.enemies.get(0).getView().getMeasuredHeight():0;
+            result = (Math.sin(value) + 1) / 2 * ((double) getScreenHeight()-height);
         }
         return (int) result;
     }

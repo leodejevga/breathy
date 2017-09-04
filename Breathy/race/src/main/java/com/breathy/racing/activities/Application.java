@@ -60,8 +60,8 @@ public class Application extends Activity2D {
     int curXIndex;
 
     //Breathgraph
-    private Float breathdata;
-    private Float testdata;
+    private double breathdata;
+    private double testdata;
     private LineChart myChart;
     private LineData chartData;
     private LineDataSet breathChartData;
@@ -238,7 +238,7 @@ public class Application extends Activity2D {
     private void checkOvertake(int i) {
         int j;
         SlowCar curCar = slowCars.get(i);
-        int carSpeed = curCar.getAnimated().getSpeed();
+        double carSpeed = curCar.getAnimated().getSpeed();
         boolean leftLane = true;
         boolean rightLane = true;
         int overtake = 0;
@@ -296,7 +296,7 @@ public class Application extends Activity2D {
      */
     private void calcBostPoints() {
 
-        if (testdata.equals(breathdata)) { //ToDo toleranz
+        if (testdata == breathdata) { //ToDo toleranz
             bostPoints += 10;
         } else if (testdata + 100 < breathdata && testdata - 100 > breathdata) {
             bostPoints = Math.max(bostPoints - 1, 0);
@@ -338,8 +338,8 @@ public class Application extends Activity2D {
         testdata = BreathData.get(0).data * GameUtil.getRandomNumber(0, 1);
         breathdata = BreathData.get(0).data;
 
-        breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), breathdata));
-        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), testdata));
+        breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
+        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
         breathChartData.notifyDataSetChanged();
         chartData.notifyDataChanged();
         myChart.notifyDataSetChanged();
