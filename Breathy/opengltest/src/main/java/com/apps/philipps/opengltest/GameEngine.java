@@ -218,8 +218,8 @@ public class GameEngine {
 
     private void refreshStreet() {
         GameObject3D square = street.get(0);
-        float f = street.get(street.size() - 1).getPosition().get(1);
-        square.setPosition(new Vector(0, f + 1.0f, 0));
+        double d = street.get(street.size() - 1).getPosition().get(1);
+        square.setPosition(new Vector(0, d + 1.0f, 0));
         street.add(square);
         street.remove(0);
     }

@@ -71,7 +71,7 @@ public class Camera3D {
         if (vectors.length > 2)
             up.add(vectors[2]);
         if (vectors.length > 3) {
-            vectors[3].add(new Vector(0, 0, 0, rotation.get(3)));
+            vectors[3].add(new Vector(0, 0, 0, rotation.getF(3)));
             rotation.set(vectors[3]);
         }
         updateMatrices();
@@ -87,13 +87,13 @@ public class Camera3D {
     private void updateMatrices() {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-        Matrix.setLookAtM(mViewMatrix, 0, position.get(0), position.get(1), position.get(2),
-                direction.get(0), direction.get(1), direction.get(2),
-                up.get(0), up.get(1), up.get(2));
+        Matrix.setLookAtM(mViewMatrix, 0, position.getF(0), position.getF(1), position.getF(2),
+                direction.getF(0), direction.getF(1), direction.getF(2),
+                up.getF(0), up.getF(1), up.getF(2));
 
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-        Matrix.setRotateM(mRotationMatrix, 0, rotation.get(3), rotation.get(0), rotation.get(1), rotation.get(2));
+        Matrix.setRotateM(mRotationMatrix, 0, rotation.getF(3), rotation.getF(0), rotation.getF(1), rotation.getF(2));
 
         Matrix.multiplyMM(mMVPMatrix, 0, mMVPMatrix, 0, mRotationMatrix, 0);
     }

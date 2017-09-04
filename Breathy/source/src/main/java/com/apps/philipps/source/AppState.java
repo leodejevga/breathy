@@ -36,9 +36,9 @@ public class AppState {
     public static AppState.BtState btState = BtState.Disabled;
 
     public static int breathyNormState = 700;
-    public static int breathyDataFrequency = 3;
-    public static int breathyUserMax = 1024;
-    public static int breathyUserMin = 200;
+    public static int breathyDataFrequency = 4;
+    public static double breathyUserMax = 1024;
+    public static double breathyUserMin = 200;
 
     public final static BroadcastReceiver btStateChanger = new BroadcastReceiver() {
         @Override

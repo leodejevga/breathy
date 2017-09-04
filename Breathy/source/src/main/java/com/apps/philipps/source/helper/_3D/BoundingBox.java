@@ -70,7 +70,7 @@ public class BoundingBox {
         if (needToCalculate) {
             float[] temp = new float[16];
             Matrix.setIdentityM(temp, 0);
-            Matrix.translateM(temp, 0, vector.get(0), vector.get(1), vector.get(2));
+            Matrix.translateM(temp, 0, vector.getF(0), vector.getF(1), vector.getF(2));
             multipleMatrix(temp);
             position.add(vector);
         }
@@ -85,7 +85,7 @@ public class BoundingBox {
         if (needToCalculate) {
             float[] temp = new float[16];
             Matrix.setIdentityM(temp, 0);
-            Matrix.rotateM(temp, 0, temp, 0, vector.get(3), vector.get(0), vector.get(1), vector.get(2));
+            Matrix.rotateM(temp, 0, temp, 0, vector.getF(3), vector.getF(0), vector.getF(1), vector.getF(2));
             multipleMatrix(temp);
         }
     }
@@ -93,9 +93,9 @@ public class BoundingBox {
     private void multipleMatrix(float[] transformMatrix) {
         for (int i = 0; i < points.length; i++) {
             float[] vector = new float[4];
-            vector[0] = points[i].get(0);
-            vector[1] = points[i].get(1);
-            vector[2] = points[i].get(2);
+            vector[0] = points[i].getF(0);
+            vector[1] = points[i].getF(1);
+            vector[2] = points[i].getF(2);
             vector[3] = 1;
             Matrix.multiplyMV(vector, 0, transformMatrix, 0, vector, 0);
             points[i].set(new Vector(vector[0], vector[1], vector[2]));
@@ -116,20 +116,20 @@ public class BoundingBox {
 
         for (int i = 0; i < temp.length; i++) {
             Vector v = temp[i];
-            if (v.get(0) > this.maxX)
-                this.maxX = v.get(0);
-            if (v.get(0) < this.minX)
-                this.minX = v.get(0);
+            if (v.getF(0) > this.maxX)
+                this.maxX = v.getF(0);
+            if (v.getF(0) < this.minX)
+                this.minX = v.getF(0);
 
-            if (v.get(1) > this.maxY)
-                this.maxY = v.get(1);
-            if (v.get(1) < this.minY)
-                this.minY = v.get(1);
+            if (v.getF(1) > this.maxY)
+                this.maxY = v.getF(1);
+            if (v.getF(1) < this.minY)
+                this.minY = v.getF(1);
 
-            if (v.get(2) > this.maxZ)
-                this.maxZ = v.get(2);
-            if (v.get(2) < this.minZ)
-                this.minZ = v.get(2);
+            if (v.getF(2) > this.maxZ)
+                this.maxZ = v.getF(2);
+            if (v.getF(2) < this.minZ)
+                this.minZ = v.getF(2);
         }
         this.points[0] = new Vector(maxX, maxY, maxZ);
         this.points[1] = new Vector(minX, maxY, maxZ);

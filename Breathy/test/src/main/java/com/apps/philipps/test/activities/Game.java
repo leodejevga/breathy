@@ -2,7 +2,6 @@ package com.apps.philipps.test.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ public class Game extends Activity2D {
     private TextView secondsLeft;
     private BreathInterpreter.BreathStatus status;
     private long cloudSpawned;
+    private long start = System.currentTimeMillis();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +57,9 @@ public class Game extends Activity2D {
         for (GameObject2D object : buffer) {
             object.update(delta);
             if (object instanceof Ship && status != null && BreathData.get(0) != null) {
-                Float y = BreathData.get(0).data / AppState.breathyUserMax * getScreenHeight();
+                double y = (BreathData.get(0).data-AppState.breathyUserMin) / AppState.breathyUserMax * getScreenHeight();
                 object.move(new Vector(object.getPosition().get(0), y));
+                object.getView().bringToFront();
             } else if (object instanceof Enemy && !object.isMoving()) {
                 game.removeView(object.getView());
                 subCoin(10);
@@ -90,7 +91,7 @@ public class Game extends Activity2D {
         buffer.removeAll(toRemove);
         if ((System.currentTimeMillis() - enemySpawned) > buffer.enemyCome) {
             enemySpawned = System.currentTimeMillis();
-            buffer.enemies.add(new Enemy(this, new Vector(getScreenWidth(), getInt(0, getScreenHeight())), buffer.enemySpeed, game));
+            buffer.enemies.add(new Enemy(this, new Vector(getScreenWidth()-50, getEnemyY()), buffer.enemySpeed, game));
         }
         if ((System.currentTimeMillis() - cloudSpawned) > buffer.cloudCome + getInt(0, 1000)) {
             cloudSpawned = System.currentTimeMillis();
@@ -122,9 +123,9 @@ public class Game extends Activity2D {
     }
 
     private static class Buffer implements Iterable<GameObject2D> {
-        private int enemyCome = 565;
+        private int enemyCome = 100;
         private int cloudCome = 5502;
-        private int enemySpeed = 200;
+        private int enemySpeed = 500;
         private int shipSpeed = 1000;
         private int laserSpeed = 4000;
         private int cloudSpeed = 60;
@@ -210,8 +211,9 @@ public class Game extends Activity2D {
 
     private static class Enemy extends GameObject2D {
         public Enemy(Context context, Vector position, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(position, new Vector(-50, position.get(1)), speed, true));
+            super(new ImageView(context), new Animated(position, new Vector(0, position.get(1)), speed, true));
             ((ImageView) getView()).setImageResource(R.drawable.enemy);
+            getView().bringToFront();
             game.addView(getView());
         }
     }
@@ -235,9 +237,20 @@ public class Game extends Activity2D {
     private static class Ship extends GameObject2D {
         public Ship(Context context, Animated animated, ViewGroup game) {
             super(new ImageView(context), animated);
-            ((ImageView) getView()).setImageResource(R.drawable.ship);
+            ((ImageView) getView()).setImageResource(R.drawable.player);
             game.addView(getView());
         }
+    }
+
+    private int getEnemyY() {
+        double result = 0;
+        if (PlanManager.getCurrentPlan() != null) {
+            double frequency = PlanManager.getCurrentPlan().getFrequency() / 60f;
+            double delta = System.currentTimeMillis() - start;
+            double value = (delta / 1000 * Math.PI * frequency);
+            result = (Math.sin(value) + 1) / 2 * (double) getScreenHeight();
+        }
+        return (int) result;
     }
 
 }

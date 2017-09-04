@@ -6,6 +6,7 @@ import com.apps.philipps.source.helper.Vector;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 
 /**
@@ -16,11 +17,11 @@ public class Line {
     private int positionHandle;
     private int colorHandle;
     private int mvpMatrixHandle;
-    private FloatBuffer vertexBuffer;
+    private DoubleBuffer vertexBuffer;
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
-    static float lineCoords[] = {
+    static double lineCoords[] = {
             0.0f, 0.0f, 0.0f,
             1.0f, 0.0f, 0.0f
     };
@@ -40,7 +41,7 @@ public class Line {
         bb.order(ByteOrder.nativeOrder());
 
         // create a floating point buffer from the ByteBuffer
-        vertexBuffer = bb.asFloatBuffer();
+        vertexBuffer = bb.asDoubleBuffer();
         // add the coordinates to the FloatBuffer
         vertexBuffer.put(lineCoords);
         // set the buffer to read the first coordinate

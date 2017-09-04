@@ -92,6 +92,7 @@ public abstract class PlanManager implements Serializable {
         return currentPlan == id;
     }
 
+    @Nullable
     public static Plan getCurrentPlan() {
         if (currentPlan != -1)
             return plans.get(currentPlan);

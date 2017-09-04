@@ -70,7 +70,7 @@ public class GameObject3D implements IGameObject {
         init();
         setRotation(destination);
         float[] temp = new float[16];
-        Matrix.setRotateM(temp, 0, rotation.get(3), rotation.get(0), rotation.get(1), rotation.get(2));
+        Matrix.setRotateM(temp, 0, rotation.getF(3), rotation.getF(0), rotation.getF(1), rotation.getF(2));
         Matrix.multiplyMM(result, 0, result, 0, temp, 0);
         Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
     }
@@ -81,7 +81,7 @@ public class GameObject3D implements IGameObject {
         shape.setPosition(getPosition().add(destination));
         float[] temp = new float[16];
         Matrix.setIdentityM(temp, 0);
-        Matrix.translateM(temp, 0, getPosition().get(0), getPosition().get(1), getPosition().get(2));
+        Matrix.translateM(temp, 0, getPosition().getF(0), getPosition().getF(1), getPosition().getF(2));
         Matrix.multiplyMM(result, 0, result, 0, temp, 0);
         Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
     }
@@ -331,7 +331,7 @@ public class GameObject3D implements IGameObject {
         private static float[] transformVectors(@NonNull Vector... vectors) {
             ArrayList<Float> list = new ArrayList<>();
             for (int i = 0; i < vectors.length; i++) {
-                float[] temp = vectors[i].get();
+                float[] temp = vectors[i].getF();
                 for (int j = 0; j < temp.length; j++)
                     list.add(temp[j]);
             }
@@ -367,7 +367,7 @@ public class GameObject3D implements IGameObject {
             //Current position of Bounding Box
             if (boundingBox.isNeedToCalculateBB()) {
                 Vector currentPos = boundingBox.position;
-                Vector inversePos = new Vector(-currentPos.get(0), -currentPos.get(1), -currentPos.get(2));
+                Vector inversePos = new Vector(-currentPos.getF(0), -currentPos.getF(1), -currentPos.getF(2));
                 this.boundingBox.translate(inversePos.add(position));
             }
         }
@@ -511,9 +511,9 @@ public class GameObject3D implements IGameObject {
                 }
                 for (int j = 0; j < 3; j++) {
                     int index = (i * 9) + (j * 3);
-                    normalData[index] = waveFrontObject ? -normal.get(0) : normal.get(0);
-                    normalData[index + 1] = waveFrontObject ? -normal.get(1) : normal.get(1);
-                    normalData[index + 2] = waveFrontObject ? -normal.get(2) : normal.get(2);
+                    normalData[index] = waveFrontObject ? -normal.getF(0) : normal.getF(0);
+                    normalData[index + 1] = waveFrontObject ? -normal.getF(1) : normal.getF(1);
+                    normalData[index + 2] = waveFrontObject ? -normal.getF(2) : normal.getF(2);
                 }
             }
         }

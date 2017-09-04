@@ -77,7 +77,7 @@ public class Application extends Activity2D {
         views = (TextView) findViewById(R.id.app_views);
         rate = (TextView) findViewById(R.id.app_framelimit);
         game = (RelativeLayout) findViewById(R.id.test_game_area);
-        ship = initObject(R.drawable.ship, new Vector(50f, getScreenHeight() / 2f), new Vector(50f, getScreenHeight()), (int) (1200 * SCREEN_FACTOR));
+        ship = initObject(R.drawable.player, new Vector(50f, getScreenHeight() / 2f), new Vector(50f, getScreenHeight()), (int) (1200 * SCREEN_FACTOR));
         enemies = new ArrayList<>();
         lasers = new ArrayList<>();
         enemySpawn = System.currentTimeMillis();
