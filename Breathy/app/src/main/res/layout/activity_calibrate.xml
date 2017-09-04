@@ -66,6 +66,13 @@
                     android:text="@string/accept"
                     android:onClick="accept"
                     android:textColor="@color/colorAccent" />
+
+                <TextView
+                    android:id="@+id/calibrateInformation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
             </LinearLayout>
 
         </LinearLayout>

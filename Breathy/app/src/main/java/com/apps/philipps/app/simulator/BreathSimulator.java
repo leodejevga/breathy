@@ -138,10 +138,13 @@ public class BreathSimulator {
     }
 
     private Random r = new Random(0);
+    private int num = 0;
     private void generate(){
         int kind = r.nextInt(3)%3;
         breath();
-//        if(kind==0)
+//        if(num++%20-10<0)
+//            pause();
+//        else if(kind==0)
 //            breath();
 //        else if(kind==1)
 //            breathIn();

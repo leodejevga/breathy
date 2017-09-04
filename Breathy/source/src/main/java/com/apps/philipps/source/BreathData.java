@@ -70,40 +70,11 @@ public abstract class BreathData {
         return BreathData.observer.remove(observer);
     }
 
-//    /**
-//     * Adds a Value to ram. If the Limit of RAM size is reached, the ram will written on the hard drive.
-//     *
-//     * @param value the Value to add
-//     */
-//    public static void add(String value) {
-//        if (AppState.recordData) {
-//            for (int i : convert(value))
-//                ram.addData(i);
-//        }
-//    }
 
     public static void add(Element... elements) {
-        if (AppState.recordData) {
-            for (Element element : elements)
-                ram.addData(element);
-        }
+        for (Element element : elements)
+            ram.addData(element);
     }
-
-//    private static int[] convert(String value) {
-//        String[] values = value.split("\r\n|\r|\n");
-//        int[] result = new int[values.length];
-//        for (int i = 0; i < result.length; i++) {
-//            try {
-//                result[i] = Integer.parseInt(values[i]);
-//            } catch (NumberFormatException e) {
-//                e.printStackTrace();
-//                if (i > 0)
-//                    result[i] = result[i - 1];
-//                Log.d("Format Exception", "" + values[i]);
-//            }
-//        }
-//        return result;
-//    }
 
     /**
      * Get list of values from <code>index</code> to <code>index+range</code>
@@ -149,8 +120,10 @@ public abstract class BreathData {
     }
 
     public static void saveRest() {
-        ram.saveAll();
-        DataBlock.info.save();
+        if (AppState.recordData) {
+            ram.saveAll();
+            DataBlock.info.save();
+        }
     }
 
 
@@ -182,7 +155,8 @@ public abstract class BreathData {
 
             if (size() > ramSize) {
                 DataBlock toSave = get(size() - 1);
-                saveData.writeObject(toSave.getName(), toSave);
+                if (AppState.recordData)
+                    saveData.writeObject(toSave.getName(), toSave);
                 remove(size() - 1);
                 return true;
             }
@@ -223,7 +197,7 @@ public abstract class BreathData {
             DataBlock block = get(0);
             if (i < block.elements.size())
                 return block.get(i);
-            i+= blockSize - block.elements.size();
+            i += blockSize - block.elements.size();
 
             block = get(i / blockSize);
             if (block == null)
@@ -330,6 +304,7 @@ public abstract class BreathData {
         public Element(Integer data) {
             this(data.doubleValue());
         }
+
         public Element(double data) {
             this.data = data;
             this.date = Calendar.getInstance();

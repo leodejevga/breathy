@@ -56,7 +56,7 @@ public class GameObject2D implements IObserver, IGameObject {
     public void setPosition(Vector position) {
         this.object.setX(position.getF(0));
         this.object.setY(position.getF(1));
-        this.position = new Animated(position);
+        this.position.setPosition(position);
     }
 
 
@@ -102,7 +102,7 @@ public class GameObject2D implements IObserver, IGameObject {
 
     @Override
     public void move(Vector destination) {
-        position.animate(destination,0);
+        position.animate(destination);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class GameObject2D implements IObserver, IGameObject {
      * x1,y1   x2,y1
      * x1,y2   x2,y2
      * </pre>
-     *
+     * <p>
      * x1,y1 is the Position of this Game Object
      *
      * @return 4 Values that describes edges of a box
@@ -193,9 +193,4 @@ public class GameObject2D implements IObserver, IGameObject {
         return getClass().getSimpleName() + " at " + position;
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        ((ViewGroup)object.getParent()).removeView(object);
-    }
 }

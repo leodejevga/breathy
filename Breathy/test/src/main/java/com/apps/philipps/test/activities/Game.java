@@ -57,8 +57,9 @@ public class Game extends Activity2D {
         for (GameObject2D object : buffer) {
             object.update(delta);
             if (object instanceof Ship && status != null && BreathData.get(0) != null) {
-                double y = (BreathData.get(0).data-AppState.breathyUserMin) / AppState.breathyUserMax * getScreenHeight();
-                object.move(new Vector(object.getPosition().get(0), y));
+                double d = BreathData.get(0).data;
+                double y = (d - AppState.breathyUserMin) / (AppState.breathyUserMax - AppState.breathyUserMin) * getScreenHeight();
+                object.move(new Vector(object.getPosition().get(0), -y));
                 object.getView().bringToFront();
             } else if (object instanceof Enemy && !object.isMoving()) {
                 game.removeView(object.getView());
@@ -102,7 +103,7 @@ public class Game extends Activity2D {
 
     @Override
     protected void init() {
-        PlanManager.startPlan();
+        PlanManager.start();
         game = (RelativeLayout) findViewById(R.id.test_game2d);
         buffer = new Buffer(new Ship(this, new Animated(new Vector(50, getScreenHeight() / 2)), game), SCREEN_FACTOR);
         finisched = (TextView) findViewById(R.id.finished);
@@ -220,7 +221,7 @@ public class Game extends Activity2D {
 
     private static class Laser extends GameObject2D {
         public Laser(Context context, Ship ship, int dest, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(ship.getPosition().clone().add(new Vector(0,3)), new Vector(dest, ship.getPosition().get(1)), speed, true));
+            super(new ImageView(context), new Animated(ship.getPosition().clone().add(new Vector(50, 5)), new Vector(dest, ship.getPosition().get(1)), speed, true));
             ((ImageView) getView()).setImageResource(R.drawable.laser);
             game.addView(getView());
         }
@@ -248,8 +249,8 @@ public class Game extends Activity2D {
             double frequency = PlanManager.getCurrentPlan().getFrequency() / 60f;
             double delta = System.currentTimeMillis() - start;
             double value = (delta / 1000 * Math.PI * frequency);
-            int height = buffer.enemies.size()!=0?buffer.enemies.get(0).getView().getMeasuredHeight():0;
-            result = (Math.sin(value) + 1) / 2 * ((double) getScreenHeight()-height);
+            int height = buffer.enemies.size() != 0 ? buffer.enemies.get(0).getView().getMeasuredHeight() : 0;
+            result = (Math.sin(value) + 1) / 2 * ((double) getScreenHeight() - height);
         }
         return (int) result;
     }

@@ -142,6 +142,19 @@ public class Animated {
      */
     public void setDestination(Vector vector) {
         this.destination = vector;
+        if(destination.compareTo(position)==0)
+            active=false;
+    }
+
+    /**
+     * Position of Animated Object
+     *
+     * @param position
+     */
+    public void setPosition(Vector position) {
+        this.position = position;
+        if(destination.compareTo(position)==0)
+            active=false;
     }
 
     public void update(long deltaMilliseconds) {
@@ -167,4 +180,5 @@ public class Animated {
     public String toString() {
         return position + " --> " + destination + "  at " + speed + (isMoving() ? "  moving" : "");
     }
+
 }

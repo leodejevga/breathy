@@ -116,7 +116,7 @@ public class TGame extends Activity3D {
 
         private void initPlan() {
             setTextViewHowGood();
-            PlanManager.startPlan();
+            PlanManager.start();
         }
 
     }

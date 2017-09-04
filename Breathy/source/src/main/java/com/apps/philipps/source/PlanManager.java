@@ -65,7 +65,7 @@ public abstract class PlanManager implements Serializable {
         return true;
     }
 
-    public static boolean startPlan() {
+    public static boolean start() {
         if (currentPlan != -1) {
             plans.get(currentPlan).startPlan();
             return true;
@@ -73,9 +73,20 @@ public abstract class PlanManager implements Serializable {
         return false;
     }
 
+
+    public static void resume() {
+        if (currentPlan != -1)
+            plans.get(currentPlan).resume();
+    }
+
     public static void stop() {
         if (currentPlan != -1)
             plans.get(currentPlan).stop();
+    }
+
+    public static void pause() {
+        if (currentPlan != -1)
+            plans.get(currentPlan).pause();
     }
 
     public static boolean isActive() {
@@ -99,8 +110,8 @@ public abstract class PlanManager implements Serializable {
         return null;
     }
 
-    public static long getDuration(){
-        if(currentPlan!=-1 && plans.get(currentPlan).running){
+    public static long getDuration() {
+        if (currentPlan != -1 && plans.get(currentPlan).running) {
             return plans.get(currentPlan).getCurrentDuration();
         }
         return 0;
@@ -167,6 +178,7 @@ public abstract class PlanManager implements Serializable {
         private boolean running;
         private long delta;
         private String name;
+        private boolean paused = false;
 
         public Plan() {
             options = new ArrayList<>();
@@ -251,15 +263,16 @@ public abstract class PlanManager implements Serializable {
                 return false;
             else {
                 running = true;
-                currentTime = options.get(0).duration;
+                currentOption = 0;
+                currentTime = options.get(currentOption).duration;
                 delta = System.currentTimeMillis();
             }
-            return running;
+            return true;
         }
 
         private boolean update() {
             delta = System.currentTimeMillis() - delta;
-            if (running) {
+            if (running || !paused) {
                 if (currentTime - delta <= 0) {
                     currentOption++;
                     if (currentOption == options.size())
@@ -273,11 +286,20 @@ public abstract class PlanManager implements Serializable {
             return true;
         }
 
-        private boolean stop() {
+        private void stop() {
             running = false;
+            paused = false;
             currentOption = 0;
             currentTime = 0;
-            return false;
+        }
+
+
+        private void pause() {
+            paused = false;
+        }
+
+        private void resume() {
+            paused = false;
         }
 
         public String getDescription() {

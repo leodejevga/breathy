@@ -21,9 +21,9 @@ import java.util.Random;
  */
 
 public abstract class Activity2D extends Activity implements IObserver {
-    protected final float SCREEN_FACTOR = (float) (getScreenHeight() + getScreenWidth()) / (1080 + 1920);
+    protected final float SCREEN_FACTOR = (float) (getScreenHeight(true) + getScreenWidth(true)) / (1080 + 1920);
 
-    protected static final String TAG = "Activity 2D";
+    protected final String TAG = getClass().getSimpleName();
     protected boolean draw;
     protected ViewGroup game;
     protected long delta;
@@ -162,10 +162,18 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected void onPause() {
         super.onPause();
         Log.e(TAG, "OnPause");
-        AppState.recordData = AppState.inGame = false;
         BreathData.removeObserver(this);
         BreathData.saveRest();
+        PlanManager.pause();
+        AppState.recordData = AppState.inGame = false;
         draw = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "OnDestroy");
+        PlanManager.stop();
     }
 
     @Override
@@ -174,6 +182,7 @@ public abstract class Activity2D extends Activity implements IObserver {
         Log.e(TAG, "OnResume");
         AppState.recordData = AppState.inGame = true;
         BreathData.addObserver(this);
+        PlanManager.resume();
         starToDraw();
     }
 
