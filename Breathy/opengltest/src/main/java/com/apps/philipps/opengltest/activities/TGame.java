@@ -85,7 +85,7 @@ public class TGame extends Activity3D {
         super.onResume();
         // The following call resumes a paused rendering thread.
         // If you de-allocated graphic objects for onPause()
-        // this is a good place to re-allocate them.
+        // this is a goody_good place to re-allocate them.
         openGL.onResume();
     }
 

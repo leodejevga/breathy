@@ -1,5 +1,6 @@
 package com.apps.philipps.source.helper._2D;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
@@ -14,14 +15,19 @@ import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.interfaces.IGameObject;
 import com.apps.philipps.source.interfaces.IObserver;
 
+import java.util.concurrent.atomic.AtomicLongArray;
+
 /**
  * Created by Jevgenij Huebert on 17.03.2017. Project Breathy
  */
-public class GameObject2D implements IObserver, IGameObject {
+public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
+    protected final String TAG = getClass().getSimpleName();
+    public boolean intercectable = true;
     private View object;
     private Animated position;
     private double curRotation;
+    public final long created = System.currentTimeMillis();
 
     public GameObject2D(@NonNull View object) {
         this(object, null, null);
@@ -33,8 +39,6 @@ public class GameObject2D implements IObserver, IGameObject {
 
     public GameObject2D(@NonNull View object, Vector position, Vector destination) {
         this.object = object;
-        if (destination == null)
-            destination = new Vector();
         if (position == null)
             this.position = new Animated(new Vector(this.object.getX(), this.object.getY()), destination);
         else {
@@ -111,6 +115,7 @@ public class GameObject2D implements IObserver, IGameObject {
     }
 
     @Override
+    @CallSuper
     public void update(long deltaMilliseconds) {
         position.update(deltaMilliseconds);
         object.setX(position.getPosition().getF(0));
@@ -180,12 +185,15 @@ public class GameObject2D implements IObserver, IGameObject {
 
     @Override
     public boolean intersect(IGameObject gameObject) {
-        Vector b = getBoundaries();
-        Vector bO = gameObject.getBoundaries();
-        return bO.get(0) <= b.get(0) && b.get(0) <= bO.get(1) && bO.get(2) <= b.get(2) && b.get(2) <= bO.get(3) ||
-                bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(2) && b.get(2) <= bO.get(3) ||
-                bO.get(0) <= b.get(0) && b.get(0) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3) ||
-                bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3);
+        if (intercectable) {
+            Vector b = getBoundaries();
+            Vector bO = gameObject.getBoundaries();
+            return bO.get(0) <= b.get(0) && b.get(0) <= bO.get(1) && bO.get(2) <= b.get(2) && b.get(2) <= bO.get(3) ||
+                    bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(2) && b.get(2) <= bO.get(3) ||
+                    bO.get(0) <= b.get(0) && b.get(0) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3) ||
+                    bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3);
+        }
+        return false;
     }
 
     @Override

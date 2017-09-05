@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class Animated {
 
+    protected final String TAG = getClass().getSimpleName();
     private Vector position;
     private Vector destination;
     private List<IObserver> oberver = new ArrayList<>();
@@ -57,7 +58,7 @@ public class Animated {
      * @param speed       the speed
      * @param activate    the activate
      */
-    public Animated(@NonNull Vector position, @NonNull Vector destination, int speed, boolean activate) {
+    public Animated(@NonNull Vector position, @NonNull Vector destination, double speed, boolean activate) {
         this.position = position;
         this.destination = destination;
         this.speed = speed;
@@ -142,8 +143,8 @@ public class Animated {
      */
     public void setDestination(Vector vector) {
         this.destination = vector;
-        if(destination.compareTo(position)==0)
-            active=false;
+        if (destination.compareTo(position) == 0)
+            active = false;
     }
 
     /**
@@ -153,8 +154,8 @@ public class Animated {
      */
     public void setPosition(Vector position) {
         this.position = position;
-        if(destination.compareTo(position)==0)
-            active=false;
+        if (destination.compareTo(position) == 0)
+            active = false;
     }
 
     public void update(long deltaMilliseconds) {
@@ -165,9 +166,10 @@ public class Animated {
                 Vector div = Vector.sub(destination, position);
                 Vector norm = div.clone().norm();
                 Vector add = Vector.mult(norm, speed * deltaMilliseconds / 1000f);
-                if (position.getDistance(destination) < position.getDistance(Vector.add(position, add)))
+                if (position.getDistance(destination) < position.getDistance(Vector.add(position, add))) {
                     position = destination.clone();
-                else {
+                    active = false;
+                } else {
                     position.add(add);
                     for (IObserver o : oberver)
                         o.call(position);
@@ -178,7 +180,11 @@ public class Animated {
 
     @Override
     public String toString() {
-        return position + " --> " + destination + "  at " + speed + (isMoving() ? "  moving" : "");
+        return position + " --> " + destination + (isMoving() ? "  is moving with " + speed : "");
     }
 
+    @Override
+    public Animated clone() {
+        return new Animated(position.clone(), destination.clone(), speed, active);
+    }
 }

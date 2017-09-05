@@ -41,7 +41,7 @@ dependencies {
     compile project(':source')
     compile project(':audioSurf')
     compile project(':fade')
-    compile project(':test')
+    compile project(':spaceFight')
     compile project(':race')
     compile project(':opengltest')
     compile 'com.android.support:appcompat-v7:25.3.1'

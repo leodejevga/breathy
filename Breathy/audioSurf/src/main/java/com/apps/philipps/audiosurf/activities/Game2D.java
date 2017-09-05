@@ -31,6 +31,7 @@ public class Game2D extends Activity2D {
     int displayHeight;
     Canvas canvas;
 
+
     // Display
     GameView gameview;
 
@@ -71,6 +72,11 @@ public class Game2D extends Activity2D {
 
         AppState.recordData = AppState.inGame = true;
     }
+
+    @Override
+    protected void onLoading(boolean firstLoad, int progress) {
+    }
+
 
     @Override
     protected void draw() {

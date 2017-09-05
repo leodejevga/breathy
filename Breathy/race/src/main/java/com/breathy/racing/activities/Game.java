@@ -26,6 +26,11 @@ public class Game extends Activity2D {
 
 
     @Override
+    protected void onLoading(boolean firstLoad, int progress) {
+    }
+
+
+    @Override
     protected void draw() {
         String data = BreathData.getAsString(0, 5);
         dataDisplay.setText(data);
@@ -38,6 +43,7 @@ public class Game extends Activity2D {
         dataDisplay = (TextView) findViewById(R.id.test_data);
         highscore = (TextView) findViewById(R.id.RacingScore);
     }
+
 
     @Override
     protected void touch(MotionEvent event) {

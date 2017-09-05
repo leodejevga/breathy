@@ -37,7 +37,7 @@ public class Calibrate extends Activity2D {
 
     @Override
     public void call(Object... messages) {
-        if (messages.length >= 1) {
+        if (messages.length >= 1 && isInitialized()) {
             double data = ((BreathData.Element) messages[0]).data;
             minValue = Double.MAX_VALUE;
             maxValue = 0;
@@ -52,8 +52,8 @@ public class Calibrate extends Activity2D {
                 if (maxValue < y)
                     maxValue = y;
             }
-            min.setText("Min value: " + minValue);
-            max.setText("Max value: " + maxValue);
+            min.setText("Min rate: " + minValue);
+            max.setText("Max rate: " + maxValue);
             Vector position = new Vector(getScreenWidth(), data);
             Vector destination = new Vector(-50, data);
             points.add(new GO(initObject(R.drawable.point, position, destination, 150 * SCREEN_FACTOR), data));
@@ -61,12 +61,16 @@ public class Calibrate extends Activity2D {
     }
 
     @Override
+    protected void onLoading(boolean firstLoad, int progress) {
+    }
+
+    @Override
     protected void draw() {
         List<GO> toRemove = new ArrayList<>();
         for (GO point : points) {
             double y = 0;
-            if(Math.abs(minValue-maxValue)<=AppState.MAX_BT_VALUE/50)
-                y = point.data-AppState.breathyNormState + getScreenHeight()/2;
+            if (Math.abs(minValue - maxValue) <= AppState.MAX_BT_VALUE / 50)
+                y = point.data - AppState.breathyNormState + getScreenHeight() / 2;
             else y = (point.data - minValue) / (maxValue - minValue) * (getScreenHeight() - 50);
 
             point.o.setPosition(new Vector(point.o.getPosition().get(0), y));
@@ -88,7 +92,6 @@ public class Calibrate extends Activity2D {
         max = (TextView) findViewById(R.id.data_max);
         calibrateInformation = (TextView) findViewById(R.id.calibrateInformation);
 
-        BreathData.addObserver(this);
         AppState.recordData = AppState.inGame = false;
     }
 

@@ -2,6 +2,7 @@ package com.apps.philipps.source.helper._2D;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -28,11 +29,14 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected ViewGroup game;
     protected long delta;
     private int coins;
+    private boolean loadingReady;
+    protected long currentTime = System.currentTimeMillis();
 
     private int frameRate = 0;
     private int frame = 0;
     private boolean initialized = false;
-    private long start = System.currentTimeMillis();
+    private long frameTime = System.currentTimeMillis();
+    protected final long start = System.currentTimeMillis();
     private boolean ready = true;
     private static int thread = 0;
 
@@ -53,7 +57,11 @@ public abstract class Activity2D extends Activity implements IObserver {
     }
 
     protected void subCoin() {
-        coins--;
+        subCoin(1);
+    }
+
+    protected boolean isInitialized() {
+        return initialized;
     }
 
     protected void addCoin(int coins) {
@@ -87,38 +95,87 @@ public abstract class Activity2D extends Activity implements IObserver {
             });
             while (draw) {
                 if (initialized) {
-                    delta = System.currentTimeMillis() - start;
+                    delta = System.currentTimeMillis() - frameTime;
                     if (ready) {
                         ready = false;
-                        executeDraw();
-                        start = System.currentTimeMillis();
+                        if (!loadingReady)
+                            load(false);
+                        else
+                            executeDraw();
+                        frameTime = System.currentTimeMillis();
                     }
                 }
             }
         }
     };
 
+
     private void starToDraw() {
         draw = true;
-        Thread drawThread = new Thread(null, drawing, "Activity 2D " + thread++);
+        load(true);
+        Thread drawThread = new Thread(null, drawing, TAG + " " + thread++);
         drawThread.start();
     }
 
+    private void load(final boolean firstLoad) {
+        // TODO: 05.09.2017 Vernünftige Load schreiben sie muss wissen wann alles geladen wurde
+        if (System.currentTimeMillis() - start > 6000) {
+            loadingReady = true;
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (loadingReady)
+                    onLoadingReady();
+                else
+                    onLoading(firstLoad, (int) (System.currentTimeMillis() - start) / 60);
+
+                ready = true;
+            }
+        });
+    }
+
+    /**
+     * You can remove your loading Screen here, or use the first draw() call to do this.
+     */
+    protected void onLoadingReady() {
+    }
+
+    /**
+     * Show your loading screen here. This is kind of draw method, just for drawing Loading Screen.
+     * Due to several background workings, this method might not be called 60 times every second.
+     *
+     * @param firstLoad true if this is the first onLoading(...) call
+     * @param progress  progress of loading from 0 to 100;
+     * @return true if this method called for the first time, otherwise false
+     */
+    protected abstract void onLoading(boolean firstLoad, int progress);
+
+    /**
+     * Draw your Frame
+     */
     protected abstract void draw();
 
+    /**
+     * Initialize your game
+     */
     protected abstract void init();
 
+    /**
+     * Your touch event
+     *
+     * @param event touch event
+     */
     protected abstract void touch(MotionEvent event);
 
     /**
-     *
      * Returns the width of the game Layout if initialized, else the width of the screen
      *
      * @param absolute
      * @return with of game Layout or screen in the second place
      */
     protected int getScreenWidth(boolean... absolute) {
-        if (game != null && (absolute.length==0 || !absolute[0]))
+        if (game != null && (absolute.length == 0 || !absolute[0]))
             return game.getWidth();
         return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
@@ -130,7 +187,7 @@ public abstract class Activity2D extends Activity implements IObserver {
      * @return height of game Layout or screen in the second place
      */
     protected int getScreenHeight(boolean... absolute) {
-        if (game != null && (absolute.length==0 || !absolute[0]))
+        if (game != null && (absolute.length == 0 || !absolute[0]))
             return game.getHeight();
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
@@ -143,6 +200,7 @@ public abstract class Activity2D extends Activity implements IObserver {
             public void run() {
                 try {
                     PlanManager.update();
+                    currentTime = System.currentTimeMillis();
                     draw();
                 } catch (Exception e) {
                     Log.e(TAG, "Draw not successfull", e);
@@ -192,6 +250,15 @@ public abstract class Activity2D extends Activity implements IObserver {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * Use this Method to quickly initialize your GameObject2D
+     *
+     * @param content     id of your drawable content
+     * @param position    position ov the Object
+     * @param destination destination of the movement (can be null)
+     * @param move        speed of the movement
+     * @return your GameoObject2D
+     */
     protected GameObject2D initObject(@DrawableRes int content, Vector position, Vector destination, double move) {
         ImageView view = new ImageView(this);
         view.setImageResource(content);
@@ -201,8 +268,15 @@ public abstract class Activity2D extends Activity implements IObserver {
         return result;
     }
 
+    /**
+     * Get random int from to
+     *
+     * @param from frameTime of values
+     * @param to   limit of values (from 0 to 2 the Values are [0,1,2])
+     * @return random int from to
+     */
     protected int getInt(int from, int to) {
         Random r = new Random();
-        return (from + r.nextInt()) % to;
+        return (from + Math.abs(r.nextInt())) % to + 1;
     }
 }

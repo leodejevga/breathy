@@ -77,6 +77,11 @@ public class Application extends Activity2D {
     }
 
     @Override
+    protected void onLoading(boolean firstLoad, int progress) {
+    }
+
+
+    @Override
     protected void draw() {
         long delta = System.currentTimeMillis() - start;
         calcSpeed();
