@@ -65,6 +65,12 @@ public class Vector implements Comparable<Vector>, Cloneable {
             set(i, get(i) + position.get(i));
         return this;
     }
+    public Vector add(double... position) {
+        Vector toAdd = new Vector(position);
+        for (int i = 0; i < getDimensions() || i < toAdd.getDimensions(); i++)
+            set(i, get(i) + toAdd.get(i));
+        return this;
+    }
 
     /**
      * Sub position.
@@ -75,6 +81,12 @@ public class Vector implements Comparable<Vector>, Cloneable {
     public Vector sub(Vector position) {
         for (int i = 0; i < getDimensions() || i < position.getDimensions(); i++)
             set(i, get(i) - position.get(i));
+        return this;
+    }
+    public Vector sub(double... position) {
+        Vector toSub = new Vector(position);
+        for (int i = 0; i < getDimensions() || i < toSub.getDimensions(); i++)
+            set(i, get(i) - toSub.get(i));
         return this;
     }
 

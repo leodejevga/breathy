@@ -1,6 +1,7 @@
 package com.apps.philipps.test;
 
 import android.content.Context;
+import android.provider.Settings;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -14,7 +15,6 @@ import com.apps.philipps.source.helper._2D.GameObject2D;
 
 public class GOFactory {
 
-
     public static class Enemy extends GameObject2D {
         public Enemy(Context context, Vector position, int speed, ViewGroup game) {
             super(new ImageView(context), new Animated(position, new Vector(-100, position.get(1)), speed, true));
@@ -26,7 +26,8 @@ public class GOFactory {
 
     public static class Laser extends GameObject2D {
         public Laser(Context context, Ship ship, int dest, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(ship.getPosition().clone().add(new Vector(30, 30)), new Vector(dest, ship.getPosition().get(1) + 50), speed, true));
+            super(new ImageView(context), new Animated(ship.getPosition().clone().add(new Vector(110, 25)), new Vector(dest, ship.getPosition().get(1) + 25), speed, true));
+
             if (GameStats.shoot.id == 0)
                 ((ImageView) getView()).setImageResource(R.drawable.laser_green);
             if (GameStats.shoot.id == 1)
@@ -47,12 +48,23 @@ public class GOFactory {
 
     public static class Explosion extends GameObject2D {
         public long start = System.currentTimeMillis();
+        private long past;
+        private ViewGroup game;
+        public boolean toRemove;
 
         public Explosion(Context context, Enemy enemy, final ViewGroup game) {
-            super(new ImageView(context), enemy.getAnimated().clone());
+            super(new ImageView(context), new Animated(enemy.getPosition().clone().add(new Vector(-40, -40)), enemy.getAnimated().getDestination(), enemy.getAnimated().getSpeed(), true));
             ((ImageView) getView()).setImageResource(R.drawable.explosion);
             game.addView(getView());
+            this.game = game;
+        }
 
+        @Override
+        public void update(long deltaMilliseconds) {
+            super.update(deltaMilliseconds);
+            past += deltaMilliseconds;
+            if (toRemove = past > GameStats.explosionTime)
+                game.removeView(getView());
         }
     }
 
@@ -66,7 +78,8 @@ public class GOFactory {
 
     public static class Goody extends GameObject2D {
         public GameStats.Effect effect;
-        public int intercectableIn = 50;
+        public int intersectableIn = 100;
+        public long loopStart = 0;
 
         public Goody(Context context, Enemy enemy, ViewGroup game, boolean good) {
             super(new ImageView(context), enemy.getAnimated().clone());
@@ -80,6 +93,8 @@ public class GOFactory {
         }
 
         public boolean activate() {
+            if (effect == GameStats.Effect.timeLoop)
+                loopStart = effect.value;
             return effect.activate();
         }
 
@@ -87,8 +102,39 @@ public class GOFactory {
         public void update(long deltaMilliseconds) {
             super.update(deltaMilliseconds);
             if (!intercectable) {
-                intercectable = System.currentTimeMillis() - created >= intercectableIn;
+                intercectable = System.currentTimeMillis() - created >= intersectableIn;
             }
+            if (loopStart != 0 && System.currentTimeMillis() - loopStart >= GameStats.TIME_LOOP_DELAY) {
+                loopStart = 0;
+                GameStats.timeLoopAnimation.animate(new Vector(1));
+            }
+        }
+    }
+
+    public static class Shoot extends GameObject2D {
+        private long past;
+        private ViewGroup game;
+        public boolean toRemove;
+
+        public Shoot(Context context, Ship ship, ViewGroup game) {
+            super(new ImageView(context), new Animated(ship.getPosition().clone().add(90, -20),
+                    ship.getAnimated().getDestination().clone().add(110, -20), ship.getAnimated().getSpeed(), true));
+            if (GameStats.shoot.id == 0)
+                ((ImageView) getView()).setImageResource(R.drawable.shoot_greed);
+            if (GameStats.shoot.id == 1)
+                ((ImageView) getView()).setImageResource(R.drawable.shoot_blue);
+            if (GameStats.shoot.id == 2)
+                ((ImageView) getView()).setImageResource(R.drawable.shoot_red);
+            game.addView(getView());
+            this.game = game;
+        }
+
+        @Override
+        public void update(long deltaMilliseconds) {
+            super.update(deltaMilliseconds);
+            past += deltaMilliseconds;
+            if (toRemove = past > GameStats.shootTime)
+                game.removeView(getView());
         }
     }
 }

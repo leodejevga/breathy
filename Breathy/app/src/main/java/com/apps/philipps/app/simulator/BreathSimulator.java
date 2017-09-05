@@ -114,7 +114,7 @@ public class BreathSimulator {
             private int value = 0;
             @Override
             public void run() {
-                Looper.prepare();
+//                Looper.prepare();
                 int index = 0;
                 long delta = 0;
                 double millis = 1000 / rate;

@@ -1,5 +1,8 @@
 package com.apps.philipps.test;
 
+import com.apps.philipps.source.helper.Animated;
+import com.apps.philipps.source.helper.Vector;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,6 +17,7 @@ public class GameStats {
     private static final int[] ENEMY_COME_MIN_MAX = {100, 300};
     private static final int[] ENEMY_SPEED_MIN_MAX = {200, 500};
     private static boolean initialized = false;
+    public static final int TIME_LOOP_DELAY = 5000;
 
     public static int enemyCome;
     public static int starCome;
@@ -22,31 +26,36 @@ public class GameStats {
     public static int cloudSpeed;
     public static int explosionTime;
     public static ShootSpeed shoot = ShootSpeed.Green;
+    public static long shootTime;
+    public static Animated timeLoopAnimation;
 
     public static void init() {
         enemyCome = 200;
         starCome = 20;
         enemySpeed = 300;
-        shipSpeed = 1000;
+        shipSpeed = 1200;
         cloudSpeed = 160;
         explosionTime = 50;
+        shootTime = 30;
+        timeLoopAnimation = new Animated(new Vector(1), new Vector(0.5), 1000, false);
         shoot = ShootSpeed.Green;
         initialized = true;
     }
 
     public enum Effect {
-        increaseShootSpeed(true, "Increase shoot_red speed", 0),
-        decreaseShootSpeed(false, "Decrease shoot_red speed", 0),
-        increaseEnemySpeed(false, "Increase enemy speed", 50),
-        decreaseEnemySpeed(true, "Decrease enemy speed", 50),
-        increaseEnemyCome(false, "Increase enemy come", -30),
-        decreaseEnemyCome(true, "Decrease enemy come", -30);
+        timeLoop(true, "Good: Time Loop for 5 seconds", System.currentTimeMillis()),
+        increaseShootSpeed(true, "Good: Increase shoot speed", 0),
+        decreaseShootSpeed(false, "Bad: Decrease shoot speed", 0),
+        increaseEnemySpeed(false, "Bad: Increase enemy speed", 50),
+        decreaseEnemySpeed(true, "Good: Decrease enemy speed", 50),
+        increaseEnemyCome(false, "Bad: Increase enemy come", -30),
+        decreaseEnemyCome(true, "Good: Decrease enemy come", -30);
 
         public final boolean good;
         public final String name;
-        public final int value;
+        public final long value;
 
-        Effect(boolean good, String name, int value) {
+        Effect(boolean good, String name, long value) {
             this.good = good;
             this.name = name;
             this.value = value;
@@ -69,14 +78,18 @@ public class GameStats {
 
         public static Effect getEffect(boolean good) {
             Random r = new Random();
-            int i = Math.abs(r.nextInt()) % 2;
-            return getKind(good).get(i);
+            List<Effect> kinds = getKind(good);
+            int i = Math.abs(r.nextInt()) % kinds.size();
+            return kinds.get(i);
         }
 
         public boolean activate() {
             boolean result;
             if (initialized) {
                 switch (this) {
+                    case timeLoop:
+                        timeLoopAnimation.animate(new Vector(0.5));
+                        return true;
                     case increaseShootSpeed:
                         ShootSpeed succ = shoot;
                         shoot = shoot.succ();
@@ -109,9 +122,9 @@ public class GameStats {
 
     public static enum ShootSpeed {
         None(-1, Integer.MAX_VALUE, 0),
-        Green(0, 100, 5000),
-        Blue(1, 80, 5400),
-        Red(2, 60, 6000);
+        Green(0, 100, 5500),
+        Blue(1, 80, 6000),
+        Red(2, 60, 6500);
 
         public final int rate;
         public final int id;

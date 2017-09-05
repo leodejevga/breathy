@@ -127,9 +127,10 @@ public abstract class Activity2D extends Activity implements IObserver {
             public void run() {
                 if (loadingReady)
                     onLoadingReady();
-                else
-                    onLoading(firstLoad, (int) (System.currentTimeMillis() - start) / 60);
-
+                else {
+                    int percent = (int) (System.currentTimeMillis() - start) / 60;
+                    onLoading(firstLoad, percent>100?100:percent);
+                }
                 ready = true;
             }
         });

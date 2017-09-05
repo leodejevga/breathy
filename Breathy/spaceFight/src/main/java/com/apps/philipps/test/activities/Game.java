@@ -82,16 +82,14 @@ public class Game extends Activity2D {
                 + PlanManager.getDuration() % 1000;
 
         List<GameObject2D> toRemove = new ArrayList<>();
-        if (pressed == 0) {
-            gameBuffer.laser.add(new GOFactory.Laser(this, gameBuffer.ship, getScreenWidth(), GameStats.shoot.getSpeed(), game));
-        }
-        pressed = pressed != -1 ? pressed + delta : -1;
-        if (pressed >= GameStats.shoot.rate) {
-            pressed = 0;
-        }
 
         for (GameObject2D object : gameBuffer) {
+            double speed = object.getAnimated().getSpeed();
+            GameStats.timeLoopAnimation.update(delta);
+            object.getAnimated().setSpeed(speed*GameStats.timeLoopAnimation.getPosition().get(0));
             object.update(delta);
+            object.getAnimated().setSpeed(speed);
+
             if (object instanceof GOFactory.Ship && status != null && BreathData.get(0) != null) {
                 double d = BreathData.get(0).data;
                 double y = (d - AppState.breathyUserMin) / (AppState.breathyUserMax - AppState.breathyUserMin) * getScreenHeight();
@@ -105,8 +103,9 @@ public class Game extends Activity2D {
             } else if ((object instanceof GOFactory.Star || object instanceof GOFactory.Goody) && !object.isMoving()) {
                 game.removeView(object.getView());
                 toRemove.add(object);
-            } else if (object instanceof GOFactory.Explosion && currentTime - ((GOFactory.Explosion) object).start >= GameStats.explosionTime) {
-                game.removeView(object.getView());
+            } else if (object instanceof GOFactory.Explosion && ((GOFactory.Explosion) object).toRemove) {
+                toRemove.add(object);
+            } else if (object instanceof GOFactory.Shoot && ((GOFactory.Shoot) object).toRemove) {
                 toRemove.add(object);
             } else if (object instanceof GOFactory.Laser) {
                 if (!object.isMoving()) {
@@ -133,7 +132,7 @@ public class Game extends Activity2D {
                         if (object.intersect(enemy)) {
                             gameBuffer.explosions.add(new GOFactory.Explosion(this, enemy, game));
                             if (getInt(0, 15) == 5)
-                                gameBuffer.goodies.add(new GOFactory.Goody(this, enemy, game, getInt(0, 2) == 0));
+                                gameBuffer.goodies.add(new GOFactory.Goody(this, enemy, game, getInt(0, 2) == 1));
                             game.removeView(enemy.getView());
                             game.removeView(object.getView());
                             toRemove.add(object);
@@ -144,10 +143,19 @@ public class Game extends Activity2D {
                 }
             }
         }
+
+        if (pressed == 0) {
+            gameBuffer.shoot = new GOFactory.Shoot(this, gameBuffer.ship, game);
+            gameBuffer.laser.add(new GOFactory.Laser(this, gameBuffer.ship, getScreenWidth(), GameStats.shoot.getSpeed(), game));
+        }
+        pressed = pressed != -1 ? pressed + delta : -1;
+        if (pressed >= GameStats.shoot.rate) {
+            pressed = 0;
+        }
         gameBuffer.removeAll(toRemove);
         if ((currentTime - enemySpawned) > GameStats.enemyCome) {
             enemySpawned = currentTime;
-            gameBuffer.enemies.add(new GOFactory.Enemy(this, new Vector(getScreenWidth()-50, getEnemyY()), GameStats.enemySpeed, game));
+            gameBuffer.enemies.add(new GOFactory.Enemy(this, new Vector(getScreenWidth() - 50, getEnemyY()), GameStats.enemySpeed, game));
         }
         if ((currentTime - starSpawned) > GameStats.starCome + getInt(0, 1000)) {
             starSpawned = currentTime;
@@ -176,7 +184,7 @@ public class Game extends Activity2D {
                 finish();
             if (event.getAction() == MotionEvent.ACTION_DOWN)
                 pressed = 0;
-            else
+            else if (event.getAction() == MotionEvent.ACTION_UP)
                 pressed = -1;
         }
     }

@@ -29,6 +29,10 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
     private double curRotation;
     public final long created = System.currentTimeMillis();
 
+    public GameObject2D(){
+
+    }
+
     public GameObject2D(@NonNull View object) {
         this(object, null, null);
     }
@@ -139,6 +143,14 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
         calcNewTarget(alpha);
         getView().setRotation((float) curRotation);
 
+    }
+
+    /**
+     * Sets the View object
+     * @param object the View represented by this class
+     */
+    public void setObject(View object) {
+        this.object = object;
     }
 
     public void calcNewTarget(double alpha) {
