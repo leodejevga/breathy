@@ -118,7 +118,7 @@ public class GOFactory {
 
         public Shoot(Context context, Ship ship, ViewGroup game) {
             super(new ImageView(context), new Animated(ship.getPosition().clone().add(90, -20),
-                    ship.getAnimated().getDestination().clone().add(110, -20), ship.getAnimated().getSpeed(), true));
+                    ship.getPosition().clone().add(90, -20), 20, true));
             if (GameStats.shoot.id == 0)
                 ((ImageView) getView()).setImageResource(R.drawable.shoot_greed);
             if (GameStats.shoot.id == 1)

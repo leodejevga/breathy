@@ -36,7 +36,7 @@ public class GameStats {
         shipSpeed = 1200;
         cloudSpeed = 160;
         explosionTime = 50;
-        shootTime = 30;
+        shootTime = 20;
         timeLoopAnimation = new Animated(new Vector(1), new Vector(0.5), 1000, false);
         shoot = ShootSpeed.Green;
         initialized = true;
