@@ -112,7 +112,7 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
     @Override
     @CallSuper
-    public void update(long deltaMilliseconds) {
+    public void update(double deltaMilliseconds) {
         position.update(deltaMilliseconds);
         object.setX(position.getStart().getF(0));
         object.setY(position.getStart().getF(1));
@@ -127,7 +127,7 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
     public void setRotation(double alpha) {
         curRotation += alpha;
-        //Animation rotationAnimation = new RotateAnimation(0.0f, -90.0f, 0.5f, 0.5f);
+        //Animations rotationAnimation = new RotateAnimation(0.0f, -90.0f, 0.5f, 0.5f);
         //rotationAnimation.setDuration(1000);
         //rotationAnimation.setFillAfter(true);
         //rotationAnimation.setInterpolator(new LinearInterpolator());

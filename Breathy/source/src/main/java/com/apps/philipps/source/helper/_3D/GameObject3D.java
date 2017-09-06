@@ -92,7 +92,7 @@ public class GameObject3D implements IGameObject {
     }
 
     @Override
-    public void update(long deltaMilliseconds) {
+    public void update(double deltaMilliseconds) {
         init();
         shape.draw(result);
         isResultMatrixSet = false;
