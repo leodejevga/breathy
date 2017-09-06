@@ -80,6 +80,8 @@ public abstract class Activity2D extends Activity implements IObserver {
 
     private final Runnable drawing = new Runnable() {
         private Long millis;
+        private int whiles = 0, ifs = 0, draws = 0;
+        private long s = System.currentTimeMillis();
 
         @Override
         public void run() {
@@ -95,27 +97,25 @@ public abstract class Activity2D extends Activity implements IObserver {
             });
             while (draw) {
                 if (initialized) {
-                    delta = System.currentTimeMillis() - frameTime;
-                    if (ready) {
+                    if (ready && System.currentTimeMillis() - frameTime > millis) {
+                        draws++;
                         ready = false;
                         if (!loadingReady)
                             load(false);
                         else
                             executeDraw();
-                        frameTime = System.currentTimeMillis();
-                    }
+                    } else
+                        ifs++;
+                } else
+                    whiles++;
+                if (System.currentTimeMillis() - s > 1000) {
+//                    Log.e(TAG, "draws " + draws + " ifs " + ifs + " whiles " + whiles);
+                    whiles = ifs = draws = 0;
+                    s = System.currentTimeMillis();
                 }
             }
         }
     };
-
-
-    private void starToDraw() {
-        draw = true;
-        load(true);
-        Thread drawThread = new Thread(null, drawing, TAG + " " + thread++);
-        drawThread.start();
-    }
 
     private void load(final boolean firstLoad) {
         // TODO: 05.09.2017 Vernünftige Load schreiben sie muss wissen wann alles geladen wurde
@@ -128,12 +128,49 @@ public abstract class Activity2D extends Activity implements IObserver {
                 if (loadingReady)
                     onLoadingReady();
                 else {
+                    currentTime = System.currentTimeMillis();
+                    delta = currentTime - frameTime;
                     int percent = (int) (System.currentTimeMillis() - start) / 60;
-                    onLoading(firstLoad, percent>100?100:percent);
+                    onLoading(firstLoad, percent > 100 ? 100 : percent);
                 }
                 ready = true;
+                frameTime = System.currentTimeMillis();
             }
         });
+    }
+
+    private long second = System.currentTimeMillis();
+
+    private void executeDraw() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PlanManager.update();
+                    currentTime = System.currentTimeMillis();
+                    delta = currentTime - frameTime;
+                    draw();
+//                    Log.e(TAG, "\nDraw time: " + (System.currentTimeMillis() - currentTime));
+                } catch (Exception e) {
+                    Log.e(TAG, "Draw not successfull", e);
+                }
+                frame++;
+                if (second + 1000 <= currentTime) {
+                    frameRate = frame;
+                    frame = 0;
+                    second = currentTime;
+                }
+                ready = true;
+                frameTime = System.currentTimeMillis();
+            }
+        });
+    }
+
+    private void starToDraw() {
+        draw = true;
+        load(true);
+        Thread drawThread = new Thread(null, drawing, TAG + " " + thread++);
+        drawThread.start();
     }
 
     /**
@@ -191,30 +228,6 @@ public abstract class Activity2D extends Activity implements IObserver {
         if (game != null && (absolute.length == 0 || !absolute[0]))
             return game.getHeight();
         return Resources.getSystem().getDisplayMetrics().heightPixels;
-    }
-
-    private long second = System.currentTimeMillis();
-
-    private void executeDraw() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    PlanManager.update();
-                    currentTime = System.currentTimeMillis();
-                    draw();
-                } catch (Exception e) {
-                    Log.e(TAG, "Draw not successfull", e);
-                }
-                frame++;
-                if (second + 1000 <= System.currentTimeMillis()) {
-                    frameRate = frame;
-                    frame = 0;
-                    second = System.currentTimeMillis();
-                }
-                ready = true;
-            }
-        });
     }
 
     @Override

@@ -21,7 +21,7 @@ public abstract class BreathData {
     private static List<IObserver> observer = new ArrayList<>();
     private static RAM ram;
     private static int ramSize = 500;
-    private static int blockSize = 1000;
+    private static int blockSize = 500;
     private static boolean initialized = false;
 
     /**
@@ -308,12 +308,11 @@ public abstract class BreathData {
         public Element(double data) {
             this.data = data;
             this.date = Calendar.getInstance();
-            this.date.setTimeInMillis(Long.MAX_VALUE);
         }
 
         @Override
         public String toString() {
-            return data + " at " + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE) + ":" + date.get(Calendar.SECOND);
+            return data + " at " + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE) + ":" + date.get(Calendar.SECOND) + ":" + date.get(Calendar.MILLISECOND);
         }
     }
 

@@ -1,14 +1,9 @@
 package com.apps.philipps.source.helper;
 
-import android.provider.Settings;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.interfaces.IObserver;
 
-import java.security.PolicySpi;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,32 +13,33 @@ import java.util.List;
 public class Animated {
 
     protected final String TAG = getClass().getSimpleName();
-    private Vector position;
-    private Vector destination;
+    private Vector start;
+    private Vector end;
     private List<IObserver> oberver = new ArrayList<>();
     private double speed;
+    private double factor = 1;
 
     private boolean active = false;
 
     /**
      * Instantiates a new Animated.
      *
-     * @param position the position
+     * @param start the start
      */
-    public Animated(@NonNull Vector position) {
-        this.position = position;
+    public Animated(@NonNull Vector start) {
+        this.start = start;
     }
 
 
     /**
      * Instantiates a new Animated.
      *
-     * @param position    the position
-     * @param destination the destination
+     * @param start    the start
+     * @param end the end
      */
-    public Animated(@NonNull Vector position, @NonNull Vector destination) {
-        this.position = position;
-        this.destination = destination;
+    public Animated(@NonNull Vector start, @NonNull Vector end) {
+        this.start = start;
+        this.end = end;
     }
 
     public boolean isMoving() {
@@ -53,14 +49,14 @@ public class Animated {
     /**
      * Instantiates a new Animated.
      *
-     * @param position    the position
-     * @param destination the destination
+     * @param start    the start
+     * @param end the end
      * @param speed       the speed
      * @param activate    the activate
      */
-    public Animated(@NonNull Vector position, @NonNull Vector destination, double speed, boolean activate) {
-        this.position = position;
-        this.destination = destination;
+    public Animated(@NonNull Vector start, @NonNull Vector end, double speed, boolean activate) {
+        this.start = start;
+        this.end = end;
         this.speed = speed;
         this.active = activate;
     }
@@ -81,23 +77,23 @@ public class Animated {
 
     public void resume(double speed) {
         this.speed = speed;
-        active = destination != null && speed != 0;
+        active = end != null && speed != 0;
     }
 
     /**
      * Animate with previeous speed
      *
-     * @param destination
+     * @param end
      */
-    public void animate(Vector destination) {
-        this.destination = destination;
+    public void animate(Vector end) {
+        this.end = end;
         active = speed != 0;
     }
 
     /**
      * Animate.
      *
-     * @param destination the destination
+     * @param destination the end
      * @param speed       the speed
      */
     public void animate(Vector destination, double speed) {
@@ -106,12 +102,21 @@ public class Animated {
     }
 
     /**
-     * Get position vector.
+     * Get start vector.
      *
      * @return the vector
      */
-    public Vector getPosition() {
-        return position;
+    public Vector getStart() {
+        return start;
+    }
+
+    /**
+     * Get start vector.
+     *
+     * @return the vector
+     */
+    public void setFactor(double factor) {
+        this.factor = factor;
     }
 
     /**
@@ -124,58 +129,59 @@ public class Animated {
     }
 
     /**
-     * Get destination vector
+     * Get end vector
      *
-     * @return the destination as vector
+     * @return the end as vector
      */
-    public Vector getDestination() {
-        return destination;
+    public Vector getEnd() {
+        return end;
     }
 
     public double getSpeed() {
         return speed;
     }
+
     public void setSpeed(double speed) {
         this.speed = speed;
     }
 
     /**
-     * Set destination vector
+     * Set end vector
      *
-     * @param vector destination as vector
+     * @param vector end as vector
      */
-    public void setDestination(Vector vector) {
-        this.destination = vector;
-        if (destination.compareTo(position) == 0)
+    public void setEnd(Vector vector) {
+        this.end = vector;
+        if (end.compareTo(start) == 0)
             active = false;
     }
 
     /**
      * Position of Animated Object
      *
-     * @param position
+     * @param start
      */
-    public void setPosition(Vector position) {
-        this.position = position;
-        if (destination.compareTo(position) == 0)
+    public void setStart(Vector start) {
+        this.start = start;
+        if (end.compareTo(start) == 0)
             active = false;
     }
 
     public void update(long deltaMilliseconds) {
         if (active) {
-            if (position.compareTo(destination) == 0)
+            if (start.compareTo(end) == 0)
                 active = false;
             else {
-                Vector div = Vector.sub(destination, position);
+                Vector div = Vector.sub(end, start);
                 Vector norm = div.clone().norm();
-                Vector add = Vector.mult(norm, speed * deltaMilliseconds / 1000f);
-                if (position.getDistance(destination) < position.getDistance(Vector.add(position, add))) {
-                    position = destination.clone();
+                Vector add = Vector.mult(norm, speed * deltaMilliseconds / 1000f * factor);
+                if (start.getDistance(end) < start.getDistance(Vector.add(start, add))) {
+                    start = end.clone();
                     active = false;
                 } else {
-                    position.add(add);
+                    start.add(add);
                     for (IObserver o : oberver)
-                        o.call(position);
+                        o.call(start);
                 }
             }
         }
@@ -183,11 +189,11 @@ public class Animated {
 
     @Override
     public String toString() {
-        return position + " --> " + destination + (isMoving() ? "  is moving with " + speed : "");
+        return start + " --> " + end + (isMoving() ? "  is moving with " + speed : "");
     }
 
     @Override
     public Animated clone() {
-        return new Animated(position.clone(), destination.clone(), speed, active);
+        return new Animated(start.clone(), end.clone(), speed, active);
     }
 }

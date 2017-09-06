@@ -24,6 +24,7 @@ public class GameBuffer implements Iterable<GameObject2D> {
     public List<GOFactory.Goody> goodies = new ArrayList<>();
     public GOFactory.Shoot shoot;
     public GOFactory.Ship ship;
+    public boolean initialized = false;
 
     public GameBuffer(GOFactory.Ship ship, double screenFactor) {
         this.ship = ship;
@@ -31,6 +32,7 @@ public class GameBuffer implements Iterable<GameObject2D> {
         GameStats.shipSpeed *= screenFactor;
         GameStats.shoot.setFactor(screenFactor);
         this.ship.move(GameStats.shipSpeed);
+        initialized = true;
     }
 
 
@@ -114,5 +116,6 @@ public class GameBuffer implements Iterable<GameObject2D> {
         explosions.clear();
         ship = null;
         enemies.clear();
+        initialized = false;
     }
 }

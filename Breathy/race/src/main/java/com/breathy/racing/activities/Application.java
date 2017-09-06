@@ -270,9 +270,9 @@ public class Application extends Activity2D {
         }
         if (overtake != 0) {
             if (rightLane) {
-                curCar.move(new Vector(xRoads[curStreet + 1], curCar.getAnimated().getDestination().get(1)));
+                curCar.move(new Vector(xRoads[curStreet + 1], curCar.getAnimated().getEnd().get(1)));
             } else if (leftLane) {
-                curCar.move(new Vector(xRoads[curStreet - 1], curCar.getAnimated().getDestination().get(1)));
+                curCar.move(new Vector(xRoads[curStreet - 1], curCar.getAnimated().getEnd().get(1)));
             } else {
                 curCar.move(slowCars.get(overtake).getAnimated().getSpeed());
             }

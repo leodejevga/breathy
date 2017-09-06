@@ -1,7 +1,7 @@
 package com.apps.philipps.test;
 
 import android.content.Context;
-import android.provider.Settings;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -53,7 +53,7 @@ public class GOFactory {
         public boolean toRemove;
 
         public Explosion(Context context, Enemy enemy, final ViewGroup game) {
-            super(new ImageView(context), new Animated(enemy.getPosition().clone().add(new Vector(-40, -40)), enemy.getAnimated().getDestination(), enemy.getAnimated().getSpeed(), true));
+            super(new ImageView(context), new Animated(enemy.getPosition().clone().add(new Vector(-40, -40)), enemy.getAnimated().getEnd(), enemy.getAnimated().getSpeed(), true));
             ((ImageView) getView()).setImageResource(R.drawable.explosion);
             game.addView(getView());
             this.game = game;
@@ -79,7 +79,8 @@ public class GOFactory {
     public static class Goody extends GameObject2D {
         public GameStats.Effect effect;
         public int intersectableIn = 100;
-        public long loopStart = 0;
+        public long start = 0;
+        public boolean toRemove = false;
 
         public Goody(Context context, Enemy enemy, ViewGroup game, boolean good) {
             super(new ImageView(context), enemy.getAnimated().clone());
@@ -93,9 +94,11 @@ public class GOFactory {
         }
 
         public boolean activate() {
+            boolean result = effect.activate();
             if (effect == GameStats.Effect.timeLoop)
-                loopStart = effect.value;
-            return effect.activate();
+                start = effect.value;
+            else start = -1;
+            return result;
         }
 
         @Override
@@ -104,10 +107,14 @@ public class GOFactory {
             if (!intercectable) {
                 intercectable = System.currentTimeMillis() - created >= intersectableIn;
             }
-            if (loopStart != 0 && System.currentTimeMillis() - loopStart >= GameStats.TIME_LOOP_DELAY) {
-                loopStart = 0;
+            long delta = System.currentTimeMillis() - start;
+            if (start > 0 && delta >= GameStats.TIME_LOOP_DELAY) {
                 GameStats.timeLoopAnimation.animate(new Vector(1));
+                Log.e(TAG, "time loop deactivate : " + GameStats.timeLoopAnimation);
+                start = -1;
             }
+            if (start == -1 || !isMoving())
+                toRemove = true;
         }
     }
 
@@ -118,7 +125,7 @@ public class GOFactory {
 
         public Shoot(Context context, Ship ship, ViewGroup game) {
             super(new ImageView(context), new Animated(ship.getPosition().clone().add(90, -20),
-                    ship.getPosition().clone().add(90, -20), 20, true));
+                    ship.getAnimated().getEnd().clone().add(110, -20), ship.getAnimated().getSpeed(), true));
             if (GameStats.shoot.id == 0)
                 ((ImageView) getView()).setImageResource(R.drawable.shoot_greed);
             if (GameStats.shoot.id == 1)
@@ -135,6 +142,7 @@ public class GOFactory {
             past += deltaMilliseconds;
             if (toRemove = past > GameStats.shootTime)
                 game.removeView(getView());
+            Log.e(TAG + ":" + getClass().getSimpleName(), toRemove + " to Remove");
         }
     }
 }

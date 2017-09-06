@@ -1,5 +1,7 @@
 package com.apps.philipps.test;
 
+import android.util.Log;
+
 import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Vector;
 
@@ -15,15 +17,15 @@ public class GameStats {
 
     public static final String TAG = "Game Constants";
     private static final int[] ENEMY_COME_MIN_MAX = {100, 300};
-    private static final int[] ENEMY_SPEED_MIN_MAX = {200, 500};
+    private static final int[] ENEMY_SPEED_MIN_MAX = {50, 250};
     private static boolean initialized = false;
-    public static final int TIME_LOOP_DELAY = 5000;
+    public static final int TIME_LOOP_DELAY = 10000;
 
     public static int enemyCome;
     public static int starCome;
     public static int enemySpeed;
     public static int shipSpeed;
-    public static int cloudSpeed;
+    public static int starSpeed;
     public static int explosionTime;
     public static ShootSpeed shoot = ShootSpeed.Green;
     public static long shootTime;
@@ -31,13 +33,13 @@ public class GameStats {
 
     public static void init() {
         enemyCome = 200;
-        starCome = 20;
-        enemySpeed = 300;
-        shipSpeed = 1200;
-        cloudSpeed = 160;
-        explosionTime = 50;
-        shootTime = 20;
-        timeLoopAnimation = new Animated(new Vector(1), new Vector(0.5), 1000, false);
+        starCome =20;
+        enemySpeed = 150;
+        shipSpeed = 2000;
+        starSpeed = 80;
+        explosionTime = 60;
+        shootTime = 40;
+        timeLoopAnimation = new Animated(new Vector(1), new Vector(0.2), 1000, false);
         shoot = ShootSpeed.Green;
         initialized = true;
     }
@@ -88,7 +90,8 @@ public class GameStats {
             if (initialized) {
                 switch (this) {
                     case timeLoop:
-                        timeLoopAnimation.animate(new Vector(0.5));
+                        timeLoopAnimation.animate(new Vector(0.2));
+                        Log.e(TAG, "time loop activate");
                         return true;
                     case increaseShootSpeed:
                         ShootSpeed succ = shoot;
@@ -122,9 +125,9 @@ public class GameStats {
 
     public static enum ShootSpeed {
         None(-1, Integer.MAX_VALUE, 0),
-        Green(0, 100, 5500),
-        Blue(1, 80, 6000),
-        Red(2, 60, 6500);
+        Green(0, 120, 3000),
+        Blue(1, 100, 3500),
+        Red(2, 80, 4500);
 
         public final int rate;
         public final int id;

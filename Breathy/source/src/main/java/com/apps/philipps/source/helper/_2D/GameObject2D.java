@@ -2,20 +2,12 @@ package com.apps.philipps.source.helper._2D;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
-import android.widget.ImageView;
 
 import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.interfaces.IGameObject;
 import com.apps.philipps.source.interfaces.IObserver;
-
-import java.util.concurrent.atomic.AtomicLongArray;
 
 /**
  * Created by Jevgenij Huebert on 17.03.2017. Project Breathy
@@ -55,8 +47,8 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
     public GameObject2D(@NonNull View object, @NonNull Animated position) {
         this.object = object;
-        object.setX(position.getPosition().getF(0));
-        object.setY(position.getPosition().getF(1));
+        object.setX(position.getStart().getF(0));
+        object.setY(position.getStart().getF(1));
         this.position = position;
         this.position.addObserver(this);
     }
@@ -64,7 +56,7 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
     public void setPosition(Vector position) {
         this.object.setX(position.getF(0));
         this.object.setY(position.getF(1));
-        this.position.setPosition(position);
+        this.position.setStart(position);
     }
 
 
@@ -74,7 +66,7 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
     @Override
     public Vector getPosition() {
-        return position.getPosition();
+        return position.getStart();
     }
 
     @Override
@@ -93,8 +85,8 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
             this.object.setX(((Vector) messages[0]).getF(0));
             this.object.setY(((Vector) messages[0]).getF(1));
         } else {
-            this.object.setX(position.getPosition().getF(0));
-            this.object.setY(position.getPosition().getF(1));
+            this.object.setX(position.getStart().getF(0));
+            this.object.setY(position.getStart().getF(1));
         }
     }
 
@@ -122,8 +114,8 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
     @CallSuper
     public void update(long deltaMilliseconds) {
         position.update(deltaMilliseconds);
-        object.setX(position.getPosition().getF(0));
-        object.setY(position.getPosition().getF(1));
+        object.setX(position.getStart().getF(0));
+        object.setY(position.getStart().getF(1));
     }
 
     @Override
@@ -155,10 +147,10 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
     public void calcNewTarget(double alpha) {
 
-        float x = position.getDestination().getF(0);
-        float y = position.getDestination().getF(1);
-        float xD = position.getPosition().getF(0);
-        float yD = position.getPosition().getF(1);
+        float x = position.getEnd().getF(0);
+        float y = position.getEnd().getF(1);
+        float xD = position.getStart().getF(0);
+        float yD = position.getStart().getF(1);
         float newX = (float) (xD + (x - xD) * Math.cos(alpha) - (y - yD) * Math.sin(alpha));
         ;
         float newY = (float) (yD + (x - xD) * Math.sin(alpha) + (y - yD) * Math.cos(alpha));
@@ -166,7 +158,7 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
         //ToDo dafür sorgen das Bild unter bestimmten umständen aus dem Screen verschwindet
 
-        position.setDestination(new Vector(x, y));
+        position.setEnd(new Vector(x, y));
     }
 
     /**
