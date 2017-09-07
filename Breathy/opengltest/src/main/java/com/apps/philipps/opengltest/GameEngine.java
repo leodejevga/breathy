@@ -74,6 +74,8 @@ public class GameEngine {
     }
 
     private void playBackgroundMusic(){
+        if (myMediaPlayer != null)
+            myMediaPlayer.release();
         myMediaPlayer = MediaPlayer.create(mActivityContext, Backend.getDefault_music_resource_id());
         myMediaPlayer.setLooping(true);
         myMediaPlayer.start();
@@ -81,6 +83,8 @@ public class GameEngine {
     }
 
     private void playCrashMusic(){
+        if (myMediaPlayer != null)
+            myMediaPlayer.release();
         myMediaPlayer = MediaPlayer.create(mActivityContext, R.raw.aspower_ranger);
         myMediaPlayer.setLooping(false);
         myMediaPlayer.start();
@@ -110,7 +114,8 @@ public class GameEngine {
         } else {
             car.crashes();
             SPEED = MIN_SPEED;
-            playCrashMusic();
+            if (isBackgroundMusicPlaying)
+                playCrashMusic();
         }
         car.draw(deltaTime);
 
