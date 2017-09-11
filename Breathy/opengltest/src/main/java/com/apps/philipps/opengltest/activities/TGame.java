@@ -78,7 +78,17 @@ public class TGame extends Activity3D {
         // consume significant memory here.
         openGL.onPause();
         renderer3D.gameEngine.onPause();
+        System.gc();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        openGL.onPause();
+        renderer3D.gameEngine.onPause();
+        System.gc();
+    }
+
 
     @Override
     protected void onResume() {
