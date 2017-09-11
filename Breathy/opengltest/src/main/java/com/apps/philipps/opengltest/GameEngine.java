@@ -40,6 +40,7 @@ public class GameEngine {
 
     private MediaPlayer myMediaPlayer;
     private boolean isBackgroundMusicPlaying = false;
+    private int score = 0;
 
     /**
      * Set true to draw bounding box to debug
@@ -63,17 +64,22 @@ public class GameEngine {
      * draws objects
      */
     public void runGame(long deltaTime) {
+        if (Backend.highscore < score) {
+            Backend.highscore = score;
+            if (Backend.life == 0)
+                Backend.saveHighScore(mActivityContext, Backend.gName);
+        }
         rotateCam();
         Renderer3D.light.setUpLight();
         drawStreet(deltaTime);
         runSimulation(deltaTime);
         Renderer3D.light.drawLight();
         validateBreath();
-        if ( !isBackgroundMusicPlaying && !collisionDetectionThread.crashed )
+        if (!isBackgroundMusicPlaying && !collisionDetectionThread.crashed)
             playBackgroundMusic();
     }
 
-    private void playBackgroundMusic(){
+    private void playBackgroundMusic() {
         if (myMediaPlayer != null)
             myMediaPlayer.release();
         myMediaPlayer = MediaPlayer.create(mActivityContext, Backend.getDefault_music_resource_id());
@@ -82,7 +88,7 @@ public class GameEngine {
         isBackgroundMusicPlaying = true;
     }
 
-    private void playCrashMusic(){
+    private void playCrashMusic() {
         if (myMediaPlayer != null)
             myMediaPlayer.release();
         myMediaPlayer = MediaPlayer.create(mActivityContext, R.raw.aspower_ranger);
@@ -91,7 +97,7 @@ public class GameEngine {
         isBackgroundMusicPlaying = false;
     }
 
-    private void stopBackgroundMusic(){
+    private void stopBackgroundMusic() {
         myMediaPlayer.release();
         isBackgroundMusicPlaying = false;
     }
@@ -114,8 +120,10 @@ public class GameEngine {
         } else {
             car.crashes();
             SPEED = MIN_SPEED;
-            if (isBackgroundMusicPlaying)
+            if (isBackgroundMusicPlaying) {
                 playCrashMusic();
+                Backend.life--;
+            }
         }
         car.draw(deltaTime);
 
@@ -190,6 +198,7 @@ public class GameEngine {
                 while (enemiesOverlapped(enemy)) {
                     enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
                 }
+                score++;
             }
 
             //runsWithSpeed
@@ -335,7 +344,6 @@ public class GameEngine {
                 enemiesSimulation();
             }
         }
-
 
         public void enemiesSimulation() {
             for (int i = 0; i < enemies.size(); i++) {
