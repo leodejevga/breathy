@@ -170,13 +170,13 @@ public class GameEngine {
             float r = collisionDetectionThread.generateRandomNumber();
             if (enemy.getCounter() > 120) {
                 if (enemy.isTurningLeft()) {
-                    enemy.turnLeft(30f * r);
+                    enemy.turnLeft(0.01f * r);
                     if (enemy.getCounter() > 180) {
                         enemy.setCounter(0);
                         enemy.setTurningLeft(false);
                     }
                 } else if (enemy.isTurningRight()) {
-                    enemy.turnRight(30f * r);
+                    enemy.turnRight(0.01f * r);
                     if (enemy.getCounter() > 180) {
                         enemy.setCounter(0);
                         enemy.setTurningRight(false);

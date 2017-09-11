@@ -13,6 +13,10 @@ public class Backend {
     public static String gName;
     public static OptionManager<String, Boolean> options;
     private static String key;
+    public static float rotateSpeed = 360f;
+    public static float limitedAngle = 20f;
+
+
     /**
      * The constant highscore.
      */
