@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:fontFamily="casual"
         android:text="---" />
 
     <TextView
@@ -20,5 +21,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:text="---"/>
+        android:fontFamily="casual"
+        android:text="---" />
+    <TextView
+        android:id="@+id/theend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:fontFamily="casual"
+        />
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:fontFamily="casual"
+        />
 </FrameLayout>

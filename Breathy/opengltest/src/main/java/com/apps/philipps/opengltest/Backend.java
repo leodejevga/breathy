@@ -16,6 +16,8 @@ public class Backend {
     public static float rotateSpeed = 360f;
     public static float limitedAngle = 20f;
     public static int life = 3;
+    public static int score = 0;
+
 
 
     /**

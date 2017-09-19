@@ -30,6 +30,7 @@ public class GameEngine {
     private int numberOfEnemies = 2;
     private float minDistanceToMainCar = 4f;
     private boolean isRunning = true;
+    private boolean win = false;
 
     public CollisionDetectionThread collisionDetectionThread;
     private Context mActivityContext;
@@ -40,8 +41,6 @@ public class GameEngine {
 
     private MediaPlayer myMediaPlayer;
     private boolean isBackgroundMusicPlaying = false;
-    private int score = 0;
-
     /**
      * Set true to draw bounding box to debug
      */
@@ -64,11 +63,18 @@ public class GameEngine {
      * draws objects
      */
     public void runGame(long deltaTime) {
-        if (Backend.highscore < score) {
-            Backend.highscore = score;
-            if (Backend.life == 0)
-                Backend.saveHighScore(mActivityContext, Backend.gName);
+        if (Backend.highscore < Backend.score) {
+            Backend.highscore = Backend.score;
         }
+        if (Backend.life <= 0) {
+            Backend.saveHighScore(mActivityContext, Backend.gName);
+            onPause();
+        }
+        if (Backend.score == 50){
+            win =  true;
+            onPause();
+        }
+
         rotateCam();
         Renderer3D.light.setUpLight();
         drawStreet(deltaTime);
@@ -198,7 +204,7 @@ public class GameEngine {
                 while (enemiesOverlapped(enemy)) {
                     enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
                 }
-                score++;
+                Backend.score++;
             }
 
             //runsWithSpeed
@@ -331,6 +337,11 @@ public class GameEngine {
     public boolean isRunning() {
         return isRunning;
     }
+
+    public boolean isWin() {
+        return win;
+    }
+
 
     public class CollisionDetectionThread extends Thread {
         boolean crashed = false;
