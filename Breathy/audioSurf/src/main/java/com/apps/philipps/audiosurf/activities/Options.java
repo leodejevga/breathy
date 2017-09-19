@@ -163,7 +163,7 @@ public class Options extends Activity {
     }
 
     public void changeGameMusicAndVolumme() {
-        Backend.setDefaut_music_resource_id(musicIndex[getResourceIndex()]);
+        Backend.setDefault_music_resource_id(musicIndex[getResourceIndex()]);
         finish();
     }
 }

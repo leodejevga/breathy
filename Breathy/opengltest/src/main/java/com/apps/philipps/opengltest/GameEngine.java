@@ -1,6 +1,7 @@
 package com.apps.philipps.opengltest;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 
 import com.apps.philipps.source.BreathInterpreter;
 import com.apps.philipps.source.helper.Vector;
@@ -29,6 +30,7 @@ public class GameEngine {
     private int numberOfEnemies = 2;
     private float minDistanceToMainCar = 4f;
     private boolean isRunning = true;
+    private boolean win = false;
 
     public CollisionDetectionThread collisionDetectionThread;
     private Context mActivityContext;
@@ -37,6 +39,8 @@ public class GameEngine {
     public ArrayList<Enemy> enemies;
     public static float streetSize = 0.7f;
 
+    private MediaPlayer myMediaPlayer;
+    private boolean isBackgroundMusicPlaying = false;
     /**
      * Set true to draw bounding box to debug
      */
@@ -52,18 +56,56 @@ public class GameEngine {
         createStreet();
         collisionDetectionThread = new CollisionDetectionThread();
         collisionDetectionThread.start();
+        playBackgroundMusic();
     }
 
     /**
      * draws objects
      */
     public void runGame(long deltaTime) {
+        if (Backend.highscore < Backend.score) {
+            Backend.highscore = Backend.score;
+        }
+        if (Backend.life <= 0) {
+            Backend.saveHighScore(mActivityContext, Backend.gName);
+            onPause();
+        }
+        if (Backend.score == 50){
+            win =  true;
+            onPause();
+        }
+
         rotateCam();
         Renderer3D.light.setUpLight();
         drawStreet(deltaTime);
         runSimulation(deltaTime);
         Renderer3D.light.drawLight();
         validateBreath();
+        if (!isBackgroundMusicPlaying && !collisionDetectionThread.crashed)
+            playBackgroundMusic();
+    }
+
+    private void playBackgroundMusic() {
+        if (myMediaPlayer != null)
+            myMediaPlayer.release();
+        myMediaPlayer = MediaPlayer.create(mActivityContext, Backend.getDefault_music_resource_id());
+        myMediaPlayer.setLooping(true);
+        myMediaPlayer.start();
+        isBackgroundMusicPlaying = true;
+    }
+
+    private void playCrashMusic() {
+        if (myMediaPlayer != null)
+            myMediaPlayer.release();
+        myMediaPlayer = MediaPlayer.create(mActivityContext, R.raw.aspower_ranger);
+        myMediaPlayer.setLooping(false);
+        myMediaPlayer.start();
+        isBackgroundMusicPlaying = false;
+    }
+
+    private void stopBackgroundMusic() {
+        myMediaPlayer.release();
+        isBackgroundMusicPlaying = false;
     }
 
     private void validateBreath() {
@@ -84,6 +126,10 @@ public class GameEngine {
         } else {
             car.crashes();
             SPEED = MIN_SPEED;
+            if (isBackgroundMusicPlaying) {
+                playCrashMusic();
+                Backend.life--;
+            }
         }
         car.draw(deltaTime);
 
@@ -138,13 +184,13 @@ public class GameEngine {
             float r = collisionDetectionThread.generateRandomNumber();
             if (enemy.getCounter() > 120) {
                 if (enemy.isTurningLeft()) {
-                    enemy.turnLeft(30f * r);
+                    enemy.turnLeft(0.01f * r);
                     if (enemy.getCounter() > 180) {
                         enemy.setCounter(0);
                         enemy.setTurningLeft(false);
                     }
                 } else if (enemy.isTurningRight()) {
-                    enemy.turnRight(30f * r);
+                    enemy.turnRight(0.01f * r);
                     if (enemy.getCounter() > 180) {
                         enemy.setCounter(0);
                         enemy.setTurningRight(false);
@@ -158,6 +204,7 @@ public class GameEngine {
                 while (enemiesOverlapped(enemy)) {
                     enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
                 }
+                Backend.score++;
             }
 
             //runsWithSpeed
@@ -283,12 +330,18 @@ public class GameEngine {
     }
 
     public void onPause() {
+        stopBackgroundMusic();
         isRunning = false;
     }
 
     public boolean isRunning() {
         return isRunning;
     }
+
+    public boolean isWin() {
+        return win;
+    }
+
 
     public class CollisionDetectionThread extends Thread {
         boolean crashed = false;
@@ -302,7 +355,6 @@ public class GameEngine {
                 enemiesSimulation();
             }
         }
-
 
         public void enemiesSimulation() {
             for (int i = 0; i < enemies.size(); i++) {

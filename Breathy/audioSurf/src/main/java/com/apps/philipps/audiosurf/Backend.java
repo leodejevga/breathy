@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Backend {
     private static boolean init = false;
-    private static int defaut_music_resource_id = R.raw.asmario;
+    private static int default_music_resource_id = R.raw.asmario;
     public static String gName;
     public static OptionManager<String, Boolean> options;
     private static String key;
@@ -47,12 +47,12 @@ public class Backend {
         return false;
     }
 
-    public static int getDefaut_music_resource_id() {
-        return defaut_music_resource_id;
+    public static int getDefault_music_resource_id() {
+        return default_music_resource_id;
     }
 
-    public static void setDefaut_music_resource_id(int defaut_music_resource_id) {
-        Backend.defaut_music_resource_id = defaut_music_resource_id;
+    public static void setDefault_music_resource_id(int default_music_resource_id) {
+        Backend.default_music_resource_id = default_music_resource_id;
     }
 
     protected static void loadGameOptions(Context context, String keyword){

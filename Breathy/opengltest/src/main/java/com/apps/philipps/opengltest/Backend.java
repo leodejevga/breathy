@@ -9,14 +9,21 @@ import java.util.ArrayList;
 
 public class Backend {
     private static boolean init = false;
-    private static int defaut_music_resource_id = R.raw.asmario;
+    private static int default_music_resource_id = R.raw.asmario;
     public static String gName;
     public static OptionManager<String, Boolean> options;
     private static String key;
+    public static float rotateSpeed = 360f;
+    public static float limitedAngle = 20f;
+    public static int life = 3;
+    public static int score = 0;
+
+
+
     /**
      * The constant highscore.
      */
-    public static int highscore;
+    public static int highscore = 0;
     /**
      * Reinitialize <code>Backend</code> of the game.
      */
@@ -37,19 +44,19 @@ public class Backend {
             options.add("Ambulance Car", false, 30);
             init = true;
             loadGameOptions(context, gName);
+            loadHighScore(context, gName);
             return true;
         }
         return false;
     }
 
-    public static int getDefaut_music_resource_id() {
-        return defaut_music_resource_id;
+    public static int getDefault_music_resource_id() {
+        return default_music_resource_id;
     }
 
-    public static void setDefaut_music_resource_id(int defaut_music_resource_id) {
-        Backend.defaut_music_resource_id = defaut_music_resource_id;
+    public static void setDefault_music_resource_id(int default_music_resource_id) {
+        Backend.default_music_resource_id = default_music_resource_id;
     }
-
     protected static void loadGameOptions(Context context, String keyword){
         keyword = keyword.replaceAll("[ ]*", "");
         key = keyword + "Options";
@@ -64,5 +71,21 @@ public class Backend {
         key = keyword + "Options";
         SaveData<ArrayList> saveOptions =  new SaveData<>(context);
         saveOptions.writeObject(key , options.getOptions());
+    }
+
+    public static void saveHighScore(Context context, String keyword){
+        keyword = keyword.replaceAll("[ ]*", "");
+        key = keyword + "Highscore";
+        SaveData<Integer> saveHighscore =  new SaveData<>(context);
+        saveHighscore.writeObject(key , highscore);
+    }
+
+    public static void loadHighScore(Context context, String keyword){
+        keyword = keyword.replaceAll("[ ]*", "");
+        key = keyword + "Highscore";
+        SaveData<Integer> loadHighscore =  new SaveData<>(context);
+        Integer hs = loadHighscore.readObject(key);
+        if (hs != null)
+            highscore = hs;
     }
 }

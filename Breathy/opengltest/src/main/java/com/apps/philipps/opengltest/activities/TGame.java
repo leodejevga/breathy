@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.apps.philipps.opengltest.Backend;
 import com.apps.philipps.opengltest.R;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
@@ -32,6 +33,9 @@ public class TGame extends Activity3D {
     private TextView how_good;
     private double breathdata;
     private double testdata;
+    private TextView highscore;
+    private TextView theend;
+    private TextView score;
     private LineChart myChart;
     private LineData chartData;
     private LineDataSet breathChartData;
@@ -56,6 +60,13 @@ public class TGame extends Activity3D {
         openGL.setRenderer(renderer3D);
         how_good = (TextView) findViewById(R.id.how_good);
         how_good.setTextColor(Color.WHITE);
+        highscore = (TextView) findViewById(R.id.highscore);
+        highscore.setTextColor(Color.WHITE);
+        theend = (TextView) findViewById(R.id.theend);
+        theend.setTextColor(Color.WHITE);
+        theend.setTextSize(20f);
+        score = (TextView) findViewById(R.id.score);
+        score.setTextColor(Color.YELLOW);
         myChart = ChartUtil.createLineChart(this);
         addContentView(myChart, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 400));
         chartData = ChartUtil.createData();
@@ -72,13 +83,19 @@ public class TGame extends Activity3D {
     @Override
     protected void onPause() {
         super.onPause();
-        // The following call pauses the rendering thread.
-        // If your OpenGL application is memory intensive,
-        // you should consider de-allocating objects that
-        // consume significant memory here.
         openGL.onPause();
         renderer3D.gameEngine.onPause();
+        System.gc();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        openGL.onPause();
+        renderer3D.gameEngine.onPause();
+        System.gc();
+    }
+
 
     @Override
     protected void onResume() {
@@ -151,6 +168,8 @@ public class TGame extends Activity3D {
                             @Override
                             public void run() {
                                 how_good.setText(BreathInterpreter.getStatus().getError().toString());
+                                highscore.setText("Life: " + Backend.life + " High score: " + Backend.highscore);
+                                score.setText("Score: " + Backend.score);
                                 refreshChart();
                             }
                         });
@@ -159,6 +178,18 @@ public class TGame extends Activity3D {
                         e.printStackTrace();
                     }
                 }
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (renderer3D.gameEngine.isWin()) {
+                            theend.setText("Congratulations !");
+                        } else {
+                            theend.setText("You need to breath better !");
+                        }
+                    }
+                });
+
             }
         }.start();
     }

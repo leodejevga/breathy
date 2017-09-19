@@ -12,8 +12,8 @@ public class Car {
     private CarBody carBody;
     private ArrayList<Tire> tires = new ArrayList<>();
     private float limit = GameEngine.streetSize / 2f;
-    private float speed = 0f;
-    private float delay = 2000f;
+    //private float speed = 0f;
+    //private float delay = 3000f;
     private float xPosition = 0.0f;
 
     public void setCarBodyModel(Context mActivityContext, int modelID, int textureId) {
@@ -45,21 +45,19 @@ public class Car {
 
     public void turnRight(float dx) {
         if (xPosition < limit) {
-            speed = Math.abs(dx) / delay;
-            xPosition += speed;
-            carBody.turnLeft(speed);
+            xPosition += dx;
+            carBody.turnLeft(dx);
             for (Tire tire : tires)
-                tire.turnRight(speed);
+                tire.turnRight(dx);
         }
     }
 
     public void turnLeft(float dx) {
         if (xPosition > -limit) {
-            speed = Math.abs(dx) / delay;
-            xPosition -= speed;
-            carBody.turnRight(speed);
+            xPosition -= dx;
+            carBody.turnRight(dx);
             for (Tire tire : tires)
-                tire.turnLeft(speed);
+                tire.turnLeft(dx);
         }
     }
 
