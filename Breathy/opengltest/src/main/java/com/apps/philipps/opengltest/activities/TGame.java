@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -86,7 +85,6 @@ public class TGame extends Activity3D {
         super.onPause();
         openGL.onPause();
         renderer3D.gameEngine.pause(true);
-        Log.e("Test", "pause");
     }
 
     @Override
@@ -96,7 +94,6 @@ public class TGame extends Activity3D {
         Backend.life = 3;
         Backend.score = 0;
         System.gc();
-        Log.e("Test", "destroy");
     }
 
 
@@ -105,7 +102,6 @@ public class TGame extends Activity3D {
         super.onResume();
         openGL.onResume();
         System.gc();
-        Log.e("Test", "resume");
     }
 
     class BackGroundTask extends

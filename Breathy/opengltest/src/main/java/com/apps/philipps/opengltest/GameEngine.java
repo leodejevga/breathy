@@ -9,6 +9,7 @@ import com.apps.philipps.source.helper._3D.GameObject3D;
 import com.apps.philipps.source.helper._3D.Renderer3D;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -17,8 +18,10 @@ import java.util.Random;
  **/
 public class GameEngine {
     private ArrayList<GameObject3D> street = new ArrayList<>();
-    private float SPEED = 0.01f;
+    private ArrayList<GameObject3D> streetleft = new ArrayList<>();
+    private ArrayList<GameObject3D> streetright = new ArrayList<>();
     private float MIN_SPEED = 0.03f;
+    private float SPEED = MIN_SPEED;
     private float MAX_SPEED = 0.15f;
     private float INCR_SPEED = 0.001f;
     private float current_camAngle = Renderer3D.start_cam_Angle;
@@ -72,11 +75,10 @@ public class GameEngine {
         }
 
         rotateCam();
-        Renderer3D.light.setUpLight();
+        //Renderer3D.light.setUpLight();
         drawStreet(deltaTime);
         runSimulation(deltaTime);
         //Renderer3D.light.drawLight();
-        validateBreath();
         if (!isBackgroundMusicPlaying && !collisionDetectionThread.crashed)
             playBackgroundMusic();
         if (Backend.life <= 0) {
@@ -135,12 +137,9 @@ public class GameEngine {
         }
         car.draw(deltaTime);
 
-
         if (DEBUG_MODE) {
             car.drawBoundingBoxLines();
-        } else
-            car.renewBoundingBoxPosition();
-
+        }
         enemiesRun(deltaTime);
     }
 
@@ -210,14 +209,11 @@ public class GameEngine {
             }
 
             //runsWithSpeed
-
             enemy.runsWithSpeed(SPEED / 2.0f);
             enemy.draw(deltaTime);
 
             if (DEBUG_MODE)
                 enemy.drawBoundingBoxLines();
-            else
-                enemy.renewBoundingBoxPosition();
         }
     }
 
@@ -248,40 +244,54 @@ public class GameEngine {
     }
 
     private void drawStreet(long deltaTime) {
-        if (street.get(street.size() / 2).getPosition().get(1) > -(streetSize * 2)) {
+        if (street.get(0).getPosition().get(1) > -(streetSize * 4)) {
             moveStreet();
         } else {
-            moveStreet();
             refreshStreet();
+            moveStreet();
         }
         drawSquares(deltaTime);
     }
 
     private void createStreet() {
-        for (int i = -9; i < 10; i++) {
-            GameObject3D square = new GameObject3D(new Shapes.Square(mActivityContext, streetSize));
-            square.setPosition(new Vector(0, i * streetSize * 2, 0));
-            street.add(square);
+        for (int i = -2; i < 4; i++) {
+            GameObject3D str = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.newstreet));
+            str.setPosition(new Vector(0, i * streetSize * 2, 0));
+            street.add(str);
+
+            GameObject3D strl = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.stone));
+            strl.setPosition(new Vector(-streetSize * 2, i * streetSize * 2, 0));
+            streetleft.add(strl);
+
+            GameObject3D strr = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.water));
+            strr.setPosition(new Vector(streetSize * 2, i * streetSize * 2, 0));
+            streetright.add(strr);
         }
     }
 
     private void refreshStreet() {
-        GameObject3D square = street.get(0);
         float f = street.get(street.size() - 1).getPosition().get(1);
-        square.setPosition(new Vector(0, f + 1.0f, 0));
-        street.add(square);
-        street.remove(0);
+        street.get(0).setPosition(new Vector(0, f + streetSize * 2, 0));
+        streetleft.get(0).setPosition(new Vector(-2 * streetSize, f + streetSize * 2, 0));
+        streetright.get(0).setPosition(new Vector(2 * streetSize, f + streetSize * 2, 0));
+        Collections.rotate(street, -1);
+        Collections.rotate(streetleft, -1);
+        Collections.rotate(streetright, -1);
     }
 
     private void moveStreet() {
         for (int i = 0; i < street.size(); i++) {
             street.get(i).move(new Vector(0, -SPEED, 0));
+            streetleft.get(i).move(new Vector(0, -SPEED, 0));
+            streetright.get(i).move(new Vector(0, -SPEED, 0));
         }
     }
 
     private void drawSquares(long deltaTime) {
         for (int i = 0; i < street.size(); i++) {
             street.get(i).update(deltaTime);
+            streetleft.get(i).update(deltaTime);
+            streetright.get(i).update(deltaTime);
         }
     }
 
@@ -359,6 +369,7 @@ public class GameEngine {
                 e.printStackTrace();
             }
             while (isRunning) {
+                validateBreath();
                 collisionDetection();
                 enemiesSimulation();
             }
@@ -383,6 +394,8 @@ public class GameEngine {
 
         private void collisionDetection() {
             for (int i = 0; i < enemies.size(); i++) {
+                car.renewBoundingBoxPosition();
+                enemies.get(i).renewBoundingBoxPosition();
                 if (car.getCarBodyObject3D() != null
                         && car.getCarBodyObject3D().getBoundingBox().collision(enemies.get(i).getCarBodyObject3D().getBoundingBox())) {
                     crashed = true;
