@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -84,26 +85,27 @@ public class TGame extends Activity3D {
     protected void onPause() {
         super.onPause();
         openGL.onPause();
-        renderer3D.gameEngine.onPause();
-        System.gc();
+        renderer3D.gameEngine.pause(true);
+        Log.e("Test", "pause");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        openGL.onPause();
-        renderer3D.gameEngine.onPause();
+        renderer3D.gameEngine.pause(false);
+        Backend.life = 3;
+        Backend.score = 0;
         System.gc();
+        Log.e("Test", "destroy");
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        // The following call resumes a paused rendering thread.
-        // If you de-allocated graphic objects for onPause()
-        // this is a good place to re-allocate them.
         openGL.onResume();
+        System.gc();
+        Log.e("Test", "resume");
     }
 
     class BackGroundTask extends
@@ -173,7 +175,7 @@ public class TGame extends Activity3D {
                                 refreshChart();
                             }
                         });
-                        Thread.sleep(250);
+                        Thread.sleep(50);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -66,23 +66,25 @@ public class GameEngine {
         if (Backend.highscore < Backend.score) {
             Backend.highscore = Backend.score;
         }
-        if (Backend.life <= 0) {
-            Backend.saveHighScore(mActivityContext, Backend.gName);
-            onPause();
-        }
-        if (Backend.score == 50){
-            win =  true;
-            onPause();
+        if (Backend.score == 50) {
+            win = true;
+            pause(false);
         }
 
         rotateCam();
         Renderer3D.light.setUpLight();
         drawStreet(deltaTime);
         runSimulation(deltaTime);
-        Renderer3D.light.drawLight();
+        //Renderer3D.light.drawLight();
         validateBreath();
         if (!isBackgroundMusicPlaying && !collisionDetectionThread.crashed)
             playBackgroundMusic();
+        if (Backend.life <= 0) {
+            while (current_camAngle < min_CamAngle)
+                resetCamAngle();
+            Backend.saveHighScore(mActivityContext, Backend.gName);
+            pause(false);
+        }
     }
 
     private void playBackgroundMusic() {
@@ -299,7 +301,7 @@ public class GameEngine {
         }
     }
 
-    private void resetCamAngle() {
+    public void resetCamAngle() {
         decreaseCamAngle();
     }
 
@@ -329,9 +331,9 @@ public class GameEngine {
         }
     }
 
-    public void onPause() {
+    public void pause(boolean isRunning) {
         stopBackgroundMusic();
-        isRunning = false;
+        this.isRunning = isRunning;
     }
 
     public boolean isRunning() {
@@ -350,6 +352,12 @@ public class GameEngine {
 
         @Override
         public void run() {
+            try {
+                //sleep to fix bug when the bounding boxes are created and immediately recognize that is a collision
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             while (isRunning) {
                 collisionDetection();
                 enemiesSimulation();

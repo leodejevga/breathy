@@ -15,8 +15,8 @@ public class Backend {
     private static String key;
     public static float rotateSpeed = 360f;
     public static float limitedAngle = 20f;
-    public static int life = 3;
-    public static int score = 0;
+    public static int life;
+    public static int score;
 
 
 
@@ -37,6 +37,8 @@ public class Backend {
      */
     public static boolean init(Context context, String name) {
         gName = name;
+        life = 3;
+        score = 0;
         if (!init) {
             options = new OptionManager<>();
             options.add("White Car", false, 20);
