@@ -30,8 +30,10 @@ public class GameEngine {
     private float zOffset = -0.2f;
     private float relativeDistanceOfEnemies = 10.0f;
     private float safeDistance = 1.0f;
+    float carY_Position = -1.4f;
     private int numberOfEnemies = 2;
-    private float minDistanceToMainCar = 4f;
+    private int maxscore = 50;
+    private float minDistanceToMainCar = 3f;
     private boolean isRunning = true;
     private boolean win = false;
 
@@ -69,16 +71,14 @@ public class GameEngine {
         if (Backend.highscore < Backend.score) {
             Backend.highscore = Backend.score;
         }
-        if (Backend.score == 50) {
+        if (Backend.score == maxscore) {
             win = true;
             pause(false);
         }
 
         rotateCam();
-        //Renderer3D.light.setUpLight();
         drawStreet(deltaTime);
         runSimulation(deltaTime);
-        //Renderer3D.light.drawLight();
         if (!isBackgroundMusicPlaying && !collisionDetectionThread.crashed)
             playBackgroundMusic();
         if (Backend.life <= 0) {
@@ -86,38 +86,6 @@ public class GameEngine {
                 resetCamAngle();
             Backend.saveHighScore(mActivityContext, Backend.gName);
             pause(false);
-        }
-    }
-
-    private void playBackgroundMusic() {
-        if (myMediaPlayer != null)
-            myMediaPlayer.release();
-        myMediaPlayer = MediaPlayer.create(mActivityContext, Backend.getDefault_music_resource_id());
-        myMediaPlayer.setLooping(true);
-        myMediaPlayer.start();
-        isBackgroundMusicPlaying = true;
-    }
-
-    private void playCrashMusic() {
-        if (myMediaPlayer != null)
-            myMediaPlayer.release();
-        myMediaPlayer = MediaPlayer.create(mActivityContext, R.raw.aspower_ranger);
-        myMediaPlayer.setLooping(false);
-        myMediaPlayer.start();
-        isBackgroundMusicPlaying = false;
-    }
-
-    private void stopBackgroundMusic() {
-        myMediaPlayer.release();
-        isBackgroundMusicPlaying = false;
-    }
-
-    private void validateBreath() {
-        if (BreathInterpreter.getStatus().getError() != BreathInterpreter.BreathError.VeryGood
-                && BreathInterpreter.getStatus().getError() != BreathInterpreter.BreathError.None) {
-            increaseCarSpeed();
-        } else {
-            decreaseCarSpeed();
         }
     }
 
@@ -146,7 +114,7 @@ public class GameEngine {
     private void createCar() {
         car = new Car();
         car.setCarBodyModel(mActivityContext, R.raw.carbody, getTextureID());
-        car.setCarBodyPosition(new Vector(0, -1.4f, zOffset));
+        car.setCarBodyPosition(new Vector(0, carY_Position, zOffset));
         car.setCarTireModel(mActivityContext, R.raw.tire1, R.drawable.tiretexture, true);
         car.setCarTireModel(mActivityContext, R.raw.tire2, R.drawable.tiretexture, true);
         car.setCarTireModel(mActivityContext, R.raw.tire3, R.drawable.tiretexture, false);
@@ -182,32 +150,6 @@ public class GameEngine {
         //generate random turn
         for (int i = 0; i < enemies.size(); i++) {
             Enemy enemy = enemies.get(i);
-            float r = collisionDetectionThread.generateRandomNumber();
-            if (enemy.getCounter() > 120) {
-                if (enemy.isTurningLeft()) {
-                    enemy.turnLeft(0.01f * r);
-                    if (enemy.getCounter() > 180) {
-                        enemy.setCounter(0);
-                        enemy.setTurningLeft(false);
-                    }
-                } else if (enemy.isTurningRight()) {
-                    enemy.turnRight(0.01f * r);
-                    if (enemy.getCounter() > 180) {
-                        enemy.setCounter(0);
-                        enemy.setTurningRight(false);
-                    }
-                }
-            }
-
-            //set enemy, which is out of the screen to new position
-            if (enemy.getCarBodyObject3D().getPosition().get(1) < -2.0f) {
-                enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
-                while (enemiesOverlapped(enemy)) {
-                    enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
-                }
-                Backend.score++;
-            }
-
             //runsWithSpeed
             enemy.runsWithSpeed(SPEED / 2.0f);
             enemy.draw(deltaTime);
@@ -346,6 +288,40 @@ public class GameEngine {
         this.isRunning = isRunning;
     }
 
+    private void playBackgroundMusic() {
+        if (myMediaPlayer != null)
+            myMediaPlayer.release();
+        myMediaPlayer = MediaPlayer.create(mActivityContext, Backend.getDefault_music_resource_id());
+        myMediaPlayer.setLooping(true);
+        myMediaPlayer.start();
+        isBackgroundMusicPlaying = true;
+    }
+
+    private void playCrashMusic() {
+        if (myMediaPlayer != null)
+            myMediaPlayer.release();
+        myMediaPlayer = MediaPlayer.create(mActivityContext, R.raw.aspower_ranger);
+        myMediaPlayer.setLooping(false);
+        myMediaPlayer.start();
+        isBackgroundMusicPlaying = false;
+    }
+
+    private void stopBackgroundMusic() {
+        myMediaPlayer.release();
+        isBackgroundMusicPlaying = false;
+    }
+
+    private void validateBreath() {
+        if (BreathInterpreter.getStatus().getError() != BreathInterpreter.BreathError.VeryGood
+                && BreathInterpreter.getStatus().getError() != BreathInterpreter.BreathError.None) {
+            increaseCarSpeed();
+        } else {
+            decreaseCarSpeed();
+        }
+    }
+
+
+
     public boolean isRunning() {
         return isRunning;
     }
@@ -395,12 +371,40 @@ public class GameEngine {
         private void collisionDetection() {
             for (int i = 0; i < enemies.size(); i++) {
                 car.renewBoundingBoxPosition();
-                enemies.get(i).renewBoundingBoxPosition();
+                Enemy enemy = enemies.get(i);
+                float r = collisionDetectionThread.generateRandomNumber();
+                //set turning or right for enemies
+                int timeToStartTurn = 100;
+                if (enemy.getCounter() > timeToStartTurn) {
+                    int timeToEndTurn = 200;
+                    if (enemy.isTurningLeft()) {
+                        enemy.turnLeft(0.01f * r);
+                        if (enemy.getCounter() > timeToEndTurn) {
+                            enemy.setCounter(0);
+                            enemy.setTurningLeft(false);
+                        }
+                    } else if (enemy.isTurningRight()) {
+                        enemy.turnRight(0.01f * r);
+                        if (enemy.getCounter() > timeToEndTurn) {
+                            enemy.setCounter(0);
+                            enemy.setTurningRight(false);
+                        }
+                    }
+                }
+                //set enemy, which is out of the screen to new position
+                if (enemy.getCarBodyObject3D().getPosition().get(1) < -2.0f) {
+                    enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
+                    while (enemiesOverlapped(enemy)) {
+                        enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
+                    }
+                    Backend.score++;
+                }
+                enemy.renewBoundingBoxPosition();
                 if (car.getCarBodyObject3D() != null
-                        && car.getCarBodyObject3D().getBoundingBox().collision(enemies.get(i).getCarBodyObject3D().getBoundingBox())) {
+                        && car.getCarBodyObject3D().getBoundingBox().collision(enemy.getCarBodyObject3D().getBoundingBox())) {
                     crashed = true;
                     try {
-                        sleep(1000 / 40);
+                        sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -409,7 +413,7 @@ public class GameEngine {
             }
             crashed = false;
             try {
-                sleep(1000 / 40);
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
