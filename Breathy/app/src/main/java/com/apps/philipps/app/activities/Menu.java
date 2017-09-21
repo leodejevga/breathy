@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,13 +15,12 @@ import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.BluetoothService;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.AppState;
-import com.apps.philipps.source.BreathInterpreter;
 
 /**
  * Main Activity.
  */
 public class Menu extends Activity {
-
+    MediaPlayer myMediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +74,12 @@ public class Menu extends Activity {
         else
             Backend.startBTService();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        myMediaPlayer.release();
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -89,6 +95,9 @@ public class Menu extends Activity {
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
         Backend.bluetoothResume();
         checkBluetooth();
+        myMediaPlayer = MediaPlayer.create(this, R.raw.gamemenu);
+        myMediaPlayer.setLooping(true);
+        myMediaPlayer.start();
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {

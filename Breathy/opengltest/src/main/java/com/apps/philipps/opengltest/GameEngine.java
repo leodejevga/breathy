@@ -300,7 +300,7 @@ public class GameEngine {
     private void playCrashMusic() {
         if (myMediaPlayer != null)
             myMediaPlayer.release();
-        myMediaPlayer = MediaPlayer.create(mActivityContext, R.raw.aspower_ranger);
+        myMediaPlayer = MediaPlayer.create(mActivityContext, R.raw.tiresound);
         myMediaPlayer.setLooping(false);
         myMediaPlayer.start();
         isBackgroundMusicPlaying = false;

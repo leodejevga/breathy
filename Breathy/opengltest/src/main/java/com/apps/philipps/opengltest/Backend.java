@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Backend {
     private static boolean init = false;
-    private static int default_music_resource_id = R.raw.asmario;
+    private static int default_music_resource_id = R.raw.ascartheft;
     public static String gName;
     public static OptionManager<String, Boolean> options;
     private static String key;
