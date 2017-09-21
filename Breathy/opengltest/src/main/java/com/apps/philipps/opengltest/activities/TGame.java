@@ -31,11 +31,11 @@ public class TGame extends Activity3D {
     private ProgressDialog pd = null;
     private MyGLRenderer renderer3D = null;
     private TextView how_good;
-    private double breathdata;
-    private double testdata;
     private TextView highscore;
     private TextView theend;
     private TextView score;
+    private Integer breathdata;
+    private Integer testdata;
     private LineChart myChart;
     private LineData chartData;
     private LineDataSet breathChartData;
@@ -50,7 +50,7 @@ public class TGame extends Activity3D {
         setContentView(R.layout.tgame);
         pd = ProgressDialog.show(TGame.this, "Loading...",
                 "Loading. Please wait...", true, false);
-        new BackgroundTask().execute();
+        new BackGroundTask().execute();
         init();
     }
 
@@ -84,15 +84,15 @@ public class TGame extends Activity3D {
     protected void onPause() {
         super.onPause();
         openGL.onPause();
-        renderer3D.gameEngine.onPause();
-        System.gc();
+        renderer3D.gameEngine.pause(true);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        openGL.onPause();
-        renderer3D.gameEngine.onPause();
+        renderer3D.gameEngine.pause(false);
+        Backend.life = 3;
+        Backend.score = 0;
         System.gc();
     }
 
@@ -100,13 +100,11 @@ public class TGame extends Activity3D {
     @Override
     protected void onResume() {
         super.onResume();
-        // The following call resumes a paused rendering thread.
-        // If you de-allocated graphic objects for onPause()
-        // this is a goody_good place to re-allocate them.
         openGL.onResume();
+        System.gc();
     }
 
-    class BackgroundTask extends
+    class BackGroundTask extends
             AsyncTask<String, Integer, Boolean> {
         @Override
         protected void onPreExecute() {
@@ -133,17 +131,17 @@ public class TGame extends Activity3D {
 
         private void initPlan() {
             setTextViewHowGood();
-            PlanManager.start();
+            PlanManager.startPlan();
         }
 
     }
 
     private void refreshChart() {
-        testdata = BreathData.get(0).data * getRandomNumber(0, 1);
-        breathdata = BreathData.get(0).data;
+        testdata = BreathData.get(0) * getRandomNumber(0, 1);
+        breathdata = BreathData.get(0);
 
-        breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
-        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
+        breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), breathdata));
+        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), testdata));
         breathChartData.notifyDataSetChanged();
         chartData.notifyDataChanged();
         myChart.notifyDataSetChanged();
@@ -173,7 +171,7 @@ public class TGame extends Activity3D {
                                 refreshChart();
                             }
                         });
-                        Thread.sleep(250);
+                        Thread.sleep(50);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

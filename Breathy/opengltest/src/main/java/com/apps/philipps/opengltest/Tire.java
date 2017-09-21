@@ -22,6 +22,7 @@ public class Tire {
         this.isFrontTire = isFrontTire;
         tire = new GameObject3D(GameObject3D.loadObject(mActivityContext, modelID, textureId));
         tire.getBoundingBox().setNeedToCalculateBB(false);
+        calculateCenterOfObject();
     }
 
     public void setPosition(Vector position) {
@@ -47,12 +48,9 @@ public class Tire {
 
     public void runs(float speed) {
         tire.move(new Vector(0, 0, 0));
-        calculateCenterOfObject();
         Vector centerOfObject = getCenterOfObject();
-
         tire.rotate(new Vector(1, 0, 0, -90));
         float turnAngel = angle * Backend.rotateSpeed;
-        //if (Math.abs(turnAngel) < Backend.limitedAngle)
         tire.rotate(new Vector(0, 1, 0, turnAngel));
         resetRotation();
 

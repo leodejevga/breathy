@@ -11,9 +11,7 @@ import java.util.ArrayList;
 public class Car {
     private CarBody carBody;
     private ArrayList<Tire> tires = new ArrayList<>();
-    private float limit = GameEngine.streetSize / 2f;
-    //private float speed = 0f;
-    //private float delay = 3000f;
+    private float limit = GameEngine.streetSize / 1.5f;
     private float xPosition = 0.0f;
 
     public void setCarBodyModel(Context mActivityContext, int modelID, int textureId) {

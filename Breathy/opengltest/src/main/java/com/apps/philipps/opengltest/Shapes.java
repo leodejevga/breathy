@@ -8,9 +8,9 @@ import com.apps.philipps.source.helper._3D.GameObject3D;
 
 public class Shapes {
     public static class Square extends GameObject3D.Shape {
-        public Square(Context context, float size) {
+        public Square(Context context, float size, int textureID) {
             this(context, new Vector(100, 100, 100),
-                    6, 6, 6, R.drawable.streettexture,
+                    6, 6, 6, textureID,
                     // vertex
                     new Vector(-size, size, 0), new Vector(-size, -size, 0), new Vector(size, -size, 0),
                     new Vector(-size, size, 0), new Vector(size, -size, 0), new Vector(size, size, 0),
@@ -21,12 +21,6 @@ public class Shapes {
                     new Vector(0.0f, 1.0f), new Vector(0.0f, 0.0f), new Vector(1.0f, 0.0f),
                     new Vector(0.0f, 1.0f), new Vector(1.0f, 0.0f), new Vector(1.0f, 1.0f)
             );
-        }
-
-        public Square(Context context, int dimensions, Vector position,
-                      int vertexCount, int colorCount, int textureCount, int textureID,
-                      float... coords) {
-            super(context, false, dimensions, position, vertexCount, colorCount, textureCount, textureID, coords);
         }
 
         public Square(Context context, Vector position,
