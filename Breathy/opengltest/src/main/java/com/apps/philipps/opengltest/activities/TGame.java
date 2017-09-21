@@ -34,8 +34,8 @@ public class TGame extends Activity3D {
     private TextView highscore;
     private TextView theend;
     private TextView score;
-    private Integer breathdata;
-    private Integer testdata;
+    private double breathdata;
+    private double testdata;
     private LineChart myChart;
     private LineData chartData;
     private LineDataSet breathChartData;
@@ -131,17 +131,17 @@ public class TGame extends Activity3D {
 
         private void initPlan() {
             setTextViewHowGood();
-            PlanManager.startPlan();
+            PlanManager.start();
         }
 
     }
 
     private void refreshChart() {
-        testdata = BreathData.get(0) * getRandomNumber(0, 1);
-        breathdata = BreathData.get(0);
+        testdata = BreathData.get(0).data * getRandomNumber(0, 1);
+        breathdata = BreathData.get(0).data;
 
-        breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), breathdata));
-        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), testdata));
+        breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
+        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
         breathChartData.notifyDataSetChanged();
         chartData.notifyDataChanged();
         myChart.notifyDataSetChanged();

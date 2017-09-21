@@ -212,7 +212,7 @@ public class GameEngine {
     }
 
     private void refreshStreet() {
-        float f = street.get(street.size() - 1).getPosition().get(1);
+        float f = (float) street.get(street.size() - 1).getPosition().get(1);
         street.get(0).setPosition(new Vector(0, f + streetSize * 2, 0));
         streetleft.get(0).setPosition(new Vector(-2 * streetSize, f + streetSize * 2, 0));
         streetright.get(0).setPosition(new Vector(2 * streetSize, f + streetSize * 2, 0));

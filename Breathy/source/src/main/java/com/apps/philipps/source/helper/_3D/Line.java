@@ -7,7 +7,6 @@ import com.apps.philipps.source.helper.Vector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
 
 /**
  * This class generates line with GL
@@ -36,7 +35,7 @@ public class Line {
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (number of coordinate values * 4 bytes per float)
-                lineCoords.length * 4);
+                lineCoords.length * 8);
         // use the device hardware's native byte order
         bb.order(ByteOrder.nativeOrder());
 
