@@ -8,8 +8,8 @@ import com.apps.philipps.source.implementations.BreathyGame;
 /**
  * Created by Jevgenij Huebert on 19.03.2017. Project Breathy
  */
-public class Test extends BreathyGame {
-    public Test() {
+public class SpaceFight extends BreathyGame {
+    public SpaceFight() {
         price = 0;
         name = "Space Fight";
     }

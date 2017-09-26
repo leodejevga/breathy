@@ -57,7 +57,7 @@ public class PlansManager extends AppCompatActivity {
         super.onResume();
         for(PlanManager.Plan plan : PlanManager.getPlans()){
             if(plan.getName()==null || plan.getName().length()==0)
-                plan.setName("Test Plan");
+                plan.setName("SpaceFight Plan");
         }
         initExpandableListView();
     }

@@ -20,7 +20,6 @@ import java.util.Random;
 /**
  * Created by Jevgenij Huebert on 11.03.2017. Project Breathy
  */
-
 public abstract class Activity2D extends Activity implements IObserver {
     protected final float SCREEN_FACTOR = (float) (getScreenHeight(true) + getScreenWidth(true)) / (1080 + 1920);
 
@@ -40,41 +39,41 @@ public abstract class Activity2D extends Activity implements IObserver {
     private boolean ready = true;
     private static int thread = 0;
 
-    protected void stopDrawing() {
+    protected final void stopDrawing() {
         draw = false;
     }
 
-    public int getFrameRate() {
+    public final int getFrameRate() {
         return frameRate;
     }
 
-    public int getFrame() {
+    public final int getFrame() {
         return frame;
     }
 
-    protected void addCoin() {
+    protected final void addCoin() {
         coins++;
     }
 
-    protected void subCoin() {
+    protected final void subCoin() {
         subCoin(1);
     }
 
-    protected boolean isInitialized() {
+    protected final boolean isInitialized() {
         return initialized;
     }
 
-    protected void addCoin(int coins) {
+    protected final void addCoin(int coins) {
         this.coins += coins;
     }
 
-    protected void subCoin(int coins) {
+    protected final void subCoin(int coins) {
         this.coins -= coins;
         if (this.coins < 0)
             this.coins = 0;
     }
 
-    public int getCoins() {
+    public final int getCoins() {
         return coins;
     }
 
@@ -212,7 +211,7 @@ public abstract class Activity2D extends Activity implements IObserver {
      * @param absolute
      * @return with of game Layout or screen in the second place
      */
-    protected int getScreenWidth(boolean... absolute) {
+    protected final int getScreenWidth(boolean... absolute) {
         if (game != null && (absolute.length == 0 || !absolute[0]))
             return game.getWidth();
         return Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -224,7 +223,7 @@ public abstract class Activity2D extends Activity implements IObserver {
      * @param absolute
      * @return height of game Layout or screen in the second place
      */
-    protected int getScreenHeight(boolean... absolute) {
+    protected final int getScreenHeight(boolean... absolute) {
         if (game != null && (absolute.length == 0 || !absolute[0]))
             return game.getHeight();
         return Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -289,7 +288,7 @@ public abstract class Activity2D extends Activity implements IObserver {
      * @param to   limit of values (from 0 to 2 the Values are [0,1,2])
      * @return random int from to
      */
-    protected int getInt(int from, int to) {
+    protected final int getInt(int from, int to) {
         Random r = new Random();
         return (from + Math.abs(r.nextInt())) % to + 1;
     }

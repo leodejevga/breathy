@@ -17,9 +17,9 @@ public class GameStats {
 
     public static final String TAG = "Game Constants";
     private static final int[] ENEMY_COME_MIN_MAX = {100, 300};
-    private static final int[] ENEMY_SPEED_MIN_MAX = {50, 250};
+    private static final int[] ENEMY_SPEED_MIN_MAX = {100, 250};
     private static boolean initialized = false;
-    public static final int TIME_LOOP_DELAY = 10000;
+    public static final int TIME_LOOP_DELAY = 3000;
 
     public static int enemyCome;
     public static int starCome;
@@ -33,19 +33,19 @@ public class GameStats {
 
     public static void init() {
         enemyCome = 200;
-        starCome =20;
-        enemySpeed = 150;
+        starCome = 20;
+        enemySpeed = 180;
         shipSpeed = 2000;
         starSpeed = 80;
         explosionTime = 60;
         shootTime = 40;
-        timeLoopAnimation = new Animated(new Vector(1), new Vector(0.2), 1000, false);
+        timeLoopAnimation = new Animated(new Vector(1));
         shoot = ShootSpeed.Green;
         initialized = true;
     }
 
     public enum Effect {
-        timeLoop(true, "Good: Time Loop for 5 seconds", System.currentTimeMillis()),
+        timeLoop(true, "Good: Time Loop for 3 seconds", System.currentTimeMillis()),
         increaseShootSpeed(true, "Good: Increase shoot speed", 0),
         decreaseShootSpeed(false, "Bad: Decrease shoot speed", 0),
         increaseEnemySpeed(false, "Bad: Increase enemy speed", 50),
@@ -90,8 +90,9 @@ public class GameStats {
             if (initialized) {
                 switch (this) {
                     case timeLoop:
-                        timeLoopAnimation.animate(new Vector(0.2));
-                        Log.e(TAG, "time loop activate");
+                        timeLoopAnimation = new Animated(new Vector(1), new Vector(0.2), 1, true);
+                        Log.e(TAG, "time loop activate : " + timeLoopAnimation);
+
                         return true;
                     case increaseShootSpeed:
                         ShootSpeed succ = shoot;

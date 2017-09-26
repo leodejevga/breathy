@@ -21,8 +21,8 @@ public class Line {
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
     static double lineCoords[] = {
-            0.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f
+            0.0, 0.0, 0.0,
+            1.0, 0.0, 0.0
     };
 
     private final int vertexCount = lineCoords.length / COORDS_PER_VERTEX;
