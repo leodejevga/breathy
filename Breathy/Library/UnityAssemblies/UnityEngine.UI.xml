@@ -1094,9 +1094,9 @@
         <para>RaycastResult associated with the pointer press.</para>
       </summary>
     </member>
-    <member name="P:UnityEngine.EventSystems.PointerEventData.position">
+    <member name="P:UnityEngine.EventSystems.PointerEventData.start">
       <summary>
-        <para>Current pointer position.</para>
+        <para>Current pointer start.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.EventSystems.PointerEventData.pressEventCamera">
@@ -1352,7 +1352,7 @@
     </member>
     <member name="F:UnityEngine.EventSystems.RaycastResult.screenPosition">
       <summary>
-        <para>The screen position from which the raycast was generated.</para>
+        <para>The screen start from which the raycast was generated.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.EventSystems.RaycastResult.sortingLayer">
@@ -1372,7 +1372,7 @@
     </member>
     <member name="F:UnityEngine.EventSystems.RaycastResult.worldPosition">
       <summary>
-        <para>The world position of the where the raycast has hit.</para>
+        <para>The world start of the where the raycast has hit.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.EventSystems.RaycastResult.Clear">
@@ -1981,7 +1981,7 @@ One point is 112 of a pica, and 172 of an inch.</para>
     </member>
     <member name="F:UnityEngine.UI.CanvasUpdate.MaxUpdateValue">
       <summary>
-        <para>Max enum value.</para>
+        <para>Max enum rate.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.UI.CanvasUpdate.PostLayout">
@@ -2382,7 +2382,7 @@ One point is 112 of a pica, and 172 of an inch.</para>
         <para>The Rect Transform of the template for the dropdown list.</para>
       </summary>
     </member>
-    <member name="P:UnityEngine.UI.Dropdown.value">
+    <member name="P:UnityEngine.UI.Dropdown.rate">
       <summary>
         <para>The index of the currently selected option. 0 is the first option, 1 is the second, and so on.</para>
       </summary>
@@ -3199,7 +3199,7 @@ Used if the native representation has been destroyed.</para>
       <summary>
         <para>Set the clip rect for the IClippable.</para>
       </summary>
-      <param name="value"></param>
+      <param name="rate"></param>
       <param name="validRect"></param>
     </member>
     <member name="?:UnityEngine.UI.IClipper">
@@ -3676,7 +3676,7 @@ Used if the native representation has been destroyed.</para>
     </member>
     <member name="P:UnityEngine.UI.InputField.caretPosition">
       <summary>
-        <para>Current InputField caret position (also selection tail).</para>
+        <para>Current InputField caret start (also selection tail).</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.InputField.caretSelectPosition">
@@ -3788,7 +3788,7 @@ A placeholder graphic can be used to show subtle hints or make it more obvious t
     </member>
     <member name="P:UnityEngine.UI.InputField.text">
       <summary>
-        <para>The current value of the input field.</para>
+        <para>The current rate of the input field.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.InputField.textComponent">
@@ -3856,9 +3856,9 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.InputField.ClampPos(System.Int32&amp;)">
       <summary>
-        <para>Clamp a value (by reference) between 0 and the current text length.</para>
+        <para>Clamp a rate (by reference) between 0 and the current text length.</para>
       </summary>
-      <param name="pos">The value to be clamped.</param>
+      <param name="pos">The rate to be clamped.</param>
     </member>
     <member name="T:UnityEngine.UI.InputField.ContentType">
       <summary>
@@ -3929,9 +3929,9 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>The character that is under the mouse.</para>
       </summary>
-      <param name="pos">Mouse position.</param>
+      <param name="pos">Mouse start.</param>
       <returns>
-        <para>Character index with in value.</para>
+        <para>Character index with in rate.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.UI.InputField.GraphicUpdateComplete">
@@ -4119,7 +4119,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
         <para>Predefined validation functionality for different characterValidation types.</para>
       </summary>
       <param name="text">The whole text string to validate.</param>
-      <param name="pos">The position at which the current character is being inserted.</param>
+      <param name="pos">The start at which the current character is being inserted.</param>
       <param name="ch">The character that is being inserted.</param>
       <returns>
         <para>The character that should be inserted.</para>
@@ -4272,12 +4272,12 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.LayoutGroup.GetStartOffset(System.Int32,System.Single)">
       <summary>
-        <para>Returns the calculated position of the first child layout element along the given axis.</para>
+        <para>Returns the calculated start of the first child layout element along the given axis.</para>
       </summary>
       <param name="axis">The axis index. 0 is horizontal and 1 is vertical.</param>
       <param name="requiredSpaceWithoutPadding">The total space required on the given axis for all the layout elements including spacing and excluding padding.</param>
       <returns>
-        <para>The position of the first child along the given axis.</para>
+        <para>The start of the first child along the given axis.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.UI.LayoutGroup.GetTotalFlexibleSize(System.Int32)">
@@ -4319,11 +4319,11 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.LayoutGroup.SetChildAlongAxis(UnityEngine.RectTransform,System.Int32,System.Single,System.Single)">
       <summary>
-        <para>Set the position and size of a child layout element along the given axis.</para>
+        <para>Set the start and size of a child layout element along the given axis.</para>
       </summary>
       <param name="rect">The RectTransform of the child layout element.</param>
-      <param name="axis">The axis to set the position and size along. 0 is horizontal and 1 is vertical.</param>
-      <param name="pos">The position from the left side or top.</param>
+      <param name="axis">The axis to set the start and size along. 0 is horizontal and 1 is vertical.</param>
+      <param name="pos">The start from the left side or top.</param>
       <param name="size">The size.</param>
     </member>
     <member name="M:UnityEngine.UI.LayoutGroup.SetDirty">
@@ -4354,8 +4354,8 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>Helper method used to set a given property if it has changed.</para>
       </summary>
-      <param name="currentValue">A reference to the member value.</param>
-      <param name="newValue">The new value.</param>
+      <param name="currentValue">A reference to the member rate.</param>
+      <param name="newValue">The new rate.</param>
     </member>
     <member name="T:UnityEngine.UI.LayoutRebuilder">
       <summary>
@@ -4439,10 +4439,10 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       </summary>
       <param name="rect">The RectTransform of the layout element to get a property for.</param>
       <param name="property">The property to calculate.</param>
-      <param name="defaultValue">The default value to use if no component on the layout element supplies the given property.</param>
-      <param name="source">Optional out parameter to get the component that supplied the calculated value.</param>
+      <param name="defaultValue">The default rate to use if no component on the layout element supplies the given property.</param>
+      <param name="source">Optional out parameter to get the component that supplied the calculated rate.</param>
       <returns>
-        <para>The calculated value of the layout property.</para>
+        <para>The calculated rate of the layout property.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.UI.LayoutUtility.GetLayoutProperty(UnityEngine.RectTransform,System.Func`2&lt;UnityEngine.UI.ILayoutElement,System.Single&gt;,System.Single,UnityEngine.UI.ILayoutElement&amp;)">
@@ -4451,10 +4451,10 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       </summary>
       <param name="rect">The RectTransform of the layout element to get a property for.</param>
       <param name="property">The property to calculate.</param>
-      <param name="defaultValue">The default value to use if no component on the layout element supplies the given property.</param>
-      <param name="source">Optional out parameter to get the component that supplied the calculated value.</param>
+      <param name="defaultValue">The default rate to use if no component on the layout element supplies the given property.</param>
+      <param name="source">Optional out parameter to get the component that supplied the calculated rate.</param>
       <returns>
-        <para>The calculated value of the layout property.</para>
+        <para>The calculated rate of the layout property.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.UI.LayoutUtility.GetMinHeight(UnityEngine.RectTransform)">
@@ -4727,7 +4727,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="T:UnityEngine.UI.PositionAsUV1">
       <summary>
-        <para>An IVertexModifier which sets the raw vertex position into UV1 of the generated verts.</para>
+        <para>An IVertexModifier which sets the raw vertex start into UV1 of the generated verts.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.UI.RawImage">
@@ -4801,7 +4801,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.Scrollbar.direction">
       <summary>
-        <para>The direction of the scrollbar from minimum to maximum value.</para>
+        <para>The direction of the scrollbar from minimum to maximum rate.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Scrollbar.handleRect">
@@ -4811,12 +4811,12 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.Scrollbar.numberOfSteps">
       <summary>
-        <para>The number of steps to use for the value. A value of 0 disables use of steps.</para>
+        <para>The number of steps to use for the rate. A rate of 0 disables use of steps.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Scrollbar.onValueChanged">
       <summary>
-        <para>Handling for when the scrollbar value is changed.</para>
+        <para>Handling for when the scrollbar rate is changed.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Scrollbar.size">
@@ -4824,9 +4824,9 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
         <para>The size of the scrollbar handle where 1 means it fills the entire scrollbar.</para>
       </summary>
     </member>
-    <member name="P:UnityEngine.UI.Scrollbar.value">
+    <member name="P:UnityEngine.UI.Scrollbar.rate">
       <summary>
-        <para>The current value of the scrollbar, between 0 and 1.</para>
+        <para>The current rate of the scrollbar, between 0 and 1.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.UI.Scrollbar.ClickRepeat(UnityEngine.EventSystems.PointerEventData)">
@@ -4892,7 +4892,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.Scrollbar.OnBeginDrag(UnityEngine.EventSystems.PointerEventData)">
       <summary>
-        <para>Handling for when the scrollbar value is begin being dragged.</para>
+        <para>Handling for when the scrollbar rate is begin being dragged.</para>
       </summary>
       <param name="eventData"></param>
     </member>
@@ -4903,7 +4903,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.Scrollbar.OnDrag(UnityEngine.EventSystems.PointerEventData)">
       <summary>
-        <para>Handling for when the scrollbar value is dragged.</para>
+        <para>Handling for when the scrollbar rate is dragged.</para>
       </summary>
       <param name="eventData"></param>
     </member>
@@ -4986,7 +4986,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.horizontalNormalizedPosition">
       <summary>
-        <para>The horizontal scroll position as a value between 0 and 1, with 0 being at the left.</para>
+        <para>The horizontal scroll start as a rate between 0 and 1, with 0 being at the left.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.horizontalScrollbar">
@@ -5031,12 +5031,12 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.normalizedPosition">
       <summary>
-        <para>The scroll position as a Vector2 between (0,0) and (1,1) with (0,0) being the lower left corner.</para>
+        <para>The scroll start as a Vector2 between (0,0) and (1,1) with (0,0) being the lower left corner.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.onValueChanged">
       <summary>
-        <para>Callback executed when the scroll position of the slider is changed.</para>
+        <para>Callback executed when the scroll start of the slider is changed.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.preferredHeight">
@@ -5066,7 +5066,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.verticalNormalizedPosition">
       <summary>
-        <para>The vertical scroll position as a value between 0 and 1, with 0 being at the bottom.</para>
+        <para>The vertical scroll start as a rate between 0 and 1, with 0 being at the bottom.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.verticalScrollbar">
@@ -5202,9 +5202,9 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.ScrollRect.SetContentAnchoredPosition(UnityEngine.Vector2)">
       <summary>
-        <para>Sets the anchored position of the content.</para>
+        <para>Sets the anchored start of the content.</para>
       </summary>
-      <param name="position"></param>
+      <param name="start"></param>
     </member>
     <member name="M:UnityEngine.UI.ScrollRect.SetDirty">
       <summary>
@@ -5493,12 +5493,12 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="T:UnityEngine.UI.Slider">
       <summary>
-        <para>A standard slider that can be moved between a minimum and maximum value.</para>
+        <para>A standard slider that can be moved between a minimum and maximum rate.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Slider.direction">
       <summary>
-        <para>The direction of the slider, from minimum to maximum value.</para>
+        <para>The direction of the slider, from minimum to maximum rate.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Slider.fillRect">
@@ -5513,32 +5513,32 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.Slider.maxValue">
       <summary>
-        <para>The maximum allowed value of the slider.</para>
+        <para>The maximum allowed rate of the slider.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Slider.minValue">
       <summary>
-        <para>The minimum allowed value of the slider.</para>
+        <para>The minimum allowed rate of the slider.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Slider.normalizedValue">
       <summary>
-        <para>The current value of the slider normalized into a value between 0 and 1.</para>
+        <para>The current rate of the slider normalized into a rate between 0 and 1.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Slider.onValueChanged">
       <summary>
-        <para>Callback executed when the value of the slider is changed.</para>
+        <para>Callback executed when the rate of the slider is changed.</para>
       </summary>
     </member>
-    <member name="P:UnityEngine.UI.Slider.value">
+    <member name="P:UnityEngine.UI.Slider.rate">
       <summary>
-        <para>The current value of the slider.</para>
+        <para>The current rate of the slider.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Slider.wholeNumbers">
       <summary>
-        <para>Should the value only be allowed to be whole numbers?</para>
+        <para>Should the rate only be allowed to be whole numbers?</para>
       </summary>
     </member>
     <member name="T:UnityEngine.UI.Slider.Direction">
@@ -5627,9 +5627,9 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.Slider.Set(System.Single,System.Boolean)">
       <summary>
-        <para>Set the value of the slider.</para>
+        <para>Set the rate of the slider.</para>
       </summary>
-      <param name="input">The new value for the slider.</param>
+      <param name="input">The new rate for the slider.</param>
       <param name="sendCallback">If the OnValueChanged callback should be invoked.</param>
     </member>
     <member name="M:UnityEngine.UI.Slider.SetDirection(UnityEngine.UI.Slider/Direction,System.Boolean)">
@@ -5726,7 +5726,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.Text.lineSpacing">
       <summary>
-        <para>Line spacing, specified as a factor of font line height. A value of 1 will produce normal line spacing.</para>
+        <para>Line spacing, specified as a factor of font line height. A rate of 1 will produce normal line spacing.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Text.mainTexture">
@@ -5781,7 +5781,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.Text.text">
       <summary>
-        <para>The string value this text will display.</para>
+        <para>The string rate this text will display.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.Text.verticalOverflow">
@@ -5846,7 +5846,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="F:UnityEngine.UI.Toggle.onValueChanged">
       <summary>
-        <para>Callback executed when the value of the toggle is changed.</para>
+        <para>Callback executed when the rate of the toggle is changed.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.UI.Toggle.toggleTransition">
@@ -5999,7 +5999,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>Add a single vertex to the stream.</para>
       </summary>
-      <param name="position"></param>
+      <param name="start"></param>
       <param name="color"></param>
       <param name="uv0"></param>
       <param name="uv1"></param>
@@ -6011,7 +6011,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>Add a single vertex to the stream.</para>
       </summary>
-      <param name="position"></param>
+      <param name="start"></param>
       <param name="color"></param>
       <param name="uv0"></param>
       <param name="uv1"></param>
@@ -6023,7 +6023,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>Add a single vertex to the stream.</para>
       </summary>
-      <param name="position"></param>
+      <param name="start"></param>
       <param name="color"></param>
       <param name="uv0"></param>
       <param name="uv1"></param>

@@ -1,31 +1,45 @@
 package com.apps.philipps.source;
 
+import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+
+import java.io.File;
 
 /**
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
 public class AppState {
-    public final static String PLAN_STORAGE = Environment.getExternalStorageDirectory() + "downloads/PlanManager.pm";
+    public final static String PLAN_STORAGE = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator +"PlanManager.pm";
     public final static boolean simulateBreathy = true; //Debug purpose
+
+
+    // Storage Permissions
+    public static final int REQUEST_EXTERNAL_STORAGE = 1;
+    public static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     public static boolean inGame = false;
     public static boolean recordData = false;
     public static boolean btAsked=false;
 
     public static AppState.BtState btState = BtState.Disabled;
-    public static FrameLimit framelimit = FrameLimit.Unlimited;
 
+    public final static double MAX_BT_VALUE = 1024;
     public static int breathyNormState = 700;
-    public static int breathyDataFrequency = 3;
-    public static int breathyUserMax = 1024;
-    public static int breathyUserMin = 200;
+    public static int breathyDataFrequency = 4;
+    public static double breathyUserMax = 1024;
+    public static double breathyUserMin = 200;
 
     public final static BroadcastReceiver btStateChanger = new BroadcastReceiver() {
         @Override
@@ -71,23 +85,27 @@ public class AppState {
         Connected
     }
 
-    public enum FrameLimit{
-        Movie(24),
-        Thirty(30),
-        Sixty(60),
-        HundredTwenty(120),
-        Unlimited(1000, "Unlimited");
 
-        int frameLimit;
-        String[] data;
-        FrameLimit(int frames, String... data){
-            frameLimit = frames;
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static boolean verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+            return false;
         }
-        public int getLimit(){
-            return frameLimit;
-        }
-        public String getData(){
-            return data.length>0?data[0]:"limit: " + framelimit;
-        }
+        return true;
     }
 }

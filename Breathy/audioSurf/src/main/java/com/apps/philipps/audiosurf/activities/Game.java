@@ -20,7 +20,7 @@ public class Game extends Activity3D implements IObserver {
         super.onCreate(savedInstanceState);
         AppState.inGame = AppState.recordData = true;
         BreathData.addObserver(this);
-        myMediaPlayer = MediaPlayer.create(Game.this, Backend.getDefaut_music_resource_id());
+        myMediaPlayer = MediaPlayer.create(Game.this, Backend.getDefault_music_resource_id());
     }
 
     @Override

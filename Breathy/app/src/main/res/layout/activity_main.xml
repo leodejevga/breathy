@@ -12,49 +12,74 @@
     android:background="@color/background"
     tools:context="com.apps.philipps.app.activities.Menu">
 
-    <Button
-        android:textColor="@color/colorAccent"
-        android:text="@string/select_game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/mainGames"
-        android:drawableTop="@drawable/select"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/colorPrimary"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp" />
-
-    <Button
-        android:textColor="@color/colorAccent"
-        android:text="@string/main_options"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/settings"
-        android:id="@+id/mainOptions"
-        android:background="@color/colorPrimary"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/mainGames"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
-
-
-    <Button
-        android:id="@+id/mainBreathPlan"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mainOptions"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimary"
-        android:drawableTop="@drawable/settings"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:text="@string/select_breath_plan"
-        android:textColor="@color/colorAccent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/mainGames"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary"
+            android:drawableTop="@drawable/select"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/select_game"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/mainOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/mainGames"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary"
+            android:drawableTop="@drawable/settings"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/main_options"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/mainCalibrate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mainOptions"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary"
+            android:drawableTop="@drawable/settings"
+            android:onClick="calibrate"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/select_calibrate"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/mainBreathPlan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary"
+            android:drawableTop="@drawable/settings"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/select_breath_plan"
+            android:textColor="@color/colorAccent" />
+    </LinearLayout>
+
+
 </RelativeLayout>

@@ -45,7 +45,7 @@ public interface IGameObject {
      * @param destination the destination
      * @param speed       the speed
      */
-    void move(Vector destination, int speed);
+    void move(Vector destination, double speed);
 
     /**
      * Move.
@@ -61,7 +61,7 @@ public interface IGameObject {
      *
      * @param speed the speed
      */
-    void move(int speed);
+    void move(double speed);
 
     /**
      * Update.

@@ -1,7 +1,9 @@
 package com.apps.philipps.opengltest;
 
 import android.content.Context;
+import android.content.Intent;
 
+import com.apps.philipps.opengltest.activities.Options;
 import com.apps.philipps.source.implementations.BreathyGameComponent;
 
 /**
@@ -21,7 +23,11 @@ public class TestOptions extends BreathyGameComponent {
      */
     @Override
     public boolean start() {
-        return false;
+        if(context==null)
+            return false;
+        Intent i = new Intent(context, Options.class);
+        context.startActivity(i);
+        return true;
     }
 }
 

@@ -75,9 +75,17 @@ public class CreatePlan extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this,
-                plan.getParts(), null, edit(), delete());
+        ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this, null, edit(), delete(), plan.getId());
         planParts.setAdapter(expandableListViewAdapter);
+
+        if(PlanManager.getCurrentPlan()==null && PlanManager.getOption(0,0)!=null){
+            PlanManager.setActive(0);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private View.OnClickListener edit(){
@@ -92,6 +100,13 @@ public class CreatePlan extends AppCompatActivity {
     private View.OnClickListener delete(){
         return v -> {
             plan.removeOption(ExpandableListViewAdapter.selected); onResume();
+            SaveData.savePlanManager(this);
         };
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        SaveData.savePlanManager(this);
     }
 }

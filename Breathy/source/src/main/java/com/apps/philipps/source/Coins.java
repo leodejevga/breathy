@@ -54,7 +54,7 @@ public class Coins {
      *
      * @param coins coins that have to be added
      */
-    public void addCoins(int coins) {
+    public static void addCoins(int coins) {
         Coins.amount += coins;
     }
 }

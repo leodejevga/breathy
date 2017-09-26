@@ -31,12 +31,13 @@ public class Game2D extends Activity2D {
     int displayHeight;
     Canvas canvas;
 
+
     // Display
     GameView gameview;
 
     // Bitmaps
-    Bitmap playerbmp = BitmapFactory.decodeResource(getResources(), R.drawable.ship);
-    Bitmap barricadebmp = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
+    Bitmap playerbmp = BitmapFactory.decodeResource(getResources(), R.drawable.player);
+    Bitmap barricadebmp = BitmapFactory.decodeResource(getResources(), R.drawable.gegner);
 
     // Game stats
     Player player;
@@ -71,6 +72,11 @@ public class Game2D extends Activity2D {
 
         AppState.recordData = AppState.inGame = true;
     }
+
+    @Override
+    protected void onLoading(boolean firstLoad, int progress) {
+    }
+
 
     @Override
     protected void draw() {
@@ -115,5 +121,10 @@ public class Game2D extends Activity2D {
 
     public int getDisplayWidth() {
         return displayWidth;
+    }
+
+    @Override
+    public void call(Object... messages) {
+
     }
 }

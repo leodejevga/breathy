@@ -1,5 +1,6 @@
 package com.apps.philipps.source;
 
+import android.graphics.Path;
 import android.support.annotation.Nullable;
 
 import com.apps.philipps.source.interfaces.IObserver;
@@ -7,33 +8,47 @@ import com.apps.philipps.source.interfaces.IObserver;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Currency;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by Jevgenij Huebert on 06.05.2017. Project Breathy
  */
 
-public class PlanManager implements Serializable {
+public abstract class PlanManager implements Serializable {
 
-    private static List<Plan> plans;
-    private static PlanManager manager = new PlanManager();
-    private static int currentPlan;
+    private static List<Plan> plans = new ArrayList<>();
+    private static int currentPlan = -1;
+    private static boolean initialized = false;
 
     private PlanManager() {
-        currentPlan = -1;
-        plans = new ArrayList<>();
     }
 
-    public static PlanManager getInstance() {
-        return manager;
+    public static void init(PlanManagerInstance instance) throws PlanManagerAlreadyInitialized {
+        if (!initialized) {
+            plans = instance.plans;
+            currentPlan = instance.currentPlan;
+            initialized = true;
+        }
+        throw new PlanManagerAlreadyInitialized();
     }
 
     public static void addPlan(Plan plan) {
         plans.add(plan);
     }
 
-    public static void removePlan(Plan plan) {
-        plans.remove(plan);
+    public static Plan deletePlan(int id) {
+        if (id >= 0 && id < plans.size()) {
+            Plan p = plans.remove(id);
+            return p;
+        }
+        return null;
+    }
+
+    public static Plan getPlan(int id) {
+        if (id >= 0 && id < plans.size())
+            return plans.get(id);
+        return null;
     }
 
     public static List<Part> getParts() {
@@ -44,21 +59,13 @@ public class PlanManager implements Serializable {
     }
 
     public static boolean setActive(int id) {
-        if (id >= 0 && id < plans.size())
+        if (id >= 0 && id < plans.size()) {
             currentPlan = id;
-        else return false;
+        } else return false;
         return true;
     }
 
-    public static boolean setActive(Plan plan) {
-        int id = plans.indexOf(plan);
-        if (id != -1)
-            currentPlan = id;
-        else return false;
-        return true;
-    }
-
-    public static boolean startPlan() {
+    public static boolean start() {
         if (currentPlan != -1) {
             plans.get(currentPlan).startPlan();
             return true;
@@ -66,46 +73,56 @@ public class PlanManager implements Serializable {
         return false;
     }
 
+
+    public static void resume() {
+        if (currentPlan != -1)
+            plans.get(currentPlan).resume();
+    }
+
     public static void stop() {
         if (currentPlan != -1)
             plans.get(currentPlan).stop();
     }
 
-    public static Plan getPlan(int id) {
-        if (id >= 0 && id < plans.size())
-            return plans.get(id);
-        return null;
+    public static void pause() {
+        if (currentPlan != -1)
+            plans.get(currentPlan).pause();
     }
 
-    public static Plan deletePlan(int id) {
-        if (id >= 0 && id < plans.size())
-            return plans.remove(id);
-        return null;
+    public static boolean isActive() {
+        if (currentPlan != -1)
+            return plans.get(currentPlan).running;
+        return false;
     }
 
     public static boolean isActive(Plan plan) {
         return currentPlan == plans.indexOf(plan);
     }
 
+    public static boolean isActive(int id) {
+        return currentPlan == id;
+    }
+
+    @Nullable
     public static Plan getCurrentPlan() {
         if (currentPlan != -1)
             return plans.get(currentPlan);
         return null;
     }
 
+    public static long getDuration() {
+        if (currentPlan != -1 && plans.get(currentPlan).running) {
+            return plans.get(currentPlan).getCurrentDuration();
+        }
+        return 0;
+    }
+
+
     @Nullable
     public static String getStatus() {
-        if (currentPlan != -1 && plans.get(currentPlan).getCurrentDuration() != 0)
+        if (currentPlan != -1 && plans.get(currentPlan).running)
             return getCurrentOption() + "\nrest time: " + getCurrentPlan().getCurrentDuration();
         return null;
-    }
-
-    public static void setPlans(List<Plan> plans) {
-        PlanManager.plans = plans;
-    }
-
-    public static List<Plan> getPlans() {
-        return plans;
     }
 
     public static void update() {
@@ -114,19 +131,54 @@ public class PlanManager implements Serializable {
     }
 
     public static Plan.Option getCurrentOption() {
-        if (currentPlan != -1 && plans.get(currentPlan).getCurrentDuration() != 0)
+        if (currentPlan != -1 && plans.get(currentPlan).running)
             return plans.get(currentPlan).getOption(plans.get(currentPlan).currentOption);
         return null;
     }
 
+    //----------------------------------------------------------------------------------------------
 
-    public static class Plan implements Cloneable, Serializable, Part {
+    public static Plan.Option getOption(int planId, int optionId) {
+        if (planId >= 0 && planId < plans.size() && optionId >= 0 && optionId < plans.get(planId).options.size())
+            return plans.get(planId).options.get(optionId);
+        return null;
+    }
+
+    public static Plan.Option getOption(int optionId) {
+        if (currentPlan >= 0 && currentPlan < plans.size() && optionId >= 0 && optionId < plans.get(currentPlan).options.size())
+            return plans.get(currentPlan).options.get(optionId);
+        return null;
+    }
+
+    public static void addOption(int planId, Plan.Option option) {
+        if (planId >= 0 && planId < plans.size())
+            plans.get(planId).addOption(option);
+    }
+
+    public static void addOption(Plan.Option option) {
+        if (currentPlan >= 0 && currentPlan < plans.size())
+            plans.get(currentPlan).addOption(option);
+    }
+
+    public static List<Plan.Option> getOptions(int planId) {
+        if (planId >= 0 && planId < plans.size())
+            return plans.get(planId).options;
+        return null;
+    }
+
+    public static List<Plan> getPlans() {
+        return plans;
+    }
+
+
+    public static class Plan implements Cloneable, Serializable, Part, Iterable {
         private List<Option> options;
         private long currentTime;
         private int currentOption;
         private boolean running;
         private long delta;
         private String name;
+        private boolean paused = false;
 
         public Plan() {
             options = new ArrayList<>();
@@ -147,6 +199,12 @@ public class PlanManager implements Serializable {
 
         public Plan addOption(BreathIntensity in, BreathIntensity out, int frequency, int seconds) {
             return addOption("", in, out, frequency, seconds);
+        }
+
+        private Plan addOption(Option option) {
+            option.parent = this;
+            options.add(option);
+            return this;
         }
 
         public Plan addOption(String name, BreathIntensity in, BreathIntensity out, int frequency, int seconds) {
@@ -195,8 +253,8 @@ public class PlanManager implements Serializable {
             return options.get(currentOption).frequency;
         }
 
-        public int getCurrentDuration() {
-            return (int) (currentTime / 1000);
+        public long getCurrentDuration() {
+            return currentTime;
         }
 
 
@@ -205,15 +263,16 @@ public class PlanManager implements Serializable {
                 return false;
             else {
                 running = true;
-                currentTime = options.get(0).duration;
+                currentOption = 0;
+                currentTime = options.get(currentOption).duration;
                 delta = System.currentTimeMillis();
             }
-            return running;
+            return true;
         }
 
         private boolean update() {
             delta = System.currentTimeMillis() - delta;
-            if (running) {
+            if (running || !paused) {
                 if (currentTime - delta <= 0) {
                     currentOption++;
                     if (currentOption == options.size())
@@ -227,11 +286,20 @@ public class PlanManager implements Serializable {
             return true;
         }
 
-        private boolean stop() {
+        private void stop() {
             running = false;
+            paused = false;
             currentOption = 0;
             currentTime = 0;
-            return false;
+        }
+
+
+        private void pause() {
+            paused = false;
+        }
+
+        private void resume() {
+            paused = false;
         }
 
         public String getDescription() {
@@ -271,6 +339,11 @@ public class PlanManager implements Serializable {
         @Override
         public String toString() {
             return getId() + 1 + ") " + name + "\n" + getDescription();
+        }
+
+        @Override
+        public Iterator iterator() {
+            return options.iterator();
         }
 
         public enum BreathIntensity {
@@ -399,5 +472,21 @@ public class PlanManager implements Serializable {
         int getId();
 
         String getName();
+    }
+
+    public static class PlanManagerInstance implements Serializable {
+        private List<Plan> plans;
+        private int currentPlan = -1;
+
+        public PlanManagerInstance() {
+            plans = PlanManager.plans;
+            currentPlan = PlanManager.currentPlan;
+        }
+    }
+
+    public static class PlanManagerAlreadyInitialized extends Exception {
+        public PlanManagerAlreadyInitialized() {
+            super("Plan is already initialized and cant be initialized or reinitialized");
+        }
     }
 }

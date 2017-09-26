@@ -8,30 +8,49 @@ import java.util.List;
 /**
  * Created by Jevgenij Huebert on 17.03.2017. Project Breathy
  */
-public class Vector implements Comparable<Vector>, Cloneable{
+public class Vector implements Comparable<Vector>, Cloneable {
 
-    private List<Float> coordinates;
+    private List<Double> coordinates;
 
-    public Vector(Vector v, float... coordinates){
+    public Vector(Vector v, double... coordinates) {
         this.coordinates = new ArrayList<>();
-        for(float coordinate : v.get())
+        for (double coordinate : v.get())
             this.coordinates.add(coordinate);
 
-        for(float coordinate : coordinates)
+        for (double coordinate : coordinates)
             this.coordinates.add(coordinate);
     }
+    public Vector(Vector v, float... coordinates) {
+        this.coordinates = new ArrayList<>();
+        for (double coordinate : v.get())
+            this.coordinates.add(coordinate);
+
+        for (double coordinate : coordinates)
+            this.coordinates.add(coordinate);
+    }
+
     /**
-     * Instantiates a new Vector.
+     * Instantiates a new Vector with doubles.
      *
      * @param coordinates the coordinates
      */
-    public Vector(float... coordinates){
+    public Vector(double... coordinates) {
         this.coordinates = new ArrayList<>();
-        for(float coordinate : coordinates)
+        for (double coordinate : coordinates)
+            this.coordinates.add(coordinate);
+    }
+    /**
+     * Instantiates a new Vector with floats.
+     *
+     * @param coordinates the coordinates
+     */
+    public Vector(float... coordinates) {
+        this.coordinates = new ArrayList<>();
+        for (double coordinate : coordinates)
             this.coordinates.add(coordinate);
     }
 
-    public int getDimensions(){
+    public int getDimensions() {
         return coordinates.size();
     }
 
@@ -41,12 +60,15 @@ public class Vector implements Comparable<Vector>, Cloneable{
      * @param position the position
      * @return the position
      */
-    public Vector add(Vector position){
-        for (int i = 0; i < this.coordinates.size() && i < position.coordinates.size(); i++)
-            this.coordinates.set(i, this.coordinates.get(i) + position.coordinates.get(i));
-        if(this.coordinates.size()<position.coordinates.size())
-            for (int i = this.coordinates.size(); i < position.coordinates.size(); i++)
-                this.coordinates.add(position.coordinates.get(i));
+    public Vector add(Vector position) {
+        for (int i = 0; i < getDimensions() || i < position.getDimensions(); i++)
+            set(i, get(i) + position.get(i));
+        return this;
+    }
+    public Vector add(double... position) {
+        Vector toAdd = new Vector(position);
+        for (int i = 0; i < getDimensions() || i < toAdd.getDimensions(); i++)
+            set(i, get(i) + toAdd.get(i));
         return this;
     }
 
@@ -56,12 +78,15 @@ public class Vector implements Comparable<Vector>, Cloneable{
      * @param position the position
      * @return the position
      */
-    public Vector sub(Vector position){
-        for (int i = 0; i < this.coordinates.size() && i < position.coordinates.size(); i++)
-            this.coordinates.set(i, this.coordinates.get(i) - position.coordinates.get(i));
-        if(this.coordinates.size()<position.coordinates.size())
-            for (int i = this.coordinates.size(); i < position.coordinates.size(); i++)
-                this.coordinates.add(-position.coordinates.get(i));
+    public Vector sub(Vector position) {
+        for (int i = 0; i < getDimensions() || i < position.getDimensions(); i++)
+            set(i, get(i) - position.get(i));
+        return this;
+    }
+    public Vector sub(double... position) {
+        Vector toSub = new Vector(position);
+        for (int i = 0; i < getDimensions() || i < toSub.getDimensions(); i++)
+            set(i, get(i) - toSub.get(i));
         return this;
     }
 
@@ -71,9 +96,9 @@ public class Vector implements Comparable<Vector>, Cloneable{
      * @param multiplier the multiplier
      * @return the position
      */
-    public Vector mult(float multiplier){
-        for (int i = 0; i < this.coordinates.size(); i++)
-            this.coordinates.set(i, this.coordinates.get(i) * multiplier);
+    public Vector mult(double multiplier) {
+        for (int i = 0; i < getDimensions(); i++)
+            set(i, get(i) * multiplier);
         return this;
     }
 
@@ -85,9 +110,9 @@ public class Vector implements Comparable<Vector>, Cloneable{
      * @param multiplier the multiplier
      * @return the position
      */
-    public Vector mult(int start, int end, float multiplier){
-        for (int i = start; i < this.coordinates.size() && i <= end; i++)
-            this.coordinates.set(i, this.coordinates.get(i) * multiplier);
+    public Vector mult(int start, int end, double multiplier) {
+        for (int i = start; i < getDimensions() && i <= end; i++)
+            set(i, get(i) * multiplier);
         return this;
     }
 
@@ -98,8 +123,8 @@ public class Vector implements Comparable<Vector>, Cloneable{
      * @param multiplier the multiplier
      * @return the position
      */
-    public Vector mult(int coordinate, float multiplier){
-        this.coordinates.set(coordinate, this.coordinates.get(coordinate) * multiplier);
+    public Vector mult(int coordinate, double multiplier) {
+        set(coordinate, get(coordinate) * multiplier);
         return this;
     }
 
@@ -109,138 +134,162 @@ public class Vector implements Comparable<Vector>, Cloneable{
      * @param divisor the divisor
      * @return the position
      */
-    public Vector divide(float divisor){
-        if(divisor == 0)
+    public Vector divide(double divisor) {
+        if (divisor == 0)
             return null;
-        for (int i = 0; i < this.coordinates.size(); i++)
-            this.coordinates.set(i, this.coordinates.get(i) / divisor);
+        for (int i = 0; i < getDimensions(); i++)
+            set(i, get(i) / divisor);
         return this;
     }
 
-    public Vector norm(){
+    public Vector norm() {
         return divide(getDistance());
     }
-    public Vector normCoords(){
-        float max=0;
-        for(float c : coordinates)
-            max = c>max?c:max;
-        return divide(max==0?1:max);
+
+    public Vector normCoords() {
+        double max = 0;
+        for (double c : coordinates)
+            max = c > max ? c : max;
+        return divide(max == 0 ? 1 : max);
+    }
+    /**
+     * Get double [ ].
+     *
+     * @return the double [ ]
+     */
+    public double[] get() {
+        double[] result = new double[getDimensions()];
+        for (int i = 0; i < getDimensions(); i++)
+            result[i] = get(i);
+        return result;
+    }
+    public float[] getF() {
+        float[] result = new float[getDimensions()];
+        for (int i = 0; i < getDimensions(); i++)
+            result[i] = getF(i);
+        return result;
     }
 
     /**
-     * Get float.
+     * Get double.
      *
      * @param coordinate the coordinate
-     * @return the float
+     * @return the double
      */
-    public float get(int coordinate){
-        if(coordinate<coordinates.size())
+    public double get(int coordinate) {
+        if (coordinate < getDimensions())
             return coordinates.get(coordinate);
         else return 0;
     }
 
-    public void set(Vector v){
-        for(int i=0; i<v.getDimensions(); i++) {
-            if(i<coordinates.size())
+    public float getF(int coordinate) {
+        return (float) get(coordinate);
+    }
+
+    public void set(Vector v) {
+        for (int i = 0; i < v.getDimensions(); i++) {
+            if (i < coordinates.size())
                 coordinates.set(i, v.get(i));
             else
                 coordinates.add(v.get(i));
         }
     }
-    public void set(float... floats){
-        for(int i=0; i<floats.length; i++) {
-            if(i<coordinates.size())
-                coordinates.set(i, floats[i]);
+
+    public void set(int index, double data) {
+        if (getDimensions() > index) {
+            coordinates.set(index, data);
+            return;
+        }
+        for (int i = getDimensions(); i < index; i++)
+            coordinates.add(0.0);
+        coordinates.add(data);
+    }
+
+    public void set(double... doubles) {
+        for (int i = 0; i < doubles.length; i++) {
+            if (i < getDimensions())
+                coordinates.set(i, doubles[i]);
             else
-                coordinates.add(floats[i]);
+                coordinates.add(doubles[i]);
         }
     }
 
-    /**
-     * Get float [ ].
-     *
-     * @return the float [ ]
-     */
-    public float[] get(){
-        float[] result = new float[coordinates.size()];
-        for (int i = 0; i < coordinates.size(); i++)
-            result[i] = coordinates.get(i);
-        return result;
-    }
 
-    public float getDistance(){
+    public double getDistance() {
         return getDistance(new Vector());
     }
-    public float getDistance(Vector position){
-        float result=0;
-        for (int i = 0; i < coordinates.size() || i < position.coordinates.size(); i++)
+
+    public double getDistance(Vector position) {
+        double result = 0;
+        for (int i = 0; i < getDimensions() || i < position.getDimensions(); i++)
             result += Math.pow(position.get(i) - get(i), 2);
 
-        result = ((float) Math.sqrt(result));
-        return result;
-    }
-    public float getCoordinatesSum(){
-        float result = 0;
-        for(Float coordinate : coordinates)
-            result+=coordinate;
+        result = ((double) Math.sqrt(result));
         return result;
     }
 
-    public static Vector add(Vector a, Vector b){
+    public double getCoordinatesSum() {
+        double result = 0;
+        for (double coordinate : coordinates)
+            result += coordinate;
+        return result;
+    }
+
+    public static Vector add(Vector a, Vector b) {
         Vector result = a.clone();
         return result.add(b);
     }
 
-    public static Vector sub(Vector a, Vector b){
+    public static Vector sub(Vector a, Vector b) {
         Vector result = a.clone();
         return result.sub(b);
     }
 
-    public static Vector mult(Vector a, float b){
+    public static Vector mult(Vector a, double b) {
         Vector result = a.clone();
         return result.mult(b);
     }
 
-    public static Vector divide(Vector a, float b){
+    public static Vector divide(Vector a, double b) {
         Vector result = a.clone();
         return result.divide(b);
     }
-    public static Vector norm(Vector a){
+
+    public static Vector norm(Vector a) {
         Vector result = a.clone();
         return result.norm();
     }
-    public static Vector normCoords(Vector a){
+
+    public static Vector normCoords(Vector a) {
         Vector result = a.clone();
-        float max=0;
-        for(float c : result.coordinates)
-            max = c>max?c:max;
+        double max = 0;
+        for (double c : result.coordinates)
+            max = c > max ? c : max;
         return result.divide(max);
     }
 
-    public static Vector cross(Vector u, Vector v){
-        float uvi, uvj, uvk;
+    public static Vector cross(Vector u, Vector v) {
+        double uvi, uvj, uvk;
         uvi = u.get(1) * v.get(2) - v.get(1) * u.get(2);
         uvj = v.get(0) * u.get(2) - u.get(0) * v.get(2);
         uvk = u.get(0) * v.get(1) - v.get(0) * u.get(1);
-       return new Vector(uvi, uvj, uvk).norm();
+        return new Vector(uvi, uvj, uvk).norm();
     }
 
 
     @Override
     public int compareTo(@NonNull Vector o) {
-        int a = (int)(getCoordinatesSum()*1000);
-        int b = (int)(o.getCoordinatesSum()*1000);
-        return a<b?-1:a>b?1:0;
+        int a = (int) (getCoordinatesSum() * 1000);
+        int b = (int) (o.getCoordinatesSum() * 1000);
+        return a < b ? -1 : a > b ? 1 : 0;
     }
 
     @Override
     public String toString() {
-        String result="";
-        for (int i = 0; i < coordinates.size(); i++) {
-            result += i==0?"X = ":i==1?"Y = ":i==2?"Z = ":(i+1) + " = ";
-            result += coordinates.get(i) + "  ";
-        }
-        return result.length()==0?"0":result;
+        String result = "";
+        for (double f : coordinates)
+            result += ", " + f;
+        return result.length() == 0 ? "[0]" : "[" + result.substring(2) + "]";
     }
 
     @Override

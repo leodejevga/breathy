@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">OpenGlTest</string>
+    <string name="as_options">GlTest Options</string>
 </resources>

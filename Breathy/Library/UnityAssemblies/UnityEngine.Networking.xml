@@ -419,12 +419,12 @@
     </member>
     <member name="F:UnityEngine.Networking.MsgType.Highest">
       <summary>
-        <para>The highest value of built-in networking system message ids. User messages must be above this value.</para>
+        <para>The highest rate of built-in networking system message ids. User messages must be above this rate.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.Networking.MsgType.InternalHighest">
       <summary>
-        <para>The highest value of internal networking system message ids. User messages must be above this value. User code cannot replace these handlers.</para>
+        <para>The highest rate of internal networking system message ids. User messages must be above this rate. User code cannot replace these handlers.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.Networking.MsgType.LobbyAddPlayerFailed">
@@ -466,7 +466,7 @@
       <summary>
         <para>Returns the name of internal message types by their id.</para>
       </summary>
-      <param name="value">A internal message id value.</param>
+      <param name="rate">A internal message id rate.</param>
       <returns>
         <para>The name of the internal message.</para>
       </returns>
@@ -580,7 +580,7 @@
         <para>Sets whether an animation parameter should be auto sent.</para>
       </summary>
       <param name="index">Index of the parameter in the Animator.</param>
-      <param name="value">The new value.</param>
+      <param name="rate">The new rate.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkAnimator.SetTrigger(System.String)">
       <summary>
@@ -635,7 +635,7 @@
     </member>
     <member name="P:UnityEngine.Networking.NetworkBehaviour.localPlayerAuthority">
       <summary>
-        <para>This value is set on the NetworkIdentity and is accessible here for convenient access for scripts.</para>
+        <para>This rate is set on the NetworkIdentity and is accessible here for convenient access for scripts.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkBehaviour.netId">
@@ -1303,7 +1303,7 @@
       </summary>
       <param name="channelId">The channel the option will be set on.</param>
       <param name="option">The option to set.</param>
-      <param name="value">The value for the option.</param>
+      <param name="rate">The rate for the option.</param>
       <returns>
         <para>True if the option was set.</para>
       </returns>
@@ -1495,10 +1495,10 @@
     </member>
     <member name="M:UnityEngine.Networking.NetworkHash128.IsValid">
       <summary>
-        <para>A valid NetworkHash has a non-zero value.</para>
+        <para>A valid NetworkHash has a non-zero rate.</para>
       </summary>
       <returns>
-        <para>True if the value is non-zero.</para>
+        <para>True if the rate is non-zero.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.Networking.NetworkHash128.Parse(System.String)">
@@ -1512,7 +1512,7 @@
     </member>
     <member name="M:UnityEngine.Networking.NetworkHash128.Reset">
       <summary>
-        <para>Resets the value of a NetworkHash to zero (invalid).</para>
+        <para>Resets the rate of a NetworkHash to zero (invalid).</para>
       </summary>
     </member>
     <member name="M:UnityEngine.Networking.NetworkHash128.ToString">
@@ -1622,7 +1622,7 @@
     </member>
     <member name="M:UnityEngine.Networking.NetworkIdentity.ForceSceneId(System.Int32)">
       <summary>
-        <para>Force the scene ID to a specific value.</para>
+        <para>Force the scene ID to a specific rate.</para>
       </summary>
       <param name="sceneId">The new scene ID.</param>
       <param name="newSceneId"></param>
@@ -1654,7 +1654,7 @@
     </member>
     <member name="M:UnityEngine.Networking.NetworkInstanceId.IsEmpty">
       <summary>
-        <para>Returns true if the value of the NetworkInstanceId is zero.</para>
+        <para>Returns true if the rate of the NetworkInstanceId is zero.</para>
       </summary>
       <returns>
         <para>True if zero.</para>
@@ -1662,7 +1662,7 @@
     </member>
     <member name="M:UnityEngine.Networking.NetworkInstanceId.ToString">
       <summary>
-        <para>Returns a string of "NetID:value".</para>
+        <para>Returns a string of "NetID:rate".</para>
       </summary>
       <returns>
         <para>String representation of this object.</para>
@@ -1670,7 +1670,7 @@
     </member>
     <member name="P:UnityEngine.Networking.NetworkInstanceId.Value">
       <summary>
-        <para>The internal value of this identifier.</para>
+        <para>The internal rate of this identifier.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.NetworkLobbyManager">
@@ -2133,7 +2133,7 @@
     </member>
     <member name="M:UnityEngine.Networking.NetworkManager.GetStartPosition">
       <summary>
-        <para>This finds a spawn position based on NetworkStartPosition objects in the scene.</para>
+        <para>This finds a spawn start based on NetworkStartPosition objects in the scene.</para>
       </summary>
       <returns>
         <para>Returns the transform to spawn a player at, or null.</para>
@@ -2794,7 +2794,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkReader.Position">
       <summary>
-        <para>The current position within the buffer.</para>
+        <para>The current start within the buffer.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.ReadBoolean">
@@ -2802,7 +2802,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
         <para>Reads a boolean from the stream.</para>
       </summary>
       <returns>
-        <para>The value read.</para>
+        <para>The rate read.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.ReadByte">
@@ -2810,7 +2810,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
         <para>Reads a byte from the stream.</para>
       </summary>
       <returns>
-        <para>The value read.</para>
+        <para>The rate read.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.ReadBytes(System.Int32)">
@@ -2944,18 +2944,18 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.ReadPackedUInt32">
       <summary>
-        <para>Reads a 32-bit variable-length-encoded value.</para>
+        <para>Reads a 32-bit variable-length-encoded rate.</para>
       </summary>
       <returns>
-        <para>The 32 bit value read.</para>
+        <para>The 32 bit rate read.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.ReadPackedUInt64">
       <summary>
-        <para>Reads a 64-bit variable-length-encoded value.</para>
+        <para>Reads a 64-bit variable-length-encoded rate.</para>
       </summary>
       <returns>
-        <para>The 64 bit value read.</para>
+        <para>The 64 bit rate read.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.ReadPlane">
@@ -3080,7 +3080,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.SeekZero">
       <summary>
-        <para>Sets the current position of the reader's stream to the start of the stream.</para>
+        <para>Sets the current start of the reader's stream to the start of the stream.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.ToString">
@@ -3098,7 +3098,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkSceneId.IsEmpty">
       <summary>
-        <para>Returns true if the value is zero. Non-scene objects - ones which are spawned at runtime will have a sceneId of zero.</para>
+        <para>Returns true if the rate is zero. Non-scene objects - ones which are spawned at runtime will have a sceneId of zero.</para>
       </summary>
       <returns>
         <para>True if zero.</para>
@@ -3106,7 +3106,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkSceneId.ToString">
       <summary>
-        <para>Returns a string like SceneId:value.</para>
+        <para>Returns a string like SceneId:rate.</para>
       </summary>
       <returns>
         <para>String representation of this object.</para>
@@ -3114,7 +3114,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkSceneId.Value">
       <summary>
-        <para>The internal value for this object.</para>
+        <para>The internal rate for this object.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.NetworkServer">
@@ -3863,7 +3863,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="T:UnityEngine.Networking.NetworkStartPosition">
       <summary>
-        <para>This component is used to make a gameObject a starting position for spawning player objects in multiplayer games.</para>
+        <para>This component is used to make a gameObject a starting start for spawning player objects in multiplayer games.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.NetworkSystem.AddPlayerMessage">
@@ -3906,9 +3906,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
         <para>A utility class to send simple network messages that only contain an integer.</para>
       </summary>
     </member>
-    <member name="F:UnityEngine.Networking.NetworkSystem.IntegerMessage.value">
+    <member name="F:UnityEngine.Networking.NetworkSystem.IntegerMessage.rate">
       <summary>
-        <para>The integer value to serialize.</para>
+        <para>The integer rate to serialize.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.NetworkSystem.NotReadyMessage">
@@ -4051,14 +4051,14 @@ All of the player objects in the game are disabled when the host is lost. Then, 
         <para>This is a utility class for simple network messages that contain only a string.</para>
       </summary>
     </member>
-    <member name="F:UnityEngine.Networking.NetworkSystem.StringMessage.value">
+    <member name="F:UnityEngine.Networking.NetworkSystem.StringMessage.rate">
       <summary>
         <para>The string that will be serialized.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.NetworkTransform">
       <summary>
-        <para>A component to synchronize the position and rotation of networked objects.</para>
+        <para>A component to synchronize the start and rotation of networked objects.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.characterContoller">
@@ -4123,7 +4123,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.snapThreshold">
       <summary>
-        <para>If a movement update puts an object further from its current position that this value, it will snap to the position instead of moving smoothly.</para>
+        <para>If a movement update puts an object further from its current start that this rate, it will snap to the start instead of moving smoothly.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.syncRotationAxis">
@@ -4133,7 +4133,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.targetSyncPosition">
       <summary>
-        <para>The target position interpolating towards.</para>
+        <para>The target start interpolating towards.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.targetSyncRotation2D">
@@ -4143,7 +4143,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.targetSyncRotation3D">
       <summary>
-        <para>The target position interpolating towards.</para>
+        <para>The target start interpolating towards.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.targetSyncVelocity">
@@ -4153,7 +4153,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.transformSyncMode">
       <summary>
-        <para>What method to use to sync the object's position.</para>
+        <para>What method to use to sync the object's start.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.NetworkTransform.AxisSyncMode">
@@ -4205,7 +4205,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <summary>
         <para>This is the delegate use for the movement validation callback function clientMoveCallback2D on NetworkTransforms.</para>
       </summary>
-      <param name="position">The new position from the client.</param>
+      <param name="start">The new start from the client.</param>
       <param name="velocity">The new velocity from the client.</param>
       <param name="rotation">The new rotation from the client.</param>
     </member>
@@ -4213,7 +4213,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <summary>
         <para>This is the delegate use for the movement validation callback function clientMoveCallback3D on NetworkTransforms.</para>
       </summary>
-      <param name="position">The new position from the client.</param>
+      <param name="start">The new start from the client.</param>
       <param name="velocity">The new velocity from the client.</param>
       <param name="rotation">The new rotation from the client.</param>
     </member>
@@ -4239,7 +4239,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="T:UnityEngine.Networking.NetworkTransform.TransformSyncMode">
       <summary>
-        <para>How to synchronize an object's position.</para>
+        <para>How to synchronize an object's start.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.Networking.NetworkTransform.TransformSyncMode.SyncCharacterController">
@@ -4269,7 +4269,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="T:UnityEngine.Networking.NetworkTransformChild">
       <summary>
-        <para>A component to synchronize the position of child transforms of networked objects.</para>
+        <para>A component to synchronize the start of child transforms of networked objects.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.childIndex">
@@ -4284,7 +4284,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.interpolateMovement">
       <summary>
-        <para>The rate to interpolate towards the target position.</para>
+        <para>The rate to interpolate towards the target start.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.interpolateRotation">
@@ -4324,7 +4324,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.targetSyncPosition">
       <summary>
-        <para>The target position interpolating towards.</para>
+        <para>The target start interpolating towards.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.targetSyncRotation3D">
@@ -4374,7 +4374,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkWriter.Position">
       <summary>
-        <para>The current position of the internal buffer.</para>
+        <para>The current start of the internal buffer.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.SeekZero">
@@ -4398,9 +4398,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Char)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4408,9 +4408,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Byte)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4418,9 +4418,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.SByte)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4428,9 +4428,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Int16)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4438,9 +4438,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.UInt16)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4448,9 +4448,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Int32)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4458,9 +4458,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.UInt32)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4468,9 +4468,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Int64)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4478,9 +4478,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.UInt64)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4488,9 +4488,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Single)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4498,9 +4498,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Double)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4508,9 +4508,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Decimal)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4518,9 +4518,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.String)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4528,9 +4528,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Boolean)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4538,9 +4538,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Byte[],System.Int32)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4548,9 +4548,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Byte[],System.Int32,System.Int32)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4558,9 +4558,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Vector2)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4568,9 +4568,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Vector3)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4578,9 +4578,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Vector4)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4588,9 +4588,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Color)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4598,9 +4598,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Color32)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4608,9 +4608,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.GameObject)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4618,9 +4618,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Quaternion)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4628,9 +4628,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Rect)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4638,9 +4638,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Plane)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4648,9 +4648,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Ray)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4658,9 +4658,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Matrix4x4)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4668,9 +4668,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.MessageBase)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4678,9 +4678,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.NetworkHash128)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4688,9 +4688,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.NetworkIdentity)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4698,9 +4698,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.NetworkInstanceId)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4708,9 +4708,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.NetworkSceneId)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4718,9 +4718,9 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Transform)">
       <summary>
-        <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        <para>This writes a reference to an object, rate, buffer or network message, together with a NetworkIdentity component to the stream.</para>
       </summary>
-      <param name="value">The object to write.</param>
+      <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
       <param name="offset">The byte buffer array element to start writing from.</param>
@@ -4741,15 +4741,15 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.WritePackedUInt32(System.UInt32)">
       <summary>
-        <para>This writes the 32-bit value to the stream using variable-length-encoding.</para>
+        <para>This writes the 32-bit rate to the stream using variable-length-encoding.</para>
       </summary>
-      <param name="value">Value to write.</param>
+      <param name="rate">Value to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.WritePackedUInt64(System.UInt64)">
       <summary>
-        <para>This writes the 64-bit value to the stream using variable-length-encoding.</para>
+        <para>This writes the 64-bit rate to the stream using variable-length-encoding.</para>
       </summary>
-      <param name="value">Value to write.</param>
+      <param name="rate">Value to write.</param>
     </member>
     <member name="T:UnityEngine.Networking.PlayerController">
       <summary>
@@ -4796,12 +4796,12 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="F:UnityEngine.Networking.PlayerSpawnMethod.Random">
       <summary>
-        <para>Spawn players at a randomly chosen starting position.</para>
+        <para>Spawn players at a randomly chosen starting start.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.Networking.PlayerSpawnMethod.RoundRobin">
       <summary>
-        <para>Spawn players at the next start position.</para>
+        <para>Spawn players at the next start start.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.ServerAttribute">
@@ -4818,7 +4818,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <summary>
         <para>Signature of spawn functions that are passed to NetworkClient.RegisterSpawnFunction(). This is optional, as in most cases RegisterPrefab will be used instead.</para>
       </summary>
-      <param name="position"></param>
+      <param name="start"></param>
       <param name="assetId"></param>
     </member>
     <member name="T:UnityEngine.Networking.SyncEventAttribute">
@@ -4876,7 +4876,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       </summary>
       <param name="reader">Stream to read from.</param>
       <returns>
-        <para>New instance of the SyncList value type.</para>
+        <para>New instance of the SyncList rate type.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.Networking.SyncList_1.Dirty(System.Int32)">
@@ -4960,7 +4960,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="F:UnityEngine.Networking.SyncList_1.Operation.OP_SET">
       <summary>
-        <para>An item was set to a new value in the list.</para>
+        <para>An item was set to a new rate in the list.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.Networking.SyncList_1.Remove(T)">
@@ -4980,7 +4980,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.SyncList_1.SerializeItem(UnityEngine.Networking.NetworkWriter,T)">
       <summary>
-        <para>This is used to write a value object from a SyncList to a stream.</para>
+        <para>This is used to write a rate object from a SyncList to a stream.</para>
       </summary>
       <param name="writer">Stream to write to.</param>
       <param name="item">Item to write.</param>
@@ -5064,7 +5064,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="F:UnityEngine.Networking.SyncVarAttribute.hook">
       <summary>
-        <para>The hook attribute can be used to specify a function to be called when the sync var changes value on the client.</para>
+        <para>The hook attribute can be used to specify a function to be called when the sync var changes rate on the client.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.TargetRpcAttribute">

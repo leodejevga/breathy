@@ -14,7 +14,7 @@
             <option value="$PROJECT_DIR$/audioSurf" />
             <option value="$PROJECT_DIR$/opengltest" />
             <option value="$PROJECT_DIR$/source" />
-            <option value="$PROJECT_DIR$/test" />
+            <option value="$PROJECT_DIR$/spaceFight" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

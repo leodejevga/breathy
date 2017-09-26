@@ -11,6 +11,7 @@ import android.widget.ExpandableListView;
 import com.apps.philipps.app.ExpandableListViewAdapter;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.PlanManager;
+import com.apps.philipps.source.SaveData;
 
 import javax.security.auth.login.LoginException;
 
@@ -36,7 +37,7 @@ public class PlansManager extends AppCompatActivity {
     }
     private void initExpandableListView() {
         ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this,
-                PlanManager.getParts(), active(), edit(), delete());
+                active(), edit(), delete());
 
         ExpandableListView elvPlans = (ExpandableListView) findViewById(R.id.elvPlans);
         elvPlans.setAdapter(expandableListViewAdapter);
@@ -54,6 +55,10 @@ public class PlansManager extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        for(PlanManager.Plan plan : PlanManager.getPlans()){
+            if(plan.getName()==null || plan.getName().length()==0)
+                plan.setName("Test Plan");
+        }
         initExpandableListView();
     }
 
@@ -73,6 +78,19 @@ public class PlansManager extends AppCompatActivity {
     private View.OnClickListener delete(){
         return v -> {
             PlanManager.deletePlan(ExpandableListViewAdapter.selected); initExpandableListView();
+            SaveData.savePlanManager(this);
         };
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        SaveData.savePlanManager(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SaveData.savePlanManager(this);
     }
 }

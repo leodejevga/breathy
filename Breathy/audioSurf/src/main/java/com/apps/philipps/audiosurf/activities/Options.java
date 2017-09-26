@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.apps.philipps.audiosurf.Backend;
@@ -50,15 +49,14 @@ public class Options extends Activity {
     }
 
     private void initOptions(final Context context) {
-        TableRow row = new TableRow(this);
         LinearLayout layout = (LinearLayout) findViewById(R.id.optionsButtons);
         for (int i = 0; i < Backend.options.size(); i++) {
             OptionManager.Option option = Backend.options.getOption(i);
             Button btn = new Button(this);
-            int color = btn.getSolidColor();
-            btn.setBackgroundColor((Boolean) option.Value ? 0xff00ff00 : color);
-            btn.setText(option.Parameter.toString());
             btn.setId(i + 251);
+            int color = btn.getSolidColor();
+            btn.setBackgroundColor((Boolean) option.getValue() ? 0xff00ff00 : color);
+            btn.setText(option.Parameter.toString());
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -67,13 +65,13 @@ public class Options extends Activity {
                     OptionManager.Option option = Backend.options.getOption(id);
                     boolean bought = false;
                     if (!Backend.options.getValue(id)) {
-                        bought = Coins.buy(option.Price, context);
+                        bought = Coins.buy(option.getPrice(), context);
                         Backend.options.set(id, bought);
                     }
                     int color = b.getSolidColor();
                     b.setBackgroundColor(Backend.options.getValue(id) ? 0xff00ff00 : color);
                     coinsText.setText(Coins.getAmount() + " Coins");
-                    Backend.saveGameOptions(context);
+                    Backend.saveGameOptions(context, Backend.gName);
                 }
             });
             layout.addView(btn);
@@ -127,12 +125,12 @@ public class Options extends Activity {
         }
 
         Button applyAndBackButton = (Button) findViewById(R.id.audiosurf_apply_and_back_button);
-        applyAndBackButton.setOnClickListener(new View.OnClickListener(){
+        applyAndBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeGameMusicAndVolumme();
             }
-        } );
+        });
     }
 
     private String[] getListDraw() throws IllegalAccessException {
@@ -164,8 +162,8 @@ public class Options extends Activity {
         return index;
     }
 
-    public void changeGameMusicAndVolumme(){
-        Backend.setDefaut_music_resource_id(musicIndex[getResourceIndex()]);
+    public void changeGameMusicAndVolumme() {
+        Backend.setDefault_music_resource_id(musicIndex[getResourceIndex()]);
         finish();
     }
 }

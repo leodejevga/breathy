@@ -1,6 +1,7 @@
 package com.apps.philipps.app.simulator;
 
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 
 import com.apps.philipps.source.AppState;
@@ -108,12 +109,12 @@ public class BreathSimulator {
     private void startSimulation() {
         AppState.btState = AppState.BtState.Connected;
 
-        new Thread(null, new Runnable() {
+        Thread simulator = new Thread(null, new Runnable() {
             private long start = System.currentTimeMillis();
-
+            private int value = 0;
             @Override
             public void run() {
-
+//                Looper.prepare();
                 int index = 0;
                 long delta = 0;
                 double millis = 1000 / rate;
@@ -125,21 +126,25 @@ public class BreathSimulator {
                     }
                     if (!recording && delta >= millis) {
                         start = System.currentTimeMillis();
-                        BreathData.add(data[index]);
-                        index++;
+                        BreathData.add(new BreathData.Element(data[index++]));
                         index = index % data.length;
                         index++;
                     }
                 }
             }
-        }, "Breath Data Simulator").start();
+        }, "Breath Data Simulator");
+        simulator.setPriority(Thread.MIN_PRIORITY);
+        simulator.start();
     }
 
     private Random r = new Random(0);
+    private int num = 0;
     private void generate(){
         int kind = r.nextInt(3)%3;
         breath();
-//        if(kind==0)
+//        if(num++%20-10<0)
+//            pause();
+//        else if(kind==0)
 //            breath();
 //        else if(kind==1)
 //            breathIn();

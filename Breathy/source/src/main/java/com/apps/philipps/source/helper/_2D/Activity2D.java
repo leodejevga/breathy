@@ -1,140 +1,296 @@
 package com.apps.philipps.source.helper._2D;
+
 import android.app.Activity;
 import android.content.res.Resources;
-import android.graphics.Movie;
-import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings;
-import android.util.DisplayMetrics;
+import android.support.annotation.CallSuper;
+import android.support.annotation.DrawableRes;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.PlanManager;
+import com.apps.philipps.source.helper.Vector;
+import com.apps.philipps.source.interfaces.IObserver;
+
+import java.util.Random;
 
 /**
  * Created by Jevgenij Huebert on 11.03.2017. Project Breathy
  */
 
-public abstract class Activity2D extends Activity {
-    protected final float SCREEN_FACTOR = (getScreenHeight()+getScreenWidth()) / (1080+1920);
+public abstract class Activity2D extends Activity implements IObserver {
+    protected final float SCREEN_FACTOR = (float) (getScreenHeight(true) + getScreenWidth(true)) / (1080 + 1920);
 
-    private static final String TAG = "Activity 2D";
+    protected final String TAG = getClass().getSimpleName();
     protected boolean draw;
-    protected int frameRate = 0;
-    protected int frame = 0;
-    private boolean initialized = false;
-    private long start = System.currentTimeMillis();
-    private boolean destroy = false;
-    private short ready=2;
+    protected ViewGroup game;
+    protected long delta;
+    private int coins;
+    private boolean loadingReady;
+    protected long currentTime = System.currentTimeMillis();
 
-    protected void brakeDraw(){
+    private int frameRate = 0;
+    private int frame = 0;
+    private boolean initialized = false;
+    private long frameTime = System.currentTimeMillis();
+    protected final long start = System.currentTimeMillis();
+    private boolean ready = true;
+    private static int thread = 0;
+
+    protected void stopDrawing() {
         draw = false;
     }
 
-    private final Thread startToDraw =  new Thread(null, new Runnable() {
+    public int getFrameRate() {
+        return frameRate;
+    }
 
-        private double millis;
+    public int getFrame() {
+        return frame;
+    }
+
+    protected void addCoin() {
+        coins++;
+    }
+
+    protected void subCoin() {
+        subCoin(1);
+    }
+
+    protected boolean isInitialized() {
+        return initialized;
+    }
+
+    protected void addCoin(int coins) {
+        this.coins += coins;
+    }
+
+    protected void subCoin(int coins) {
+        this.coins -= coins;
+        if (this.coins < 0)
+            this.coins = 0;
+    }
+
+    public int getCoins() {
+        return coins;
+    }
+
+    private final Runnable drawing = new Runnable() {
+        private Long millis;
+        private int whiles = 0, ifs = 0, draws = 0;
+        private long s = System.currentTimeMillis();
+
         @Override
         public void run() {
-            draw = true;
-            long delta = 0;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (!initialized) {
                         init();
-                        millis = 1000/AppState.framelimit.getLimit();
+                        millis = 1000L / 60L;
                     }
                     initialized = true;
                 }
             });
-            while (!destroy) {
-                if(initialized){
-                    delta = System.currentTimeMillis() - start;
-                    if (draw && delta >= millis && ready>=2) {
-                        ready = 0;
-                        executeDraw(delta);
-                        start = System.currentTimeMillis();
-                    }
-                }
-                else{
-                    try {
-                        long sleep = 1000/AppState.framelimit.getLimit() - delta;
-                        Thread.sleep(sleep>10?sleep-3:0);
-                    } catch (InterruptedException e) {
-                        Log.e(TAG, "Fail to wait");
-                    }
+            while (draw) {
+                if (initialized) {
+                    if (ready && System.currentTimeMillis() - frameTime > millis) {
+                        draws++;
+                        ready = false;
+                        if (!loadingReady)
+                            load(false);
+                        else
+                            executeDraw();
+                    } else
+                        ifs++;
+                } else
+                    whiles++;
+                if (System.currentTimeMillis() - s > 1000) {
+//                    Log.e(TAG, "draws " + draws + " ifs " + ifs + " whiles " + whiles);
+                    whiles = ifs = draws = 0;
+                    s = System.currentTimeMillis();
                 }
             }
         }
-    }, "Activity 2D");
+    };
 
-    protected abstract void draw();
-
-    protected abstract void init();
-
-    protected abstract void touch(MotionEvent event);
-
-    protected float getScreenWidth(){
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    private void load(final boolean firstLoad) {
+        // TODO: 05.09.2017 Vernünftige Load schreiben sie muss wissen wann alles geladen wurde
+        if (System.currentTimeMillis() - start > 6000) {
+            loadingReady = true;
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (loadingReady)
+                    onLoadingReady();
+                else {
+                    currentTime = System.currentTimeMillis();
+                    delta = currentTime - frameTime;
+                    int percent = (int) (System.currentTimeMillis() - start) / 60;
+                    onLoading(firstLoad, percent > 100 ? 100 : percent);
+                }
+                ready = true;
+                frameTime = System.currentTimeMillis();
+            }
+        });
     }
-    protected float getScreenHeight(){
-        return Resources.getSystem().getDisplayMetrics().heightPixels;
-    }
 
-    private long sekond = System.currentTimeMillis();
-    private synchronized void executeDraw(long delta){
+    private long second = System.currentTimeMillis();
+
+    private void executeDraw() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
                     PlanManager.update();
+                    currentTime = System.currentTimeMillis();
+                    delta = currentTime - frameTime;
                     draw();
-                    ready++;
+//                    Log.e(TAG, "\nDraw time: " + (System.currentTimeMillis() - currentTime));
                 } catch (Exception e) {
                     Log.e(TAG, "Draw not successfull", e);
                 }
-                frame = ++frame;
+                frame++;
+                if (second + 1000 <= currentTime) {
+                    frameRate = frame;
+                    frame = 0;
+                    second = currentTime;
+                }
+                ready = true;
+                frameTime = System.currentTimeMillis();
             }
         });
-        if(sekond+1000<=System.currentTimeMillis()){
-            frameRate = frame;
-            frame = 0;
-            sekond = System.currentTimeMillis();
-        }
-        ready++;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        startToDraw.start();
+    private void starToDraw() {
+        draw = true;
+        load(true);
+        Thread drawThread = new Thread(null, drawing, TAG + " " + thread++);
+        drawThread.start();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        PlanManager.stop();
-        destroy = true;
+    /**
+     * You can remove your loading Screen here, or use the first draw() call to do this.
+     */
+    protected void onLoadingReady() {
+    }
 
+    /**
+     * Show your loading screen here. This is kind of draw method, just for drawing Loading Screen.
+     * Due to several background workings, this method might not be called 60 times every second.
+     *
+     * @param firstLoad true if this is the first onLoading(...) call
+     * @param progress  progress of loading from 0 to 100;
+     * @return true if this method called for the first time, otherwise false
+     */
+    protected abstract void onLoading(boolean firstLoad, int progress);
+
+    /**
+     * Draw your Frame
+     */
+    protected abstract void draw();
+
+    /**
+     * Initialize your game
+     */
+    protected abstract void init();
+
+    /**
+     * Your touch event
+     *
+     * @param event touch event
+     */
+    protected abstract void touch(MotionEvent event);
+
+    /**
+     * Returns the width of the game Layout if initialized, else the width of the screen
+     *
+     * @param absolute
+     * @return with of game Layout or screen in the second place
+     */
+    protected int getScreenWidth(boolean... absolute) {
+        if (game != null && (absolute.length == 0 || !absolute[0]))
+            return game.getWidth();
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    /**
+     * Returns the height of the game Layout if initialized, else the width of the screen
+     *
+     * @param absolute
+     * @return height of game Layout or screen in the second place
+     */
+    protected int getScreenHeight(boolean... absolute) {
+        if (game != null && (absolute.length == 0 || !absolute[0]))
+            return game.getHeight();
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.e(TAG, "OnPause");
+        BreathData.removeObserver(this);
+        BreathData.saveRest();
+        PlanManager.pause();
+        AppState.recordData = AppState.inGame = false;
         draw = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "OnDestroy");
+        PlanManager.stop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        draw = true;
+        Log.e(TAG, "OnResume");
+        AppState.recordData = AppState.inGame = true;
+        BreathData.addObserver(this);
+        PlanManager.resume();
+        starToDraw();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         touch(event);
         return super.onTouchEvent(event);
+    }
+
+    /**
+     * Use this Method to quickly initialize your GameObject2D
+     *
+     * @param content     id of your drawable content
+     * @param position    position ov the Object
+     * @param destination destination of the movement (can be null)
+     * @param move        speed of the movement
+     * @return your GameoObject2D
+     */
+    protected GameObject2D initObject(@DrawableRes int content, Vector position, Vector destination, double move) {
+        ImageView view = new ImageView(this);
+        view.setImageResource(content);
+        game.addView(view);
+        GameObject2D result = new GameObject2D(view, position, destination);
+        result.move(move);
+        return result;
+    }
+
+    /**
+     * Get random int from to
+     *
+     * @param from frameTime of values
+     * @param to   limit of values (from 0 to 2 the Values are [0,1,2])
+     * @return random int from to
+     */
+    protected int getInt(int from, int to) {
+        Random r = new Random();
+        return (from + Math.abs(r.nextInt())) % to + 1;
     }
 }

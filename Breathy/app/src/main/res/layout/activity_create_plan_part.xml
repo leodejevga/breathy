@@ -24,8 +24,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:hint="Plan part name"
+                android:inputType="textPersonName" />
 
             <TextView
                 android:id="@+id/txtCreatePlanTitle"
@@ -200,7 +200,7 @@
                     android:id="@+id/textView11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20"
+                    android:text="10"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:textColor="@color/text" />
 
@@ -215,7 +215,7 @@
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="120"
+                    android:text="110"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:textColor="@color/text" />
             </LinearLayout>
