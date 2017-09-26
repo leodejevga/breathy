@@ -20,7 +20,6 @@ import java.util.Random;
 /**
  * Created by Jevgenij Huebert on 11.03.2017. Project Breathy
  */
-
 public abstract class Activity2D extends Activity implements IObserver {
     protected final float SCREEN_FACTOR = (float) (getScreenHeight(true) + getScreenWidth(true)) / (1080 + 1920);
 
