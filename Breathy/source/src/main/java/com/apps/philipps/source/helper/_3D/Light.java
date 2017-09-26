@@ -72,14 +72,12 @@ public class Light {
         if (increase)
             angle += speed;
         else angle -= speed;
-
     }
 
     public void setUpLight() {
         lightMovementSimulation();
         // Calculate position of the light. Rotate and then push into the distance.
         Matrix.setIdentityM(lightModel_Matrix, 0);
-        //Matrix.translateM(lightModel_Matrix, 0, 0.0f, 0.0f, -5.0f);
         Matrix.rotateM(lightModel_Matrix, 0, angle, 0.0f, 1.0f, 0.0f);
         Matrix.translateM(lightModel_Matrix, 0, 0.0f, 0.0f, -0.7f);
 

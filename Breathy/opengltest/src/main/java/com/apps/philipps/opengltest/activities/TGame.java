@@ -1,5 +1,7 @@
 package com.apps.philipps.opengltest.activities;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.apps.philipps.source.helper._3D.Activity3D;
@@ -9,11 +11,17 @@ import com.apps.philipps.source.helper._3D.Activity3D;
  */
 
 public class TGame extends Activity3D {
+    private ProgressDialog pd = null;
+    private MyGLRenderer renderer3D = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        openGL = new MyGLSurfaceView(this, new MyGLRenderer(this));
+        pd = ProgressDialog.show(TGame.this, "Loading...",
+                "Loading. Please wait...", true, false);
+        new BackGroundTask().execute();
+        renderer3D = new MyGLRenderer(this);
+        openGL = new MyGLSurfaceView(this, renderer3D);
     }
 
     @Override
@@ -33,5 +41,31 @@ public class TGame extends Activity3D {
         // If you de-allocated graphic objects for onPause()
         // this is a good place to re-allocate them.
         openGL.onResume();
+    }
+
+    class BackGroundTask extends
+            AsyncTask<String, Integer, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            // showDialog(AUTHORIZING_DIALOG);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (TGame.this.pd != null) {
+                TGame.this.pd.dismiss();
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            while (TGame.this.renderer3D.gameEngine == null) {
+                //wait ultil object is loaded
+            }
+            TGame.this.pd.dismiss();
+            return true;
+
+        }
+
     }
 }

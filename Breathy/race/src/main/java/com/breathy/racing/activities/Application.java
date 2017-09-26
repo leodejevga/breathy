@@ -3,6 +3,7 @@ package com.breathy.racing.activities;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class Application extends Activity2D {
     ArrayList<SlowCar> slowCars;
     LinkedList<GameObject2D> background;
     RelativeLayout game;
+    int carNumber;
 
     // Highscore
     double highscore = 0;
@@ -81,23 +83,23 @@ public class Application extends Activity2D {
     @Override
     protected void draw() {
         long delta = System.currentTimeMillis() - start;
-
         if(oneCallPerMin.update()){
             calcSpeed();
+
+            Log.i("Move", "One Call move");
             int target = (int) car.getAnimated().getDestination().get( 0 );
             yCar = raceBreathInterpreter.getCurY();
-            car.setPosition( new Vector( car.getPosition().get( 0 ), yCar ) );
-            car.move( new Vector( target, yCar ) );
+            car.getView().setY( yCar );//setPosition( new Vector( car.getPosition().get( 0 ), yCar ) );
+            car.move(new Vector( target, yCar ) );
         }
-
         updateBreathStatus();
-
         calcEmeny( delta );
-
+        Log.i("Draw",background.getFirst().isMoving() + "");
         //checkBackground
-        if ( !background.getFirst().isMoving() ) {
+        if ( background.getLast().getPosition().get( 1 )>= 0) { // !background.getFirst().isMoving() ||
             background.removeFirst();
             createBackground();
+            Log.i("Draw1","1.");
         }
 
         background.getFirst().update( delta );
@@ -106,7 +108,6 @@ public class Application extends Activity2D {
         car.update( delta );
         score.setText( "Highscore: " + (Math.round( 100 * safedhighscore ) / 100.0) + " + " + (Math.round( 100 * highscore ) / 100) );
         start = System.currentTimeMillis();
-
         refreshChart();
 
 
@@ -117,8 +118,8 @@ public class Application extends Activity2D {
     @Override
     protected void init() {
         //RelativeLayout game = new RelativeLayout(getBaseContext());
-        PlanManager.addPlan(PlanManager.getPlan(0.5f, 0.2f, 0.5f, 15).addOption(0.3f, 0.6f, 0.7f, 25).addOption(0.3f, 0.3f, 0.1f, 5));
-        PlanManager.startPlan(0);
+        PlanManager.getPlan( 0 );
+        PlanManager.startPlan();
 
         game = (RelativeLayout) findViewById( R.id.gameArea );
         score = (TextView) findViewById( R.id.score );
@@ -128,7 +129,7 @@ public class Application extends Activity2D {
         xRoads = new float[]{(int) (getScreenWidth() /100 * 25), (int) (getScreenWidth() / 100 * 42.5), (int) (getScreenWidth() / 5 * 3)};
         raceBreathInterpreter = new RaceBreathInterpreter( new Pair<>( (int) getScreenHeight() / 2, (int) getScreenHeight() - 264) );
         this.oneCallPerMin = new SlowerUpdate( this.frameRate, 1 );
-        yCar = raceBreathInterpreter.getCurY();
+        yCar = (int) getScreenHeight() - 600;
 
         car = initObject( new ImageView( this ), R.drawable.car, 1, new Vector( xRoads[1], yCar ), new Vector( xRoads[1], yCar ), 1200 );
         car.getView().getLayoutParams().height = (int) (getScreenWidth()*0.15);
@@ -173,7 +174,7 @@ public class Application extends Activity2D {
      */
     @Override
     protected void touch( MotionEvent event ) {
-        if ( event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+        if ( event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) { //TODO hier muss wieder andere Touch event hin
             int dx = (int) event.getX();
             int dy = (int) event.getY();
 
@@ -198,7 +199,7 @@ public class Application extends Activity2D {
     public void movePlayer( String direction ) {
         switch ( direction ) {
             case "right":
-
+                Log.i("Move", "Right move");
                 if ( curXIndex == 0 ) {
                     car.move( new Vector( xRoads[1], yCar ) );
                     curXIndex = 1;
@@ -244,8 +245,9 @@ public class Application extends Activity2D {
                 highscore += 1 * gameScoreMultiplier;
                 i--;
             } else if ( !removed ) {
-                slowCars.get( i ).update( delta );
                 checkOvertake( i );
+                slowCars.get( i ).update( delta );
+
             }
 
 
@@ -257,19 +259,20 @@ public class Application extends Activity2D {
         int j;
         SlowCar curCar = slowCars.get( i );
         int carSpeed = curCar.getAnimated().getSpeed();
-        boolean leftLane = true;
-        boolean rightLane = true;
-        int overtake = 0;
+
         int curStreet = curCar.getCurXStreet();
+        boolean leftLane = (curStreet == 0 ? false : true);
+        boolean rightLane = (curStreet == 2 ? false : true);
+        int overtake = -1;
 
         for(j = i; j<slowCars.size(); j++){
             SlowCar carInFront = slowCars.get( j );
 
-            if(carInFront.getPosition().get( 1 ) < curCar.getPosition().get( 1 ) - 4*carSpeed){
-                break;
-            }
+//            if(carInFront.getPosition().get( 1 ) < curCar.getPosition().get( 1 ) - 2*carSpeed){
+//                break;
+//            }
 
-            if(overtake ==0 && (curStreet == carInFront.getCurXStreet() && carInFront.getPosition().get( 1 ) <
+            if(overtake == -1 && (curStreet == carInFront.getCurXStreet() && carInFront.getPosition().get( 1 ) <
                     curCar.getPosition().get( 1 ) + 2*(carSpeed-carInFront.getAnimated().getSpeed()) &&
                     curCar.getAnimated().getSpeed() <= carInFront.getAnimated().getSpeed())){
                 overtake = j;
@@ -282,8 +285,8 @@ public class Application extends Activity2D {
             }
 
         }
-        if( overtake != 0){
-            if(rightLane){
+        if( overtake != -1){
+            if(rightLane){//ToDo
                 curCar.move( new Vector( xRoads[curStreet+1], curCar.getAnimated().getDestination().get( 1 ) ) );
             }else if(leftLane){
                 curCar.move( new Vector( xRoads[curStreet-1], curCar.getAnimated().getDestination().get( 1 ) ) );
@@ -297,16 +300,17 @@ public class Application extends Activity2D {
      * creates a new Emeny on a pseudo random line
      */
     private void createEmeny() {
+
         int xIndex = GameUtil.getRandomNumber( 0, 2 );
         if (  slowCars.size() != 0 && xIndex == slowCars.get( slowCars.size() - 1 ).getPosition().get( 0 ) ) {
             xIndex = GameUtil.getRandomNumber( 0, 2 );
         }
-        double speed = GameUtil.triangularDistribution( 0.1, 1.4, 1 );
-        slowCars.add( initSlowCar( new ImageView( this ), R.drawable.slow_car, 0, new Vector( xRoads[xIndex], (float) 10 ),
+        double speed = GameUtil.triangularDistribution( 0.5, 1.4, 1 );
+        slowCars.add( initSlowCar( new ImageView( this ), GameUtil.getRandomCar(), 0, new Vector( xRoads[xIndex], (float) 10 ),
                 new Vector( xRoads[xIndex], getScreenHeight() ), (int) deltaSpeed , xIndex, speed) );
         slowCars.get( slowCars.size()-1).getView().getLayoutParams().height = (int) (getScreenWidth()*0.15);
         slowCars.get( slowCars.size()-1).getView().getLayoutParams().width = (int) (getScreenWidth()*0.15);
-        nextCar = System.currentTimeMillis() + (long) GameUtil.triangularDistribution( 1500., 2300., 2000. );
+        nextCar = System.currentTimeMillis() + (long) GameUtil.triangularDistribution( 1200., 2000., 1600. );
     }
 
     /**
@@ -338,14 +342,15 @@ public class Application extends Activity2D {
      * creates a new Background above the screen and bring him to the back
      */
     private void createBackground() {
+        int start = 0 - (int)getScreenHeight();//background.getFirst().getView().getLayoutParams().height;
         if ( Math.random() > 0.5 ) {
-            background.add( initObject( new ImageView( this ), R.drawable.stadt, 3, new Vector( 0, 0 - getScreenHeight() ), new Vector( 0, getScreenHeight() ), (int) (BACKGROUNDSPEED + deltaSpeed) ) );
+            background.add( initObject( new ImageView( this ), R.drawable.stadt22, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight() ), (int) (BACKGROUNDSPEED + deltaSpeed) ) );
         } else {
-            background.add( initObject( new ImageView( this ), R.drawable.wald, 3, new Vector( 0, 0 - getScreenHeight() ), new Vector( 0, getScreenHeight() ), (int) (BACKGROUNDSPEED + deltaSpeed) ) );
+            background.add( initObject( new ImageView( this ), R.drawable.wald, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight() ), (int) (BACKGROUNDSPEED + deltaSpeed) ) );
         }
         background.getLast().getView().setLayoutParams(new ViewGroup.LayoutParams((int) getScreenWidth(), (int) getScreenHeight()));
+        //background.getLast().getView().getLayoutParams().height = (int) getScreenHeight();
         GameUtil.sendViewToBack( background.getLast().getView() );
-
     }
 
     private void refreshChart(){

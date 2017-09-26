@@ -3,7 +3,6 @@ package com.apps.philipps.app.activities;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -13,9 +12,9 @@ import android.widget.Toast;
 
 import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.BluetoothService;
-import com.apps.philipps.app.BreathPlan;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.BreathInterpreter;
 
 /**
  * Main Activity.
@@ -26,7 +25,6 @@ public class Menu extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         IntentFilter enabled = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         IntentFilter connected = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
         IntentFilter disconnected = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
@@ -48,28 +46,19 @@ public class Menu extends Activity {
 
     private void initActivity() {
         Button games = (Button) findViewById(R.id.mainGames);
-        games.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Menu.this, SelectGame.class);
-                startActivity(i);
-            }
+        games.setOnClickListener(v -> {
+            Intent i = new Intent(Menu.this, SelectGame.class);
+            startActivity(i);
         });
         Button options = (Button) findViewById(R.id.mainOptions);
-        options.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Menu.this, Options.class);
-                startActivity(i);
-            }
+        options.setOnClickListener(v -> {
+            Intent i = new Intent(Menu.this, Options.class);
+            startActivity(i);
         });
         Button breathPlan = (Button) findViewById(R.id.mainBreathPlan);
-        breathPlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Menu.this, PlanManager.class);
-                startActivity(i);
-            }
+        breathPlan.setOnClickListener(v -> {
+            Intent i = new Intent(Menu.this, PlansManager.class);
+            startActivity(i);
         });
     }
 
@@ -137,7 +126,7 @@ public class Menu extends Activity {
     }
 
     public void createPlan(View view) {
-        Intent i = new Intent(this, CreatePlan.class);
+        Intent i = new Intent(this, CreatePlanPart.class);
         startActivity(i);
     }
 }

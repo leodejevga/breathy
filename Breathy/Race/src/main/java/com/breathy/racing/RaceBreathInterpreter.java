@@ -28,7 +28,7 @@ public class RaceBreathInterpreter {
 
     public void update(){
 
-        int plannedBreath = BreathInterpreter.getStatus().getError().getValue();
+        int plannedBreath = BreathInterpreter.getStatus().getError().value;
         switch ( plannedBreath ){
             case 1: punishProzent = Math.max( 0, punishProzent - 10 );
                 break;

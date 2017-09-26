@@ -13,7 +13,7 @@ public class Shapes {
     public static class Triangle extends GameObject3D.Shape {
 
         public Triangle(Context context) {
-            this(context, new Vector(10, 0, 140), new Vector(0, 0, 0),
+            this(context, new Vector(10, 0, 140),
                     3, 3, 3, R.drawable.streettexture,
                     // vertex
                     new Vector(0, 0.622008459f, 1.0f), new Vector(-0.5f, -0.311004243f, 1.0f), new Vector(0.5f, -0.311004243f, 1.0f),
@@ -26,22 +26,22 @@ public class Shapes {
             );
         }
 
-        public Triangle(Context context, Vector color, int dimensions, Vector position,
+        public Triangle(Context context, int dimensions, Vector position,
                         int vertexCount, int colorCount, int textureCount, int textureID,
                         float... coords) {
-            super(context, color, dimensions, position, vertexCount, colorCount, textureCount, textureID, coords);
+            super(context, false, dimensions, position, vertexCount, colorCount, textureCount, textureID, coords);
         }
 
-        public Triangle(Context context, Vector color, Vector position,
+        public Triangle(Context context, Vector position,
                         int vertexCount, int colorCount, int textureCount, int textureID,
                         Vector... coords) {
-            super(context, color, position, vertexCount, colorCount, textureCount, textureID, coords);
+            super(context, false, position, vertexCount, colorCount, textureCount, textureID, coords);
         }
     }
 
     public static class Square extends GameObject3D.Shape {
         public Square(Context context) {
-            this(context, new Vector(100, 100, 100), new Vector(0, 5f, 0),
+            this(context, new Vector(100, 100, 100),
                     6, 6, 6, R.drawable.streettexture,
                     // vertex
                     new Vector(-0.5f, 0.5f, 0), new Vector(-0.5f, -0.5f, 0), new Vector(0.5f, -0.5f, 0),
@@ -55,16 +55,16 @@ public class Shapes {
             );
         }
 
-        public Square(Context context, Vector color, int dimensions, Vector position,
+        public Square(Context context, int dimensions, Vector position,
                       int vertexCount, int colorCount, int textureCount, int textureID,
                       float... coords) {
-            super(context, color, dimensions, position, vertexCount, colorCount, textureCount, textureID, coords);
+            super(context, false, dimensions, position, vertexCount, colorCount, textureCount, textureID, coords);
         }
 
-        public Square(Context context, Vector color, Vector position,
+        public Square(Context context, Vector position,
                       int vertexCount, int colorCount, int textureCount, int textureID,
                       Vector... coords) {
-            super(context, color, position, vertexCount, colorCount, textureCount, textureID, coords);
+            super(context, false, position, vertexCount, colorCount, textureCount, textureID, coords);
         }
     }
 }

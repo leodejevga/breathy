@@ -5,12 +5,14 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 
 /**
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
 public class AppState {
+    public final static String PLAN_STORAGE = Environment.getExternalStorageDirectory() + "downloads/PlanManager.pm";
     public final static boolean simulateBreathy = true; //Debug purpose
 
     public static boolean inGame = false;

@@ -1,5 +1,6 @@
 package com.apps.philipps.source;
 
+import android.hardware.fingerprint.FingerprintManager;
 import com.apps.philipps.source.interfaces.IObserver;
 
 import java.util.ArrayList;
@@ -30,12 +31,9 @@ public abstract class BreathInterpreter {
         Bad(5),
         VeryBad(6);
 
-        private int value;
+        public final int value;
         BreathError(int value){
             this.value = value;
-        }
-        public int getValue(){
-            return value;
         }
         public Comparator<BreathError> getComperator(){
             return new Comparator<BreathError>() {
@@ -49,17 +47,18 @@ public abstract class BreathInterpreter {
             return value==be.value?0:value<be.value?-1:1;
         }
 
-        public static BreathError getErrorStatus(float strengthIn, float strengthOut, float frequenzy){
-            PlanManager.Plan.Option option = PlanManager.getStatus();
+        public static BreathError getErrorStatus(double strengthIn, double strengthOut, double frequenzy){
+            PlanManager.Plan.Option option = PlanManager.getCurrentOption();
             if(option == null)
                 return BreathError.None;
-            float fValue = Math.abs(option.getFrequency()-frequenzy)/option.getFrequency();
-            float iValue = Math.abs(option.getIn()-strengthIn<0?0:option.getIn()-strengthIn);
-            float oValue = Math.abs(option.getOut()-strengthOut<0?0:option.getOut()-strengthOut);
-            float min = (fValue + iValue + oValue) / 3;
+            double fValue = Math.abs(option.getFrequency()-frequenzy)/option.getFrequency();
+            double iValue = Math.abs(option.getIn().value-strengthIn<0?0:option.getIn().value-strengthIn);
+            double oValue = Math.abs(option.getOut().value-strengthOut<0?0:option.getOut().value-strengthOut);
+            double min = (fValue + iValue + oValue) / 3;
             return min<0.1?VeryGood:min<0.15?Good:min<0.17?Ok:min<0.2?NotOk:min<0.25?NotGood:min<0.3?Bad:VeryBad;
         }
     }
+
     public static void addObserver(IObserver o) {
         observer.add(o);
     }
@@ -74,9 +73,9 @@ public abstract class BreathInterpreter {
         BreathMoment moment = BreathMoment.None;
         float in = 0;
         float out = 0;
-        float frequency = 0;
+        double frequency = 0;
         boolean readyToAdd=false;
-        int mean=0;
+        double mean=0;
         int founds = 0;
         for (int i=0; i<data.length-1 && data[i]!=null; i++) {
             int d = data[i];
@@ -111,7 +110,7 @@ public abstract class BreathInterpreter {
         if(founds!=0)
             mean /= founds;
         if(mean!=0)
-            frequency = 1f/(mean/AppState.breathyDataFrequency);
+            frequency = 1/(mean/AppState.breathyDataFrequency);
 
         return new BreathStatus(moment==BreathMoment.In?in:out,frequency, moment, BreathError.getErrorStatus(in,out,frequency));
     }
@@ -119,10 +118,10 @@ public abstract class BreathInterpreter {
     public static class BreathStatus {
         private float strength; //wie stark in prozent
         private BreathMoment moment = BreathMoment.None;
-        private float frequency; //Wie oft pro sekunde
+        private double frequency; //Wie oft pro sekunde
         private BreathError error = BreathError.None;
 
-        public BreathStatus(float strength, float frequency, BreathMoment moment, BreathError error){
+        public BreathStatus(float strength, double frequency, BreathMoment moment, BreathError error){
             this.strength = strength;
             this.frequency = frequency;
             this.moment = moment;
@@ -138,7 +137,7 @@ public abstract class BreathInterpreter {
             return moment;
         }
 
-        public float getFrequency() {
+        public double getFrequency() {
             return frequency;
         }
 
