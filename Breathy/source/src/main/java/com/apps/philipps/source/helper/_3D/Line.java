@@ -7,7 +7,6 @@ import com.apps.philipps.source.helper.Vector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
 
 /**
  * This class generates line with GL
@@ -22,8 +21,8 @@ public class Line {
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
     static double lineCoords[] = {
-            0.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f
+            0.0, 0.0, 0.0,
+            1.0, 0.0, 0.0
     };
 
     private final int vertexCount = lineCoords.length / COORDS_PER_VERTEX;
@@ -36,7 +35,7 @@ public class Line {
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (number of coordinate values * 4 bytes per float)
-                lineCoords.length * 4);
+                lineCoords.length * 8);
         // use the device hardware's native byte order
         bb.order(ByteOrder.nativeOrder());
 
