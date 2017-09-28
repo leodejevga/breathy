@@ -306,7 +306,7 @@ public class Application extends Activity2D {
             } else if (leftLane) {
                 curCar.move(new Vector(xRoads[curStreet - 1], curCar.getAnimated().getEnd().get(1)));
             } else {
-                curCar.move(slowCars.get(overtake).getAnimated().getSpeed());
+                curCar.move(slowCars.get(overtake).getAnimated().getSpeed()); //TODO Array out of bounds length = 15 index = -1
             }
         }
     }
