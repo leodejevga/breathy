@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Breathing</string>
+    <string name="play_game">Play game</string>
+    <string name="play_game1">Play game1</string>
+    <string name="stop_game">Stop game</string>
+    <string name="score_label">Score:</string>
+    <string name="maxNumber">99</string>
+    <string name="level_label">Level:</string>
+    <string name="breathing_status_label">B S:</string>
+    <string name="default_breathing_status_label">TOP</string>
+    <string name="more_levels_than_ever">More Levels than Ever!</string>
+    <string name="new_top_score">New Top Score!</string>
+    <string name="your_top_score_is">Top score: %s</string>
+    <string name="you_completed_n_levels">Levels completed: %s</string>
+    <string name="game_over">Game over!</string>
+    <string name="you_finished_level_n">You finished level %s!</string>
+</resources>

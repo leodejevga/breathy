@@ -1,1 +1,1 @@
-include ':app', ':source', ':audioSurf', ':fade', ':spaceFight', ':race', ':opengltest'
+include ':app', ':source', ':audioSurf', ':fade', ':spaceFight', ':race', ':opengltest', ':breathing'
