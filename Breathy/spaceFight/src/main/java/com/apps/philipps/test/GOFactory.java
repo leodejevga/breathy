@@ -1,13 +1,19 @@
 package com.apps.philipps.test;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.apps.philipps.source.helper.Animated;
+import com.apps.philipps.source.helper.Animations;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.GameObject2D;
+import com.apps.philipps.test.activities.Game;
+
+import java.util.List;
 
 /**
  * Created by Leo on 05.09.2017.
@@ -25,8 +31,9 @@ public class GOFactory {
     }
 
     public static class Laser extends GameObject2D {
-        public Laser(Context context, Ship ship, int dest, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(ship.getPosition().clone().add(new Vector(110, 25)), new Vector(dest, ship.getPosition().get(1) + 25), speed, true));
+        public Laser(Context context, int dest, int speed, ViewGroup game) {
+            super(new ImageView(context), new Animated(GameBuffer.ship.getPosition().clone().add(new Vector(110, 25)),
+                    new Vector(dest, GameBuffer.ship.getPosition().get(1) + 25), speed, true));
 
             if (GameStats.shoot.id == 0)
                 ((ImageView) getView()).setImageResource(R.drawable.laser_green);
@@ -50,21 +57,22 @@ public class GOFactory {
         public long start = System.currentTimeMillis();
         private long past;
         private ViewGroup game;
-        public boolean toRemove;
 
         public Explosion(Context context, Enemy enemy, final ViewGroup game) {
-            super(new ImageView(context), new Animated(enemy.getPosition().clone().add(new Vector(-40, -40)), enemy.getAnimated().getEnd(), enemy.getAnimated().getSpeed(), true));
+            super(new ImageView(context), new Animated(enemy.getPosition().clone().add(new Vector(-80, -80)), enemy.getAnimated().getEnd(), enemy.getAnimated().getSpeed(), true));
             ((ImageView) getView()).setImageResource(R.drawable.explosion);
             game.addView(getView());
             this.game = game;
         }
 
         @Override
-        public void update(long deltaMilliseconds) {
+        public void update(double deltaMilliseconds) {
             super.update(deltaMilliseconds);
             past += deltaMilliseconds;
-            if (toRemove = past > GameStats.explosionTime)
+            if (past > GameStats.explosionTime) {
                 game.removeView(getView());
+                GameBuffer.remove(this);
+            }
         }
     }
 
@@ -80,10 +88,12 @@ public class GOFactory {
         public GameStats.Effect effect;
         public int intersectableIn = 100;
         public long start = 0;
-        public boolean toRemove = false;
+        private Context context;
+        private ViewGroup game;
 
         public Goody(Context context, Enemy enemy, ViewGroup game, boolean good) {
             super(new ImageView(context), enemy.getAnimated().clone());
+            this.context = context;
             intercectable = false;
             if (good)
                 ((ImageView) getView()).setImageResource(R.drawable.goody_good);
@@ -91,18 +101,21 @@ public class GOFactory {
                 ((ImageView) getView()).setImageResource(R.drawable.goody_bad);
             effect = GameStats.Effect.getEffect(good);
             game.addView(getView());
+            this.game = game;
         }
 
         public boolean activate() {
             boolean result = effect.activate();
-            if (effect == GameStats.Effect.timeLoop)
-                start = effect.value;
+            if (effect == GameStats.Effect.timeLoop) {
+                start = System.currentTimeMillis();
+                new LoopAnimationsOn(context, game);
+            }
             else start = -1;
             return result;
         }
 
         @Override
-        public void update(long deltaMilliseconds) {
+        public void update(double deltaMilliseconds) {
             super.update(deltaMilliseconds);
             if (!intercectable) {
                 intercectable = System.currentTimeMillis() - created >= intersectableIn;
@@ -114,18 +127,17 @@ public class GOFactory {
                 start = -1;
             }
             if (start == -1 || !isMoving())
-                toRemove = true;
+                GameBuffer.remove(this);
         }
     }
 
     public static class Shoot extends GameObject2D {
         private long past;
         private ViewGroup game;
-        public boolean toRemove;
 
-        public Shoot(Context context, Ship ship, ViewGroup game) {
-            super(new ImageView(context), new Animated(ship.getPosition().clone().add(90, -20),
-                    ship.getAnimated().getEnd().clone().add(110, -20), ship.getAnimated().getSpeed(), true));
+        public Shoot(Context context, ViewGroup game) {
+            super(new ImageView(context), new Animated(GameBuffer.ship.getPosition().clone().add(90, -20),
+                    GameBuffer.ship.getPosition().clone().add(110, -20), 30, true));
             if (GameStats.shoot.id == 0)
                 ((ImageView) getView()).setImageResource(R.drawable.shoot_greed);
             if (GameStats.shoot.id == 1)
@@ -137,12 +149,41 @@ public class GOFactory {
         }
 
         @Override
-        public void update(long deltaMilliseconds) {
+        public void update(double deltaMilliseconds) {
             super.update(deltaMilliseconds);
             past += deltaMilliseconds;
-            if (toRemove = past > GameStats.shootTime)
+            if (past > GameStats.shootTime) {
                 game.removeView(getView());
-            Log.e(TAG + ":" + getClass().getSimpleName(), toRemove + " to Remove");
+                GameBuffer.remove(this);
+            }
+        }
+    }
+    //Animations_____________________
+
+
+    public static class LoopAnimationsOn extends Animations {
+        private Animated fade = new Animated(new Vector(1), new Vector(0), 2, true);
+        private RelativeLayout surfaceView;
+        private ViewGroup game;
+
+        public LoopAnimationsOn(Context context, ViewGroup game) {
+            this.game = game;
+            surfaceView = new RelativeLayout(context);
+            surfaceView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            int color = (int) (Color.WHITE * fade.getStart().get(0));
+            surfaceView.setBackgroundColor(color);
+            this.game.addView(surfaceView);
+        }
+
+        @Override
+        protected void updateAnimation(double delta) {
+            fade.update(delta);
+            int color = (int) (Color.WHITE * fade.getStart().get(0));
+            surfaceView.setBackgroundColor(color);
+            if(!fade.isMoving()) {
+                game.removeView(surfaceView);
+                remove();
+            }
         }
     }
 }

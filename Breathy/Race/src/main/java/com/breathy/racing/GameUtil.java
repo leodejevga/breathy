@@ -39,4 +39,16 @@ public class GameUtil {
         }
     }
 
+    public static int getRandomCar(){
+        int random = getRandomNumber( 0, 5 );
+        switch (random){
+            case 0: return R.drawable.slow_car;
+            case 1: return R.drawable.slow_car_02;
+            case 2: return R.drawable.slow_car_03;
+            case 3: return R.drawable.slow_car_04;
+            case 4: return R.drawable.slow_car_05;
+        }
+        return R.drawable.slow_car;
+    }
+
 }

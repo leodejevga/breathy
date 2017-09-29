@@ -11,7 +11,6 @@ public class Tire {
     private GameObject3D tire;
     public float speed = 0f;
     float angle = 0;
-    float rotateSpeed = 360f;
     float constant = 0f;
     float count = 0f;
     Car car;
@@ -23,6 +22,7 @@ public class Tire {
         this.isFrontTire = isFrontTire;
         tire = new GameObject3D(GameObject3D.loadObject(mActivityContext, modelID, textureId));
         tire.getBoundingBox().setNeedToCalculateBB(false);
+        calculateCenterOfObject();
     }
 
     public void setPosition(Vector position) {
@@ -48,18 +48,17 @@ public class Tire {
 
     public void runs(float speed) {
         tire.move(new Vector(0, 0, 0));
-        calculateCenterOfObject();
         Vector centerOfObject = getCenterOfObject();
-
         tire.rotate(new Vector(1, 0, 0, -90));
-        tire.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
+        float turnAngel = angle * Backend.rotateSpeed;
+        tire.rotate(new Vector(0, 1, 0, turnAngel));
         resetRotation();
 
         tire.setPosition(new Vector(0, 0, 0));
         tire.move(centerOfObject);
-        count = count + 5 + speed*360f;
+        count = count + 5 + speed * 360f;
         if (isFrontTire)
-            tire.rotate(new Vector(0, 1, 0, angle * rotateSpeed / 2));
+            tire.rotate(new Vector(0, 1, 0, angle * Backend.rotateSpeed / 2.0f));
         tire.rotate(new Vector(1, 0, 0, count));
         tire.setPosition(new Vector(0, 0, 0));
         tire.move(new Vector().sub(centerOfObject));
@@ -93,14 +92,15 @@ public class Tire {
         return tire;
     }
 
-    private void calculateCenterOfObject(){
+    private void calculateCenterOfObject() {
         BoundingBox boundingBox = getObject3D().getBoundingBox();
-        centerOfObject =  new Vector(
+        centerOfObject = new Vector(
                 (boundingBox.start_maxX - boundingBox.start_minX) / 2.0f + boundingBox.start_minX,
                 (boundingBox.start_maxY - boundingBox.start_minY) / 2.0f + boundingBox.start_minY,
                 (boundingBox.start_maxZ - boundingBox.start_minZ) / 2.0f + boundingBox.start_minZ);
     }
-    private Vector getCenterOfObject(){
+
+    private Vector getCenterOfObject() {
         return centerOfObject;
     }
 

@@ -40,6 +40,7 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
             camera3D.changeSurface(width, height);
         }
         light = new Light();
+        light.setUpLight();
 
     }
 

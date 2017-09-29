@@ -68,7 +68,7 @@ public interface IGameObject {
      *
      * @param deltaMilliseconds the delta milliseconds
      */
-    void update(long deltaMilliseconds);
+    void update(double deltaMilliseconds);
 
     /**
      * Intersect boolean.

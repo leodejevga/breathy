@@ -11,7 +11,6 @@ public class CarBody {
     private GameObject3D carBody;
     public float speed = 0f;
     float angle = 0;
-    float rotateSpeed = 360f;
     float constant = 0f;
 
     public CarBody(Context mActivityContext, int modelID, int textureId) {
@@ -42,7 +41,9 @@ public class CarBody {
     public void runs() {
         carBody.move(new Vector(0, 0, 0));
         carBody.rotate(new Vector(1, 0, 0, -90));
-        carBody.rotate(new Vector(0, 1, 0, angle * rotateSpeed));
+        float turnAngel = angle * Backend.rotateSpeed;
+        //if (Math.abs(turnAngel) < Backend.limitedAngle)
+        carBody.rotate(new Vector(0, 1, 0, turnAngel));
         resetRotation();
         constant = 0.0f;
     }

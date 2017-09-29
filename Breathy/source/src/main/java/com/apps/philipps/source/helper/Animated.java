@@ -34,8 +34,8 @@ public class Animated {
     /**
      * Instantiates a new Animated.
      *
-     * @param start    the start
-     * @param end the end
+     * @param start the start
+     * @param end   the end
      */
     public Animated(@NonNull Vector start, @NonNull Vector end) {
         this.start = start;
@@ -50,9 +50,9 @@ public class Animated {
      * Instantiates a new Animated.
      *
      * @param start    the start
-     * @param end the end
-     * @param speed       the speed
-     * @param activate    the activate
+     * @param end      the end
+     * @param speed    the speed defines pixel per second
+     * @param activate the activate
      */
     public Animated(@NonNull Vector start, @NonNull Vector end, double speed, boolean activate) {
         this.start = start;
@@ -167,7 +167,7 @@ public class Animated {
             active = false;
     }
 
-    public void update(long deltaMilliseconds) {
+    public void update(double deltaMilliseconds) {
         if (active) {
             if (start.compareTo(end) == 0)
                 active = false;

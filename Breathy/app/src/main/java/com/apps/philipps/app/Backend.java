@@ -7,13 +7,14 @@ import android.content.Context;
 import com.apps.philipps.app.simulator.BreathSimulator;
 import com.apps.philipps.audiosurf.AudioSurf;
 import com.apps.philipps.fade.Fade;
+import com.apps.philipps.opengltest.Test;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.SaveData;
 import com.apps.philipps.source.cachemanager.CacheManager;
 import com.apps.philipps.source.interfaces.IGame;
-import com.apps.philipps.test.Test;
+import com.apps.philipps.test.SpaceFight;
 import com.breathy.racing.Race;
 
 import java.util.ArrayList;
@@ -66,12 +67,12 @@ public class Backend {
             cacheManager = new CacheManager(context);
             games = new ArrayList<>();
             Backend.games.add(new AudioSurf());
-            Backend.games.add(new Test());
+            Backend.games.add(new SpaceFight());
             Backend.games.add(new Race());
             Backend.games.add(new Fade());
             Backend.games.add(new BreathingGame());
-            Backend.games.add(new com.apps.philipps.opengltest.Test());
-
+            Backend.games.add(new Test());
+            
 
             for(IGame game : Backend.games){
                 game.init(context, Backend.cacheManager.isIGameBought(game.getName()));
