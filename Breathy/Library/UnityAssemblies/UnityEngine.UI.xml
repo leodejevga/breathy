@@ -1094,9 +1094,9 @@
         <para>RaycastResult associated with the pointer press.</para>
       </summary>
     </member>
-    <member name="P:UnityEngine.EventSystems.PointerEventData.start">
+    <member name="P:UnityEngine.EventSystems.PointerEventData.position">
       <summary>
-        <para>Current pointer start.</para>
+        <para>Current pointer position.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.EventSystems.PointerEventData.pressEventCamera">
@@ -1352,7 +1352,7 @@
     </member>
     <member name="F:UnityEngine.EventSystems.RaycastResult.screenPosition">
       <summary>
-        <para>The screen start from which the raycast was generated.</para>
+        <para>The screen position from which the raycast was generated.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.EventSystems.RaycastResult.sortingLayer">
@@ -1372,7 +1372,7 @@
     </member>
     <member name="F:UnityEngine.EventSystems.RaycastResult.worldPosition">
       <summary>
-        <para>The world start of the where the raycast has hit.</para>
+        <para>The world position of the where the raycast has hit.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.EventSystems.RaycastResult.Clear">
@@ -3676,7 +3676,7 @@ Used if the native representation has been destroyed.</para>
     </member>
     <member name="P:UnityEngine.UI.InputField.caretPosition">
       <summary>
-        <para>Current InputField caret start (also selection tail).</para>
+        <para>Current InputField caret position (also selection tail).</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.InputField.caretSelectPosition">
@@ -3778,7 +3778,7 @@ A placeholder graphic can be used to show subtle hints or make it more obvious t
     </member>
     <member name="P:UnityEngine.UI.InputField.selectionFocusPosition">
       <summary>
-        <para>The end point of the selection.</para>
+        <para>The destination point of the selection.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.InputField.shouldHideMobileInput">
@@ -3929,7 +3929,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>The character that is under the mouse.</para>
       </summary>
-      <param name="pos">Mouse start.</param>
+      <param name="pos">Mouse position.</param>
       <returns>
         <para>Character index with in rate.</para>
       </returns>
@@ -3965,7 +3965,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       </summary>
       <param name="evt">The Event that is currently being processed.</param>
       <returns>
-        <para>If we should continue processing events or we have hit an end condition.</para>
+        <para>If we should continue processing events or we have hit an destination condition.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.UI.InputField.LayoutComplete">
@@ -3995,13 +3995,13 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.InputField.MoveTextEnd(System.Boolean)">
       <summary>
-        <para>Move the caret index to end of text.</para>
+        <para>Move the caret index to destination of text.</para>
       </summary>
       <param name="shift">Only move the selectionPosition.</param>
     </member>
     <member name="M:UnityEngine.UI.InputField.MoveTextStart(System.Boolean)">
       <summary>
-        <para>Move the caret index to start of text.</para>
+        <para>Move the caret index to position of text.</para>
       </summary>
       <param name="shift">Only move the selectionPosition.</param>
     </member>
@@ -4119,7 +4119,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
         <para>Predefined validation functionality for different characterValidation types.</para>
       </summary>
       <param name="text">The whole text string to validate.</param>
-      <param name="pos">The start at which the current character is being inserted.</param>
+      <param name="pos">The position at which the current character is being inserted.</param>
       <param name="ch">The character that is being inserted.</param>
       <returns>
         <para>The character that should be inserted.</para>
@@ -4272,12 +4272,12 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.LayoutGroup.GetStartOffset(System.Int32,System.Single)">
       <summary>
-        <para>Returns the calculated start of the first child layout element along the given axis.</para>
+        <para>Returns the calculated position of the first child layout element along the given axis.</para>
       </summary>
       <param name="axis">The axis index. 0 is horizontal and 1 is vertical.</param>
       <param name="requiredSpaceWithoutPadding">The total space required on the given axis for all the layout elements including spacing and excluding padding.</param>
       <returns>
-        <para>The start of the first child along the given axis.</para>
+        <para>The position of the first child along the given axis.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.UI.LayoutGroup.GetTotalFlexibleSize(System.Int32)">
@@ -4319,11 +4319,11 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.LayoutGroup.SetChildAlongAxis(UnityEngine.RectTransform,System.Int32,System.Single,System.Single)">
       <summary>
-        <para>Set the start and size of a child layout element along the given axis.</para>
+        <para>Set the position and size of a child layout element along the given axis.</para>
       </summary>
       <param name="rect">The RectTransform of the child layout element.</param>
-      <param name="axis">The axis to set the start and size along. 0 is horizontal and 1 is vertical.</param>
-      <param name="pos">The start from the left side or top.</param>
+      <param name="axis">The axis to set the position and size along. 0 is horizontal and 1 is vertical.</param>
+      <param name="pos">The position from the left side or top.</param>
       <param name="size">The size.</param>
     </member>
     <member name="M:UnityEngine.UI.LayoutGroup.SetDirty">
@@ -4607,7 +4607,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>Find a root Canvas.</para>
       </summary>
-      <param name="start">Search start.</param>
+      <param name="position">Search position.</param>
       <returns>
         <para>Canvas transform.</para>
       </returns>
@@ -4727,7 +4727,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="T:UnityEngine.UI.PositionAsUV1">
       <summary>
-        <para>An IVertexModifier which sets the raw vertex start into UV1 of the generated verts.</para>
+        <para>An IVertexModifier which sets the raw vertex position into UV1 of the generated verts.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.UI.RawImage">
@@ -4986,7 +4986,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.horizontalNormalizedPosition">
       <summary>
-        <para>The horizontal scroll start as a rate between 0 and 1, with 0 being at the left.</para>
+        <para>The horizontal scroll position as a rate between 0 and 1, with 0 being at the left.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.horizontalScrollbar">
@@ -5031,12 +5031,12 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.normalizedPosition">
       <summary>
-        <para>The scroll start as a Vector2 between (0,0) and (1,1) with (0,0) being the lower left corner.</para>
+        <para>The scroll position as a Vector2 between (0,0) and (1,1) with (0,0) being the lower left corner.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.onValueChanged">
       <summary>
-        <para>Callback executed when the scroll start of the slider is changed.</para>
+        <para>Callback executed when the scroll position of the slider is changed.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.preferredHeight">
@@ -5066,7 +5066,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.verticalNormalizedPosition">
       <summary>
-        <para>The vertical scroll start as a rate between 0 and 1, with 0 being at the bottom.</para>
+        <para>The vertical scroll position as a rate between 0 and 1, with 0 being at the bottom.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.ScrollRect.verticalScrollbar">
@@ -5202,9 +5202,9 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.ScrollRect.SetContentAnchoredPosition(UnityEngine.Vector2)">
       <summary>
-        <para>Sets the anchored start of the content.</para>
+        <para>Sets the anchored position of the content.</para>
       </summary>
-      <param name="start"></param>
+      <param name="position"></param>
     </member>
     <member name="M:UnityEngine.UI.ScrollRect.SetDirty">
       <summary>
@@ -5477,12 +5477,12 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
     </member>
     <member name="M:UnityEngine.UI.Shadow.ApplyShadow(System.Collections.Generic.List`1&lt;UnityEngine.UIVertex&gt;,UnityEngine.Color32,System.Int32,System.Int32,System.Single,System.Single)">
       <summary>
-        <para>Duplicate vertices from start to end and turn them into shadows with the given offset.</para>
+        <para>Duplicate vertices from position to destination and turn them into shadows with the given offset.</para>
       </summary>
       <param name="verts">Verts List.</param>
       <param name="color">Shadow Color.</param>
-      <param name="start">Start Index.</param>
-      <param name="end">End Index.</param>
+      <param name="position">Start Index.</param>
+      <param name="destination">End Index.</param>
       <param name="x">Shadow x offset.</param>
       <param name="y">Shadow y offset.</param>
     </member>
@@ -5999,7 +5999,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>Add a single vertex to the stream.</para>
       </summary>
-      <param name="start"></param>
+      <param name="position"></param>
       <param name="color"></param>
       <param name="uv0"></param>
       <param name="uv1"></param>
@@ -6011,7 +6011,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>Add a single vertex to the stream.</para>
       </summary>
-      <param name="start"></param>
+      <param name="position"></param>
       <param name="color"></param>
       <param name="uv0"></param>
       <param name="uv1"></param>
@@ -6023,7 +6023,7 @@ Characters 0-9, . (dot), and - (dash / minus sign) are allowed. The dash is only
       <summary>
         <para>Add a single vertex to the stream.</para>
       </summary>
-      <param name="start"></param>
+      <param name="position"></param>
       <param name="color"></param>
       <param name="uv0"></param>
       <param name="uv1"></param>

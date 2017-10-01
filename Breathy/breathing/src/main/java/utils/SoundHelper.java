@@ -77,7 +77,7 @@ public class SoundHelper {
             musicPlayer.stop();
         }
     }
-    public void pausMusic(){
+    public void pauseMusic(){
         if (musicPlayer != null && musicPlayer.isPlaying()){
             musicPlayer.pause();
         }

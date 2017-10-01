@@ -13,18 +13,14 @@ import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.BreathInterpreter;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.PlanManager;
-import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Animations;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.Activity2D;
 import com.apps.philipps.source.helper._2D.GameObject2D;
 import com.apps.philipps.test.GOFactory;
-import com.apps.philipps.test.GameBuffer;
 import com.apps.philipps.test.GameStats;
 import com.apps.philipps.test.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.apps.philipps.test.SoundManager;
 
 public class Game extends Activity2D {
     private long enemySpawned;
@@ -37,7 +33,6 @@ public class Game extends Activity2D {
     private ProgressBar loadingProgress2;
     private TextView loadingProgressText;
     private double pressed = -1;
-    private String lastGoodie = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +41,7 @@ public class Game extends Activity2D {
     }
 
     @Override
-    protected void onLoading(boolean firstLoad, int progress) {
+    protected void onLoading(boolean firstLoad, int progress, long delta) {
         if (firstLoad) {
             loadingImage = (ImageView) findViewById(R.id.loadingImage);
             loadingProgress = (ProgressBar) findViewById(R.id.loadingProgress);
@@ -71,110 +66,55 @@ public class Game extends Activity2D {
     @Override
     protected void draw() {
         double realTime = delta;
-        double loopTime = (long) (GameStats.timeLoopAnimation.getStart().get(0) * realTime);
+        double loopTime = (long) (GameStats.timeLoopAnimation.getPosition().get(0) * realTime);
+        GameStats.timeLoopAnimation.update(realTime);
+        Animations.updateAnimations(loopTime);
+        GOFactory.ship.update(realTime);
+
+
         if (!PlanManager.isActive()) {
             stopDrawing();
             Coins.addCoins(getCoins());
             finished.setVisibility(View.VISIBLE);
-            GameBuffer.clear(game);
         }
         long seconds = PlanManager.getDuration() / 1000;
         String left = (seconds / 60 != 0 ? (seconds / 60) + ":" : "")
                 + (seconds != 0 ? seconds % 60 + ":" : "")
                 + PlanManager.getDuration() % 1000;
 
-        List<GameObject2D> toRemove = new ArrayList<>();
 
-        for (GameObject2D object : GameBuffer.iterable()) {
-            GameStats.timeLoopAnimation.update(delta);
-            if (object instanceof GOFactory.Ship)
-                object.update(realTime);
-            else object.update(loopTime);
-
-            if (object instanceof GOFactory.Ship && status != null && BreathData.get(0) != null) {
-                double d = BreathData.get(0).data;
-                double y = (d - AppState.breathyUserMin) / (AppState.breathyUserMax - AppState.breathyUserMin) * getScreenHeight();
-                object.move(new Vector(object.getPosition().get(0), y));
-                object.getView().bringToFront();
-            } else if (object instanceof GOFactory.Enemy && !object.isMoving()) {
-                game.removeView(object.getView());
-                subCoin();
-                toRemove.add(object);
-                object.getView().bringToFront();
-            } else if (object instanceof GOFactory.Star && !object.isMoving()) {
-                game.removeView(object.getView());
-                toRemove.add(object);
-            } else if (object instanceof GOFactory.Laser) {
-                if (!object.isMoving()) {
-                    game.removeView(object.getView());
-                    toRemove.add(object);
-                } else {
-                    for (GOFactory.Goody goody : GameBuffer.goodies) {
-                        if (object.intersect(goody)) {
-                            if (goody.activate()) {
-                                if (goody.effect.good)
-                                    addCoin(10);
-                                else
-                                    subCoin(10);
-                            }
-                            lastGoodie = goody.effect.name;
-                            game.removeView(goody.getView());
-                            game.removeView(object.getView());
-                            toRemove.add(object);
-                            addCoin();
-                        }
-                    }
-                    for (GOFactory.Enemy enemy : GameBuffer.enemies) {
-                        if (object.intersect(enemy)) {
-                            GameBuffer.explosions.add(new GOFactory.Explosion(this, enemy, game));
-                            if (getInt(0, 5) == 5)
-                                GameBuffer.goodies.add(new GOFactory.Goody(this, enemy, game, getInt(0, 5) != 1));
-                            game.removeView(enemy.getView());
-                            game.removeView(object.getView());
-                            toRemove.add(object);
-                            toRemove.add(enemy);
-                            addCoin();
-                        }
-                    }
-                }
-            }
+        if (pressed == 0) {
+            new GOFactory.Shoot(this, game);
+            new GOFactory.Laser(this, getScreenWidth(), game);
+            SoundManager.shoot();
         }
-
-        if (GameBuffer.initialized) {
-            if (pressed == 0) {
-                GameBuffer.shoot.add(new GOFactory.Shoot(this, game));
-                GameBuffer.laser.add(new GOFactory.Laser(this, getScreenWidth(), GameStats.shoot.getSpeed(), game));
-            }
-            pressed = pressed != -1 ? pressed + loopTime : -1;
-            if (pressed >= GameStats.shoot.rate) {
-                pressed = 0;
-            }
-            GameBuffer.removeAll(toRemove);
-            enemySpawned += loopTime;
-            starSpawned += loopTime;
-            if (enemySpawned > GameStats.enemyCome) {
-                enemySpawned = 0;
-                GameBuffer.enemies.add(new GOFactory.Enemy(this, new Vector(getScreenWidth() - 50, getEnemyY()), GameStats.enemySpeed, game));
-            }
-            if (starSpawned > GameStats.starCome + getInt(0, 1000)) {
-                starSpawned = 0;
-                int y = getInt(0, getScreenHeight());
-                GameBuffer.stars.add(new GOFactory.Star(this, new Vector(getScreenWidth(), y), GameStats.starSpeed, game));
-            }
+        pressed = pressed != -1 ? pressed + loopTime : -1;
+        if (pressed >= GameStats.shoot.rate) {
+            pressed = 0;
+        }
+        enemySpawned += loopTime;
+        starSpawned += loopTime;
+        if (enemySpawned > GameStats.enemyCome) {
+            enemySpawned = 0;
+            new GOFactory.Enemy(this, new Vector(getScreenWidth() - 50, getEnemyY()), game);
+        }
+        if (starSpawned > GameStats.starCome + getInt(0, 1000)) {
+            starSpawned = 0;
+            int y = getInt(0, getScreenHeight());
+            new GOFactory.Star(this, new Vector(getScreenWidth(), y), game);
         }
         secondsLeft.bringToFront();
-        secondsLeft.setText(left + "\n" + getCoins() + " Coins\n" + status + " status\n" +
-                realTime + " real Time\n" + loopTime + " loop time\n" + lastGoodie);
-        Animations.update(realTime);
+        secondsLeft.setText(left + "\n" + getCoins() + " Coins\n" + "Animations: " + Animations.count());
     }
 
     @Override
     protected void init() {
-//        AppState.recordData = false;
+        SoundManager.init(this);
+        AppState.recordData = false;
         PlanManager.start();
-        GameStats.init();
+        GameStats.init(SCREEN_FACTOR);
         game = (RelativeLayout) findViewById(R.id.test_game2d);
-        GameBuffer.init(new GOFactory.Ship(this, new Animated(new Vector(50, getScreenHeight() / 2)), game), SCREEN_FACTOR);
+        GOFactory.init(this, new Vector(50, getScreenHeight() / 2), game);
         finished = (TextView) findViewById(R.id.finished);
         secondsLeft = (TextView) findViewById(R.id.seconds_left);
     }
@@ -205,7 +145,6 @@ public class Game extends Activity2D {
             double frequency = plan.getFrequency() / 60f;
             double absoluteDelta = currentTime - start;
             double value = (absoluteDelta / 1000 * Math.PI * frequency);
-            int height = GameBuffer.enemies.size() != 0 ? GameBuffer.enemies.get(0).getView().getMeasuredHeight() : 0;
             double up = plan.getStrengthOut().value * (getScreenHeight()) / 2;
             double down = plan.getStrengthIn().value * (getScreenHeight() - 30) / 2;
 
@@ -216,5 +155,10 @@ public class Game extends Activity2D {
         return (int) result;
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Animations.removeAll();
+        Animations.updateAnimations(0);
+    }
 }

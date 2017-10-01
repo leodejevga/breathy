@@ -61,7 +61,7 @@ public class Calibrate extends Activity2D {
     }
 
     @Override
-    protected void onLoading(boolean firstLoad, int progress) {
+    protected void onLoading(boolean firstLoad, int progress, long delta) {
     }
 
     @Override

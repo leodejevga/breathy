@@ -23,22 +23,22 @@ public class GameStats {
 
     public static int enemyCome;
     public static int starCome;
-    public static int enemySpeed;
-    public static int shipSpeed;
-    public static int starSpeed;
+    public static double enemySpeed;
+    public static double shipSpeed;
+    public static double starSpeed;
     public static int explosionTime;
     public static ShootSpeed shoot = ShootSpeed.Green;
     public static long shootTime;
     public static Animated timeLoopAnimation;
 
-    public static void init() {
+    public static void init(double factor) {
         enemyCome = 200;
         starCome = 20;
-        enemySpeed = 180;
-        shipSpeed = 2000;
-        starSpeed = 80;
+        enemySpeed = 180*factor;
+        shipSpeed = 2000*factor;
+        starSpeed = 80*factor;
         explosionTime = 60;
-        shootTime = 40;
+        shootTime = 20;
         timeLoopAnimation = new Animated(new Vector(1));
         shoot = ShootSpeed.Green;
         initialized = true;
@@ -90,9 +90,8 @@ public class GameStats {
             if (initialized) {
                 switch (this) {
                     case timeLoop:
-                        timeLoopAnimation = new Animated(new Vector(1), new Vector(0.2), 1, true);
+                        timeLoopAnimation = new Animated(new Vector(1), new Vector(0.2), 1.5, true);
                         Log.e(TAG, "time loop activate : " + timeLoopAnimation);
-
                         return true;
                     case increaseShootSpeed:
                         ShootSpeed succ = shoot;
@@ -109,15 +108,15 @@ public class GameStats {
                     case decreaseEnemySpeed:
                         enemySpeed -= value;
                         enemySpeed = (result = enemySpeed < ENEMY_SPEED_MIN_MAX[0]) ? ENEMY_SPEED_MIN_MAX[0] : enemySpeed;
-                        return result;
+                        return !result;
                     case increaseEnemyCome:
                         enemyCome += value;
                         enemyCome = (result = enemyCome > ENEMY_COME_MIN_MAX[1]) ? ENEMY_COME_MIN_MAX[1] : enemyCome;
-                        return result;
+                        return !result;
                     case decreaseEnemyCome:
                         enemyCome -= value;
                         enemyCome = (result = enemyCome < ENEMY_COME_MIN_MAX[0]) ? ENEMY_COME_MIN_MAX[0] : enemyCome;
-                        return result;
+                        return !result;
                 }
             }
             return false;

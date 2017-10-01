@@ -76,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/lightGrey">
+        android:background="@color/textbg">
 
         <LinearLayout
             android:id="@+id/status_display1"

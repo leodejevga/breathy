@@ -1,6 +1,7 @@
 package breathing.philipps.apps.com.breathing;
 
 import android.content.Context;
+import android.support.annotation.RawRes;
 
 import com.apps.philipps.source.implementations.BreathyGame;
 

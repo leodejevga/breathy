@@ -83,7 +83,7 @@ public class Application extends Activity2D {
     }
 
     @Override
-    protected void onLoading(boolean firstLoad, int progress) {
+    protected void onLoading(boolean firstLoad, int progress, long delta) {
     }
 
 
@@ -95,7 +95,7 @@ public class Application extends Activity2D {
             calcSpeed();
 
             Log.i("Move", "One Call move");
-            int target = (int) car.getAnimated().getEnd().get( 0 );
+            int target = (int) car.getDestination().get( 0 );
             yCar = raceBreathInterpreter.getCurY();
             car.getView().setY( yCar );//setPosition( new Vector( car.getPosition().get( 0 ), yCar ) );
             car.move(new Vector( target, yCar ) );
@@ -271,7 +271,7 @@ public class Application extends Activity2D {
     private void checkOvertake(int i) {
         int j;
         SlowCar curCar = slowCars.get( i );
-        int carSpeed =(int) curCar.getAnimated().getSpeed();
+        int carSpeed =(int) curCar.getSpeed();
 
         int curStreet = curCar.getCurXStreet();
         boolean leftLane = (curStreet == 0 ? false : true);
@@ -286,8 +286,8 @@ public class Application extends Activity2D {
 //            }
 
             if(overtake == -1 && (curStreet == carInFront.getCurXStreet() && carInFront.getPosition().get( 1 ) <
-                    curCar.getPosition().get( 1 ) + 2*(carSpeed-carInFront.getAnimated().getSpeed()) &&
-                    curCar.getAnimated().getSpeed() <= carInFront.getAnimated().getSpeed())){
+                    curCar.getPosition().get( 1 ) + 2*(carSpeed-carInFront.getSpeed()) &&
+                    curCar.getSpeed() <= carInFront.getSpeed())){
 
                 overtake = j;
             }
@@ -302,11 +302,11 @@ public class Application extends Activity2D {
 
         if (overtake != 0) {
             if (rightLane) {
-                curCar.move(new Vector(xRoads[curStreet + 1], curCar.getAnimated().getEnd().get(1)));
+                curCar.move(new Vector(xRoads[curStreet + 1], curCar.getDestination().get(1)));
             } else if (leftLane) {
-                curCar.move(new Vector(xRoads[curStreet - 1], curCar.getAnimated().getEnd().get(1)));
+                curCar.move(new Vector(xRoads[curStreet - 1], curCar.getDestination().get(1)));
             } else {
-                curCar.move(slowCars.get(overtake).getAnimated().getSpeed()); //TODO Array out of bounds length = 15 index = -1
+                curCar.move(slowCars.get(overtake).getSpeed()); //TODO Array out of bounds length = 15 index = -1
             }
         }
     }
@@ -396,7 +396,7 @@ public class Application extends Activity2D {
      * @param id          //TODO
      * @param position    2d position of the gameobject
      * @param destination 2d destination of the gameobject
-     * @param move        the movementspeed of the object in pixel per update
+     * @param move        the movementspeed of the object in pixel per updateAnimations
      * @return the gameobject
      */
     private GameObject2D initObject(ImageView view, @DrawableRes int content, int id, Vector position, Vector destination, int move) {
