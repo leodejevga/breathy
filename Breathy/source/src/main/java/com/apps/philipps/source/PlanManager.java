@@ -1,13 +1,10 @@
 package com.apps.philipps.source;
 
-import android.graphics.Path;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.apps.philipps.source.interfaces.IObserver;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.Iterator;
 import java.util.List;
 
@@ -171,7 +168,7 @@ public abstract class PlanManager implements Serializable {
     }
 
 
-    public static class Plan implements Cloneable, Serializable, Part, Iterable {
+    public static class Plan implements Cloneable, Serializable, Part, Iterable, Comparable {
         private List<Option> options;
         private long currentTime;
         private int currentOption;
@@ -346,6 +343,23 @@ public abstract class PlanManager implements Serializable {
             return options.iterator();
         }
 
+        @Override
+        public int compareTo(@NonNull Object o) {
+            if (o instanceof Plan) {
+                Plan p = (Plan) o;
+                if (p.currentOption == this.currentOption
+                        && p.currentTime == this.currentTime
+                        && p.delta == this.delta
+                        && p.running == this.running)
+                    for (int i = 0 ; i < this.options.size(); i++){
+                        if (p.getOption(i).compareTo(this.getOption(i)) != 0)
+                            return 1;
+                    }
+                    return 0;
+            }
+            return -1;
+        }
+
         public enum BreathIntensity {
             VeryHigh(1, 5, "Very high"),
             High(0.8, 4, "High"),
@@ -387,7 +401,7 @@ public abstract class PlanManager implements Serializable {
         }
 
 
-        public static class Option implements Cloneable, Serializable, Part {
+        public static class Option implements Cloneable, Serializable, Part, Comparable {
             private BreathIntensity out;
             private BreathIntensity in;
             private int frequency;
@@ -463,6 +477,21 @@ public abstract class PlanManager implements Serializable {
             public void setName(String name) {
                 this.name = name;
             }
+
+            @Override
+            public int compareTo(@NonNull Object o) {
+                if (o instanceof Option) {
+                    Option op = (Option) o;
+                    if (this.out == op.out
+                            && this.in == op.in
+                            && this.frequency == op.frequency
+                            && this.duration == op.duration
+                            && this.parent == op.parent
+                            && this.name == op.name)
+                        return 0;
+                }
+                return -1;
+            }
         }
 
 
@@ -474,13 +503,32 @@ public abstract class PlanManager implements Serializable {
         String getName();
     }
 
-    public static class PlanManagerInstance implements Serializable {
+    public static class PlanManagerInstance implements Serializable, Comparable {
         private List<Plan> plans;
         private int currentPlan = -1;
 
         public PlanManagerInstance() {
             plans = PlanManager.plans;
             currentPlan = PlanManager.currentPlan;
+        }
+
+        @Override
+        public int compareTo(@NonNull Object o) {
+            if (o instanceof PlanManagerInstance) {
+                if (currentPlan != ((PlanManagerInstance) o).currentPlan)
+                    return 1;
+                List<Plan> plans = ((PlanManagerInstance) o).plans;
+                if (this.plans.size() != plans.size()) {
+                    return 2;
+                } else {
+                    for (int i = 0; i < plans.size(); i++) {
+                        if (this.plans.get(i).compareTo(plans.get(i)) != 0)
+                            return 3;
+                    }
+                }
+                return 0;
+            } else
+                return -1;
         }
     }
 
