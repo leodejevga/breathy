@@ -80,12 +80,16 @@ public class CacheManager {
         String keyword = gameName.replaceAll("[ ]*", "");
         keyword = keyword + "Highscore";
         ArrayList highscores = loadHighScore(gameName);
-        highscores.add(score);
-        Collections.sort(highscores);
-        Collections.reverse(highscores);
-        while (highscores.size() > 5)
-            highscores.remove(highscores.size() - 1);
-        saveHighscores.writeObject(keyword, highscores);
+        if (!highscores.contains(score)) {
+            highscores.add(score);
+            if (highscores.contains(0))
+                highscores.remove(highscores.indexOf(0));
+            Collections.sort(highscores);
+            Collections.reverse(highscores);
+            while (highscores.size() > 5)
+                highscores.remove(highscores.size() - 1);
+            saveHighscores.writeObject(keyword, highscores);
+        }
     }
 
 }

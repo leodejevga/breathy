@@ -166,7 +166,7 @@ public class TGame extends Activity3D {
                             @Override
                             public void run() {
                                 how_good.setText(BreathInterpreter.getStatus().getError().toString());
-                                highscore.setText("Life: " + Backend.life + " High score: " + Backend.highscore);
+                                highscore.setText("Life: " + Backend.life + " Best score: " + Backend.highscore);
                                 score.setText("Score: " + Backend.score);
                                 refreshChart();
                             }
@@ -184,8 +184,9 @@ public class TGame extends Activity3D {
                             theend.setText("Congratulations !");
                         } else {
                             String text = "You need to breath better !";
+                            text =  text + "\n" + "High scores:";
                             for (Object o : Backend.cacheManager.loadHighScore(Backend.gName))
-                                text = "\n" + text + (int) o;
+                                text =text + "\n" +(int) o;
                             theend.setText(text);
                         }
                     }
