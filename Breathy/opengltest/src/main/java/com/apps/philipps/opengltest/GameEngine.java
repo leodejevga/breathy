@@ -68,24 +68,26 @@ public class GameEngine {
      * draws objects
      */
     public void runGame(long deltaTime) {
-        if (Backend.highscore < Backend.score) {
-            Backend.highscore = Backend.score;
-        }
-        if (Backend.score == maxscore) {
-            win = true;
-            pause(false);
-        }
-
-        rotateCam();
-        drawStreet(deltaTime);
-        runSimulation(deltaTime);
-        if (!isBackgroundMusicPlaying && !collisionDetectionThread.crashed)
-            playBackgroundMusic();
-        if (Backend.life <= 0) {
-            while (current_camAngle < min_CamAngle)
-                resetCamAngle();
-            Backend.saveHighScore(mActivityContext, Backend.gName);
-            pause(false);
+        if (isRunning()) {
+            if (Backend.highscore < Backend.score) {
+                Backend.highscore = Backend.score;
+            }
+            rotateCam();
+            drawStreet(deltaTime);
+            runSimulation(deltaTime);
+            if (!isBackgroundMusicPlaying && !collisionDetectionThread.crashed)
+                playBackgroundMusic();
+            if (Backend.score == maxscore) {
+                win = true;
+                Backend.saveHighScore(Backend.gName, Backend.score);
+                pause(false);
+            }
+            if (Backend.life <= 0) {
+                while (current_camAngle < min_CamAngle)
+                    resetCamAngle();
+                Backend.saveHighScore(Backend.gName, Backend.score);
+                pause(false);
+            }
         }
     }
 
@@ -319,7 +321,6 @@ public class GameEngine {
             decreaseCarSpeed();
         }
     }
-
 
 
     public boolean isRunning() {

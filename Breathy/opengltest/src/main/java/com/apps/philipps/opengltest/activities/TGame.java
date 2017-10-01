@@ -84,7 +84,7 @@ public class TGame extends Activity3D {
     protected void onPause() {
         super.onPause();
         openGL.onPause();
-        renderer3D.gameEngine.pause(true);
+        renderer3D.gameEngine.pause(renderer3D.gameEngine.isRunning());
     }
 
     @Override
@@ -183,7 +183,10 @@ public class TGame extends Activity3D {
                         if (renderer3D.gameEngine.isWin()) {
                             theend.setText("Congratulations !");
                         } else {
-                            theend.setText("You need to breath better !");
+                            String text = "You need to breath better !";
+                            for (Object o : Backend.cacheManager.loadHighScore(Backend.gName))
+                                text = "\n" + text + (int) o;
+                            theend.setText(text);
                         }
                     }
                 });
