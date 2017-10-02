@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.support.annotation.CallSuper;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public abstract class Animation {
     /**
      * Initializes Animation with a specific z value. Higher z value will be updated at the end, because
      * you can bring them to front and they will appear at the top of other animations.
+     *
      * @param z the hierarchical value of this animation
      */
     public Animation(@NonNull Integer z) {
@@ -54,6 +56,7 @@ public abstract class Animation {
 
     /**
      * Removes all marked Animations and than update remained Animations
+     *
      * @param delta Time past after the last update
      */
     @CallSuper
@@ -68,10 +71,12 @@ public abstract class Animation {
         if (!toRemove.isEmpty()) {
             for (Animation ani : toRemove) {
                 List<Animation> anis = animations.get(ani.z);
-                anis.remove(ani);
-                if (anis.isEmpty()) {
-                    levels.remove(ani.z);
-                    animations.remove(ani.z);
+                if (anis != null) {
+                    anis.remove(ani);
+                    if (anis.isEmpty()) {
+                        levels.remove(ani.z);
+                        animations.remove(ani.z);
+                    }
                 }
             }
             toRemove.clear();
@@ -90,6 +95,7 @@ public abstract class Animation {
 
     /**
      * Returns list of of all Animations with the given z value
+     *
      * @param z the hierarchical value of this animation
      * @return List of values with the given z value
      */
@@ -99,6 +105,7 @@ public abstract class Animation {
 
     /**
      * Returns all animations of a specific Class
+     *
      * @param clazz Class of Animation
      * @return List of those Animations
      */
@@ -113,6 +120,7 @@ public abstract class Animation {
 
     /**
      * Update your Animation here
+     *
      * @param delta Time past after the last update
      */
     @MainThread
@@ -120,6 +128,7 @@ public abstract class Animation {
 
     /**
      * Animations count
+     *
      * @return amount of created Animations
      */
     public static int count() {
@@ -145,6 +154,10 @@ public abstract class Animation {
 
     @Override
     public String toString() {
-        return (getClass() != Animation.class ? getClass().getSimpleName() + " : total " : "") + count() + " Animation";
+        String ls = "";
+        for (Integer l : levels)
+            ls += ", " + l;
+        return getClass().getSimpleName() + " : z=" + z + " | " + count() +
+                " Animations with keys=[" + (ls.isEmpty() ? "" : ls.substring(2)) + "]";
     }
 }

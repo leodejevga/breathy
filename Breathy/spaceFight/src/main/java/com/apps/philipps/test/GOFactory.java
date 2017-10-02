@@ -35,24 +35,24 @@ public abstract class GOFactory {
         private GameObject2D o;
 
         public Ship(Context context, Vector position, ViewGroup game) {
-            super(2);
             o = new GameObject2D(new ImageView(context), position);
             engine = new GameObject2D(new ImageView(context), position);
             ((ImageView) o.getView()).setImageResource(R.drawable.ship);
             game.addView(o.getView());
             ((ImageView) engine.getView()).setImageResource(R.drawable.engine);
             game.addView(engine.getView());
+            engine.setPosition(o.getPosition().add(new Vector(-80, 4)));
             this.game = game;
         }
 
         @Override
         public void update(double delta) {
             o.update(delta);
+            engine.getView().bringToFront();
             o.getView().bringToFront();
-            engine.setPosition(o.getPosition().add(new Vector(-100, -8)));
+            engine.setPosition(o.getPosition().add(new Vector(-80, 2)));
             float value = 0.2f + (Math.abs(new Random().nextInt()) % 800f) / 1000f;
-
-            engine.getView().setScaleY(value);
+            engine.getView().setScaleY(value * 1.5f);
 
 
             double d = BreathData.get(0).data;
@@ -76,22 +76,31 @@ public abstract class GOFactory {
             game.addView(o.getView());
 
             engine = new GameObject2D(context);
-            engine.setPosition(o.getPosition().add());
+            ((ImageView) engine.getView()).setImageResource(R.drawable.engine);
+            game.addView(engine.getView());
+            engine.setPosition(o.getPosition().add(new Vector(-60, -2)));
             this.game = game;
         }
 
         @Override
         protected void update(double delta) {
             o.update(delta);
+            engine.getView().bringToFront();
             o.getView().bringToFront();
-            engine.setPosition(o.getPosition().add(new Vector(-100, -8)));
+            engine.setPosition(o.getPosition().add(new Vector(-60, -2)));
             float value = 0.2f + (Math.abs(new Random().nextInt()) % 800f) / 1000f;
+            engine.getView().setScaleY(value * 1.5f);
 
-            engine.getView().setScaleY(value);
             if (!o.isMoving()) {
-                game.removeView(o.getView());
                 remove();
             }
+        }
+
+        @Override
+        public void remove() {
+            super.remove();
+            game.removeView(o.getView());
+            game.removeView(engine.getView());
         }
     }
 
@@ -138,6 +147,7 @@ public abstract class GOFactory {
                 for (Animation ani : get(Enemy.class)) {
                     Enemy enemy = (Enemy) ani;
                     if (o.intersect(enemy.o)) {
+                        SoundManager.bang();
                         new GOFactory.Explosion(context, enemy, game);
                         if (new Random().nextInt() % 5 == 3)
                             new GOFactory.Goody(context, enemy, game, (new Random().nextInt() % 5 != 1));
@@ -247,12 +257,23 @@ public abstract class GOFactory {
             this.good = good;
             this.context = context;
             o.intercectable = false;
-            if (good)
+            effect = GameStats.Effect.getEffect(good);
+            if (effect == GameStats.Effect.timeLoop)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_time);
+            else if (effect == GameStats.Effect.increaseShootSpeed)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_laser_good);
+            else if (effect == GameStats.Effect.decreaseEnemySpeed)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_speed_good);
+            else if (effect == GameStats.Effect.decreaseShootSpeed)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_laser_bad);
+            else if (effect == GameStats.Effect.increaseEnemySpeed)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_speed_bad);
+            else if (good)
                 ((ImageView) o.getView()).setImageResource(R.drawable.goody_good);
             else
                 ((ImageView) o.getView()).setImageResource(R.drawable.goody_bad);
+
             game.addView(o.getView());
-            effect = GameStats.Effect.getEffect(good);
             this.game = game;
         }
 
