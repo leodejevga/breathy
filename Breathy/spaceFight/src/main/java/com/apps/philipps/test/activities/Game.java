@@ -9,19 +9,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apps.philipps.source.AppState;
-import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.BreathInterpreter;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.PlanManager;
-import com.apps.philipps.source.helper.Animations;
+import com.apps.philipps.source.helper.Animation;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.Activity2D;
-import com.apps.philipps.source.helper._2D.GameObject2D;
 import com.apps.philipps.test.GOFactory;
 import com.apps.philipps.test.GameStats;
 import com.apps.philipps.test.R;
 import com.apps.philipps.test.SoundManager;
 
+/**
+ * Created by Jevgenij Huebert on 05.09.2017. Project Breathy.
+ */
 public class Game extends Activity2D {
     private long enemySpawned;
     private TextView finished;
@@ -68,7 +69,7 @@ public class Game extends Activity2D {
         double realTime = delta;
         double loopTime = (long) (GameStats.timeLoopAnimation.getPosition().get(0) * realTime);
         GameStats.timeLoopAnimation.update(realTime);
-        Animations.updateAnimations(loopTime);
+        Animation.updateAnimations(loopTime);
         GOFactory.ship.update(realTime);
 
 
@@ -104,7 +105,7 @@ public class Game extends Activity2D {
             new GOFactory.Star(this, new Vector(getScreenWidth(), y), game);
         }
         secondsLeft.bringToFront();
-        secondsLeft.setText(left + "\n" + getCoins() + " Coins\n" + "Animations: " + Animations.count());
+        secondsLeft.setText(left + "\n" + getCoins() + " Coins\n" + "Animation: " + Animation.count());
     }
 
     @Override
@@ -158,7 +159,7 @@ public class Game extends Activity2D {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Animations.removeAll();
-        Animations.updateAnimations(0);
+        Animation.removeAll();
+        Animation.updateAnimations(0);
     }
 }

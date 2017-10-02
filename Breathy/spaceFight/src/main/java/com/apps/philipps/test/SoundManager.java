@@ -5,8 +5,9 @@ import android.media.MediaPlayer;
 
 import java.io.IOException;
 
+
 /**
- * Created by Leo on 01.10.2017.
+ * Created by Jevgenij Huebert on 05.09.2017. Project Breathy.
  */
 
 public class SoundManager {

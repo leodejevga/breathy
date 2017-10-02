@@ -1,7 +1,9 @@
 package com.apps.philipps.source.helper._2D;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Vector;
@@ -17,8 +19,9 @@ public class GameObject2D extends Animated implements Cloneable {
     private double curRotation;
     public final long created = System.currentTimeMillis();
 
-    public GameObject2D() {
+    public GameObject2D(Context context) {
         super(new Vector());
+        object = new ImageView(context);
     }
 
     public GameObject2D(@NonNull View object) {
@@ -76,7 +79,7 @@ public class GameObject2D extends Animated implements Cloneable {
 
     public void setRotation(double alpha) {
         curRotation += alpha;
-        //Animations rotationAnimation = new RotateAnimation(0.0f, -90.0f, 0.5f, 0.5f);
+        //Animation rotationAnimation = new RotateAnimation(0.0f, -90.0f, 0.5f, 0.5f);
         //rotationAnimation.setDuration(1000);
         //rotationAnimation.setFillAfter(true);
         //rotationAnimation.setInterpolator(new LinearInterpolator());

@@ -9,16 +9,16 @@ import android.widget.RelativeLayout;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.helper.Animated;
-import com.apps.philipps.source.helper.Animations;
+import com.apps.philipps.source.helper.Animation;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.GameObject2D;
 
 import java.util.Random;
 
-/**
- * Created by Leo on 05.09.2017.
- */
 
+/**
+ * Created by Jevgenij Huebert on 05.09.2017. Project Breathy.
+ */
 public abstract class GOFactory {
     private static final String TAG = "Game Object Factory";
     public static Ship ship;
@@ -28,15 +28,55 @@ public abstract class GOFactory {
         ship.remove();
     }
 
-    public static class Enemy extends Animations {
+
+    public static class Ship extends Animation {
+        private GameObject2D engine;
+        private ViewGroup game;
         private GameObject2D o;
+
+        public Ship(Context context, Vector position, ViewGroup game) {
+            super(2);
+            o = new GameObject2D(new ImageView(context), position);
+            engine = new GameObject2D(new ImageView(context), position);
+            ((ImageView) o.getView()).setImageResource(R.drawable.ship);
+            game.addView(o.getView());
+            ((ImageView) engine.getView()).setImageResource(R.drawable.engine);
+            game.addView(engine.getView());
+            this.game = game;
+        }
+
+        @Override
+        public void update(double delta) {
+            o.update(delta);
+            o.getView().bringToFront();
+            engine.setPosition(o.getPosition().add(new Vector(-100, -8)));
+            float value = 0.2f + (Math.abs(new Random().nextInt()) % 800f) / 1000f;
+
+            engine.getView().setScaleY(value);
+
+
+            double d = BreathData.get(0).data;
+            double y = (d - AppState.breathyUserMin) / (AppState.breathyUserMax - AppState.breathyUserMin) * game.getHeight();
+            double speed = Math.abs(o.getPosition().get(1) - y) * AppState.breathyDataFrequency;
+            o.move(new Vector(o.getPosition().get(0), y), speed);
+            o.getView().bringToFront();
+        }
+    }
+
+    public static class Enemy extends Animation {
+        private GameObject2D o;
+        private GameObject2D engine;
         private ViewGroup game;
 
         public Enemy(Context context, Vector position, ViewGroup game) {
+            super(2);
             o = new GameObject2D(new ImageView(context), position, new Vector(-100, position.get(1)), GameStats.enemySpeed, true);
             ((ImageView) o.getView()).setImageResource(R.drawable.enemy);
             o.getView().bringToFront();
             game.addView(o.getView());
+
+            engine = new GameObject2D(context);
+            engine.setPosition(o.getPosition().add());
             this.game = game;
         }
 
@@ -44,6 +84,10 @@ public abstract class GOFactory {
         protected void update(double delta) {
             o.update(delta);
             o.getView().bringToFront();
+            engine.setPosition(o.getPosition().add(new Vector(-100, -8)));
+            float value = 0.2f + (Math.abs(new Random().nextInt()) % 800f) / 1000f;
+
+            engine.getView().setScaleY(value);
             if (!o.isMoving()) {
                 game.removeView(o.getView());
                 remove();
@@ -51,12 +95,13 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Laser extends Animations {
+    public static class Laser extends Animation {
         private GameObject2D o;
         private ViewGroup game;
         private Context context;
 
         public Laser(Context context, int dest, ViewGroup game) {
+            super(3);
             o = new GameObject2D(new ImageView(context), ship.o.getPosition().add(new Vector(110, 25)),
                     new Vector(dest, ship.o.getPosition().get(1) + 25), GameStats.shoot.getSpeed(), true);
 
@@ -75,11 +120,12 @@ public abstract class GOFactory {
         @Override
         protected void update(double delta) {
             o.update(delta);
+            o.getView().bringToFront();
             if (!o.isMoving()) {
                 game.removeView(o.getView());
                 remove();
             } else {
-                for (Animations ani : get(Goody.class)) {
+                for (Animation ani : get(Goody.class)) {
                     Goody goody = (Goody) ani;
                     if (o.intersect(goody.o)) {
                         goody.activate();
@@ -89,7 +135,7 @@ public abstract class GOFactory {
                         return;
                     }
                 }
-                for (Animations ani : get(Enemy.class)) {
+                for (Animation ani : get(Enemy.class)) {
                     Enemy enemy = (Enemy) ani;
                     if (o.intersect(enemy.o)) {
                         new GOFactory.Explosion(context, enemy, game);
@@ -105,12 +151,13 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Star extends Animations {
+    public static class Star extends Animation {
         private GameObject2D o;
         private ViewGroup game;
         private Context context;
 
         public Star(Context context, Vector position, ViewGroup game) {
+            super(0);
             o = new GameObject2D(new ImageView(context), position, new Vector(-10, position.get(1)), GameStats.starSpeed, true);
             ((ImageView) o.getView()).setImageResource(R.drawable.star);
             game.addView(o.getView());
@@ -121,6 +168,7 @@ public abstract class GOFactory {
         @Override
         protected void update(double delta) {
             o.update(delta);
+            o.getView().bringToFront();
             if (!o.isMoving()) {
                 remove();
                 game.removeView(o.getView());
@@ -128,7 +176,7 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Explosion extends Animations {
+    public static class Explosion extends Animation {
         private GameObject2D o;
         public long start = System.currentTimeMillis();
         private long past;
@@ -136,6 +184,7 @@ public abstract class GOFactory {
         private Context context;
 
         public Explosion(Context context, Enemy enemy, final ViewGroup game) {
+            super(4);
             o = new GameObject2D(new ImageView(context), enemy.o.getPosition().add(new Vector(-80, -80)), enemy.o.getDestination(), enemy.o.getSpeed(), true);
             ((ImageView) o.getView()).setImageResource(R.drawable.explosion);
             game.addView(o.getView());
@@ -147,6 +196,7 @@ public abstract class GOFactory {
         public void update(double delta) {
             o.update(delta);
             past += delta;
+            o.getView().bringToFront();
             if (past > GameStats.explosionTime) {
                 game.removeView(o.getView());
                 remove();
@@ -155,11 +205,12 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Cloud extends Animations {
+    public static class Cloud extends Animation {
         private GameObject2D o;
         private ViewGroup game;
 
         public Cloud(Context context, Explosion explosion, ViewGroup game) {
+            super(5);
             o = new GameObject2D(new ImageView(context), explosion.o);
             ((ImageView) o.getView()).setImageResource(R.drawable.cloud);
             o.setPosition(o.getPosition().add(new Vector(20, 30)));
@@ -172,6 +223,7 @@ public abstract class GOFactory {
         @Override
         protected void update(double delta) {
             o.update(delta);
+            o.getView().bringToFront();
             if (!o.isMoving()) {
                 remove();
                 game.removeView(o.getView());
@@ -179,39 +231,8 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Ship extends Animations {
-        private GameObject2D engine;
-        private ViewGroup game;
-        private GameObject2D o;
 
-        public Ship(Context context, Vector position, ViewGroup game) {
-            o = new GameObject2D(new ImageView(context), position);
-            engine = new GameObject2D(new ImageView(context), position);
-            ((ImageView) o.getView()).setImageResource(R.drawable.ship);
-            game.addView(o.getView());
-            ((ImageView) engine.getView()).setImageResource(R.drawable.engine);
-            game.addView(engine.getView());
-            this.game = game;
-        }
-
-        @Override
-        public void update(double delta) {
-            o.update(delta);
-            engine.setPosition(o.getPosition().add(new Vector(-100, -8)));
-            float value = 0.2f + (Math.abs(new Random().nextInt()) % 800f) / 1000f;
-
-            engine.getView().setAlpha(value);
-
-
-            double d = BreathData.get(0).data;
-            double y = (d - AppState.breathyUserMin) / (AppState.breathyUserMax - AppState.breathyUserMin) * game.getHeight();
-            double speed = Math.abs(o.getPosition().get(1) - y) * AppState.breathyDataFrequency;
-            o.move(new Vector(o.getPosition().get(0), y), speed);
-            o.getView().bringToFront();
-        }
-    }
-
-    public static class Goody extends Animations {
+    public static class Goody extends Animation {
         public GameStats.Effect effect;
         public int intersectableIn = 100;
         private long start = 0;
@@ -221,6 +242,7 @@ public abstract class GOFactory {
         private GameObject2D o;
 
         public Goody(Context context, Enemy enemy, ViewGroup game, boolean good) {
+            super(6);
             o = new GameObject2D(new ImageView(context), enemy.o.clone());
             this.good = good;
             this.context = context;
@@ -235,6 +257,7 @@ public abstract class GOFactory {
         }
 
         public boolean activate() {
+            o.getView().bringToFront();
             if (GameStats.timeLoopAnimation.getPosition().get(0) != 1 && effect == GameStats.Effect.timeLoop)
                 effect = GameStats.Effect.increaseShootSpeed;
             boolean result = effect.activate();
@@ -252,6 +275,7 @@ public abstract class GOFactory {
         @Override
         public void update(double delta) {
             o.update(delta);
+            o.getView().bringToFront();
             if (!o.intercectable) {
                 o.intercectable = System.currentTimeMillis() - o.created >= intersectableIn;
             }
@@ -274,13 +298,14 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Shoot extends Animations {
+    public static class Shoot extends Animation {
         private long past;
         private ViewGroup game;
         private Context context;
         private GameObject2D o;
 
         public Shoot(Context context, ViewGroup game) {
+            super(4);
             o = new GameObject2D(new ImageView(context), ship.o.getPosition().add(90, -20));
             if (GameStats.shoot.id == 0)
                 ((ImageView) o.getView()).setImageResource(R.drawable.shoot_greed);
@@ -295,6 +320,7 @@ public abstract class GOFactory {
         @Override
         public void update(double delta) {
             o.update(delta);
+            o.getView().bringToFront();
             o.setPosition(ship.o.getPosition().add(90, -20));
             past += delta;
             if (past > GameStats.shootTime) {
@@ -306,51 +332,55 @@ public abstract class GOFactory {
     //Animations_____________________
 
 
-    public static class LoopAnimationOn extends Animations {
+    public static class LoopAnimationOn extends Animation {
         private Animated fade = new Animated(new Vector(1), new Vector(0), 2, true);
-        private RelativeLayout surfaceView;
+        private RelativeLayout o;
         private ViewGroup game;
 
         public LoopAnimationOn(Context context, ViewGroup game) {
+            super(7);
             this.game = game;
-            surfaceView = new RelativeLayout(context);
-            surfaceView.setLayoutParams(new ViewGroup.LayoutParams(game.getWidth(), game.getHeight()));
-            this.game.addView(surfaceView);
+            o = new RelativeLayout(context);
+            o.setLayoutParams(new ViewGroup.LayoutParams(game.getWidth(), game.getHeight()));
+            this.game.addView(o);
         }
 
         @Override
         protected void update(double delta) {
             fade.update(delta);
+            o.bringToFront();
             int c = (int) (fade.getPosition().get(0) * 255);
             int color = Color.argb(c, c, c, c);
-            surfaceView.setBackgroundColor(color);
+            o.setBackgroundColor(color);
             if (!fade.isMoving()) {
-                game.removeView(surfaceView);
+                game.removeView(o);
                 remove();
             }
         }
     }
 
-    public static class LoopAnimationOff extends Animations {
+    public static class LoopAnimationOff extends Animation {
         private Animated fade = new Animated(new Vector(0), new Vector(1), 2, true);
-        private RelativeLayout surfaceView;
+        private RelativeLayout o;
         private ViewGroup game;
 
         public LoopAnimationOff(Context context, ViewGroup game) {
+            super(7);
             this.game = game;
-            surfaceView = new RelativeLayout(context);
-            surfaceView.setLayoutParams(new ViewGroup.LayoutParams(game.getWidth(), game.getHeight()));
-            this.game.addView(surfaceView);
+            o = new RelativeLayout(context);
+            o.setLayoutParams(new ViewGroup.LayoutParams(game.getWidth(), game.getHeight()));
+            this.game.addView(o);
         }
 
         @Override
         protected void update(double delta) {
             fade.update(delta);
+            o.bringToFront();
             int c = (int) (fade.getPosition().get(0) * 128);
             int color = Color.argb(c, c * 2, c * 2, 128 + c);
-            surfaceView.setBackgroundColor(color);
+            o.setBackgroundColor(color);
             if (!fade.isMoving()) {
-                game.removeView(surfaceView);
+                game.removeView(o);
                 remove();
             }
         }
