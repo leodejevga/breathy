@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CallSuper;
 import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public abstract class Animation {
      * you can bring them to front and they will appear at the top of other animations.
      * @param z the hierarchical value of this animation
      */
-    public Animation(Integer z) {
+    public Animation(@NonNull Integer z) {
         this.z = z;
         List<Animation> level = animations.get(z);
         if (level == null) {
@@ -70,7 +71,7 @@ public abstract class Animation {
                 anis.remove(ani);
                 if (anis.isEmpty()) {
                     levels.remove(ani.z);
-                    anis.remove(ani.z);
+                    animations.remove(ani.z);
                 }
             }
             toRemove.clear();
@@ -104,7 +105,7 @@ public abstract class Animation {
     public static List<Animation> get(Class clazz) {
         List<Animation> result = new ArrayList<>();
         for (int i : levels)
-            for (int j = 0; j < animations.get(j).size(); j++)
+            for (int j = 0; j < animations.get(i).size(); j++)
                 if (animations.get(i).get(j).getClass() == clazz)
                     result.add(animations.get(i).get(j));
         return result;

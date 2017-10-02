@@ -28,7 +28,8 @@ public class Animated implements Cloneable {
      * @param position the position
      */
     public Animated(@NonNull Vector position) {
-        this.position = position;
+        this(position, position.clone());
+
     }
 
 
@@ -56,10 +57,7 @@ public class Animated implements Cloneable {
      */
     public Animated(@NonNull Vector position, @NonNull Vector destination, double speed, boolean activate) {
         this.position = position;
-        if (destination == null)
-            this.destination = position.clone();
-        else
-            this.destination = destination;
+        this.destination = destination;
         this.speed = speed;
         this.active = activate;
     }
@@ -75,7 +73,7 @@ public class Animated implements Cloneable {
      * Resume.
      */
     public void move() {
-        active = true;
+        active = speed != 0 || destination.compareTo(position) == 0;
     }
 
     public void move(double speed) {
@@ -85,11 +83,11 @@ public class Animated implements Cloneable {
     /**
      * Animate with previeous speed
      *
-     * @param end
+     * @param destination
      */
-    public void move(Vector end) {
-        this.destination = end;
-        active = speed != 0;
+    public void move(Vector destination) {
+        this.destination = destination;
+        active = speed != 0 && destination.compareTo(position) != 0;
     }
 
     /**
