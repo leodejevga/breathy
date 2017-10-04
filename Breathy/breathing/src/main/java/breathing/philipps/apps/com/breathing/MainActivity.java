@@ -77,9 +77,6 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
                     mContentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     mScreenWidth = mContentView.getWidth();
                     mScreenHight = mContentView.getHeight();
-
-
-
                 }
             });
         }
@@ -100,8 +97,7 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
         mSoundHelper = new SoundHelper(this);
         mSoundHelper.prepareMusicPlayer(this);
     }
-    private void setToFullScreen()
-    {
+    private void setToFullScreen(){
         ViewGroup rootLayout =(ViewGroup) findViewById(R.id.activity_main1);
 
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
@@ -169,18 +165,18 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
 
     @Override
     public void popFish(Fish fish, boolean userTouch) {
-        
+
         mFishPopped++;
         mSoundHelper.playSound();
         mContentView.removeView(fish);
         mFish.remove(fish);
-        
+
         if(userTouch){
             mScore++;
         } else {
             pBar.setProgress(pBar.getProgress()-20);
             if (pBar.getProgress() < 60)
-            pBar.getProgressDrawable().setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+                pBar.getProgressDrawable().setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
             if (pBar.getProgress() <= 0){
                 gameOver(true);
             }
@@ -224,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
         }
 
     }
-
 
     private class FishLauncher extends AsyncTask<Integer, Integer, Void> {
 

@@ -6,8 +6,8 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
-import android.view.View;
-import breathing.philipps.apps.com.breathing.R;
+
+import breathing.philipps.apps.com.breathing.*;
 
 public class SoundHelper {
 
@@ -46,7 +46,7 @@ public class SoundHelper {
                 mLoaded = true;
             }
         });
-        mSoundID = mSoundPool.load(activity, R.raw.balloon_pop, 1);
+        mSoundID = mSoundPool.load(activity, R.raw.popfish, 1);
     }
 
     public SoundHelper() {

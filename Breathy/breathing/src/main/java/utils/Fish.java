@@ -50,7 +50,7 @@ public class Fish extends android.support.v7.widget.AppCompatImageView implement
         int dpWidth = PixelHelper.pixelsToDp(rawidth, context);
         ViewGroup.LayoutParams params =  new ViewGroup.LayoutParams(dpWidth, dpHeight);
         setLayoutParams(params);
-       // int x = getLayoutParams().height;
+
     }
 
     public void releaseFish(int screenWidth, int duration){
