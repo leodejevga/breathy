@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_breathing_game);
 
 
         textView = (TextView) findViewById(R.id.Breathing_status_display);
@@ -76,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
                     mContentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     mScreenWidth = mContentView.getWidth();
                     mScreenHight = mContentView.getHeight();
-
-
                 }
             });
         }
@@ -222,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
         }
 
     }
-
 
     private class FishLauncher extends AsyncTask<Integer, Integer, Void> {
 
