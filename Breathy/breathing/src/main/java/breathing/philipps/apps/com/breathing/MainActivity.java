@@ -114,6 +114,17 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
         setToFullScreen();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSoundHelper.pauseMusic();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSoundHelper.stopMusic();
+    }
 
     private void startGame() {
         setToFullScreen();

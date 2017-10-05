@@ -24,7 +24,7 @@ public class Menu extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_menu);
         IntentFilter enabled = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         IntentFilter connected = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
         IntentFilter disconnected = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
