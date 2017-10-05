@@ -17,7 +17,7 @@ public class BreathingOption extends BreathyGameComponent {
     public boolean start() {
         if(context==null)
             return false;
-        Intent i = new Intent(context, Options.class);
+        Intent i = new Intent(context, BreathingOptions.class);
         context.startActivity(i);
         return true;
     }

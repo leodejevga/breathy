@@ -18,8 +18,8 @@ public class Breathing extends BreathyGame {
 
     @Override
     public void init(Context context, boolean bought) {
-        game = new BreathingOption(context);
-        options = new BreathingGame(context);
+        options = new BreathingOption(context);
+        game = new BreathingGame(context);
         this.bought = bought;
     }
 
