@@ -49,8 +49,6 @@ public class TGame extends Activity3D {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tgame);
-        pd = ProgressDialog.show(TGame.this, "Loading...",
-                "Loading. Please wait...", true, false);
         new BackGroundTask().execute();
         init();
     }
@@ -99,10 +97,8 @@ public class TGame extends Activity3D {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        renderer3D.gameEngine.pause(false);
         Backend.life = 3;
         Backend.score = 0;
-        System.gc();
     }
 
 
@@ -110,33 +106,39 @@ public class TGame extends Activity3D {
     protected void onResume() {
         super.onResume();
         openGL.onResume();
-        System.gc();
     }
 
     class BackGroundTask extends
             AsyncTask<String, Integer, Boolean> {
         @Override
         protected void onPreExecute() {
-            // showDialog(AUTHORIZING_DIALOG);
+            pd = ProgressDialog.show(TGame.this, "Loading...",
+                    "Loading. Please wait...", true, false);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (TGame.this.pd != null) {
-                TGame.this.pd.dismiss();
-            }
+            TGame.this.pd.dismiss();
         }
 
         @Override
         protected Boolean doInBackground(String... params) {
             while (TGame.this.renderer3D.gameEngine == null) {
-                //wait ultil object is loaded
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             TGame.this.pd.dismiss();
             initPlan();
             return true;
-
         }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+        }
+
 
         private void initPlan() {
             setTextViewHowGood();
@@ -193,9 +195,9 @@ public class TGame extends Activity3D {
                             theend.setText("Congratulations !");
                         } else {
                             String text = "You need to breath better !";
-                            text =  text + "\n" + "High scores:";
+                            text = text + "\n" + "High scores:";
                             for (Object o : Backend.cacheManager.loadHighScore(Backend.gName))
-                                text =text + "\n" +(int) o;
+                                text = text + "\n" + (int) o;
                             theend.setText(text);
                         }
                     }
