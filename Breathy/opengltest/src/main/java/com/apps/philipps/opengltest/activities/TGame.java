@@ -49,8 +49,8 @@ public class TGame extends Activity3D {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tgame);
-        new BackGroundTask().execute();
         init();
+        new BackGroundTask().execute();
     }
 
     private void init() {
