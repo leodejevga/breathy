@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apps.philipps.source.BreathInterpreter;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,9 +46,12 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
     private List<Fish> mFish = new ArrayList<Fish>();
     private int mFishPopped;
     private static final int FISH_PER_LEVEL = 10;
+    private int addFish = 0;
     private static final int Bubble_PER_LEVEL = 20;
     private SoundHelper mSoundHelper;
-    TextView textView;
+    TextView textView, bsView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
 
 
         textView = (TextView) findViewById(R.id.Breathing_status_display);
+
 
         pBar = (ProgressBar) findViewById(R.id.pBar);
         pBar.setVisibility(View.VISIBLE);
@@ -194,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
         }
         updateDisplay();
 
-        if (mFishPopped == FISH_PER_LEVEL) {
+        if (mFishPopped == FISH_PER_LEVEL + addFish) {
             finishLevel();
         }
     }
@@ -202,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
     private void updateDisplay() {
         mScoreDisplay.setText(String.valueOf(mScore));
         mLevelDisplay.setText(String.valueOf(mlevel));
-
     }
 
     private void gameOver(boolean b) {
@@ -227,12 +232,17 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
                         String.format("Your new High Score ist %d", mScore));
                 dialog.show(getSupportFragmentManager(), null);
             }
-
         }
-
     }
 
     private class FishLauncher extends AsyncTask<Integer, Integer, Void> {
+
+        private int generateRandom(int a, int b) {
+            Random r = new Random();
+            return r.nextInt(b) + a;
+
+        }
+
 
         @Override
         protected Void doInBackground(Integer... params) {
@@ -248,12 +258,20 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
             int minDelay = maxDelay / 2;
 
             int fishesLaunched = 0;
-            while (mPlaying && fishesLaunched < FISH_PER_LEVEL) {
+            while (mPlaying && fishesLaunched < FISH_PER_LEVEL + addFish) {
 
 //              Get a random horizontal position for the next Fish
                 Random random = new Random(new Date().getTime());
+
                 int yPosition = random.nextInt(mScreenHight - 180);
-                publishProgress(yPosition);
+                Integer array[] = new Integer[2];
+                array[0]= yPosition;
+
+//              set the Breathdata to show in Breath_status_Display
+                array[1] =generateRandom(-1,5);
+
+
+                publishProgress(array);
                 fishesLaunched++;
 
 //              Wait a random number of milliseconds before looping
@@ -274,9 +292,10 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             int yPosition = values[0];
-            launchFish(yPosition);
+            int status = values[1];
+            Integer array[] = {yPosition, status};
+            launchFish(array);
         }
-
     }
 
     private class BubbleLauncher extends AsyncTask<Integer, Integer, Void> {
@@ -316,23 +335,32 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
             return null;
 
         }
-
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             int xPosition = values[0];
             launchBubble(xPosition);
         }
-
     }
 
-    private void launchFish(int y) {
+    private void launchFish(Integer arr[]) {
 
         Fish fish = new Fish(this, 100, generateRandom(1, 4));
         mFish.add(fish);
 
+        String status [] = {"---","Very good","Good","IS OK","NOT OK","NOT GOOD","BAD","VERY BAD"};
+
+        textView.setText(status[arr[1]+1]);
+        if (arr[1]==3 || arr[1]==4 || arr[1]==6 || arr[1]==5)
+        {
+            pBar.setProgress(pBar.getProgress()-20);
+            addFish+=5;
+        }
+
+
+
 //      Set fishes horizental position and dimensions, add to container
-        fish.setY(y);
+        fish.setY(arr[0]);
         fish.setX(0);
         mContentView.addView(fish);
 

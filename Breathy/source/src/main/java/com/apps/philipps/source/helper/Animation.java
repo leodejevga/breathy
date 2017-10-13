@@ -136,7 +136,7 @@ public abstract class Animation {
     }
 
     /**
-     * Marks this Animation as removed. Important! This Animation will be removed at beginning by calling {@link #updateAnimations(double)}
+     * Marks this Animation as removed. Important! This Animation will be removed at the beginning of calling {@link #updateAnimations(double)}
      */
     @CallSuper
     public void remove() {
@@ -144,7 +144,7 @@ public abstract class Animation {
     }
 
     /**
-     * Marks all Animations as removed. Important! The Animations will be removed at beginning by calling {@link #updateAnimations(double)}
+     * Marks all Animations as removed. Important! The Animations will be removed at the beginning of calling {@link #updateAnimations(double)}
      */
     @CallSuper
     public static void removeAll() {
@@ -152,12 +152,16 @@ public abstract class Animation {
     }
 
 
+    /**
+     * Representation of an Animation Object like this "ClassName : key=Number | Number Animations with keys=[key1, key2, ..., keyN]"
+     * @return String that represents this Object
+     */
     @Override
     public String toString() {
         String ls = "";
         for (Integer l : levels)
             ls += ", " + l;
-        return getClass().getSimpleName() + " : z=" + z + " | " + count() +
+        return getClass().getSimpleName() + " : key=" + z + " | " + count() +
                 " Animations with keys=[" + (ls.isEmpty() ? "" : ls.substring(2)) + "]";
     }
 }
