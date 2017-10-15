@@ -1,6 +1,11 @@
 package com.apps.philipps.test.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.view.CollapsibleActionView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,7 +16,9 @@ import android.widget.TextView;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathInterpreter;
 import com.apps.philipps.source.Coins;
+import com.apps.philipps.source.OptionManager;
 import com.apps.philipps.source.PlanManager;
+import com.apps.philipps.source.SaveData;
 import com.apps.philipps.source.helper.Animation;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.Activity2D;
@@ -48,7 +55,6 @@ public class Game extends Activity2D {
             loadingProgress = (ProgressBar) findViewById(R.id.loadingProgress);
             loadingProgress2 = (ProgressBar) findViewById(R.id.loadingProgress2);
             loadingProgressText = (TextView) findViewById(R.id.loadingText);
-            loadingImage.setImageResource(R.drawable.loadingscreen);
         }
         loadingProgress.setProgress(progress);
         loadingProgress2.setProgress(progress);
@@ -66,17 +72,24 @@ public class Game extends Activity2D {
 
     @Override
     protected void draw() {
-        double realTime = delta;
+        final double realTime = delta;
         double loopTime = (long) (GameStats.timeLoopAnimation.getPosition().get(0) * realTime);
         GameStats.timeLoopAnimation.update(realTime);
         Animation.updateAnimations(loopTime);
-        GOFactory.ship.update(realTime);
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                    GOFactory.ship.update(realTime);
+            }
+        });
 
 
         if (!PlanManager.isActive()) {
             stopDrawing();
             Coins.addCoins(getCoins());
             finished.setVisibility(View.VISIBLE);
+            finished.bringToFront();
         }
         long seconds = PlanManager.getDuration() / 1000;
         String left = (seconds / 60 != 0 ? (seconds / 60) + ":" : "")
@@ -95,7 +108,8 @@ public class Game extends Activity2D {
         }
         enemySpawned += loopTime;
         starSpawned += loopTime;
-        if (enemySpawned > GameStats.enemyCome) {
+        float comeAdd = (PlanManager.getCurrentPlan().getFrequency() - 10) * 4.8f;
+        if (enemySpawned > GameStats.enemyCome - comeAdd) {
             enemySpawned = 0;
             new GOFactory.Enemy(this, new Vector(getScreenWidth() - 50, getEnemyY()), game);
         }
@@ -105,16 +119,26 @@ public class Game extends Activity2D {
             new GOFactory.Star(this, new Vector(getScreenWidth(), y), game);
         }
         secondsLeft.bringToFront();
-        secondsLeft.setText(left + "\n" + getCoins() + " Coins\n" + "Animation: " + Animation.count());
+        secondsLeft.setText(left + "\n" + getCoins() + " Coins\n");
     }
 
     @Override
     protected void init() {
+
+        SaveData<OptionManager<Boolean, Boolean>> save = new SaveData<>(this);
+        OptionManager<Boolean, Boolean> options = save.readObject(FlightOptions.TAG);
+        if(options!=null){
+            GameStats.day = options.getValue(0);
+            GameStats.aliens = options.getValue(1);
+        }
+
         SoundManager.init(this);
         AppState.recordData = false;
         PlanManager.start();
         GameStats.init(SCREEN_FACTOR);
         game = (RelativeLayout) findViewById(R.id.test_game2d);
+        if (GameStats.day)
+            game.setBackgroundColor(Color.WHITE);
         GOFactory.init(this, new Vector(50, getScreenHeight() / 2), game);
         finished = (TextView) findViewById(R.id.finished);
         secondsLeft = (TextView) findViewById(R.id.seconds_left);

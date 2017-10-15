@@ -12,6 +12,7 @@ import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Animation;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.GameObject2D;
+import com.apps.philipps.test.activities.Game;
 
 import java.util.Random;
 
@@ -67,30 +68,37 @@ public abstract class GOFactory {
         private GameObject2D o;
         private GameObject2D engine;
         private ViewGroup game;
+        private Game context;
 
-        public Enemy(Context context, Vector position, ViewGroup game) {
+        public Enemy(Game context, Vector position, ViewGroup game) {
             super(2);
             o = new GameObject2D(new ImageView(context), position, new Vector(-100, position.get(1)), GameStats.enemySpeed, true);
-            ((ImageView) o.getView()).setImageResource(R.drawable.enemy);
-            o.getView().bringToFront();
-            game.addView(o.getView());
-
-            engine = new GameObject2D(context);
-            ((ImageView) engine.getView()).setImageResource(R.drawable.engine);
-            game.addView(engine.getView());
-            engine.setPosition(o.getPosition().add(new Vector(-60, -2)));
             this.game = game;
+            this.context = context;
+            game.addView(o.getView());
+            o.getView().bringToFront();
+            if (GameStats.aliens) {
+                ((ImageView) o.getView()).setImageResource(R.drawable.alien);
+            } else {
+                ((ImageView) o.getView()).setImageResource(R.drawable.enemy);
+
+                engine = new GameObject2D(context);
+                ((ImageView) engine.getView()).setImageResource(R.drawable.engine);
+                game.addView(engine.getView());
+                engine.setPosition(o.getPosition().add(new Vector(-60, -2)));
+            }
         }
 
         @Override
         protected void update(double delta) {
             o.update(delta);
-            engine.getView().bringToFront();
             o.getView().bringToFront();
-            engine.setPosition(o.getPosition().add(new Vector(-60, -2)));
-            float value = 0.2f + (Math.abs(new Random().nextInt()) % 800f) / 1000f;
-            engine.getView().setScaleY(value * 1.5f);
-
+            if (!GameStats.aliens) {
+                engine.getView().bringToFront();
+                engine.setPosition(o.getPosition().add(new Vector(-60, -2)));
+                float value = 0.2f + (Math.abs(new Random().nextInt()) % 800f) / 1000f;
+                engine.getView().setScaleY(value * 1.5f);
+            }
             if (!o.isMoving()) {
                 remove();
             }
@@ -100,16 +108,17 @@ public abstract class GOFactory {
         public void remove() {
             super.remove();
             game.removeView(o.getView());
-            game.removeView(engine.getView());
+            if (!GameStats.aliens)
+                game.removeView(engine.getView());
         }
     }
 
     public static class Laser extends Animation {
         private GameObject2D o;
         private ViewGroup game;
-        private Context context;
+        private Game context;
 
-        public Laser(Context context, int dest, ViewGroup game) {
+        public Laser(Game context, int dest, ViewGroup game) {
             super(3);
             o = new GameObject2D(new ImageView(context), ship.o.getPosition().add(new Vector(110, 25)),
                     new Vector(dest, ship.o.getPosition().get(1) + 25), GameStats.shoot.getSpeed(), true);
@@ -147,6 +156,7 @@ public abstract class GOFactory {
                 for (Animation ani : get(Enemy.class)) {
                     Enemy enemy = (Enemy) ani;
                     if (o.intersect(enemy.o)) {
+                        context.addCoin();
                         SoundManager.bang();
                         new GOFactory.Explosion(context, enemy, game);
                         if (new Random().nextInt() % 5 == 3)
@@ -155,6 +165,7 @@ public abstract class GOFactory {
                         game.removeView(o.getView());
                         remove();
                         enemy.remove();
+                        break;
                     }
                 }
             }
@@ -168,8 +179,12 @@ public abstract class GOFactory {
 
         public Star(Context context, Vector position, ViewGroup game) {
             super(0);
-            o = new GameObject2D(new ImageView(context), position, new Vector(-10, position.get(1)), GameStats.starSpeed, true);
-            ((ImageView) o.getView()).setImageResource(R.drawable.star);
+            o = new GameObject2D(new ImageView(context), position, new Vector(-100, position.get(1)), GameStats.starSpeed, true);
+            if (GameStats.day)
+                ((ImageView) o.getView()).setImageResource(R.drawable.cloud);
+            else
+                ((ImageView) o.getView()).setImageResource(R.drawable.star);
+
             game.addView(o.getView());
             this.game = game;
             this.context = context;

@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @param <P> the type of the Option
  * @param <V> the type of the Value of the Option
  */
-public class OptionManager<P extends Serializable,V extends Serializable> implements Serializable{
+public class OptionManager<P extends Serializable, V extends Serializable> implements Serializable {
     private ArrayList<Option<P, V>> options;
 
     public ArrayList<Option<P, V>> getOptions() {
@@ -25,21 +25,22 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
     }
 
     /**
-
      * Instantiates new OptionManager.
      */
-    public OptionManager(){
+    public OptionManager() {
         options = new ArrayList<>();
     }
 
-    public void add(Option option){
+    public void add(Option<P, V> option) {
         options.add(option);
     }
-    public void add(P parameter, V value){
-        options.add(new Option<P, V>(parameter, value));
+
+    public void add(P parameter, V value) {
+        options.add(new Option<>(parameter, value));
     }
-    public void add(P parameter, V value, int price){
-        options.add(new Option<P, V>(parameter, value, price));
+
+    public void add(P parameter, V value, int price) {
+        options.add(new Option<>(parameter, value, price));
     }
 
     /**
@@ -49,28 +50,28 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
      * @param parameter the parameter of the option
      * @param value     the value of the parameter
      */
-    public void set(P parameter, V value){
+    public void set(P parameter, V value) {
         for (Option<P, V> e : options) {
-            if(e.Parameter.equals(parameter)) {
+            if (e.Parameter.equals(parameter)) {
                 options.remove(e);
                 break;
             }
         }
 
-        options.add(new Option<P,V>(parameter,value));
+        options.add(new Option<P, V>(parameter, value));
     }
 
     /**
      * Set the Option at index <code>id</code> with the given <code>value</code>.
      *
-     * @param index    the id of the option
+     * @param index the id of the option
      * @param value the value of the found parameter
      * @return true if the option was found
      */
-    public boolean set(int index, V value){
-        if(index>=size())
+    public boolean set(int index, V value) {
+        if (index >= size())
             return false;
-        options.set(index, new Option<P, V>(options.get(index).Parameter, value));
+        options.set(index, new Option<>(options.get(index).Parameter, value));
         return true;
     }
 
@@ -79,9 +80,9 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
      *
      * @param parameter the parameter to remove
      */
-    public boolean removeParameter(P parameter){
+    public boolean removeParameter(P parameter) {
         for (Option<P, V> e : options) {
-            if(e.Parameter.equals(parameter)) {
+            if (e.Parameter.equals(parameter)) {
                 options.remove(e);
                 return true;
             }
@@ -94,7 +95,7 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
      *
      * @return Amount of options
      */
-    public int size(){
+    public int size() {
         return options.size();
     }
 
@@ -104,8 +105,8 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
      * @param index id of the option
      * @return Value of the parameter
      */
-    public V getValue(int index){
-        if (index>=size())
+    public V getValue(int index) {
+        if (index >= size())
             return null;
         return options.get(index).Value;
     }
@@ -116,8 +117,8 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
      * @param index the id of the option
      * @return the parameter of the option
      */
-    public P getParameter(int index){
-        if (index>=size())
+    public P getParameter(int index) {
+        if (index >= size())
             return null;
         return options.get(index).Parameter;
     }
@@ -128,11 +129,11 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
      * @param id id of the option
      * @return the option
      */
-    public Option<P,V> getOption(int id){
+    public Option<P, V> getOption(int id) {
         return options.get(id);
     }
 
-    public static class Option<P,V> implements Serializable{
+    public static class Option<P, V> implements Serializable {
         public P Parameter;
 
         public P getParameter() {
@@ -159,20 +160,28 @@ public class OptionManager<P extends Serializable,V extends Serializable> implem
             Price = price;
         }
 
-        V Value;
-        int Price;
-        boolean isSet =  false;
-        public Option(P parameter, V value, int cost){
+        public V Value;
+        public int Price;
+        public boolean isSet = false;
+
+        public Option(P parameter, V value, int cost) {
             this.Parameter = parameter;
             this.Value = value;
             this.Price = cost;
         }
-        public Option(P parameter, V value){
+
+        public Option(P parameter, V value) {
             this.Parameter = parameter;
             this.Value = value;
             this.Price = 0;
         }
-        public void setIsSet(boolean isSet){ this.isSet =  isSet; }
-        public boolean isSet(){ return isSet; }
+
+        public void setIsSet(boolean isSet) {
+            this.isSet = isSet;
+        }
+
+        public boolean isSet() {
+            return isSet;
+        }
     }
 }

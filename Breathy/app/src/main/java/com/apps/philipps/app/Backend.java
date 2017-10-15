@@ -66,12 +66,12 @@ public class Backend {
             SaveData.loadPlanManager();
             cacheManager = new CacheManager(context);
             games = new ArrayList<>();
-            Backend.games.add(new AudioSurf());
             Backend.games.add(new SpaceFight());
+            Backend.games.add(new Test());
             Backend.games.add(new Race());
             Backend.games.add(new Fade());
             Backend.games.add(new Breathing());
-            Backend.games.add(new Test());
+            Backend.games.add(new AudioSurf());
 
 
             for(IGame game : Backend.games){
