@@ -15,25 +15,34 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
 import com.apps.philipps.fade.activities.Game;
+import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.BreathInterpreter;
+import com.apps.philipps.source.PlanManager;
 
 public class TransparencyService extends Service{
     private final String TAG = "TransparencyService";
 
-    public static final String EXTRA_NEXT_STATE = "EXTRA_NEXT_STATE";
-    public static final int NEW_SERVICE = 1000;
-    public static final int EXTRA_VALUE_PAUSE_CONTINUE = 1001;
-    public static final int EXTRA_VALUE_STOP = 1002;
+    public static final String KEY_NEXT_STATE = "KEY_NEXT_STATE";
+    public static final String KEY_FOG_COLOR = "KEY_FOG_COLOR";
+
+    public static final int EXTRA_STATE_NEW_SERVICE = 1000;
+    public static final int EXTRA_STATE_CONTINUE = 1001;
+    public static final int EXTRA_STATE_RUNNING = 1002;
+    public static final int EXTRA_STATE_PAUSED = 1003;
+    public static final int EXTRA_STATE_STOPPED = 1004;
 
     private View topLeftView;
-    private View testView;
+    private View fullscreenFogView;
 
     private static boolean threadAlive;
     private static boolean threadRunning;
+    private boolean setPausedNotification = false;
+
 
     private static float currentAlpha;
-    private static boolean alphaRise;
     private static WindowManager wm;
 
+    // Used by the Fade-Notifier
     private static Intent serviceIntent;
 
     Handler handler;
@@ -44,41 +53,71 @@ public class TransparencyService extends Service{
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int nextState = NEW_SERVICE;
+        Log.i(TAG, "onStartCommand() - Threadalive: " + threadAlive +  " - Threadrunning: " + threadRunning);
+
+        int nextState = EXTRA_STATE_NEW_SERVICE;
         if (intent != null) {
             TransparencyService.serviceIntent = intent;
-            nextState = TransparencyService.serviceIntent.getIntExtra(EXTRA_NEXT_STATE, 0);
+            nextState = TransparencyService.serviceIntent.getIntExtra(TransparencyService.KEY_NEXT_STATE, -1);
         } else {
+            Log.e(TAG, "onStartCommand() - intent == null !!!");
             TransparencyService.serviceIntent = new Intent(this, TransparencyService.class);
         }
-        if (nextState == EXTRA_VALUE_PAUSE_CONTINUE) {
-            threadRunning = !threadRunning;
-            Log.i(TAG, "onStartCommand() EXTRA_VALUE_PAUSE_CONTINUE - Threadrunning: " + threadRunning);
-            try {
-                Thread.sleep(200);
-                startOrUpdateTranspearencyNotification();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else if (nextState == EXTRA_VALUE_STOP) {
-            Log.i(TAG, "onStartCommand() EXTRA_VALUE_STOP");
-            // NOTIFICATION will also be deleted in onDestroy()
-            onDestroy();
-        } else {
-            // nextState == NEW_SERVICE
-            TransparencyService.threadAlive = false;
-            setThreadRunning(false);
 
-            handler = new Handler();
+        switch(nextState){
+            case TransparencyService.EXTRA_STATE_NEW_SERVICE:
+                Log.i(TAG, "onStartCommand() EXTRA_STATE_NEW_SERVICE");
+                TransparencyService.threadAlive = false;
+                setThreadRunning(false);
 
-            initTransparencyObjects();
+                handler = new Handler();
 
-            startUpdateThread();
+                // Start Breathplan
+                AppState.recordData = false;
 
-            startOrUpdateTranspearencyNotification();
-            Log.i(TAG, "onStartCommand() NO NEXT STATE VALUE!!");
+                PlanManager.start();
+                Log.i(TAG, "PlanManager.start() - isActive(): " + PlanManager.isActive());
+
+                int fogColor = intent.getIntExtra(TransparencyService.KEY_FOG_COLOR, getResources().getColor(R.color.standardColor3));
+                if (fogColor == getResources().getColor(R.color.standardColor1)) {
+                    Log.i(TAG, "FogColor not changed!?");
+                }
+                initTransparencyObjects(fogColor);
+
+                startUpdateThread();
+
+                startOrUpdateTransparencyNotification();
+                break;
+            case TransparencyService.EXTRA_STATE_CONTINUE:
+                setThreadRunning(true);
+                fullscreenFogView.setVisibility(View.VISIBLE);
+
+                PlanManager.resume();
+                Log.i(TAG, "PlanManager.resume() - isActive(): " + PlanManager.isActive());
+
+                notifyFadeGameActivity(TransparencyService.EXTRA_STATE_CONTINUE);
+                Log.i(TAG, "onStartCommand() EXTRA_STATE_CONTINUE - Threadrunning: " + threadRunning);
+                break;
+            case TransparencyService.EXTRA_STATE_PAUSED:
+                setThreadRunning(false);
+                fullscreenFogView.setVisibility(View.INVISIBLE);
+
+                PlanManager.pause();
+                Log.i(TAG, "PlanManager.pause() - isActive(): " + PlanManager.isActive());
+
+                notifyFadeGameActivity(TransparencyService.EXTRA_STATE_PAUSED);
+                Log.i(TAG, "onStartCommand() EXTRA_STATE_PAUSED - Threadrunning: " + threadRunning);
+                break;
+            case TransparencyService.EXTRA_STATE_STOPPED:
+                Log.i(TAG, "onStartCommand() EXTRA_STATE_STOPPED");
+                // NOTIFICATION will be deleted in onDestroy()
+                // PlanManager.stop() will be called in onDestroy()
+                onDestroy();
+                break;
+            default:
+                Log.e(TAG, "onStartCommand() NO NEXT STATE VALUE - KEY_NEXT_STATE = -1!!");
         }
-        return 0;
+        return Service.START_STICKY_COMPATIBILITY;
     }
     @Override
     public void onCreate() {
@@ -87,23 +126,23 @@ public class TransparencyService extends Service{
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void initTransparencyObjects() {
+    private void initTransparencyObjects(int fogColor) {
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        TransparencyService.currentAlpha = 0.0f;
-        TransparencyService.alphaRise = true;
+        TransparencyService.currentAlpha = 0.0f; // No Fog
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION | WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.LEFT | Gravity.TOP;
         params.x = 0;
         params.y = 0;
 
-        testView = new View(this);
-        testView.setAlpha(currentAlpha);
-        testView.setBackgroundColor(0xDD664422);
-        testView.setFocusable(false);
+        fullscreenFogView = new View(this);
+        fullscreenFogView.setFocusable(false);
+        fullscreenFogView.setAlpha(currentAlpha / 100);
+        fullscreenFogView.setBackgroundColor(fogColor);
 
-        wm.addView(testView, params);
+        wm.addView(fullscreenFogView, params);
 
+        // ToDo topLeftParams???
         topLeftView = new View(this);
         WindowManager.LayoutParams topLeftParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, PixelFormat.TRANSLUCENT);
         topLeftParams.gravity = Gravity.LEFT | Gravity.TOP;
@@ -119,20 +158,27 @@ public class TransparencyService extends Service{
         new Thread() {
             public void run() {
                 while (threadAlive) {
+                    // ToDo
+                    //fullscreenFogView.setVisibility(View.INVISIBLE);
                     while (threadRunning) {
+                        setPausedNotification = false;
                         try {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     setNewAlpha();
                                     updateView();
-                                    startOrUpdateTranspearencyNotification();
+                                    startOrUpdateTransparencyNotification();
                                 }
                             });
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                    }
+                    if (threadAlive && !setPausedNotification){
+                        setPausedNotification = true;
+                        startOrUpdateTransparencyNotification();
                     }
                     try {
                         Thread.sleep(250);
@@ -150,36 +196,59 @@ public class TransparencyService extends Service{
         TransparencyService.threadAlive = false;
         setThreadRunning(false);
 
+        // Stop Breathplan
+        PlanManager.stop();
+
         removeAllViews();
 
-        stopTranspearencyNotification();
+        stopTransparencyNotification();
 
-        notifyMainActivity();
+        notifyFadeGameActivity(EXTRA_STATE_STOPPED);
 
         super.onDestroy();
     }
 
-    private void notifyMainActivity() {
+    private void notifyFadeGameActivity(int nextState) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        intent.setAction(Game.BROADCAST_R_INTENT_FILTER_ACTION);
-        intent.putExtra(EXTRA_NEXT_STATE, EXTRA_VALUE_STOP);
+        intent.setAction(Game.FADE_BROADCAST_R_INTENT_FILTER);
+        intent.putExtra(KEY_NEXT_STATE, nextState);
 
-        Log.i(TAG, "sendBroadcast()");
+        Log.i(TAG, "sendBroadcast(): " + nextState);
         sendBroadcast(intent);
     }
+
     private void removeAllViews() {
-        wm.removeView(testView);
-        wm.removeView(topLeftView);
-        testView = null;
+        wm.removeView(fullscreenFogView);
+//        wm.removeView(topLeftView);
+        fullscreenFogView = null;
         topLeftView = null;
         wm = null;
     }
+    private void startOrUpdateTransparencyNotification() {
+        Log.v(TAG, "startOrUpdateTransparencyNotification()");
+        if (isThreadRunning()) {
+            // Thread laeuft > M�glichkeit den Thead zu pausieren in Notification einfuegen
+            TransparencyNotification.notify(this, TransparencyNotification.NOTIFICATION_PAUSE ,getString(R.string.notification_exercise_runnung), getPractiseInformation(), 1);
+        } else {
+            // Thread laeuft nicht > M�glichkeit den Thead zu fortzusetzen in Notification einfuegen
+            TransparencyNotification.notify(this, TransparencyNotification.NOTIFICATION_CONTINUE ,getString(R.string.notification_exercise_paused), getPractiseInformation(), 1);
+        }
+    }
+    private void stopTransparencyNotification() {
+        Log.i(TAG, "stopTransparencyNotification()");
+        TransparencyNotification.cancel(this);
+    }
 
-    private void updateView() {
-        testView.setAlpha(currentAlpha / 100);
-        WindowManager.LayoutParams params = (LayoutParams) testView.getLayoutParams();
-        wm.updateViewLayout(testView, params);
+    private String getRemainingTimeString(){
+        long seconds = PlanManager.getDuration() / 1000;
+        return (seconds / 60 != 0 ? (seconds / 60) + ":" : "")
+                + (seconds != 0 ? seconds % 60 + ":" : "")
+                + PlanManager.getDuration() % 1000;
+    }
+
+    private String getPractiseInformation() {
+        return (100 - TransparencyService.getAlpha()) + "% - " + BreathInterpreter.getStatus().getError() + " - " + getRemainingTimeString();
     }
 
     private void runOnUiThread(Runnable runnable) {
@@ -187,18 +256,42 @@ public class TransparencyService extends Service{
     }
 
     public void setNewAlpha() {
-        if (currentAlpha >= 100.0f) {
-            alphaRise = false;
-        } else if (currentAlpha <= 0.0f) {
-            alphaRise = true;
+        switch(BreathInterpreter.getStatus().getError()){
+            case VeryGood:
+                currentAlpha = 0.0f;
+                break;
+            case Good:
+                currentAlpha = 16.6f;
+                break;
+            case Ok:
+                currentAlpha = 33.3f;
+                break;
+            case NotOk:
+                currentAlpha = 50.0f;
+                break;
+            case NotGood:
+                currentAlpha = 66.6f;
+                break;
+            case Bad:
+                currentAlpha = 83.3f;
+                break;
+            case VeryBad:
+                currentAlpha = 100.0f;
+                break;
+            default:
+                Log.e(TAG, "Kein Status!");
+                currentAlpha = 100.0f;
         }
-        if (alphaRise) {
-            // TODO
-            currentAlpha = currentAlpha + 10;
-        } else {
-            currentAlpha = currentAlpha - 10;
-        }
+
+        fullscreenFogView.setAlpha(currentAlpha / 100);
     }
+    private void updateView() {
+        fullscreenFogView.setVisibility(View.VISIBLE);
+
+        WindowManager.LayoutParams params = (LayoutParams) fullscreenFogView.getLayoutParams();
+        wm.updateViewLayout(fullscreenFogView, params);
+    }
+
     public static boolean isThreadRunning() {
         return threadRunning;
     }
@@ -215,21 +308,7 @@ public class TransparencyService extends Service{
         return currentAlpha;
     }
 
-    private void startOrUpdateTranspearencyNotification() {
-        if (isThreadRunning()) {
-            // Thread laeuft > M�glichkeit den Thead zu pausieren in Notification einfuegen
-            TransparencyNotification.notify(this, TransparencyNotification.NOTIFICATION_PAUSE ,getString(R.string.notification_exercise_runnung), getPractiseInformation(), 1);
-        } else {
-            // Thread laeuft nicht > M�glichkeit den Thead zu fortzusetzen in Notification einfuegen
-            TransparencyNotification.notify(this, TransparencyNotification.NOTIFICATION_CONTINUE ,getString(R.string.notification_exercise_paused), getPractiseInformation(), 1);
-        }
-    }
-    private void stopTranspearencyNotification() {
-        TransparencyNotification.cancel(this);
-    }
-    private String getPractiseInformation() {
-        return "Aktueller Transparenz-Grad: " + (100 - TransparencyService.getAlpha()) + "%";
-    }
+
     public static Intent getServiceIntent() {
         return serviceIntent;
     }

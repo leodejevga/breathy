@@ -1,6 +1,9 @@
 package com.apps.philipps.fade.activities;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,34 +18,33 @@ public class Options extends Activity implements SeekBar.OnSeekBarChangeListener
 
     private Button btnStandardColor1, btnStandardColor2, btnStandardColor3, btnStandardColor4, btnStandardColor5;
 
-    private boolean isCustomColor;
-    private ToggleButton btnCustomColorr;
+    private ToggleButton btnCustomColor;
 
     LinearLayout llCustomColor;
-    private int red, green, blue;
     private SeekBar sbRed, sbBlue, sbGreen;
 
+    private View vwColorPreview;
+
+    private Button btnCancelOptions, btnSubmitOptions;
+
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fade_options);
 
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+
         // Load Stored Values
-        loadOptions();
+        boolean isCustomColor = loadCustomColor();
+        int activeColor = loadColor();
 
-        initGUIComponents();
+        initGUIComponents(isCustomColor, activeColor);
     }
 
-    private void loadOptions() {
-        isCustomColor = false;
-        red = 127;
-        green = 127;
-        blue = 127;
-    }
-
-    private void initGUIComponents() {
-        btnCustomColorr = (ToggleButton) findViewById(R.id.btnCustomColor);
+    private void initGUIComponents(boolean isCustomColor, int activeColor) {
+        btnCustomColor = (ToggleButton) findViewById(R.id.btnCustomColor);
 
         btnStandardColor1 = (Button) findViewById(R.id.btnStandardColor1);
         btnStandardColor2 = (Button) findViewById(R.id.btnStandardColor2);
@@ -57,9 +59,9 @@ public class Options extends Activity implements SeekBar.OnSeekBarChangeListener
         btnStandardColor5.setOnClickListener(this);
 
 
-        btnCustomColorr.setChecked(isCustomColor);
+        btnCustomColor.setChecked(isCustomColor);
 
-        btnCustomColorr.setOnCheckedChangeListener(this);
+        btnCustomColor.setOnCheckedChangeListener(this);
 
 
         llCustomColor = (LinearLayout) findViewById(R.id.llCustomColor);
@@ -71,49 +73,45 @@ public class Options extends Activity implements SeekBar.OnSeekBarChangeListener
         sbBlue = (SeekBar) findViewById(R.id.sbBlue);
         sbGreen = (SeekBar) findViewById(R.id.sbGreen);
 
-        sbRed.setProgress(red);
-        sbGreen.setProgress(green);
-        sbBlue.setProgress(blue);
+        sbRed.setProgress(Color.red(activeColor));
+        sbGreen.setProgress(Color.green(activeColor));
+        sbBlue.setProgress(Color.blue(activeColor));
 
         sbRed.setOnSeekBarChangeListener(this);
         sbBlue.setOnSeekBarChangeListener(this);
         sbGreen.setOnSeekBarChangeListener(this);
 
+        vwColorPreview = (View) findViewById(R.id.vwColorPreview);
+        updateColorPreview();
 
+        btnCancelOptions = (Button) findViewById(R.id.btnCancelOptions);
+        btnSubmitOptions = (Button) findViewById(R.id.btnSubmitOptions);
+
+        btnCancelOptions.setOnClickListener(this);
+        btnSubmitOptions.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btnCancel) {
+        int red, green, blue;
+        if (v.getId() == btnCancelOptions.getId()) {
             // Close the Activity
             finish();
-        } else if (v.getId() == R.id.btnSubmit) {
-            saveOptions();
+        } else if (v.getId() == btnSubmitOptions.getId()) {
+            saveSharedPrefs();
             finish();
-        } else if (v.getId() == R.id.btnStandardColor1) {
-            red = getResources().getColor(R.color.standardColor1) >> 16 & 0xFF;
-            green = getResources().getColor(R.color.standardColor1) >> 8 & 0xFF;
-            blue = getResources().getColor(R.color.standardColor1) & 0xFF;
-        } else if (v.getId() == R.id.btnStandardColor2) {
-            red = getResources().getColor(R.color.standardColor2) >> 16 & 0xFF;
-            green = getResources().getColor(R.color.standardColor2) >> 8 & 0xFF;
-            blue = getResources().getColor(R.color.standardColor2) & 0xFF;
-        } else if (v.getId() == R.id.btnStandardColor3) {
-            red = getResources().getColor(R.color.standardColor3) >> 16 & 0xFF;
-            green = getResources().getColor(R.color.standardColor3) >> 8 & 0xFF;
-            blue = getResources().getColor(R.color.standardColor3) & 0xFF;
-        } else if (v.getId() == R.id.btnStandardColor4) {
-            red = getResources().getColor(R.color.standardColor4) >> 16 & 0xFF;
-            green = getResources().getColor(R.color.standardColor4) >> 8 & 0xFF;
-            blue = getResources().getColor(R.color.standardColor4) & 0xFF;
-        } else if (v.getId() == R.id.btnStandardColor5) {
-            red = getResources().getColor(R.color.standardColor5) >> 16 & 0xFF;
-            green = getResources().getColor(R.color.standardColor5) >> 8 & 0xFF;
-            blue = getResources().getColor(R.color.standardColor5) & 0xFF;
+        } else if (v.getId() == btnStandardColor1.getId()) {
+            updateSeekBars(getResources().getColor(R.color.standardColor1));
+        } else if (v.getId() == btnStandardColor2.getId()) {
+            updateSeekBars(getResources().getColor(R.color.standardColor2));
+        } else if (v.getId() == btnStandardColor3.getId()) {
+            updateSeekBars(getResources().getColor(R.color.standardColor3));
+        } else if (v.getId() == btnStandardColor4.getId()) {
+            updateSeekBars(getResources().getColor(R.color.standardColor4));
+        } else if (v.getId() == btnStandardColor5.getId()) {
+            updateSeekBars(getResources().getColor(R.color.standardColor5));
         }
-        sbRed.setProgress(red);
-        sbGreen.setProgress(green);
-        sbBlue.setProgress(blue);
+
     }
 
     @Override
@@ -129,19 +127,34 @@ public class Options extends Activity implements SeekBar.OnSeekBarChangeListener
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
-            if (seekBar.getId() == sbRed.getId()) {
-
-            } else if (seekBar.getId() == sbGreen.getId()) {
-
-            } else if (seekBar.getId() == sbBlue.getId()) {
-
-            }
-        }
+            updateColorPreview();
     }
 
-    private void saveOptions() {
+    private void updateSeekBars(int newColor){
+        sbRed.setProgress(Color.red(newColor));
+        sbGreen.setProgress(Color.green(newColor));
+        sbBlue.setProgress(Color.blue(newColor));
+    }
 
+    private void updateColorPreview(){
+        vwColorPreview.setBackgroundColor(Color.rgb(sbRed.getProgress(), sbGreen.getProgress(), sbBlue.getProgress()));
+    }
+
+    private int loadColor() {
+        int red = sharedPref.getInt(getString(R.string.com_apps_philipps_fade_preference_key_red), 127);
+        int green = sharedPref.getInt(getString(R.string.com_apps_philipps_fade_preference_key_green), 127);
+        int blue = sharedPref.getInt(getString(R.string.com_apps_philipps_fade_preference_key_blue), 127);
+        return Color.rgb(red, green, blue);
+    }
+    private boolean loadCustomColor(){
+        return sharedPref.getBoolean(getString(R.string.com_apps_philipps_fade_preference_key_custom_color), false);
+    }
+
+    private void saveSharedPrefs() {
+        sharedPref.edit().putBoolean(getString(R.string.com_apps_philipps_fade_preference_key_custom_color), btnCustomColor.isChecked()).commit();
+        sharedPref.edit().putInt(getString(R.string.com_apps_philipps_fade_preference_key_red), sbRed.getProgress()).commit();
+        sharedPref.edit().putInt(getString(R.string.com_apps_philipps_fade_preference_key_green), sbGreen.getProgress()).commit();
+        sharedPref.edit().putInt(getString(R.string.com_apps_philipps_fade_preference_key_blue), sbBlue.getProgress()).commit();
     }
 
 

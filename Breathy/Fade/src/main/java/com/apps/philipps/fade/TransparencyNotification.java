@@ -65,28 +65,37 @@ public class TransparencyNotification {
         Intent intentOpenMainActivity = new Intent(context, Game.class);
         intentOpenMainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        final PendingIntent pendingIntentOpenMainActivity = PendingIntent.getActivity(context, PANDING_INTENT_RQ_OPEN_MAIN, intentOpenMainActivity, 0);
+        final PendingIntent piOpenMainActivity = PendingIntent.getActivity(context, PANDING_INTENT_RQ_OPEN_MAIN, intentOpenMainActivity, 0);
+
+        Intent serviceIntent = TransparencyService.getServiceIntent();
+        serviceIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent piPauseContinueService;
+
+        int notificationBarDrawable;
 
         if (notificationState == NOTIFICATION_PAUSE) {
             // ###### Pausieren des Services
             pauseContinueDrawableID = R.drawable.ic_pause;
             pauseContinueString = res.getString(R.string.notification_pause);
-        } else if (notificationState == NOTIFICATION_CONTINUE) {
+
+            serviceIntent = serviceIntent.putExtra(TransparencyService.KEY_NEXT_STATE, TransparencyService.EXTRA_STATE_PAUSED);
+            piPauseContinueService = PendingIntent.getService(context, PANDING_INTENT_RQ_PAUSE_CONTINUE, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            notificationBarDrawable = R.drawable.ic_play; // Serivce ist currently running
+        } else { // notificationState == NOTIFICATION_CONTINUE
             // ###### Service fortsetzen
             pauseContinueDrawableID = R.drawable.ic_play;
             pauseContinueString = res.getString(R.string.notification_play);
-        } else {
-            // TODO
-            Log.e(TAG, "notificationState not Pause or Continue!");
+
+            serviceIntent = serviceIntent.putExtra(TransparencyService.KEY_NEXT_STATE, TransparencyService.EXTRA_STATE_CONTINUE);
+            piPauseContinueService = PendingIntent.getService(context, PANDING_INTENT_RQ_PAUSE_CONTINUE, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            notificationBarDrawable = R.drawable.ic_pause; // Serivce ist currently NOT running
         }
 
-        Intent serviceIntent = TransparencyService.getServiceIntent();
-        serviceIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        final PendingIntent pendingIntentPauseContinueService = PendingIntent.getService(context, PANDING_INTENT_RQ_PAUSE_CONTINUE, serviceIntent.putExtra(TransparencyService.EXTRA_NEXT_STATE, TransparencyService.EXTRA_VALUE_PAUSE_CONTINUE), PendingIntent.FLAG_UPDATE_CURRENT);
-
         // ###### Service stoppen
-        final PendingIntent pendingIntentStopService = PendingIntent.getService(context, PANDING_INTENT_RQ_STOP, serviceIntent.putExtra(TransparencyService.EXTRA_NEXT_STATE, TransparencyService.EXTRA_VALUE_STOP), PendingIntent.FLAG_UPDATE_CURRENT);
+        final PendingIntent piStopService = PendingIntent.getService(context, PANDING_INTENT_RQ_STOP, serviceIntent.putExtra(TransparencyService.KEY_NEXT_STATE, TransparencyService.EXTRA_STATE_STOPPED), PendingIntent.FLAG_UPDATE_CURRENT);
 
         // TODO Icon für Notification in der Statusleiste erstellen
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
@@ -97,7 +106,7 @@ public class TransparencyNotification {
 
                 // Set required fields, including the small icon, the
                 // notification title, and text.
-                .setSmallIcon(R.drawable.ic_play).setContentTitle(notificationTitle).setContentText(notificationText)
+                .setSmallIcon(notificationBarDrawable).setContentTitle(notificationTitle).setContentText(notificationText)
 
                 // All fields below this line are optional.
 
@@ -127,15 +136,15 @@ public class TransparencyNotification {
 
                 // Set the pending intent to be initiated when the user touches
                 // the notification.
-                .setContentIntent(pendingIntentOpenMainActivity)
+                .setContentIntent(piOpenMainActivity)
 
                 // Example additional actions for this notification. These will
                 // only show on devices running Android 4.1 or later, so you
                 // should ensure that the activity in this notification's
                 // content intent provides access to the same actions in
                 // another way.
-                .addAction(pauseContinueDrawableID, pauseContinueString, pendingIntentPauseContinueService)
-                .addAction(R.drawable.ic_stop, res.getString(R.string.notification_stop), pendingIntentStopService)
+                .addAction(pauseContinueDrawableID, pauseContinueString, piPauseContinueService)
+                .addAction(R.drawable.ic_stop, res.getString(R.string.notification_stop), piStopService)
 
                 // Automatically dismiss the notification when it is touched.
                 .setAutoCancel(false);

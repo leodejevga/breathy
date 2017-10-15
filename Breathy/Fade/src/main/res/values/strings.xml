@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_activity_transparent">TransparentActivity</string>
+    <string name="title">Fade</string>
+    <string name="no_plan_selected">No Breathplan found!</string>
+    <string name="remaining_time">Time Remaining: </string>
+    <string name="main_start_exercise">Übung starten</string>
+    <string name="main_stop_exercise">Übung stoppen</string>
+    <string name="main_pause_exercise">Übung pausieren</string>
+    <string name="main_continue_exercise">Übung fortsetzen</string>
     <string name="transparency_notification_title_template">Transparency (Titel): %1$s</string>
     <string name="notification_pause">Pause</string>
     <string name="notification_play">Play</string>
@@ -14,4 +20,10 @@
     <string name="blue">Blau</string>
     <string name="cancel">Abbrechen</string>
     <string name="submit">Übernehmen</string>
+    <string name="com.apps.philipps.fade.preference_key_custom_color">com.apps.philipps.fade.preference_key_custom_color</string>
+    <string name="com.apps.philipps.fade.preference_key_red">com.apps.philipps.fade.preference_key_red</string>
+    <string name="com.apps.philipps.fade.preference_key_green">com.apps.philipps.fade.preference_key_green</string>
+    <string name="com.apps.philipps.fade.preference_key_blue">com.apps.philipps.fade.preference_key_blue</string>
+    <string name="com.apps.philipps.fade.preference_key_color_rgb">com.apps.philipps.fade.preference_key_color_rgb</string>
+
 </resources>
