@@ -151,7 +151,7 @@ public abstract class Activity2D extends Activity implements IObserver {
             @Override
             public void run() {
                 try {
-                    PlanManager.update();
+                    AppState.recordData = true;
                     currentTime = System.currentTimeMillis();
                     delta = currentTime - frameTime;
                     draw();
@@ -258,7 +258,7 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "OnResume");
-        AppState.recordData = AppState.inGame = true;
+        AppState.inGame = true;
         BreathData.addObserver(this);
         PlanManager.resume();
         starToDraw();
