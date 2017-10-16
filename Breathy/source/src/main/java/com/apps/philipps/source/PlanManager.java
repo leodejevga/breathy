@@ -26,8 +26,8 @@ public abstract class PlanManager implements Serializable {
             plans = instance.plans;
             currentPlan = instance.currentPlan;
             initialized = true;
-        }
-        throw new PlanManagerAlreadyInitialized();
+        } else
+            throw new PlanManagerAlreadyInitialized();
     }
 
     public static void addPlan(Plan plan) {
@@ -276,7 +276,7 @@ public abstract class PlanManager implements Serializable {
 
         private boolean update() {
             delta = System.currentTimeMillis() - delta;
-            if (running || !paused) {
+            if (running && !paused) {
                 if (currentTime - delta <= 0) {
                     currentOption++;
                     if (currentOption == options.size())
