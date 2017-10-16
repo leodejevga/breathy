@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.apps.philipps.opengltest.activities.TGame;
+import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.source.implementations.BreathyGameComponent;
 
 /**
@@ -12,7 +13,7 @@ import com.apps.philipps.source.implementations.BreathyGameComponent;
 
 public class TestGame extends BreathyGameComponent {
 
-    public TestGame(Context context){
+    public TestGame(Context context) {
         this.context = context;
     }
 
@@ -23,8 +24,13 @@ public class TestGame extends BreathyGameComponent {
      */
     @Override
     public boolean start() {
-        Intent i = new Intent(context, TGame.class);
-        context.startActivity(i);
-        return true;
+        if (PlanManager.getCurrentPlan() != null) {
+            Intent i = new Intent(context, TGame.class);
+            context.startActivity(i);
+            return true;
+        }else{
+            message("Bitte ein Plan auswählen");
+            return false;
+        }
     }
 }
