@@ -174,7 +174,7 @@ public class TGame extends Activity3D {
 
                             @Override
                             public void run() {
-                                PlanManager.update();
+                                AppState.recordData = true;
                                 long seconds = PlanManager.getDuration() / 1000;
                                 String left = (seconds / 60 != 0 ? (seconds / 60) + ":" : "")
                                         + (seconds != 0 ? seconds % 60 + ":" : "")

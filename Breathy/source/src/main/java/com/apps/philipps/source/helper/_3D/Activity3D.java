@@ -21,9 +21,8 @@ public abstract class Activity3D extends Activity {
     protected void onPause() {
         super.onPause();
         Log.e(TAG, "OnPause");
-        BreathData.saveRest();
         PlanManager.pause();
-        AppState.recordData = AppState.inGame = false;
+        AppState.recordData = false;
         if (openGL != null)
             openGL.onPause();
     }
@@ -32,7 +31,7 @@ public abstract class Activity3D extends Activity {
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "OnResume");
-        AppState.recordData = AppState.inGame = true;
+        AppState.inGame = true;
         if (PlanManager.isActive())
             PlanManager.resume();
         else
@@ -44,6 +43,8 @@ public abstract class Activity3D extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "OnDestroy");
+        BreathData.saveRest();
+        AppState.inGame = false;
         PlanManager.stop();
     }
 }
