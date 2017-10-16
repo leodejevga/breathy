@@ -16,7 +16,11 @@ import com.apps.philipps.app.Backend;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.Coins;
+import com.apps.philipps.source.SaveData;
 import com.apps.philipps.source.interfaces.IGame;
+import com.apps.philipps.source.interfaces.IObserver;
+
+import dalvik.system.BaseDexClassLoader;
 
 /**
  * Select Game Activity
@@ -48,7 +52,7 @@ public class SelectGame extends AppCompatActivity {
                 Backend.selected = Backend.games.get(position);
                 buy.setVisibility(Backend.selected.isBought() ? View.INVISIBLE : View.VISIBLE);
                 Integer previewData = Backend.selected.getPreview();
-                if(previewData!=null) {
+                if (previewData != null) {
                     String videoPath = "android.resource://" + getResources().getResourcePackageName(R.raw.preview) + "/" + previewData;
                     Uri uri = Uri.parse(videoPath);
                     preview.setVisibility(View.VISIBLE);
@@ -57,6 +61,12 @@ public class SelectGame extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Backend.cacheManager.saveCreditToCache();
     }
 
     /**
@@ -102,6 +112,5 @@ public class SelectGame extends AppCompatActivity {
         super.onStart();
         coins.setText(Coins.getAmount() + " Coins");
     }
-
 
 }

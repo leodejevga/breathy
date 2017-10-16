@@ -1,5 +1,6 @@
 package com.apps.philipps.source.helper;
 
+import android.icu.text.TimeZoneFormat;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CallSuper;
@@ -11,6 +12,7 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -19,7 +21,7 @@ import java.util.List;
 public abstract class Animation {
     private Integer z;
     private final static String TAG = "Animation";
-    private static SparseArray<List<Animation>> animations = new SparseArray<>();
+    public static SparseArray<List<Animation>> animations = new SparseArray<>();
     private static List<Animation> toRemove = new ArrayList<>();
     private static List<Integer> levels = new ArrayList<>();
     private static boolean removeAll = false;
@@ -61,6 +63,25 @@ public abstract class Animation {
      */
     @CallSuper
     public static void updateAnimations(final double delta) {
+        executeToRemove();
+
+        for (int i : levels) {
+            for (final Animation animation : animations.get(i)) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            animation.update(delta);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Update failed: " + animation + "\nError:", e);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private static void executeToRemove() {
         if (removeAll) {
             animations.clear();
             removeAll = false;
@@ -80,16 +101,6 @@ public abstract class Animation {
                 }
             }
             toRemove.clear();
-        }
-        for (int i : levels) {
-            for (final Animation animation : animations.get(i)) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        animation.update(delta);
-                    }
-                });
-            }
         }
     }
 
@@ -132,7 +143,10 @@ public abstract class Animation {
      * @return amount of created Animations
      */
     public static int count() {
-        return animations.size();
+        int count = 0;
+        for (int i = 0; i < levels.size(); i++)
+            count += animations.get(levels.get(i)).size();
+        return count;
     }
 
     /**
@@ -154,6 +168,7 @@ public abstract class Animation {
 
     /**
      * Representation of an Animation Object like this "ClassName : key=Number | Number Animations with keys=[key1, key2, ..., keyN]"
+     *
      * @return String that represents this Object
      */
     @Override
@@ -164,4 +179,5 @@ public abstract class Animation {
         return getClass().getSimpleName() + " : key=" + z + " | " + count() +
                 " Animations with keys=[" + (ls.isEmpty() ? "" : ls.substring(2)) + "]";
     }
+
 }

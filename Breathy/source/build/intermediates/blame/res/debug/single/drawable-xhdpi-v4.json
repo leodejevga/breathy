@@ -1,7 +1,7 @@
 [
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\notification_bg_low_normal.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\notification_bg_low_normal.9.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_share_mtrl_alpha.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_menu_share_mtrl_alpha.png"
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_radio_to_on_mtrl_000.png",
@@ -12,8 +12,8 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_tab_indicator_mtrl_alpha.9.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_text_select_handle_left_mtrl_light.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_text_select_handle_left_mtrl_light.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_text_select_handle_left_mtrl_light.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_text_select_handle_left_mtrl_light.png"
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_textfield_search_default_mtrl_alpha.9.png",
@@ -24,6 +24,7 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_scrubber_track_mtrl_alpha.9.png"
     },
     {
+<<<<<<< HEAD
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_switch_track_mtrl_alpha.9.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_switch_track_mtrl_alpha.9.png"
     },
@@ -34,10 +35,14 @@
     {
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_textfield_search_default_mtrl_alpha.9.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_textfield_search_default_mtrl_alpha.9.png"
+=======
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_switch_track_mtrl_alpha.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_switch_track_mtrl_alpha.9.png"
+>>>>>>> master
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_switch_to_on_mtrl_00012.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_btn_switch_to_on_mtrl_00012.9.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_half_black_36dp.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_half_black_36dp.png"
     },
     {
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_text_select_handle_left_mtrl_light.png",
@@ -48,8 +53,13 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_btn_switch_to_on_mtrl_00012.9.png"
     },
     {
+<<<<<<< HEAD
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_switch_track_mtrl_alpha.9.png",
         "source": "C:\\Users\\Var\\.android\\build-cache\\f18ac88d560b197436eb97a0bc331c0b82566f98\\output\\res\\drawable-xhdpi-v4\\abc_switch_track_mtrl_alpha.9.png"
+=======
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_black_36dp.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_black_36dp.png"
+>>>>>>> master
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_textfield_default_mtrl_alpha.9.png",
@@ -60,6 +70,7 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_textfield_activated_mtrl_alpha.9.png"
     },
     {
+<<<<<<< HEAD
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_radio_to_on_mtrl_000.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_btn_radio_to_on_mtrl_000.png"
     },
@@ -70,12 +81,17 @@
     {
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_focused_holo.9.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_list_focused_holo.9.png"
+=======
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_text_select_handle_middle_mtrl_light.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_text_select_handle_middle_mtrl_light.png"
+>>>>>>> master
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_half_black_16dp.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_half_black_16dp.png"
     },
     {
+<<<<<<< HEAD
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_switch_to_on_mtrl_00001.9.png",
         "source": "C:\\Users\\Var\\.android\\build-cache\\f18ac88d560b197436eb97a0bc331c0b82566f98\\output\\res\\drawable-xhdpi-v4\\abc_btn_switch_to_on_mtrl_00001.9.png"
     },
@@ -86,6 +102,14 @@
     {
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_textfield_default_mtrl_alpha.9.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_textfield_default_mtrl_alpha.9.png"
+=======
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_cut_mtrl_alpha.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_menu_cut_mtrl_alpha.png"
+    },
+    {
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_spinner_mtrl_am_alpha.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_spinner_mtrl_am_alpha.9.png"
+>>>>>>> master
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\notification_bg_low_pressed.9.png",
@@ -96,14 +120,20 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_list_focused_holo.9.png"
     },
     {
+<<<<<<< HEAD
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_check_to_on_mtrl_000.png",
         "source": "C:\\Users\\Var\\.android\\build-cache\\f18ac88d560b197436eb97a0bc331c0b82566f98\\output\\res\\drawable-xhdpi-v4\\abc_btn_check_to_on_mtrl_000.png"
+=======
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_scrubber_control_off_mtrl_alpha.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_scrubber_control_off_mtrl_alpha.png"
+>>>>>>> master
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_005.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_005.png"
     },
     {
+<<<<<<< HEAD
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_005.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_005.png"
     },
@@ -112,6 +142,8 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_black_16dp.png"
     },
     {
+=======
+>>>>>>> master
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_textfield_search_activated_mtrl_alpha.9.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_textfield_search_activated_mtrl_alpha.9.png"
     },
@@ -124,6 +156,7 @@
         "source": "C:\\Users\\Var\\.android\\build-cache\\f18ac88d560b197436eb97a0bc331c0b82566f98\\output\\res\\drawable-xhdpi-v4\\notification_bg_normal_pressed.9.png"
     },
     {
+<<<<<<< HEAD
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_half_black_48dp.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_half_black_48dp.png"
     },
@@ -372,16 +405,18 @@
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_btn_switch_to_on_mtrl_00001.9.png"
     },
     {
+=======
+>>>>>>> master
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ab_share_pack_mtrl_alpha.9.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ab_share_pack_mtrl_alpha.9.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_divider_mtrl_alpha.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_list_divider_mtrl_alpha.9.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_half_black_48dp.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_half_black_48dp.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_selector_disabled_holo_light.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_list_selector_disabled_holo_light.9.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_divider_mtrl_alpha.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_list_divider_mtrl_alpha.9.png"
     },
     {
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_focused_holo.9.png",
@@ -396,30 +431,11 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_text_select_handle_middle_mtrl_dark.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_commit_search_api_mtrl_alpha.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_ic_commit_search_api_mtrl_alpha.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_selector_disabled_holo_light.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_list_selector_disabled_holo_light.9.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_scrubber_control_off_mtrl_alpha.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_scrubber_control_off_mtrl_alpha.png"
-    },
-    {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_000.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_000.png"
-    },
-    {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_cut_mtrl_alpha.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_ic_menu_cut_mtrl_alpha.png"
-    },
-    {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\notification_bg_normal_pressed.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\notification_bg_normal_pressed.9.png"
-    },
-    {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_check_to_on_mtrl_000.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_btn_check_to_on_mtrl_000.png"
-    },
-    {
+<<<<<<< HEAD
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_divider_mtrl_alpha.9.png",
         "source": "C:\\Users\\Var\\.android\\build-cache\\f18ac88d560b197436eb97a0bc331c0b82566f98\\output\\res\\drawable-xhdpi-v4\\abc_list_divider_mtrl_alpha.9.png"
     },
@@ -438,10 +454,14 @@
     {
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_black_36dp.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_black_36dp.png"
+=======
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_copy_mtrl_am_alpha.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_menu_copy_mtrl_am_alpha.png"
+>>>>>>> master
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_copy_mtrl_am_alpha.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_ic_menu_copy_mtrl_am_alpha.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_selectall_mtrl_alpha.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_menu_selectall_mtrl_alpha.png"
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_cab_background_top_mtrl_alpha.9.png",
@@ -456,12 +476,8 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_text_select_handle_right_mtrl_light.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_paste_mtrl_am_alpha.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_ic_menu_paste_mtrl_am_alpha.png"
-    },
-    {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_half_black_16dp.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_half_black_16dp.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_commit_search_api_mtrl_alpha.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_commit_search_api_mtrl_alpha.png"
     },
     {
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_copy_mtrl_am_alpha.png",
@@ -476,26 +492,27 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_popup_background_mtrl_mult.9.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_scrubber_track_mtrl_alpha.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_scrubber_track_mtrl_alpha.9.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_pressed_holo_light.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_list_pressed_holo_light.9.png"
+    },
+    {
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_pressed_holo_dark.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_list_pressed_holo_dark.9.png"
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_switch_to_on_mtrl_00001.9.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_btn_switch_to_on_mtrl_00001.9.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_selector_disabled_holo_dark.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_list_selector_disabled_holo_dark.9.png"
-    },
-    {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_longpressed_holo.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_list_longpressed_holo.9.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_000.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_000.png"
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_black_48dp.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_black_48dp.png"
     },
     {
+<<<<<<< HEAD
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\notification_bg_low_pressed.9.png",
         "source": "C:\\Users\\Var\\.android\\build-cache\\f18ac88d560b197436eb97a0bc331c0b82566f98\\output\\res\\drawable-xhdpi-v4\\notification_bg_low_pressed.9.png"
     },
@@ -522,6 +539,10 @@
     {
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_tab_indicator_mtrl_alpha.9.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_tab_indicator_mtrl_alpha.9.png"
+=======
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_check_to_on_mtrl_000.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_btn_check_to_on_mtrl_000.png"
+>>>>>>> master
     },
     {
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_scrubber_primary_mtrl_alpha.9.png",
@@ -544,14 +565,15 @@
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\notification_bg_normal_pressed.9.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_cab_background_top_mtrl_alpha.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_cab_background_top_mtrl_alpha.9.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_longpressed_holo.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_list_longpressed_holo.9.png"
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\notify_panel_notification_icon_bg.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\notify_panel_notification_icon_bg.png"
     },
     {
+<<<<<<< HEAD
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_black_48dp.png",
         "source": "C:\\Users\\Var\\.android\\build-cache\\f18ac88d560b197436eb97a0bc331c0b82566f98\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_black_48dp.png"
     },
@@ -578,12 +600,17 @@
     {
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\notification_bg_low_pressed.9.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\notification_bg_low_pressed.9.png"
+=======
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_check_to_on_mtrl_015.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_btn_check_to_on_mtrl_015.png"
+>>>>>>> master
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_btn_radio_to_on_mtrl_015.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_btn_radio_to_on_mtrl_015.png"
     },
     {
+<<<<<<< HEAD
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_share_mtrl_alpha.png",
         "source": "C:\\Users\\Var\\.android\\build-cache\\f18ac88d560b197436eb97a0bc331c0b82566f98\\output\\res\\drawable-xhdpi-v4\\abc_ic_menu_share_mtrl_alpha.png"
     },
@@ -598,14 +625,22 @@
     {
         "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_text_select_handle_right_mtrl_dark.png",
         "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_text_select_handle_right_mtrl_dark.png"
+=======
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\notification_bg_normal.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\notification_bg_normal.9.png"
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\notify_panel_notification_icon_bg.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\notify_panel_notification_icon_bg.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_text_select_handle_right_mtrl_dark.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_text_select_handle_right_mtrl_dark.png"
+>>>>>>> master
     },
     {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_textfield_search_activated_mtrl_alpha.9.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_textfield_search_activated_mtrl_alpha.9.png"
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_list_selector_disabled_holo_dark.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_list_selector_disabled_holo_dark.9.png"
+    },
+    {
+        "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_menu_hardkey_panel_mtrl_mult.9.png",
+        "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\abc_menu_hardkey_panel_mtrl_mult.9.png"
     },
     {
         "merged": "D:\\Dokumente\\Eclipse Workspace\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_menu_selectall_mtrl_alpha.png",
@@ -614,10 +649,6 @@
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\notification_bg_low_normal.9.png",
         "source": "C:\\Users\\Leo\\.android\\build-cache\\522d684a510b10a5e2294d6e200786ae55769691\\output\\res\\drawable-xhdpi-v4\\notification_bg_low_normal.9.png"
-    },
-    {
-        "merged": "D:\\ProjektArbeit\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_ic_star_black_48dp.png",
-        "source": "C:\\Users\\mohse\\.android\\build-cache\\1a2a0196393dd9219c92d3f7ceb6eb216aef846e\\output\\res\\drawable-xhdpi-v4\\abc_ic_star_black_48dp.png"
     },
     {
         "merged": "C:\\Programming\\Projects\\breathy\\Breathy\\source\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\abc_text_select_handle_left_mtrl_dark.png",
