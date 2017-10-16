@@ -181,7 +181,8 @@ public class Game extends Activity implements OnClickListener {
     }
 
     private String getRemainingTimeString(){
-        PlanManager.update();
+        AppState.recordData = true;
+        //PlanManager.update();
         long seconds = PlanManager.getDuration() / 1000;
         return (seconds / 60 != 0 ? (seconds / 60) + "min " : "")
                 + (seconds != 0 ? seconds % 60 + "s" : "");
