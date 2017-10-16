@@ -63,7 +63,8 @@ public abstract class BreathData {
      * @param observer the observer
      */
     public static void addObserver(IObserver observer) {
-        BreathData.observer.add(observer);
+        if(!BreathData.observer.contains(observer))
+            BreathData.observer.add(observer);
     }
 
     public static boolean removeObserver(IObserver observer) {
