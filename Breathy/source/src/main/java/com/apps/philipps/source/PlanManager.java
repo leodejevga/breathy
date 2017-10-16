@@ -299,7 +299,7 @@ public abstract class PlanManager implements Serializable {
 
 
         private void pause() {
-            paused = false;
+            paused = true;
         }
 
         private void resume() {
