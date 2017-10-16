@@ -2,8 +2,8 @@ package com.apps.philipps.fade;
 
 import android.content.Context;
 import android.support.annotation.RawRes;
-import com.apps.philipps.source.implementations.BreathyGame;
 
+import com.apps.philipps.source.implementations.BreathyGame;
 public class Fade extends BreathyGame {
     Context context;
 

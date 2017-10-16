@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_activity_transparent">Transparent Activity</string>
-    <string name="transparency_notification_title_template">Transparency (Titel): %1$s</string>
+    <string name="title">Fade</string>
+    <string name="remaining_time">Time Remaining: </string>
+    <string name="com.apps.philipps.fade.no_plan_selected">No Breathplan found!</string>
+    <string name="main_start_exercise">Start Exercise</string>
+    <string name="main_stop_exercise">Stop Exercise</string>
+    <string name="main_pause_exercise">Pause Exercise</string>
+    <string name="main_continue_exercise">Continue Exercise</string>
+    <string name="transparency_notification_title_template">Transparency (Title): %1$s</string>
     <string name="notification_pause">Pause</string>
     <string name="notification_play">Play</string>
     <string name="notification_stop">Stop</string>
     <string name="notification_exercise_runnung">Exercise is running</string>
-    <string name="notification_exercise_paused">Exercies paused</string>
-    <string name="custom_color">Costum color</string>
-    <string name="color_of_fog">Color of the fok</string>
+    <string name="notification_exercise_paused">Exercise paused</string>
+    <string name="custom_color">Custom color</string>
+    <string name="color_of_fog">Color of the fog</string>
     <string name="red">Red</string>
     <string name="green">Green</string>
     <string name="blue">Blue</string>

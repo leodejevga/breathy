@@ -215,15 +215,18 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtColorPreview"
+                <View
+                    android:id="@+id/vwColorPreview"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
-                    android:layout_weight="1"
-                    android:foreground="@android:color/black" />
+                    android:layout_weight="1" />
 
             </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
         </LinearLayout>
     </ScrollView>
@@ -236,14 +239,14 @@
         tools:gravity="bottom">
 
         <Button
-            android:id="@+id/btnCancel"
+            android:id="@+id/btnCancelOptions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cancel" />
 
         <Button
-            android:id="@+id/btnSubmit"
+            android:id="@+id/btnSubmitOptions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
