@@ -20,6 +20,7 @@ import java.io.File;
 public class AppState {
     public final static String PLAN_STORAGE = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator +"PlanManager.pm";
     public final static boolean simulateBreathy = true; //Debug purpose
+    public final static boolean DEVELOPER = true;
 
 
     // Storage Permissions

@@ -246,8 +246,15 @@ public abstract class PlanManager implements Serializable {
             return options.get(currentOption).out;
         }
 
+        /**
+         * Breaths per second
+         *
+         * @return breaths per second
+         */
         public int getFrequency() {
-            return options.get(currentOption).frequency;
+            if (options.size() > currentOption && currentOption >= 0)
+                return options.get(currentOption).frequency;
+            return 0;
         }
 
         public long getCurrentDuration() {
@@ -351,11 +358,11 @@ public abstract class PlanManager implements Serializable {
                         && p.currentTime == this.currentTime
                         && p.delta == this.delta
                         && p.running == this.running)
-                    for (int i = 0 ; i < this.options.size(); i++){
+                    for (int i = 0; i < this.options.size(); i++) {
                         if (p.getOption(i).compareTo(this.getOption(i)) != 0)
                             return 1;
                     }
-                    return 0;
+                return 0;
             }
             return -1;
         }

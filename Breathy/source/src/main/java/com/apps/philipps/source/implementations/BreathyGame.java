@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.source.interfaces.IGame;
 
 /**
@@ -39,12 +40,11 @@ public abstract class BreathyGame implements IGame {
 
     @Override
     public boolean buy(Context context) {
-        if(!bought) {
+        if (!bought) {
             bought = Coins.buy(price, context);
-            if(bought)
+            if (bought)
                 game.message("Congratulations! You bought " + name);
-        }
-        else return false;
+        } else return false;
 
         return bought;
     }
@@ -57,22 +57,24 @@ public abstract class BreathyGame implements IGame {
     @Override
     public boolean startGame() {
         AppState.inGame = true;
-        if(bought) {
-            if(!game.start())
-                game.message("Game " + name + " could not started");
-        }
-        else
+        if (!bought) {
             game.message("The game " + name + " was not bought");
+        } else if (PlanManager.getCurrentPlan() == null) {
+            game.message("Please activate a Plan");
+        } else if (!game.start())
+            game.message("Game " + name + " could not started");
         return bought;
     }
+
     @Override
     public boolean startOptions() {
-        if(bought)
+        if (bought)
             options.start();
         else
             game.message("The game " + name + " was not bought");
         return bought;
     }
+
     @Override
     public String toString() {
         return name;
