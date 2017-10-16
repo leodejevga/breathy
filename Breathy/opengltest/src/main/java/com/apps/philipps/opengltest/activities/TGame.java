@@ -89,9 +89,8 @@ public class TGame extends Activity3D {
 
     @Override
     protected void onPause() {
-        renderer3D.gameEngine.pause(renderer3D.gameEngine.isRunning());
         super.onPause();
-
+        renderer3D.gameEngine.pause(renderer3D.gameEngine.isRunning());
     }
 
     @Override

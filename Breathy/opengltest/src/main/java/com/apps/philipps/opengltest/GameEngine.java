@@ -36,6 +36,7 @@ public class GameEngine {
     private int numberOfEnemies = 2;
     private float minDistanceToMainCar = 3f;
     private boolean isRunning = true;
+    private boolean failed = false;
 
     public CollisionDetectionThread collisionDetectionThread;
     private Context mActivityContext;
@@ -99,8 +100,10 @@ public class GameEngine {
             SPEED = MIN_SPEED;
             if (isBackgroundMusicPlaying) {
                 playCrashMusic();
-                if (Backend.score > 0)
-                    Backend.score--;
+                if (Backend.score > 0) {
+                    Backend.score = Backend.score / 2;
+                    failed = true;
+                }
             }
         }
         car.draw(deltaTime);
@@ -168,7 +171,7 @@ public class GameEngine {
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire5enemy, R.drawable.tiretexture, false);
         newEnemy.setCarTireModel(mActivityContext, R.raw.tire6enemy, R.drawable.tiretexture, false);
 
-        newEnemy.setCarBodyPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
+        newEnemy.setCarBodyPosition(new Vector(random.nextFloat() * streetSize, random.nextFloat() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
         while (enemiesOverlapped(newEnemy)) {
             newEnemy.setCarBodyPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
         }
@@ -372,13 +375,13 @@ public class GameEngine {
                 if (enemy.getCounter() > timeToStartTurn) {
                     int timeToEndTurn = 200;
                     if (enemy.isTurningLeft()) {
-                        enemy.turnLeft(0.01f * r);
+                        enemy.turnLeft(0.02f * r);
                         if (enemy.getCounter() > timeToEndTurn) {
                             enemy.setCounter(0);
                             enemy.setTurningLeft(false);
                         }
                     } else if (enemy.isTurningRight()) {
-                        enemy.turnRight(0.01f * r);
+                        enemy.turnRight(0.02f * r);
                         if (enemy.getCounter() > timeToEndTurn) {
                             enemy.setCounter(0);
                             enemy.setTurningRight(false);
@@ -391,7 +394,10 @@ public class GameEngine {
                     while (enemiesOverlapped(enemy)) {
                         enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
                     }
-                    Backend.score++;
+                    if (failed)
+                        failed = false;
+                    else
+                        Backend.score++;
                 }
                 enemy.renewBoundingBoxPosition();
                 if (car.getCarBodyObject3D() != null
