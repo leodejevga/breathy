@@ -1,6 +1,7 @@
 package com.apps.philipps.fade;
 
 import android.annotation.TargetApi;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -78,10 +79,8 @@ public class TransparencyService extends Service{
                 PlanManager.start();
                 Log.i(TAG, "PlanManager.start() - isActive(): " + PlanManager.isActive());
 
-                int fogColor = intent.getIntExtra(TransparencyService.KEY_FOG_COLOR, getResources().getColor(R.color.standardColor3));
-                if (fogColor == getResources().getColor(R.color.standardColor1)) {
-                    Log.i(TAG, "FogColor not changed!?");
-                }
+                int fogColor = TransparencyService.serviceIntent.getIntExtra(TransparencyService.KEY_FOG_COLOR, getResources().getColor(R.color.standardColor3));
+
                 initTransparencyObjects(fogColor);
 
                 startUpdateThread();
@@ -123,6 +122,7 @@ public class TransparencyService extends Service{
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "onCreate()");
+
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -166,9 +166,16 @@ public class TransparencyService extends Service{
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                               try {
                                     setNewAlpha();
                                     updateView();
                                     startOrUpdateTransparencyNotification();
+                               } catch (NullPointerException n){
+                                   Log.e(TAG, "### NullPointerException in startOrUpdateTransparencyNotification()");
+                                   setThreadRunning(false);
+                                   TransparencyService.threadAlive = false;
+                                   TransparencyService.super.onDestroy();
+                               }
                                 }
                             });
                             Thread.sleep(500);
@@ -186,6 +193,7 @@ public class TransparencyService extends Service{
                         e1.printStackTrace();
                     }
                 }
+                // startOrUpdateTransparencyNotification();
             }
         }.start();
     }
@@ -193,7 +201,10 @@ public class TransparencyService extends Service{
     @Override
     public void onDestroy() {
         Log.i(TAG, "onDestroy()");
-        TransparencyService.threadAlive = false;
+        if (isThreadAlive()) {
+            TransparencyService.threadAlive = false;
+            stopTransparencyNotification();
+        }
         setThreadRunning(false);
 
         // Stop Breathplan
@@ -201,9 +212,8 @@ public class TransparencyService extends Service{
 
         removeAllViews();
 
-        stopTransparencyNotification();
 
-        notifyFadeGameActivity(EXTRA_STATE_STOPPED);
+        notifyFadeGameActivity(TransparencyService.EXTRA_STATE_STOPPED);
 
         super.onDestroy();
     }
@@ -214,7 +224,6 @@ public class TransparencyService extends Service{
         intent.setAction(Game.FADE_BROADCAST_R_INTENT_FILTER);
         intent.putExtra(KEY_NEXT_STATE, nextState);
 
-        Log.i(TAG, "sendBroadcast(): " + nextState);
         sendBroadcast(intent);
     }
 
@@ -226,14 +235,35 @@ public class TransparencyService extends Service{
         wm = null;
     }
     private void startOrUpdateTransparencyNotification() {
-        Log.v(TAG, "startOrUpdateTransparencyNotification()");
-        if (isThreadRunning()) {
-            // Thread laeuft > M�glichkeit den Thead zu pausieren in Notification einfuegen
-            TransparencyNotification.notify(this, TransparencyNotification.NOTIFICATION_PAUSE ,getString(R.string.notification_exercise_runnung), getPractiseInformation(), 1);
+        if (PlanManager.isActive()) {
+                if (isThreadRunning()) {
+                    // Thread laeuft > M�glichkeit den Thead zu pausieren in Notification einfuegen
+                    TransparencyNotification.notify(this, TransparencyNotification.NOTIFICATION_PAUSE ,getString(R.string.notification_exercise_runnung), getPractiseInformation(), 1);
+                } else {
+                    // Thread laeuft nicht > M�glichkeit den Thead zu fortzusetzen in Notification einfuegen
+                    TransparencyNotification.notify(this, TransparencyNotification.NOTIFICATION_CONTINUE ,getString(R.string.notification_exercise_paused), getPractiseInformation(), 1);
+                }
         } else {
-            // Thread laeuft nicht > M�glichkeit den Thead zu fortzusetzen in Notification einfuegen
-            TransparencyNotification.notify(this, TransparencyNotification.NOTIFICATION_CONTINUE ,getString(R.string.notification_exercise_paused), getPractiseInformation(), 1);
+                // Übung abgeschlossen
+                Log.i(TAG, "startOrUpdateTransparencyNotification() - Übung abgeschlossen");
+                if (threadAlive){
+                    threadAlive = false;
+                    threadRunning = false;
+
+                    setNewAlpha();
+
+                    PlanManager.stop();
+
+                    // removeAllViews();
+
+                    notifyFadeGameActivity(TransparencyService.EXTRA_STATE_STOPPED);
+
+                    TransparencyNotification.notify(this, TransparencyNotification.NOTIFICATION_FINISHED ,getString(R.string.notification_exercise_finished), getString(R.string.notification_exercise_finished_long), 1);
+
+                    onDestroy();
+                }
         }
+
     }
     private void stopTransparencyNotification() {
         Log.i(TAG, "stopTransparencyNotification()");
@@ -241,14 +271,15 @@ public class TransparencyService extends Service{
     }
 
     private String getRemainingTimeString(){
+        PlanManager.update();
         long seconds = PlanManager.getDuration() / 1000;
-        return (seconds / 60 != 0 ? (seconds / 60) + ":" : "")
-                + (seconds != 0 ? seconds % 60 + ":" : "")
-                + PlanManager.getDuration() % 1000;
+        return (seconds / 60 != 0 ? (seconds / 60) + "min " : "")
+                + (seconds != 0 ? seconds % 60 + "s" : "");
+        //        + PlanManager.getDuration() % 1000;
     }
 
     private String getPractiseInformation() {
-        return (100 - TransparencyService.getAlpha()) + "% - " + BreathInterpreter.getStatus().getError() + " - " + getRemainingTimeString();
+         return (100 - TransparencyService.getAlpha()) + "% - " + BreathInterpreter.getStatus().getError() + " - " + getRemainingTimeString();
     }
 
     private void runOnUiThread(Runnable runnable) {
@@ -256,33 +287,36 @@ public class TransparencyService extends Service{
     }
 
     public void setNewAlpha() {
-        switch(BreathInterpreter.getStatus().getError()){
-            case VeryGood:
-                currentAlpha = 0.0f;
-                break;
-            case Good:
-                currentAlpha = 16.6f;
-                break;
-            case Ok:
-                currentAlpha = 33.3f;
-                break;
-            case NotOk:
-                currentAlpha = 50.0f;
-                break;
-            case NotGood:
-                currentAlpha = 66.6f;
-                break;
-            case Bad:
-                currentAlpha = 83.3f;
-                break;
-            case VeryBad:
-                currentAlpha = 100.0f;
-                break;
-            default:
-                Log.e(TAG, "Kein Status!");
-                currentAlpha = 100.0f;
+        if (!threadRunning || !threadAlive){
+            currentAlpha = 0.0f;
+        } else {
+            switch(BreathInterpreter.getStatus().getError()){
+                case VeryGood:
+                    currentAlpha = 0.0f;
+                    break;
+                case Good:
+                    currentAlpha = 16.6f;
+                    break;
+                case Ok:
+                    currentAlpha = 33.3f;
+                    break;
+                case NotOk:
+                    currentAlpha = 50.0f;
+                    break;
+                case NotGood:
+                    currentAlpha = 66.6f;
+                    break;
+                case Bad:
+                    currentAlpha = 83.3f;
+                    break;
+                case VeryBad:
+                    currentAlpha = 100.0f;
+                    break;
+                default:
+                    Log.e(TAG, "Kein Status!");
+                    currentAlpha = 100.0f;
+            }
         }
-
         fullscreenFogView.setAlpha(currentAlpha / 100);
     }
     private void updateView() {

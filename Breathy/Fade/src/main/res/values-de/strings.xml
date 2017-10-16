@@ -2,6 +2,10 @@
 <resources>
     <string name="title">Fade</string>
     <string name="no_plan_selected">Kein Atemplan gefunden!</string>
+    <string name="exercise_state">Übungsstatus: </string>
+    <string name="running">Läuft</string>
+    <string name="paused">Pausiert</string>
+    <string name="stopped">Gestoppt / Abgeschlossen</string>
     <string name="remaining_time">Verbleibende Zeit: </string>
     <string name="main_start_exercise">Übung starten</string>
     <string name="main_stop_exercise">Übung stoppen</string>
@@ -14,6 +18,8 @@
     <string name="notification_stop">Stop</string>
     <string name="notification_exercise_runnung">Übung läuft</string>
     <string name="notification_exercise_paused">Übung pausiert</string>
+    <string name="notification_exercise_finished">Übung abgeschlossen</string>
+    <string name="notification_exercise_finished_long">Ihre Übungseinheit ist abgeschlossen. Weiter so!</string>
     <string name="custom_color">Benutzerdefinierte Farbe</string>
     <string name="color_of_fog">Farbe des Nebels</string>
     <string name="red">Rot</string>

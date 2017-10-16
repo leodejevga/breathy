@@ -30,9 +30,11 @@ public class TransparencyNotification {
 
     public static final int NOTIFICATION_PAUSE = 2001;
     public static final int NOTIFICATION_CONTINUE = 2002;
+    public static final int NOTIFICATION_FINISHED = 5001;
     public static final int PANDING_INTENT_RQ_OPEN_MAIN = 2003;
     public static final int PANDING_INTENT_RQ_PAUSE_CONTINUE = 2004;
     public static final int PANDING_INTENT_RQ_STOP = 2005;
+    public static final int PANDING_INTENT_RQ_FINISHED = 2006;
 
 
     private static int pauseContinueDrawableID;
@@ -56,6 +58,8 @@ public class TransparencyNotification {
     public static void notify(final Context context, final int notificationState, final String notificationTitle, final String notificationText, final int number) {
         final Resources res = context.getResources();
 
+        NotificationCompat.Builder builder;
+
         // This image is used as the notification's large icon (thumbnail).
         // TODO: Remove this if your notification has no relevant thumbnail.
         // final Bitmap picture = BitmapFactory.decodeResource(res,
@@ -73,81 +77,135 @@ public class TransparencyNotification {
         PendingIntent piPauseContinueService;
 
         int notificationBarDrawable;
+        if (notificationState == NOTIFICATION_FINISHED) {
 
-        if (notificationState == NOTIFICATION_PAUSE) {
-            // ###### Pausieren des Services
-            pauseContinueDrawableID = R.drawable.ic_pause;
-            pauseContinueString = res.getString(R.string.notification_pause);
+            notificationBarDrawable = R.drawable.ic_stop;
 
-            serviceIntent = serviceIntent.putExtra(TransparencyService.KEY_NEXT_STATE, TransparencyService.EXTRA_STATE_PAUSED);
-            piPauseContinueService = PendingIntent.getService(context, PANDING_INTENT_RQ_PAUSE_CONTINUE, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder = new NotificationCompat.Builder(context)
 
-            notificationBarDrawable = R.drawable.ic_play; // Serivce ist currently running
-        } else { // notificationState == NOTIFICATION_CONTINUE
-            // ###### Service fortsetzen
-            pauseContinueDrawableID = R.drawable.ic_play;
-            pauseContinueString = res.getString(R.string.notification_play);
+                    // Set appropriate defaults for the notification light, sound,
+                    // and vibration.
+                    .setDefaults(0)
 
-            serviceIntent = serviceIntent.putExtra(TransparencyService.KEY_NEXT_STATE, TransparencyService.EXTRA_STATE_CONTINUE);
-            piPauseContinueService = PendingIntent.getService(context, PANDING_INTENT_RQ_PAUSE_CONTINUE, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    // Set required fields, including the small icon, the
+                    // notification title, and text.
+                    .setSmallIcon(notificationBarDrawable).setContentTitle(notificationTitle).setContentText(notificationText)
 
-            notificationBarDrawable = R.drawable.ic_pause; // Serivce ist currently NOT running
+                    // All fields below this line are optional.
+
+                    // Use a default priority (recognized on devices running Android
+                    // 4.1 or later)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+
+                    // Provide a large icon, shown with the notification in the
+                    // notification drawer on devices running Android 3.0 or later.
+                    // .setLargeIcon(picture)
+
+                    // Set ticker text (preview) information for this notification.
+                    .setTicker(notificationText)
+
+                    // Show a number. This is useful when stacking notifications of
+                    // a single type.
+                    // .setNumber(number)
+
+                    // If this notification relates to a past or upcoming event, you
+                    // should set the relevant time information using the setWhen
+                    // method below. If this call is omitted, the notification's
+                    // timestamp will by set to the time at which it was shown.
+                    // TODO: Call setWhen if this notification relates to a past or
+                    // upcoming event. The sole argument to this method should be
+                    // the notification timestamp in milliseconds.
+                    // .setWhen(...)
+
+                    // Set the pending intent to be initiated when the user touches
+                    // the notification.
+                    .setContentIntent(piOpenMainActivity)
+
+                    // Example additional actions for this notification. These will
+                    // only show on devices running Android 4.1 or later, so you
+                    // should ensure that the activity in this notification's
+                    // content intent provides access to the same actions in
+                    // another way.
+
+                    // Automatically dismiss the notification when it is touched.
+                    .setAutoCancel(true);
+
+        } else {
+            if (notificationState == NOTIFICATION_PAUSE) {
+                // ###### Pausieren des Services
+                pauseContinueDrawableID = R.drawable.ic_pause;
+                pauseContinueString = res.getString(R.string.notification_pause);
+
+                serviceIntent = serviceIntent.putExtra(TransparencyService.KEY_NEXT_STATE, TransparencyService.EXTRA_STATE_PAUSED);
+                piPauseContinueService = PendingIntent.getService(context, PANDING_INTENT_RQ_PAUSE_CONTINUE, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                notificationBarDrawable = R.drawable.ic_play; // Serivce ist currently running
+            } else { // notificationState == NOTIFICATION_CONTINUE
+                // ###### Service fortsetzen
+                pauseContinueDrawableID = R.drawable.ic_play;
+                pauseContinueString = res.getString(R.string.notification_play);
+
+                serviceIntent = serviceIntent.putExtra(TransparencyService.KEY_NEXT_STATE, TransparencyService.EXTRA_STATE_CONTINUE);
+                piPauseContinueService = PendingIntent.getService(context, PANDING_INTENT_RQ_PAUSE_CONTINUE, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                notificationBarDrawable = R.drawable.ic_pause; // Serivce ist currently NOT running
+            }
+
+            // ###### Service stoppen
+            final PendingIntent piStopService = PendingIntent.getService(context, PANDING_INTENT_RQ_STOP, serviceIntent.putExtra(TransparencyService.KEY_NEXT_STATE, TransparencyService.EXTRA_STATE_STOPPED), PendingIntent.FLAG_UPDATE_CURRENT);
+
+            builder = new NotificationCompat.Builder(context)
+
+                    // Set appropriate defaults for the notification light, sound,
+                    // and vibration.
+                    .setDefaults(0)
+
+                    // Set required fields, including the small icon, the
+                    // notification title, and text.
+                    .setSmallIcon(notificationBarDrawable).setContentTitle(notificationTitle).setContentText(notificationText)
+
+                    // All fields below this line are optional.
+
+                    // Use a default priority (recognized on devices running Android
+                    // 4.1 or later)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+
+                    // Provide a large icon, shown with the notification in the
+                    // notification drawer on devices running Android 3.0 or later.
+                    // .setLargeIcon(picture)
+
+                    // Set ticker text (preview) information for this notification.
+                    .setTicker(notificationText)
+
+                    // Show a number. This is useful when stacking notifications of
+                    // a single type.
+                    // .setNumber(number)
+
+                    // If this notification relates to a past or upcoming event, you
+                    // should set the relevant time information using the setWhen
+                    // method below. If this call is omitted, the notification's
+                    // timestamp will by set to the time at which it was shown.
+                    // TODO: Call setWhen if this notification relates to a past or
+                    // upcoming event. The sole argument to this method should be
+                    // the notification timestamp in milliseconds.
+                    // .setWhen(...)
+
+                    // Set the pending intent to be initiated when the user touches
+                    // the notification.
+                    .setContentIntent(piOpenMainActivity)
+
+                    // Example additional actions for this notification. These will
+                    // only show on devices running Android 4.1 or later, so you
+                    // should ensure that the activity in this notification's
+                    // content intent provides access to the same actions in
+                    // another way.
+                    .addAction(pauseContinueDrawableID, pauseContinueString, piPauseContinueService)
+                    .addAction(R.drawable.ic_stop, res.getString(R.string.notification_stop), piStopService)
+
+                    // Automatically dismiss the notification when it is touched.
+                    .setAutoCancel(false);
         }
 
-        // ###### Service stoppen
-        final PendingIntent piStopService = PendingIntent.getService(context, PANDING_INTENT_RQ_STOP, serviceIntent.putExtra(TransparencyService.KEY_NEXT_STATE, TransparencyService.EXTRA_STATE_STOPPED), PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // TODO Icon für Notification in der Statusleiste erstellen
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-
-                // Set appropriate defaults for the notification light, sound,
-                // and vibration.
-                .setDefaults(0)
-
-                // Set required fields, including the small icon, the
-                // notification title, and text.
-                .setSmallIcon(notificationBarDrawable).setContentTitle(notificationTitle).setContentText(notificationText)
-
-                // All fields below this line are optional.
-
-                // Use a default priority (recognized on devices running Android
-                // 4.1 or later)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-
-                // Provide a large icon, shown with the notification in the
-                // notification drawer on devices running Android 3.0 or later.
-                // .setLargeIcon(picture)
-
-                // Set ticker text (preview) information for this notification.
-                .setTicker(notificationText)
-
-                // Show a number. This is useful when stacking notifications of
-                // a single type.
-                // .setNumber(number)
-
-                // If this notification relates to a past or upcoming event, you
-                // should set the relevant time information using the setWhen
-                // method below. If this call is omitted, the notification's
-                // timestamp will by set to the time at which it was shown.
-                // TODO: Call setWhen if this notification relates to a past or
-                // upcoming event. The sole argument to this method should be
-                // the notification timestamp in milliseconds.
-                // .setWhen(...)
-
-                // Set the pending intent to be initiated when the user touches
-                // the notification.
-                .setContentIntent(piOpenMainActivity)
-
-                // Example additional actions for this notification. These will
-                // only show on devices running Android 4.1 or later, so you
-                // should ensure that the activity in this notification's
-                // content intent provides access to the same actions in
-                // another way.
-                .addAction(pauseContinueDrawableID, pauseContinueString, piPauseContinueService)
-                .addAction(R.drawable.ic_stop, res.getString(R.string.notification_stop), piStopService)
-
-                // Automatically dismiss the notification when it is touched.
-                .setAutoCancel(false);
 
         notify(context, builder.build());
     }

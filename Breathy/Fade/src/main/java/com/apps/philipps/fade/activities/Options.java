@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -15,6 +16,8 @@ import android.widget.ToggleButton;
 import com.apps.philipps.fade.R;
 
 public class Options extends Activity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
+    private final static String TAG = "fade.Options";
 
     private Button btnStandardColor1, btnStandardColor2, btnStandardColor3, btnStandardColor4, btnStandardColor5;
 
@@ -34,7 +37,7 @@ public class Options extends Activity implements SeekBar.OnSeekBarChangeListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fade_options);
 
-        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences("Fade.SharedPreferences", Context.MODE_PRIVATE);
 
         // Load Stored Values
         boolean isCustomColor = loadCustomColor();
@@ -144,6 +147,9 @@ public class Options extends Activity implements SeekBar.OnSeekBarChangeListener
         int red = sharedPref.getInt(getString(R.string.com_apps_philipps_fade_preference_key_red), 127);
         int green = sharedPref.getInt(getString(R.string.com_apps_philipps_fade_preference_key_green), 127);
         int blue = sharedPref.getInt(getString(R.string.com_apps_philipps_fade_preference_key_blue), 127);
+        if (red == 127 || blue == 127 || blue == 127) {
+            Log.w(TAG, "FogColor not changed!?");
+        }
         return Color.rgb(red, green, blue);
     }
     private boolean loadCustomColor(){

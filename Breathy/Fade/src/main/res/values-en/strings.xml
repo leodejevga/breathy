@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title">Fade</string>
-    <string name="remaining_time">Time Remaining: </string>
     <string name="com.apps.philipps.fade.no_plan_selected">No Breathplan found!</string>
+    <string name="exercise_state">Exercise-State: </string>
+    <string name="running">Running</string>
+    <string name="paused">Paused</string>
+    <string name="stopped">Stopped / Finished</string>
+    <string name="remaining_time">Time Remaining: </string>
     <string name="main_start_exercise">Start Exercise</string>
     <string name="main_stop_exercise">Stop Exercise</string>
     <string name="main_pause_exercise">Pause Exercise</string>
@@ -13,6 +17,9 @@
     <string name="notification_stop">Stop</string>
     <string name="notification_exercise_runnung">Exercise is running</string>
     <string name="notification_exercise_paused">Exercise paused</string>
+    <string name="notification_exercise_finished">Exercise finished</string>
+    <string name="notification_exercise_finished_long">You finished your Exercise. Great!</string>
+
     <string name="custom_color">Custom color</string>
     <string name="color_of_fog">Color of the fog</string>
     <string name="red">Red</string>

@@ -34,6 +34,7 @@ public class Game extends Activity implements OnClickListener {
     private boolean threadRunning;
 
     private TextView txtRemainingTime;
+    private TextView txtExerciseState;
 
     private Button btnStartPauseService;
     private Button btnStopService;
@@ -55,12 +56,14 @@ public class Game extends Activity implements OnClickListener {
             askForOverlayPermission();
         }
 
-        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences("Fade.SharedPreferences", Context.MODE_PRIVATE);
 
-        this.currentState = getServiceState();
-        initGUIComponents(this.currentState);
+        initGUIComponents();
 
         startUpdateThread();
+
+        this.currentState = getServiceState();
+        updateState(currentState);
 
         registerBroadCastReceiver();
     }
@@ -92,16 +95,15 @@ public class Game extends Activity implements OnClickListener {
         }
     }
 
-    private void initGUIComponents(int currentState) {
+    private void initGUIComponents() {
         txtRemainingTime = (TextView) findViewById(R.id.txtRemainingTime);
+        txtExerciseState = (TextView) findViewById(R.id.txtExerciseState);
 
         btnStartPauseService = (Button) findViewById(R.id.btnStartPauseService);
         btnStartPauseService.setOnClickListener(this);
 
         btnStopService = (Button) findViewById(R.id.btnStopService);
         btnStopService.setOnClickListener(this);
-
-        updateState(currentState);
     }
 
     private int getServiceState(){
@@ -162,12 +164,10 @@ public class Game extends Activity implements OnClickListener {
                     while (threadAlive) {
                         Thread.sleep(250);
                         while (threadRunning) {
-                            Thread.sleep(250);
+                            Thread.sleep(100);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.v(TAG, "PlanManager.getStatus(): " + PlanManager.getStatus());
-
                                     txtRemainingTime.setText(getRemainingTimeString());
                                 }
                             });
@@ -181,10 +181,11 @@ public class Game extends Activity implements OnClickListener {
     }
 
     private String getRemainingTimeString(){
+        PlanManager.update();
         long seconds = PlanManager.getDuration() / 1000;
-        return (seconds / 60 != 0 ? (seconds / 60) + ":" : "")
-                + (seconds != 0 ? seconds % 60 + ":" : "")
-                + PlanManager.getDuration() % 1000;
+        return (seconds / 60 != 0 ? (seconds / 60) + "min " : "")
+                + (seconds != 0 ? seconds % 60 + "s" : "");
+        //        + PlanManager.getDuration() % 1000;
     }
 
 
@@ -194,11 +195,15 @@ public class Game extends Activity implements OnClickListener {
             case TransparencyService.EXTRA_STATE_RUNNING:
                 threadRunning = true;
 
+                txtExerciseState.setText(getString(R.string.running));
+
                 btnStartPauseService.setText(getString(R.string.main_pause_exercise));
                 btnStopService.setVisibility(View.VISIBLE);
                 break;
             case TransparencyService.EXTRA_STATE_PAUSED:
                 threadRunning = false;
+
+                txtExerciseState.setText(getString(R.string.paused));
 
                 btnStartPauseService.setText(getString(R.string.main_continue_exercise));
                 btnStopService.setVisibility(View.VISIBLE);
@@ -206,7 +211,10 @@ public class Game extends Activity implements OnClickListener {
             case TransparencyService.EXTRA_STATE_STOPPED:
                 threadRunning = false;
 
+                txtExerciseState.setText(getString(R.string.stopped));
+
                 btnStartPauseService.setText(getString(R.string.main_start_exercise));
+                txtRemainingTime.setText("");
                 btnStopService.setVisibility(View.GONE);
                 break;
         }
@@ -262,6 +270,9 @@ public class Game extends Activity implements OnClickListener {
         int red = sharedPref.getInt(getString(R.string.com_apps_philipps_fade_preference_key_red), 127);
         int green = sharedPref.getInt(getString(R.string.com_apps_philipps_fade_preference_key_green), 127);
         int blue = sharedPref.getInt(getString(R.string.com_apps_philipps_fade_preference_key_blue), 127);
+        if (red == 127 || blue == 127 || blue == 127) {
+            Log.w(TAG, "FogColor not changed!?");
+        }
         return Color.argb(221, red, green, blue);
     }
 
