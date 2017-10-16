@@ -14,6 +14,8 @@ import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.GameObject2D;
 import com.apps.philipps.test.activities.Game;
 
+import org.xml.sax.helpers.AttributesImpl;
+
 import java.util.Random;
 
 
@@ -29,13 +31,24 @@ public abstract class GOFactory {
         ship.remove();
     }
 
+    public static abstract class GOAnimation extends Animation{
+        protected GameObject2D o;
+        protected ViewGroup game;
 
-    public static class Ship extends Animation {
+        public GOAnimation(int level){
+            super(level);
+        }
+        public void removeGO(){
+            game.removeView(o.getView());
+        }
+    }
+
+
+    public static class Ship extends GOAnimation {
         private GameObject2D engine;
-        private ViewGroup game;
-        private GameObject2D o;
 
         public Ship(Context context, Vector position, ViewGroup game) {
+            super(5);
             o = new GameObject2D(new ImageView(context), position);
             engine = new GameObject2D(new ImageView(context), position);
             ((ImageView) o.getView()).setImageResource(R.drawable.ship);
@@ -64,10 +77,8 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Enemy extends Animation {
-        private GameObject2D o;
+    public static class Enemy extends GOAnimation {
         private GameObject2D engine;
-        private ViewGroup game;
         private Game context;
 
         public Enemy(Game context, Vector position, ViewGroup game) {
@@ -101,6 +112,7 @@ public abstract class GOFactory {
             }
             if (!o.isMoving()) {
                 remove();
+                context.subCoin(3);
             }
         }
 
@@ -113,9 +125,7 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Laser extends Animation {
-        private GameObject2D o;
-        private ViewGroup game;
+    public static class Laser extends GOAnimation {
         private Game context;
 
         public Laser(Game context, int dest, ViewGroup game) {
@@ -172,9 +182,7 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Star extends Animation {
-        private GameObject2D o;
-        private ViewGroup game;
+    public static class Star extends GOAnimation {
         private Context context;
 
         public Star(Context context, Vector position, ViewGroup game) {
@@ -201,11 +209,9 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Explosion extends Animation {
-        private GameObject2D o;
+    public static class Explosion extends GOAnimation {
         public long start = System.currentTimeMillis();
         private long past;
-        private ViewGroup game;
         private Context context;
 
         public Explosion(Context context, Enemy enemy, final ViewGroup game) {
@@ -230,16 +236,14 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Cloud extends Animation {
-        private GameObject2D o;
-        private ViewGroup game;
+    public static class Cloud extends GOAnimation {
 
         public Cloud(Context context, Explosion explosion, ViewGroup game) {
             super(5);
             o = new GameObject2D(new ImageView(context), explosion.o);
             ((ImageView) o.getView()).setImageResource(R.drawable.cloud);
             o.setPosition(o.getPosition().add(new Vector(20, 30)));
-            o.setDestination(new Vector(-150, o.getPosition().Y));
+            o.setDestination(new Vector(-150, o.getPosition().get(2)));
             o.setSpeed(1000);
             game.addView(o.getView());
             this.game = game;
@@ -257,14 +261,12 @@ public abstract class GOFactory {
     }
 
 
-    public static class Goody extends Animation {
+    public static class Goody extends GOAnimation {
         public GameStats.Effect effect;
         public int intersectableIn = 100;
         private long start = 0;
         private boolean good;
-        private ViewGroup game;
         private Context context;
-        private GameObject2D o;
 
         public Goody(Context context, Enemy enemy, ViewGroup game, boolean good) {
             super(6);
@@ -334,11 +336,9 @@ public abstract class GOFactory {
         }
     }
 
-    public static class Shoot extends Animation {
+    public static class Shoot extends GOAnimation {
         private long past;
-        private ViewGroup game;
         private Context context;
-        private GameObject2D o;
 
         public Shoot(Context context, ViewGroup game) {
             super(4);
@@ -368,10 +368,9 @@ public abstract class GOFactory {
     //Animations_____________________
 
 
-    public static class LoopAnimationOn extends Animation {
+    public static class LoopAnimationOn extends GOAnimation {
         private Animated fade = new Animated(new Vector(1), new Vector(0), 2, true);
         private RelativeLayout o;
-        private ViewGroup game;
 
         public LoopAnimationOn(Context context, ViewGroup game) {
             super(7);
@@ -395,10 +394,9 @@ public abstract class GOFactory {
         }
     }
 
-    public static class LoopAnimationOff extends Animation {
+    public static class LoopAnimationOff extends GOAnimation {
         private Animated fade = new Animated(new Vector(0), new Vector(1), 2, true);
         private RelativeLayout o;
-        private ViewGroup game;
 
         public LoopAnimationOff(Context context, ViewGroup game) {
             super(7);

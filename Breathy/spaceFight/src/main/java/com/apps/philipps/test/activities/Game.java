@@ -108,7 +108,7 @@ public class Game extends Activity2D {
         }
         enemySpawned += loopTime;
         starSpawned += loopTime;
-        float comeAdd = (PlanManager.getCurrentPlan().getFrequency() - 10) * 4.8f;
+        float comeAdd = (PlanManager.getCurrentPlan().getFrequency()/1.1f) * 4.9f;
         if (enemySpawned > GameStats.enemyCome - comeAdd) {
             enemySpawned = 0;
             new GOFactory.Enemy(this, new Vector(getScreenWidth() - 50, getEnemyY()), game);

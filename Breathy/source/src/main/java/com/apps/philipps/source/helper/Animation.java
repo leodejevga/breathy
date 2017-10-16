@@ -12,6 +12,7 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
 public abstract class Animation {
     private Integer z;
     private final static String TAG = "Animation";
-    private static SparseArray<List<Animation>> animations = new SparseArray<>();
+    public static SparseArray<List<Animation>> animations = new SparseArray<>();
     private static List<Animation> toRemove = new ArrayList<>();
     private static List<Integer> levels = new ArrayList<>();
     private static boolean removeAll = false;
@@ -70,8 +71,6 @@ public abstract class Animation {
                     @Override
                     public void run() {
                         try {
-                            if(animation.getClass().getSimpleName().equals("Shoot"))
-                                Log.e(TAG, "Shoot");
                             animation.update(delta);
                         } catch (Exception e) {
                             Log.e(TAG, "Update failed: " + animation + "\nError:", e);
@@ -180,4 +179,5 @@ public abstract class Animation {
         return getClass().getSimpleName() + " : key=" + z + " | " + count() +
                 " Animations with keys=[" + (ls.isEmpty() ? "" : ls.substring(2)) + "]";
     }
+
 }
