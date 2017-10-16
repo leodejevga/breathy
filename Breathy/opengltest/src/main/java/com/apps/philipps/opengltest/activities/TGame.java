@@ -89,15 +89,14 @@ public class TGame extends Activity3D {
 
     @Override
     protected void onPause() {
-        super.onPause();
-        openGL.onPause();
         renderer3D.gameEngine.pause(renderer3D.gameEngine.isRunning());
+        super.onPause();
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Backend.life = 3;
         Backend.score = 0;
     }
 
@@ -105,7 +104,6 @@ public class TGame extends Activity3D {
     @Override
     protected void onResume() {
         super.onResume();
-        openGL.onResume();
     }
 
     class BackGroundTask extends
@@ -176,8 +174,13 @@ public class TGame extends Activity3D {
 
                             @Override
                             public void run() {
+                                PlanManager.update();
+                                long seconds = PlanManager.getDuration() / 1000;
+                                String left = (seconds / 60 != 0 ? (seconds / 60) + ":" : "")
+                                        + (seconds != 0 ? seconds % 60 + ":" : "")
+                                        + PlanManager.getDuration() % 1000;
                                 how_good.setText(BreathInterpreter.getStatus().getError().toString());
-                                highscore.setText("Life: " + Backend.life + " Best score: " + Backend.highscore);
+                                highscore.setText("Time left: " + left + " Best score: " + Backend.highscore);
                                 score.setText("Score: " + Backend.score);
                                 refreshChart();
                             }
@@ -191,15 +194,12 @@ public class TGame extends Activity3D {
 
                     @Override
                     public void run() {
-                        if (renderer3D.gameEngine.isWin()) {
-                            theend.setText("Congratulations !");
-                        } else {
-                            String text = "You need to breath better !";
-                            text = text + "\n" + "High scores:";
-                            for (Object o : Backend.cacheManager.loadHighScore(Backend.gName))
-                                text = text + "\n" + (int) o;
-                            theend.setText(text);
-                        }
+                        String text = "You get " + Backend.score + " Coins";
+                        text = text + "\n" + "High scores:";
+                        for (Object o : Backend.cacheManager.loadHighScore(Backend.gName))
+                            text = text + "\n" + (int) o;
+                        theend.setText(text);
+
                     }
                 });
 

@@ -13,7 +13,6 @@ public class Backend {
     public static String gName;
     public static OptionManager<String, Boolean> options;
     public static float rotateSpeed = 360f;
-    public static int life;
     public static int score;
     public static CacheManager cacheManager;
 
@@ -37,7 +36,6 @@ public class Backend {
      */
     public static boolean init(Context context, String name) {
         gName = name;
-        life = 3;
         score = 0;
         cacheManager = new CacheManager(context);
         if (!init) {

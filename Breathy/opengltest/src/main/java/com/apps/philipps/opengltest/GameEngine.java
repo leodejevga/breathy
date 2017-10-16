@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.MediaPlayer;
 
 import com.apps.philipps.source.BreathInterpreter;
+import com.apps.philipps.source.Coins;
+import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._3D.GameObject3D;
 import com.apps.philipps.source.helper._3D.Renderer3D;
@@ -32,10 +34,8 @@ public class GameEngine {
     private float safeDistance = 1.0f;
     float carY_Position = -1.4f;
     private int numberOfEnemies = 2;
-    private int maxscore = 50;
     private float minDistanceToMainCar = 3f;
     private boolean isRunning = true;
-    private boolean win = false;
 
     public CollisionDetectionThread collisionDetectionThread;
     private Context mActivityContext;
@@ -77,15 +77,12 @@ public class GameEngine {
             runSimulation(deltaTime);
             if (!isBackgroundMusicPlaying && !collisionDetectionThread.crashed)
                 playBackgroundMusic();
-            if (Backend.score == maxscore) {
-                win = true;
-                Backend.saveHighScore(Backend.gName, Backend.score);
-                pause(false);
-            }
-            if (Backend.life <= 0) {
+            if (!PlanManager.isActive()) {
+                PlanManager.stop();
                 while (current_camAngle < min_CamAngle)
                     resetCamAngle();
                 Backend.saveHighScore(Backend.gName, Backend.score);
+                Coins.addCoins(Backend.score);
                 pause(false);
             }
         }
@@ -102,7 +99,8 @@ public class GameEngine {
             SPEED = MIN_SPEED;
             if (isBackgroundMusicPlaying) {
                 playCrashMusic();
-                Backend.life--;
+                if (Backend.score > 0)
+                    Backend.score--;
             }
         }
         car.draw(deltaTime);
@@ -326,11 +324,6 @@ public class GameEngine {
     public boolean isRunning() {
         return isRunning;
     }
-
-    public boolean isWin() {
-        return win;
-    }
-
 
     public class CollisionDetectionThread extends Thread {
         boolean crashed = false;
