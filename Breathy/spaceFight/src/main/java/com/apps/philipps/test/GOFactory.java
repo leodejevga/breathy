@@ -243,7 +243,7 @@ public abstract class GOFactory {
             o = new GameObject2D(new ImageView(context), explosion.o);
             ((ImageView) o.getView()).setImageResource(R.drawable.cloud);
             o.setPosition(o.getPosition().add(new Vector(20, 30)));
-            o.setDestination(new Vector(-150, o.getPosition().get(2)));
+            o.setDestination(new Vector(-150, o.getPosition().get(1)));
             o.setSpeed(1000);
             game.addView(o.getView());
             this.game = game;
