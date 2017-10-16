@@ -3,7 +3,7 @@ package com.apps.philipps.opengltest;
 import android.content.Context;
 
 import com.apps.philipps.source.OptionManager;
-import com.apps.philipps.source.SaveData;
+import com.apps.philipps.source.cachemanager.CacheManager;
 
 import java.util.ArrayList;
 
@@ -12,18 +12,18 @@ public class Backend {
     private static int default_music_resource_id = R.raw.ascartheft;
     public static String gName;
     public static OptionManager<String, Boolean> options;
-    private static String key;
     public static float rotateSpeed = 360f;
-    public static float limitedAngle = 20f;
     public static int life;
     public static int score;
-
+    public static CacheManager cacheManager;
 
 
     /**
      * The constant highscore.
      */
     public static int highscore = 0;
+    public static ArrayList<Integer> highscores;
+
     /**
      * Reinitialize <code>Backend</code> of the game.
      */
@@ -39,14 +39,16 @@ public class Backend {
         gName = name;
         life = 3;
         score = 0;
+        cacheManager = new CacheManager(context);
         if (!init) {
             options = new OptionManager<>();
             options.add("White Car", false, 20);
             options.add("Police Car", false, 40);
             options.add("Ambulance Car", false, 30);
             init = true;
-            loadGameOptions(context, gName);
-            loadHighScore(context, gName);
+            loadGameOptions();
+            loadHighScores();
+            highscore = highscores.get(0);
             return true;
         }
         return false;
@@ -59,35 +61,22 @@ public class Backend {
     public static void setDefault_music_resource_id(int default_music_resource_id) {
         Backend.default_music_resource_id = default_music_resource_id;
     }
-    protected static void loadGameOptions(Context context, String keyword){
-        keyword = keyword.replaceAll("[ ]*", "");
-        key = keyword + "Options";
-        SaveData<ArrayList> saveOptions =  new SaveData<>(context);
-        ArrayList gameOptions = saveOptions.readObject(key);
-        if (gameOptions != null)
+
+    protected static void loadGameOptions() {
+        ArrayList gameOptions = cacheManager.loadGameOptions(gName);
+        if (gameOptions.size() != 0)
             options.setOptions(gameOptions);
     }
 
-    public static void saveGameOptions(Context context, String keyword){
-        keyword = keyword.replaceAll("[ ]*", "");
-        key = keyword + "Options";
-        SaveData<ArrayList> saveOptions =  new SaveData<>(context);
-        saveOptions.writeObject(key , options.getOptions());
+    public static void saveGameOptions() {
+        cacheManager.saveGameOptions(gName, options.getOptions());
     }
 
-    public static void saveHighScore(Context context, String keyword){
-        keyword = keyword.replaceAll("[ ]*", "");
-        key = keyword + "Highscore";
-        SaveData<Integer> saveHighscore =  new SaveData<>(context);
-        saveHighscore.writeObject(key , highscore);
+    public static void saveHighScore(String gameName, int score) {
+        cacheManager.saveHighScore(gameName, score);
     }
 
-    public static void loadHighScore(Context context, String keyword){
-        keyword = keyword.replaceAll("[ ]*", "");
-        key = keyword + "Highscore";
-        SaveData<Integer> loadHighscore =  new SaveData<>(context);
-        Integer hs = loadHighscore.readObject(key);
-        if (hs != null)
-            highscore = hs;
+    public static void loadHighScores() {
+        highscores = cacheManager.loadHighScore(gName);
     }
 }
