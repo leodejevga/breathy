@@ -2,6 +2,7 @@ package com.apps.philipps.source;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public abstract class PlanManager implements Serializable {
 
+    public static final String TAG = "Plan Manager";
     private static List<Plan> plans = new ArrayList<>();
     private static int currentPlan = -1;
     private static boolean initialized = false;
@@ -26,8 +28,24 @@ public abstract class PlanManager implements Serializable {
             plans = instance.plans;
             currentPlan = instance.currentPlan;
             initialized = true;
-        }
-        throw new PlanManagerAlreadyInitialized();
+
+            Thread update = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        update();
+                        try {
+                            Thread.sleep(50);
+
+                        } catch (InterruptedException e){
+                            Log.e(TAG, "Update Plans has been interrupter", e);
+                        }
+                    }
+                }
+            });
+            update.start();
+        } else
+            throw new PlanManagerAlreadyInitialized();
     }
 
     public static void addPlan(Plan plan) {
@@ -122,7 +140,7 @@ public abstract class PlanManager implements Serializable {
         return null;
     }
 
-    public static void update() {
+    private static void update() {
         if (currentPlan != -1)
             plans.get(currentPlan).update();
     }
@@ -276,7 +294,7 @@ public abstract class PlanManager implements Serializable {
 
         private boolean update() {
             delta = System.currentTimeMillis() - delta;
-            if (running || !paused) {
+            if (running && !paused) {
                 if (currentTime - delta <= 0) {
                     currentOption++;
                     if (currentOption == options.size())

@@ -90,6 +90,7 @@ public class SelectGame extends AppCompatActivity {
         else if (AppState.btState != AppState.BtState.Connected)
             Toast.makeText(this, "You are not connected to a Breathy device", Toast.LENGTH_SHORT).show();
         else {
+            preview.stopPlayback();
             Backend.selected.startGame();
         }
     }

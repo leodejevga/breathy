@@ -1,6 +1,8 @@
 package com.apps.philipps.source.helper._2D;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -149,7 +151,7 @@ public abstract class Activity2D extends Activity implements IObserver {
             @Override
             public void run() {
                 try {
-                    PlanManager.update();
+                    AppState.recordData = true;
                     currentTime = System.currentTimeMillis();
                     delta = currentTime - frameTime;
                     draw();
@@ -237,10 +239,8 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected void onPause() {
         super.onPause();
         Log.e(TAG, "OnPause");
-        BreathData.removeObserver(this);
-        BreathData.saveRest();
         PlanManager.pause();
-        AppState.recordData = AppState.inGame = false;
+        AppState.recordData = false;
         draw = false;
     }
 
@@ -248,6 +248,9 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "OnDestroy");
+        BreathData.removeObserver(this);
+        BreathData.saveRest();
+        AppState.inGame = false;
         PlanManager.stop();
     }
 
@@ -255,7 +258,7 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "OnResume");
-        AppState.recordData = AppState.inGame = true;
+        AppState.inGame = true;
         BreathData.addObserver(this);
         PlanManager.resume();
         starToDraw();
@@ -295,5 +298,34 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected final int getInt(int from, int to) {
         Random r = new Random();
         return (from + Math.abs(r.nextInt())) % to + 1;
+    }
+
+    @Override
+    public void onBackPressed() {
+        onPause();
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage("Do you really want to exit? Your coins will be lost and its not a good idea to interrupt the session.");
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "Exit the game",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Activity2D.super.onBackPressed();
+                        dialog.cancel();
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "Continue the game",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Activity2D.this.onResume();
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 }
