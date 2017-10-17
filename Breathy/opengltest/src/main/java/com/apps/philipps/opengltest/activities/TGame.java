@@ -41,6 +41,7 @@ public class TGame extends Activity3D {
     private LineData chartData;
     private LineDataSet breathChartData;
     private LineDataSet breathPlaneChartData;
+    private long startTimeInMillisecond = System.currentTimeMillis();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,8 +68,6 @@ public class TGame extends Activity3D {
         highscore.setTypeface(myCustomFont);
         highscore.setTextSize(10f);
         theend = (TextView) findViewById(R.id.theend);
-        theend.setTextColor(Color.WHITE);
-        theend.setTextSize(20f);
         theend.setTypeface(myCustomFont);
         score = (TextView) findViewById(R.id.score);
         score.setTextColor(Color.YELLOW);
@@ -182,6 +181,15 @@ public class TGame extends Activity3D {
                                 highscore.setText("Time left: " + left + " Best score: " + Backend.highscore);
                                 score.setText("Score: " + Backend.score);
                                 refreshChart();
+                                if (renderer3D.gameEngine.collisionDetectionThread.isCrashed()) {
+                                    startTimeInMillisecond = System.currentTimeMillis();
+                                    theend.setTextColor(Color.RED);
+                                    theend.setTextSize(100f);
+                                    theend.setText("-" + Backend.minusScore + " !");
+                                }
+                                if (System.currentTimeMillis() - startTimeInMillisecond > 1000) {
+                                    theend.setText("");
+                                }
                             }
                         });
                         Thread.sleep(50);
@@ -197,8 +205,9 @@ public class TGame extends Activity3D {
                         text = text + "\n" + "High scores:";
                         for (Object o : Backend.cacheManager.loadHighScore(Backend.gName))
                             text = text + "\n" + (int) o;
+                        theend.setTextColor(Color.WHITE);
+                        theend.setTextSize(20f);
                         theend.setText(text);
-
                     }
                 });
 

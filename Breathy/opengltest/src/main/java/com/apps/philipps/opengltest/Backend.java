@@ -14,6 +14,7 @@ public class Backend {
     public static OptionManager<String, Boolean> options;
     public static float rotateSpeed = 360f;
     public static int score;
+    public static int minusScore;
     public static CacheManager cacheManager;
 
 

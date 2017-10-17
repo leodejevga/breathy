@@ -101,6 +101,7 @@ public class GameEngine {
             if (isBackgroundMusicPlaying) {
                 playCrashMusic();
                 if (Backend.score > 0) {
+                    Backend.minusScore = Backend.score - (Backend.score / 2);
                     Backend.score = Backend.score / 2;
                     failed = true;
                 }
@@ -359,6 +360,10 @@ public class GameEngine {
                 }
                 enemy.setCounter(enemy.getCounter() + 1);
             }
+        }
+
+        public boolean isCrashed() {
+            return crashed;
         }
 
         private float generateRandomNumber() {
