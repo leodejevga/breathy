@@ -83,7 +83,7 @@ public class GameEngine {
                 while (current_camAngle < min_CamAngle)
                     resetCamAngle();
                 Backend.saveHighScore(Backend.gName, Backend.score);
-                Coins.addCoins(Backend.score);
+                Coins.buy(Backend.score, mActivityContext);
                 pause(false);
             }
         }
