@@ -45,9 +45,9 @@ public class Light {
 
     public static final float[] pointLightPositions = new float[]
             {
-                    0f, 3f, -2f, 0.7f,
-                    0f, 0f, -2f, 0.7f,
-                    0f, -3f, -2f, 0.7f
+                    0f, 3f, -2f, 1f,
+                    0f, 0f, -2f, 1f,
+                    0f, -3f, -2f, 1f
             };
 
     public static final float[] pointLightColors = new float[]
