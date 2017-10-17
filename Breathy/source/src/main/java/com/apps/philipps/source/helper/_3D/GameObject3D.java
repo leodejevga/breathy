@@ -268,6 +268,7 @@ public class GameObject3D implements IGameObject {
                      float... coords) {
             this.dimensions = dimensions;
             this.position = position;
+            this.waveFrontObject = isWaveFrontObj;
             this.coords = new float[vertexCount * dimensions];
             System.arraycopy(coords, 0, this.coords, 0, vertexCount * dimensions);
             this.colorData = new float[colorCount * 4];
@@ -275,9 +276,17 @@ public class GameObject3D implements IGameObject {
             this.textureCoordinateData = new float[textureCount * 2];
             System.arraycopy(coords, vertexCount * dimensions + colorCount * 4, this.textureCoordinateData, 0, textureCount * 2);
 
-            /*calculate normal matrix from model view matrix*/
-            this.waveFrontObject = isWaveFrontObj;
-            calculateNormalAndBoundingVertex();
+            // normal vectors need to be calculated if and only if object is NOT a wavefront Object
+            Vector[] temp = transformArrays(dimensions, this.coords);
+            normalData = new float[this.coords.length];
+            if (isWaveFrontObj) {
+                System.arraycopy(coords, vertexCount * dimensions + colorCount * 4 + textureCount * 2, this.normalData, 0, vertexCount * dimensions);
+            } else {
+                /*calculate normal matrix from model view matrix*/
+                calculateNormals(temp);
+            }
+            calculateBounding(temp);
+
             normals_Buffer = ByteBuffer.allocateDirect(normalData.length * mBytesPerFloat)
                     .order(ByteOrder.nativeOrder()).asFloatBuffer();
             normals_Buffer.put(normalData).position(0);
@@ -485,13 +494,6 @@ public class GameObject3D implements IGameObject {
             draw();
         }
 
-        private void calculateNormalAndBoundingVertex() {
-            normalData = new float[this.coords.length];
-            Vector[] temp = transformArrays(dimensions, this.coords);
-            calculateNormals(temp);
-            calculateBounding(temp);
-        }
-
         private void calculateBounding(Vector[] vertex) {
             this.boundingBox = new BoundingBox(vertex);
         }
@@ -531,7 +533,7 @@ public class GameObject3D implements IGameObject {
         ObjLoader objLoader = new ObjLoader(context, objID);
 
         float[] colorArray = generateColorArray(objLoader.positions.length * 4 / 3);
-        float[] coords = concatArrays(objLoader.positions, concatArrays(colorArray, objLoader.textureCoordinates));
+        float[] coords = concatArrays(objLoader.positions, concatArrays(colorArray, concatArrays(objLoader.textureCoordinates, objLoader.normals)));
 
         Shape waveFrontObj = new Shape(context, true, 3, new Vector(), objLoader.positions.length / 3, colorArray.length / 4,
                 objLoader.textureCoordinates.length / 2, textureID, coords);

@@ -43,7 +43,7 @@ public class GameEngine {
 
     public Car car;
     public ArrayList<Enemy> enemies;
-    public static float streetSize = 0.7f;
+    public static float streetSize = 0.5f;
 
     private MediaPlayer myMediaPlayer;
     private boolean isBackgroundMusicPlaying = false;
@@ -117,15 +117,10 @@ public class GameEngine {
 
     private void createCar() {
         car = new Car();
-        car.setCarBodyModel(mActivityContext, R.raw.carbody, getTextureID());
-        car.setCarBodyPosition(new Vector(0, carY_Position, zOffset));
-        car.setCarTireModel(mActivityContext, R.raw.tire1, R.drawable.tiretexture, true);
-        car.setCarTireModel(mActivityContext, R.raw.tire2, R.drawable.tiretexture, true);
-        car.setCarTireModel(mActivityContext, R.raw.tire3, R.drawable.tiretexture, false);
-        car.setCarTireModel(mActivityContext, R.raw.tire4, R.drawable.tiretexture, false);
+        createCarModel();
     }
 
-    private int getTextureID() {
+    private void createCarModel() {
         int index = -1;
         for (int i = 0; i < Backend.options.size(); i++) {
             if (Backend.options.getOption(i).isSet())
@@ -133,13 +128,37 @@ public class GameEngine {
         }
         switch (index) {
             case 0:
-                return R.drawable.cartexture2;
+                car.setCarBodyModel(mActivityContext, R.raw.simplecar, R.drawable.simplecar);
+                car.setCarBodyPosition(new Vector(0, carY_Position, zOffset));
+                car.setCarTireModel(mActivityContext, R.raw.simpletire1, R.drawable.tiretexture, true);
+                car.setCarTireModel(mActivityContext, R.raw.simpletire2, R.drawable.tiretexture, true);
+                car.setCarTireModel(mActivityContext, R.raw.simpletire3, R.drawable.tiretexture, false);
+                car.setCarTireModel(mActivityContext, R.raw.simpletire4, R.drawable.tiretexture, false);
+                break;
             case 1:
-                return R.drawable.cartexture3;
+                car.setCarBodyModel(mActivityContext, R.raw.simplevan, R.drawable.simplevan);
+                car.setCarBodyPosition(new Vector(0, carY_Position, zOffset));
+                car.setCarTireModel(mActivityContext, R.raw.simplevantire1, R.drawable.tiretexture, true);
+                car.setCarTireModel(mActivityContext, R.raw.simplevantire2, R.drawable.tiretexture, true);
+                car.setCarTireModel(mActivityContext, R.raw.simplevantire3, R.drawable.tiretexture, false);
+                car.setCarTireModel(mActivityContext, R.raw.simplevantire4, R.drawable.tiretexture, false);
+                break;
             case 2:
-                return R.drawable.cartexture4;
+                car.setCarBodyModel(mActivityContext, R.raw.simplebus, R.drawable.simplebus);
+                car.setCarBodyPosition(new Vector(0, carY_Position, zOffset));
+                car.setCarTireModel(mActivityContext, R.raw.simplebustire1, R.drawable.tiretexture, true);
+                car.setCarTireModel(mActivityContext, R.raw.simplebustire2, R.drawable.tiretexture, true);
+                car.setCarTireModel(mActivityContext, R.raw.simplebustire3, R.drawable.tiretexture, false);
+                car.setCarTireModel(mActivityContext, R.raw.simplebustire4, R.drawable.tiretexture, false);
+                break;
             default:
-                return R.drawable.cartexture;
+                car.setCarBodyModel(mActivityContext, R.raw.simplecar, R.drawable.simplecar);
+                car.setCarBodyPosition(new Vector(0, carY_Position, zOffset));
+                car.setCarTireModel(mActivityContext, R.raw.simpletire1, R.drawable.tiretexture, true);
+                car.setCarTireModel(mActivityContext, R.raw.simpletire2, R.drawable.tiretexture, true);
+                car.setCarTireModel(mActivityContext, R.raw.simpletire3, R.drawable.tiretexture, false);
+                car.setCarTireModel(mActivityContext, R.raw.simpletire4, R.drawable.tiretexture, false);
+                break;
         }
     }
 
@@ -190,7 +209,7 @@ public class GameEngine {
     }
 
     private void drawStreet(long deltaTime) {
-        if (street.get(0).getPosition().get(1) > -(streetSize * 4)) {
+        if (street.get(0).getPosition().get(1) > -(streetSize * 5)) {
             moveStreet();
         } else {
             refreshStreet();
@@ -200,16 +219,16 @@ public class GameEngine {
     }
 
     private void createStreet() {
-        for (int i = -2; i < 4; i++) {
-            GameObject3D str = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.newstreet));
+        for (int i = -3; i < 4; i++) {
+            GameObject3D str = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.road));
             str.setPosition(new Vector(0, i * streetSize * 2, 0));
             street.add(str);
 
-            GameObject3D strl = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.stone));
+            GameObject3D strl = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.grass));
             strl.setPosition(new Vector(-streetSize * 2, i * streetSize * 2, 0));
             streetleft.add(strl);
 
-            GameObject3D strr = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.water));
+            GameObject3D strr = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.sea));
             strr.setPosition(new Vector(streetSize * 2, i * streetSize * 2, 0));
             streetright.add(strr);
         }
