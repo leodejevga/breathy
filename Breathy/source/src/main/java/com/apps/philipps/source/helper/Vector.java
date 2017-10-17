@@ -11,8 +11,6 @@ import java.util.List;
 public class Vector implements Comparable<Vector>, Cloneable {
 
     private List<Double> coordinates;
-    public double X, Y, Z;
-
     public Vector(Vector v, double... coordinates) {
         this.coordinates = new ArrayList<>();
         for (double coordinate : v.get())
@@ -20,18 +18,8 @@ public class Vector implements Comparable<Vector>, Cloneable {
 
         for (double coordinate : coordinates)
             this.coordinates.add(coordinate);
-        update();
     }
 
-    private void update() {
-        X = coordinates.size()>0?coordinates.get(0):0;
-        Y = coordinates.size()>1?coordinates.get(1):0;
-        Z = coordinates.size()>2?coordinates.get(2):0;
-        int s = coordinates.size();
-        for (int i = 0; i < 3-s; i++) {
-            coordinates.add(0d);
-        }
-    }
 
     public Vector(Vector v, float... coordinates) {
         this.coordinates = new ArrayList<>();
@@ -40,7 +28,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
 
         for (double coordinate : coordinates)
             this.coordinates.add(coordinate);
-        update();
     }
 
     /**
@@ -52,7 +39,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
         this.coordinates = new ArrayList<>();
         for (double coordinate : coordinates)
             this.coordinates.add(coordinate);
-        update();
     }
 
     /**
@@ -64,7 +50,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
         this.coordinates = new ArrayList<>();
         for (double coordinate : coordinates)
             this.coordinates.add(coordinate);
-        update();
     }
 
     public int getDimensions() {
@@ -132,7 +117,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
     public Vector mult(int start, int end, double multiplier) {
         for (int i = start; i < getDimensions() && i <= end; i++)
             set(i, get(i) * multiplier);
-        update();
         return this;
     }
 
@@ -145,7 +129,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
      */
     public Vector mult(int coordinate, double multiplier) {
         set(coordinate, get(coordinate) * multiplier);
-        update();
         return this;
     }
 
@@ -160,7 +143,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
             return null;
         for (int i = 0; i < getDimensions(); i++)
             set(i, get(i) / divisor);
-        update();
         return this;
     }
 
@@ -201,9 +183,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
      * @return the double
      */
     public double get(int coordinate) {
-        coordinates.set(0, X);
-        coordinates.set(1, Y);
-        coordinates.set(2, Z);
         if (coordinate < getDimensions())
             return coordinates.get(coordinate);
         else return 0;
@@ -220,7 +199,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
             else
                 coordinates.add(v.get(i));
         }
-        update();
     }
 
     public void set(int index, double data) {
@@ -231,7 +209,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
                 coordinates.add(0d);
             coordinates.add(data);
         }
-        update();
     }
 
     public void set(double... doubles) {
@@ -241,7 +218,6 @@ public class Vector implements Comparable<Vector>, Cloneable {
             else
                 coordinates.add(doubles[i]);
         }
-        update();
     }
 
 

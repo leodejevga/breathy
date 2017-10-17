@@ -30,8 +30,7 @@ public class RaceBreathInterpreter {
     public void update(){
 
         int plannedBreath = BreathInterpreter.getStatus().getError().value;
-        Log.i("Bewegen",plannedBreath +"");
-        plannedBreath = (int) (Math.random() * 6); //TODO
+
         switch ( plannedBreath ){
             case 0: punishProzent = Math.max( 0, punishProzent - 10 );
                 break;

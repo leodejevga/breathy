@@ -10,7 +10,7 @@ import com.apps.philipps.source.implementations.BreathyGame;
 
 public class Test extends BreathyGame {
     public Test() {
-        this.name = "OpenGl SpaceFight";
+        this.name = "3D Race";
         this.price = 20;
     }
 

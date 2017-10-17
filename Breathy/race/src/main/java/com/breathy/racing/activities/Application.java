@@ -248,9 +248,9 @@ public class Application extends Activity2D {
         myChart.bringToFront();
         breathChartData = RaceUtil.createDataSet("BreathData", Color.RED);
         chartData.addDataSet(breathChartData);
-        breathPlaneChartData = RaceUtil.createDataSet("PlanData", Color.GREEN);
+        breathPlaneChartData = RaceUtil.createDataSet("PlanData", Color.YELLOW);
         chartData.addDataSet(breathPlaneChartData);
-        chartData.addDataSet(breathPlaneChartData);
+        //chartData.addDataSet(breathPlaneChartData);
         chartData.notifyDataChanged();
     }
 
@@ -451,7 +451,7 @@ public class Application extends Activity2D {
      * creates a new Background above the screen and bring him to the back
      */
     private void createBackground() {
-        int start = 0 - (int)getScreenHeight(true);//background.getFirst().getView().getLayoutParams().height;
+        int start = 0 - background.getFirst().getView().getLayoutParams().height; //(int)getScreenHeight(true);
         if ( Math.random() > 0.5 ) {
             background.add( initObject( new ImageView( this ), R.drawable.stadt22, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight(true) ), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed()) ) );
         } else {

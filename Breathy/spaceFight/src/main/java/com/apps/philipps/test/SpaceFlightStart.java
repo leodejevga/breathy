@@ -19,12 +19,8 @@ public class SpaceFlightStart extends BreathyGameComponent {
 
     @Override
     public boolean start() {
-        if(PlanManager.getCurrentPlan()!=null) {
-            Intent i = new Intent(context, Game.class);
-            context.startActivity(i);
-        }
-        else
-            message("Bitte einen Plan auswählen!");
+        Intent i = new Intent(context, Game.class);
+        context.startActivity(i);
         return true;
     }
 }

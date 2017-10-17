@@ -2,7 +2,10 @@ package com.apps.philipps.source.helper._2D;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -14,6 +17,8 @@ import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.interfaces.IObserver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -50,11 +55,11 @@ public abstract class Activity2D extends Activity implements IObserver {
         return frame;
     }
 
-    protected final void addCoin() {
+    public final void addCoin() {
         coins++;
     }
 
-    protected final void subCoin() {
+    public final void subCoin() {
         subCoin(1);
     }
 
@@ -62,11 +67,11 @@ public abstract class Activity2D extends Activity implements IObserver {
         return initialized;
     }
 
-    protected final void addCoin(int coins) {
+    public final void addCoin(int coins) {
         this.coins += coins;
     }
 
-    protected final void subCoin(int coins) {
+    public final void subCoin(int coins) {
         this.coins -= coins;
         if (this.coins < 0)
             this.coins = 0;

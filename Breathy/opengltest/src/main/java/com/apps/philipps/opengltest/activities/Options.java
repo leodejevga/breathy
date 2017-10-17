@@ -72,7 +72,7 @@ public class Options extends Activity {
                     }
                     unsetAllOptions(id);
                     coinsText.setText(Coins.getAmount() + " Coins");
-                    Backend.saveGameOptions(context, Backend.gName);
+                    Backend.saveGameOptions();
                 }
             });
             layout.addView(btn);

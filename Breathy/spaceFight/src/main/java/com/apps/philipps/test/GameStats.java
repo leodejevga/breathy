@@ -16,10 +16,13 @@ import java.util.Random;
 public class GameStats {
 
     public static final String TAG = "Game Constants";
-    private static final int[] ENEMY_COME_MIN_MAX = {100, 300};
+    private static final int[] ENEMY_COME_MIN_MAX = {500, 1000};
     private static final int[] ENEMY_SPEED_MIN_MAX = {100, 250};
     private static boolean initialized = false;
     public static final int TIME_LOOP_DELAY = 3000;
+
+    public static boolean day = false;
+    public static boolean aliens = false;
 
     public static int enemyCome;
     public static int starCome;
@@ -32,7 +35,7 @@ public class GameStats {
     public static Animated timeLoopAnimation;
 
     public static void init(double factor) {
-        enemyCome = 200;
+        enemyCome = 600;
         starCome = 20;
         enemySpeed = 180*factor;
         shipSpeed = 2000*factor;
