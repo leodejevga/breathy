@@ -30,10 +30,10 @@ public class GameEngine {
     private float max_CamAngle = 0f;
     private float min_CamAngle = Renderer3D.start_cam_Angle;
     private float zOffset = -0.2f;
-    private float relativeDistanceOfEnemies = 10.0f;
-    private float safeDistance = 1.0f;
+    private float safeDistance = 0.5f;
     float carY_Position = -1.4f;
-    private int numberOfEnemies = 2;
+    private int numberOfEnemies = 3;
+    private float relativeDistanceOfEnemies = numberOfEnemies * 2.0f;
     private float minDistanceToMainCar = 3f;
     private boolean isRunning = true;
     private boolean failed = false;
@@ -47,6 +47,7 @@ public class GameEngine {
 
     private MediaPlayer myMediaPlayer;
     private boolean isBackgroundMusicPlaying = false;
+    private boolean isLoaded = false;
     /**
      * Set true to draw bounding box to debug
      */
@@ -62,7 +63,7 @@ public class GameEngine {
         createStreet();
         collisionDetectionThread = new CollisionDetectionThread();
         collisionDetectionThread.start();
-        playBackgroundMusic();
+        isLoaded = true;
     }
 
     /**
@@ -185,15 +186,46 @@ public class GameEngine {
     private Enemy createNewEnemy() {
         Random random = new Random();
         Enemy newEnemy = new Enemy();
-        newEnemy.setCarBodyModel(mActivityContext, R.raw.enemycar, R.drawable.enemytexture);
-        newEnemy.setCarTireModel(mActivityContext, R.raw.tire1enemy, R.drawable.tiretexture, true);
-        newEnemy.setCarTireModel(mActivityContext, R.raw.tire2enemy, R.drawable.tiretexture, true);
-        newEnemy.setCarTireModel(mActivityContext, R.raw.tire5enemy, R.drawable.tiretexture, false);
-        newEnemy.setCarTireModel(mActivityContext, R.raw.tire6enemy, R.drawable.tiretexture, false);
-
-        newEnemy.setCarBodyPosition(new Vector(random.nextFloat() * streetSize, random.nextFloat() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
+        int randomModelID = random.nextInt() % 3;
+        int randomTextureID = random.nextInt() % 2;
+        switch (randomModelID) {
+            case 0:
+                newEnemy.setCarBodyModel(mActivityContext, R.raw.simplecar,
+                        randomTextureID == 0 ? R.drawable.car0 : R.drawable.car1);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simpletire1, R.drawable.tiretexture, true);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simpletire2, R.drawable.tiretexture, true);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simpletire3, R.drawable.tiretexture, false);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simpletire4, R.drawable.tiretexture, false);
+                break;
+            case 1:
+                newEnemy.setCarBodyModel(mActivityContext, R.raw.simplevan,
+                        randomTextureID == 0 ? R.drawable.van0 : R.drawable.van1);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplevantire1, R.drawable.tiretexture, true);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplevantire2, R.drawable.tiretexture, true);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplevantire3, R.drawable.tiretexture, false);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplevantire4, R.drawable.tiretexture, false);
+                break;
+            case 2:
+                newEnemy.setCarBodyModel(mActivityContext, R.raw.simplebus,
+                        randomTextureID == 0 ? R.drawable.bus0 : R.drawable.bus1);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplebustire1, R.drawable.tiretexture, true);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplebustire2, R.drawable.tiretexture, true);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplebustire3, R.drawable.tiretexture, false);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplebustire4, R.drawable.tiretexture, false);
+                break;
+            default:
+                newEnemy.setCarBodyModel(mActivityContext, R.raw.simplebus,
+                        randomTextureID == 0 ? R.drawable.bus0 : R.drawable.bus1);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplebustire1, R.drawable.tiretexture, true);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplebustire2, R.drawable.tiretexture, true);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplebustire3, R.drawable.tiretexture, false);
+                newEnemy.setCarTireModel(mActivityContext, R.raw.simplebustire4, R.drawable.tiretexture, false);
+                break;
+        }
+        float newX = randomTextureID == 0 ? random.nextFloat() * (streetSize / 1.6f) : -(random.nextFloat() * streetSize / 1.6f);
+        newEnemy.setCarBodyPosition(new Vector(newX, random.nextFloat() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
         while (enemiesOverlapped(newEnemy)) {
-            newEnemy.setCarBodyPosition(new Vector(0, random.nextFloat() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
+            newEnemy.setCarBodyPosition(new Vector(newX, random.nextFloat() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
         }
         return newEnemy;
     }
@@ -219,7 +251,7 @@ public class GameEngine {
     }
 
     private void createStreet() {
-        for (int i = -3; i < 4; i++) {
+        for (int i = -4; i < 5; i++) {
             GameObject3D str = new GameObject3D(new Shapes.Square(mActivityContext, streetSize, R.drawable.road));
             str.setPosition(new Vector(0, i * streetSize * 2, 0));
             street.add(str);
@@ -311,13 +343,15 @@ public class GameEngine {
         this.isRunning = isRunning;
     }
 
-    private void playBackgroundMusic() {
-        if (myMediaPlayer != null)
-            myMediaPlayer.release();
-        myMediaPlayer = MediaPlayer.create(mActivityContext, Backend.getDefault_music_resource_id());
-        myMediaPlayer.setLooping(true);
-        myMediaPlayer.start();
-        isBackgroundMusicPlaying = true;
+    public void playBackgroundMusic() {
+        if (!isBackgroundMusicPlaying) {
+            if (myMediaPlayer != null)
+                myMediaPlayer.release();
+            myMediaPlayer = MediaPlayer.create(mActivityContext, Backend.getDefault_music_resource_id());
+            myMediaPlayer.setLooping(true);
+            myMediaPlayer.start();
+            isBackgroundMusicPlaying = true;
+        }
     }
 
     private void playCrashMusic() {
@@ -346,6 +380,10 @@ public class GameEngine {
 
     public boolean isRunning() {
         return isRunning;
+    }
+
+    public boolean isLoaded() {
+        return isLoaded;
     }
 
     public class CollisionDetectionThread extends Thread {
@@ -401,22 +439,24 @@ public class GameEngine {
                     if (enemy.isTurningLeft()) {
                         enemy.turnLeft(0.02f * r);
                         if (enemy.getCounter() > timeToEndTurn) {
-                            enemy.setCounter(0);
+                            enemy.setNewCounter();
                             enemy.setTurningLeft(false);
                         }
                     } else if (enemy.isTurningRight()) {
                         enemy.turnRight(0.02f * r);
                         if (enemy.getCounter() > timeToEndTurn) {
-                            enemy.setCounter(0);
+                            enemy.setNewCounter();
                             enemy.setTurningRight(false);
                         }
                     }
                 }
                 //set enemy, which is out of the screen to new position
                 if (enemy.getCarBodyObject3D().getPosition().get(1) < -2.0f) {
-                    enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
+                    float nextSign = random.nextInt() % 2;
+                    float newX = nextSign == 0 ? random.nextFloat() * (streetSize / 1.6f) : -(random.nextFloat() * streetSize / 1.6f);
+                    enemy.setCarBodyPosition(new Vector(newX, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
                     while (enemiesOverlapped(enemy)) {
-                        enemy.setCarBodyPosition(new Vector(0, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
+                        enemy.setCarBodyPosition(new Vector(newX, collisionDetectionThread.generateRandomNumber() * relativeDistanceOfEnemies + minDistanceToMainCar, zOffset));
                     }
                     if (failed)
                         failed = false;
@@ -428,7 +468,7 @@ public class GameEngine {
                         && car.getCarBodyObject3D().getBoundingBox().collision(enemy.getCarBodyObject3D().getBoundingBox())) {
                     crashed = true;
                     try {
-                        sleep(100);
+                        sleep(200);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

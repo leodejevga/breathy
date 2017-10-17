@@ -6,11 +6,13 @@ import java.util.Random;
 
 public class Enemy extends Car {
     private int counter = 0;
+    private int counterRange = 120;
     private boolean isTurningLeft = false;
     private boolean isTurningRight = false;
 
+
     public Enemy() {
-        counter = new Random().nextInt(120);
+        counter = new Random().nextInt(counterRange);
     }
 
     public int getCounter() {
@@ -19,6 +21,10 @@ public class Enemy extends Car {
 
     public void setCounter(int counter) {
         this.counter = counter;
+    }
+
+    public void setNewCounter() {
+        this.counter = new Random().nextInt(counterRange);
     }
 
     public boolean isTurningLeft() {

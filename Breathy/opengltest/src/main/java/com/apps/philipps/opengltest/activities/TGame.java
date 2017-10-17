@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -60,17 +61,17 @@ public class TGame extends Activity3D {
         openGL.setRenderer(renderer3D);
         Typeface myCustomFont = Typeface.createFromAsset(getAssets(), "fonts/slackeyregular.ttf");
         how_good = (TextView) findViewById(R.id.how_good);
-        how_good.setTextColor(Color.WHITE);
+        how_good.setTextColor(Color.BLACK);
         how_good.setTypeface(myCustomFont);
         how_good.setTextSize(10f);
         highscore = (TextView) findViewById(R.id.highscore);
-        highscore.setTextColor(Color.WHITE);
+        highscore.setTextColor(Color.BLACK);
         highscore.setTypeface(myCustomFont);
         highscore.setTextSize(10f);
         theend = (TextView) findViewById(R.id.theend);
         theend.setTypeface(myCustomFont);
         score = (TextView) findViewById(R.id.score);
-        score.setTextColor(Color.YELLOW);
+        score.setTextColor(Color.BLUE);
         score.setTypeface(myCustomFont);
         score.setTextSize(20f);
         myChart = ChartUtil.createLineChart(this);
@@ -115,11 +116,12 @@ public class TGame extends Activity3D {
         @Override
         protected void onPostExecute(Boolean result) {
             TGame.this.pd.dismiss();
+            renderer3D.gameEngine.playBackgroundMusic();
         }
 
         @Override
         protected Boolean doInBackground(String... params) {
-            while (TGame.this.renderer3D.gameEngine == null) {
+            while (TGame.this.renderer3D.gameEngine == null || !TGame.this.renderer3D.gameEngine.isLoaded()) {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -178,18 +180,20 @@ public class TGame extends Activity3D {
                                         + (seconds != 0 ? seconds % 60 + ":" : "")
                                         + PlanManager.getDuration() % 1000;
                                 how_good.setText(BreathInterpreter.getStatus().getError().toString());
-                                highscore.setText("Time left: " + left + " Best score: " + Backend.highscore);
+                                highscore.setText("Time: " + left + " Best: " + Backend.highscore);
                                 score.setText("Score: " + Backend.score);
                                 refreshChart();
                                 if (renderer3D.gameEngine.collisionDetectionThread.isCrashed()) {
                                     startTimeInMillisecond = System.currentTimeMillis();
                                     theend.setTextColor(Color.RED);
                                     theend.setTextSize(100f);
-                                    theend.setText("-" + Backend.minusScore + " !");
+                                    if (Backend.minusScore != 0)
+                                        theend.setText("-" + Backend.minusScore + " !");
                                 }
                                 if (System.currentTimeMillis() - startTimeInMillisecond > 1000) {
                                     theend.setText("");
                                 }
+                                findViewById(R.id.loading_image).setVisibility(View.GONE);
                             }
                         });
                         Thread.sleep(50);

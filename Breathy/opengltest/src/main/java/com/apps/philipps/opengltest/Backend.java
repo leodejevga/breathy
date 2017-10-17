@@ -41,9 +41,9 @@ public class Backend {
         cacheManager = new CacheManager(context);
         if (!init) {
             options = new OptionManager<>();
-            options.add("White Car", false, 20);
-            options.add("Police Car", false, 40);
-            options.add("Ambulance Car", false, 30);
+            options.add("Car", false, 20);
+            options.add("Van", false, 40);
+            options.add("Bus", false, 30);
             init = true;
             loadGameOptions();
             loadHighScores();
