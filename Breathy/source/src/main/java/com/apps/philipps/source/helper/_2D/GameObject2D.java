@@ -1,28 +1,27 @@
 package com.apps.philipps.source.helper._2D;
 
-import android.support.annotation.CallSuper;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Vector;
-import com.apps.philipps.source.interfaces.IGameObject;
-import com.apps.philipps.source.interfaces.IObserver;
 
 /**
  * Created by Jevgenij Huebert on 17.03.2017. Project Breathy
  */
-public class GameObject2D implements IObserver, IGameObject, Cloneable {
+public class GameObject2D extends Animated implements Cloneable {
 
     protected final String TAG = getClass().getSimpleName();
     public boolean intercectable = true;
     private View object;
-    private Animated position;
     private double curRotation;
     public final long created = System.currentTimeMillis();
 
-    public GameObject2D(){
-
+    public GameObject2D(Context context) {
+        super(new Vector());
+        object = new ImageView(context);
     }
 
     public GameObject2D(@NonNull View object) {
@@ -30,104 +29,57 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
     }
 
     public GameObject2D(@NonNull View object, @NonNull Vector position) {
-        this(object, position, new Vector());
+        this(object, position, position.clone());
     }
+
 
     public GameObject2D(@NonNull View object, Vector position, Vector destination) {
+        this(object, position, destination, 0, false);
+    }
+
+    public GameObject2D(@NonNull View object, Vector position, Vector destination, double speed, boolean active) {
+        super(position, destination, speed, active);
         this.object = object;
-        if (position == null)
-            this.position = new Animated(new Vector(this.object.getX(), this.object.getY()), destination);
+        if (this.position == null)
+            this.position = new Vector(this.object.getX(), this.object.getY());
         else {
-            object.setX(position.getF(0));
-            object.setY(position.getF(1));
-            this.position = new Animated(position, destination);
+            object.setX(this.position.getF(0));
+            object.setY(this.position.getF(1));
         }
-        this.position.addObserver(this);
+        if (this.destination == null)
+            this.destination = this.position.clone();
     }
 
-    public GameObject2D(@NonNull View object, @NonNull Animated position) {
-        this.object = object;
-        object.setX(position.getStart().getF(0));
-        object.setY(position.getStart().getF(1));
-        this.position = position;
-        this.position.addObserver(this);
+    public GameObject2D(@NonNull View object, @NonNull GameObject2D gameObject) {
+        this(object, gameObject.getPosition(), gameObject.getDestination());
+        setSpeed(gameObject.getSpeed());
+        if(gameObject.isMoving())
+            move();
+        curRotation = gameObject.curRotation;
     }
-
-    public void setPosition(Vector position) {
-        this.object.setX(position.getF(0));
-        this.object.setY(position.getF(1));
-        this.position.setStart(position);
-    }
-
 
     public View getView() {
         return object;
     }
 
-    @Override
-    public Vector getPosition() {
-        return position.getStart();
-    }
 
     @Override
-    public boolean isMoving() {
-        return position.isMoving();
-    }
-
-
-    public Animated getAnimated() {
-        return position;
-    }
-
-    @Override
-    public void call(Object... messages) {
-        if (messages != null && messages.length == 1 && messages[0] instanceof Vector) {
-            this.object.setX(((Vector) messages[0]).getF(0));
-            this.object.setY(((Vector) messages[0]).getF(1));
-        } else {
-            this.object.setX(position.getStart().getF(0));
-            this.object.setY(position.getStart().getF(1));
-        }
-    }
-
-    @Override
-    public void move(Vector destination, double speed) {
-        position.animate(destination, speed);
-    }
-
-    @Override
-    public void rotate(Vector destination) {
-
-    }
-
-    @Override
-    public void move(Vector destination) {
-        position.animate(destination);
-    }
-
-    @Override
-    public void move(double speed) {
-        position.resume(speed);
-    }
-
-    @Override
-    @CallSuper
     public void update(double deltaMilliseconds) {
-        position.update(deltaMilliseconds);
-        object.setX(position.getStart().getF(0));
-        object.setY(position.getStart().getF(1));
+        super.update(deltaMilliseconds);
+        object.setX(position.getF(0));
+        object.setY(position.getF(1));
     }
 
     @Override
-    public void setRotation(Vector vector) {
+    public void setPosition(Vector position) {
+        super.setPosition(position);
+        object.setX(position.getF(0));
+        object.setY(position.getF(1));
     }
-
-    ;
-
 
     public void setRotation(double alpha) {
         curRotation += alpha;
-        //Animations rotationAnimation = new RotateAnimation(0.0f, -90.0f, 0.5f, 0.5f);
+        //Animation rotationAnimation = new RotateAnimation(0.0f, -90.0f, 0.5f, 0.5f);
         //rotationAnimation.setDuration(1000);
         //rotationAnimation.setFillAfter(true);
         //rotationAnimation.setInterpolator(new LinearInterpolator());
@@ -139,6 +91,7 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
     /**
      * Sets the View object
+     *
      * @param object the View represented by this class
      */
     public void setObject(View object) {
@@ -147,10 +100,10 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
     public void calcNewTarget(double alpha) {
 
-        float x = position.getEnd().getF(0);
-        float y = position.getEnd().getF(1);
-        float xD = position.getStart().getF(0);
-        float yD = position.getStart().getF(1);
+        float x = destination.getF(0);
+        float y = destination.getF(1);
+        float xD = position.getF(0);
+        float yD = position.getF(1);
         float newX = (float) (xD + (x - xD) * Math.cos(alpha) - (y - yD) * Math.sin(alpha));
         ;
         float newY = (float) (yD + (x - xD) * Math.sin(alpha) + (y - yD) * Math.cos(alpha));
@@ -158,15 +111,7 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
         //ToDo dafür sorgen das Bild unter bestimmten umständen aus dem Screen verschwindet
 
-        position.setEnd(new Vector(x, y));
-    }
-
-    /**
-     * Gets rotation.
-     */
-    @Override
-    public Vector getRotation() {
-        return null;
+        destination = new Vector(x, y);
     }
 
     /**
@@ -181,14 +126,12 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
      *
      * @return 4 Values that describes edges of a box
      */
-    @Override
     public Vector getBoundaries() {
-        double[] pos = getPosition().get();
+        double[] pos = position.get();
         return new Vector(pos[0], pos[0] + object.getMeasuredWidth(), pos[1], pos[1] + object.getMeasuredHeight());
     }
 
-    @Override
-    public boolean intersect(IGameObject gameObject) {
+    public boolean intersect(GameObject2D gameObject) {
         if (intercectable) {
             Vector b = getBoundaries();
             Vector bO = gameObject.getBoundaries();
@@ -202,7 +145,11 @@ public class GameObject2D implements IObserver, IGameObject, Cloneable {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + " at " + position;
+        return getClass().getSimpleName() + ": " + super.toString();
     }
 
+    @Override
+    public GameObject2D clone() {
+        return new GameObject2D(object, this);
+    }
 }

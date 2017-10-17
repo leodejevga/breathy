@@ -79,7 +79,7 @@ public abstract class BreathData {
     /**
      * Get list of values from <code>index</code> to <code>index+range</code>
      *
-     * @param index the index start to read
+     * @param index the index position to read
      * @param range the range of values to get
      * @return the list of values at index with size of range
      */
@@ -96,7 +96,7 @@ public abstract class BreathData {
     /**
      * Get stream of data as String from index with the amount of range
      *
-     * @param index start of stream
+     * @param index position of stream
      * @param range amount of elements
      * @return stream of data as String
      */

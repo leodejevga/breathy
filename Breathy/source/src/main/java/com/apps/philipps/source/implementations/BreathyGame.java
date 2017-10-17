@@ -10,16 +10,13 @@ import com.apps.philipps.source.interfaces.IGame;
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
  */
 public abstract class BreathyGame implements IGame {
-    /**
-     *
-     */
-    boolean initialized;
+
     /**
      * The Game.
      */
     protected BreathyGameComponent game;
     /**
-     * The OptionManager.
+     * The Options.
      */
     protected BreathyGameComponent options;
     /**

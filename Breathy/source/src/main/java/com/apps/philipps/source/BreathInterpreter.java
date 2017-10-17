@@ -45,6 +45,7 @@ public abstract class BreathInterpreter {
         public final String name;
         public final int value;
 
+
         BreathError(String name, int value) {
             this.name = name;
             this.value = value;
@@ -140,6 +141,9 @@ public abstract class BreathInterpreter {
             this.error = error;
         }
 
+        public BreathStatus() {
+        }
+
         public double getIn() {
             return in;
         }
@@ -168,6 +172,7 @@ public abstract class BreathInterpreter {
         public String toString() {
             return "status: " + moment + ", strength: " + (int) (getStrength() * 100) + "%, frequency: " + frequency + " per minute, how good: " + error;
         }
+
     }
 
 

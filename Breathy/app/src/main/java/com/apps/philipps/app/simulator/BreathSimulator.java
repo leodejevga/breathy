@@ -157,7 +157,7 @@ public class BreathSimulator {
         data[1] = 750 + r.nextInt()%30;
         data[2] = 800 + r.nextInt()%30;
         data[3] = 900 + r.nextInt()%30;
-        data[4] = 1000 + r.nextInt()%30;
+        data[4] = 1000 + r.nextInt()%10;
         data[5] = 950 + r.nextInt()%30;
         data[6] = 850 + r.nextInt()%30;
         data[7] = 750 + r.nextInt()%30;

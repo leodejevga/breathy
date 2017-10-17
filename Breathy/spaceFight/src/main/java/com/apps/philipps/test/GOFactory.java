@@ -2,186 +2,406 @@ package com.apps.philipps.test;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.apps.philipps.source.AppState;
+import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.helper.Animated;
-import com.apps.philipps.source.helper.Animations;
+import com.apps.philipps.source.helper.Animation;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.GameObject2D;
-import com.apps.philipps.test.activities.Game;
 
-import java.util.List;
+import java.util.Random;
+
 
 /**
- * Created by Leo on 05.09.2017.
+ * Created by Jevgenij Huebert on 05.09.2017. Project Breathy.
  */
+public abstract class GOFactory {
+    private static final String TAG = "Game Object Factory";
+    public static Ship ship;
 
-public class GOFactory {
-
-    public static class Enemy extends GameObject2D {
-        public Enemy(Context context, Vector position, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(position, new Vector(-100, position.get(1)), speed, true));
-            ((ImageView) getView()).setImageResource(R.drawable.enemy);
-            getView().bringToFront();
-            game.addView(getView());
-        }
+    public static void init(Context context, Vector position, ViewGroup game) {
+        ship = new Ship(context, position, game);
+        ship.remove();
     }
 
-    public static class Laser extends GameObject2D {
-        public Laser(Context context, int dest, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(GameBuffer.ship.getPosition().clone().add(new Vector(110, 25)),
-                    new Vector(dest, GameBuffer.ship.getPosition().get(1) + 25), speed, true));
 
-            if (GameStats.shoot.id == 0)
-                ((ImageView) getView()).setImageResource(R.drawable.laser_green);
-            if (GameStats.shoot.id == 1)
-                ((ImageView) getView()).setImageResource(R.drawable.laser_blue);
-            if (GameStats.shoot.id == 2)
-                ((ImageView) getView()).setImageResource(R.drawable.laser_red);
-            game.addView(getView());
-        }
-    }
-
-    public static class Star extends GameObject2D {
-        public Star(Context context, Vector position, int speed, ViewGroup game) {
-            super(new ImageView(context), new Animated(position, new Vector(-10, position.get(1)), speed, true));
-            ((ImageView) getView()).setImageResource(R.drawable.star);
-            game.addView(getView());
-        }
-    }
-
-    public static class Explosion extends GameObject2D {
-        public long start = System.currentTimeMillis();
-        private long past;
+    public static class Ship extends Animation {
+        private GameObject2D engine;
         private ViewGroup game;
+        private GameObject2D o;
 
-        public Explosion(Context context, Enemy enemy, final ViewGroup game) {
-            super(new ImageView(context), new Animated(enemy.getPosition().clone().add(new Vector(-80, -80)), enemy.getAnimated().getEnd(), enemy.getAnimated().getSpeed(), true));
-            ((ImageView) getView()).setImageResource(R.drawable.explosion);
-            game.addView(getView());
+        public Ship(Context context, Vector position, ViewGroup game) {
+            o = new GameObject2D(new ImageView(context), position);
+            engine = new GameObject2D(new ImageView(context), position);
+            ((ImageView) o.getView()).setImageResource(R.drawable.ship);
+            game.addView(o.getView());
+            ((ImageView) engine.getView()).setImageResource(R.drawable.engine);
+            game.addView(engine.getView());
+            engine.setPosition(o.getPosition().add(new Vector(-80, 4)));
             this.game = game;
         }
 
         @Override
-        public void update(double deltaMilliseconds) {
-            super.update(deltaMilliseconds);
-            past += deltaMilliseconds;
-            if (past > GameStats.explosionTime) {
-                game.removeView(getView());
-                GameBuffer.remove(this);
+        public void update(double delta) {
+            o.update(delta);
+            engine.getView().bringToFront();
+            o.getView().bringToFront();
+            engine.setPosition(o.getPosition().add(new Vector(-80, 2)));
+            float value = 0.2f + (Math.abs(new Random().nextInt()) % 800f) / 1000f;
+            engine.getView().setScaleY(value * 1.5f);
+
+
+            double d = BreathData.get(0).data;
+            double y = (d - AppState.breathyUserMin) / (AppState.breathyUserMax - AppState.breathyUserMin) * game.getHeight();
+            double speed = Math.abs(o.getPosition().get(1) - y) * AppState.breathyDataFrequency;
+            o.move(new Vector(o.getPosition().get(0), y), speed);
+            o.getView().bringToFront();
+        }
+    }
+
+    public static class Enemy extends Animation {
+        private GameObject2D o;
+        private GameObject2D engine;
+        private ViewGroup game;
+
+        public Enemy(Context context, Vector position, ViewGroup game) {
+            super(2);
+            o = new GameObject2D(new ImageView(context), position, new Vector(-100, position.get(1)), GameStats.enemySpeed, true);
+            ((ImageView) o.getView()).setImageResource(R.drawable.enemy);
+            o.getView().bringToFront();
+            game.addView(o.getView());
+
+            engine = new GameObject2D(context);
+            ((ImageView) engine.getView()).setImageResource(R.drawable.engine);
+            game.addView(engine.getView());
+            engine.setPosition(o.getPosition().add(new Vector(-60, -2)));
+            this.game = game;
+        }
+
+        @Override
+        protected void update(double delta) {
+            o.update(delta);
+            engine.getView().bringToFront();
+            o.getView().bringToFront();
+            engine.setPosition(o.getPosition().add(new Vector(-60, -2)));
+            float value = 0.2f + (Math.abs(new Random().nextInt()) % 800f) / 1000f;
+            engine.getView().setScaleY(value * 1.5f);
+
+            if (!o.isMoving()) {
+                remove();
+            }
+        }
+
+        @Override
+        public void remove() {
+            super.remove();
+            game.removeView(o.getView());
+            game.removeView(engine.getView());
+        }
+    }
+
+    public static class Laser extends Animation {
+        private GameObject2D o;
+        private ViewGroup game;
+        private Context context;
+
+        public Laser(Context context, int dest, ViewGroup game) {
+            super(3);
+            o = new GameObject2D(new ImageView(context), ship.o.getPosition().add(new Vector(110, 25)),
+                    new Vector(dest, ship.o.getPosition().get(1) + 25), GameStats.shoot.getSpeed(), true);
+
+            if (GameStats.shoot.id == 0)
+                ((ImageView) o.getView()).setImageResource(R.drawable.laser_green);
+            if (GameStats.shoot.id == 1)
+                ((ImageView) o.getView()).setImageResource(R.drawable.laser_blue);
+            if (GameStats.shoot.id == 2)
+                ((ImageView) o.getView()).setImageResource(R.drawable.laser_red);
+            game.addView(o.getView());
+            this.game = game;
+            this.context = context;
+
+        }
+
+        @Override
+        protected void update(double delta) {
+            o.update(delta);
+            o.getView().bringToFront();
+            if (!o.isMoving()) {
+                game.removeView(o.getView());
+                remove();
+            } else {
+                for (Animation ani : get(Goody.class)) {
+                    Goody goody = (Goody) ani;
+                    if (o.intersect(goody.o)) {
+                        goody.activate();
+                        game.removeView(goody.o.getView());
+                        game.removeView(o.getView());
+                        remove();
+                        return;
+                    }
+                }
+                for (Animation ani : get(Enemy.class)) {
+                    Enemy enemy = (Enemy) ani;
+                    if (o.intersect(enemy.o)) {
+                        SoundManager.bang();
+                        new GOFactory.Explosion(context, enemy, game);
+                        if (new Random().nextInt() % 5 == 3)
+                            new GOFactory.Goody(context, enemy, game, (new Random().nextInt() % 5 != 1));
+                        game.removeView(enemy.o.getView());
+                        game.removeView(o.getView());
+                        remove();
+                        enemy.remove();
+                    }
+                }
             }
         }
     }
 
-    public static class Ship extends GameObject2D {
-        public Ship(Context context, Animated animated, ViewGroup game) {
-            super(new ImageView(context), animated);
-            ((ImageView) getView()).setImageResource(R.drawable.ship);
-            game.addView(getView());
+    public static class Star extends Animation {
+        private GameObject2D o;
+        private ViewGroup game;
+        private Context context;
+
+        public Star(Context context, Vector position, ViewGroup game) {
+            super(0);
+            o = new GameObject2D(new ImageView(context), position, new Vector(-10, position.get(1)), GameStats.starSpeed, true);
+            ((ImageView) o.getView()).setImageResource(R.drawable.star);
+            game.addView(o.getView());
+            this.game = game;
+            this.context = context;
+        }
+
+        @Override
+        protected void update(double delta) {
+            o.update(delta);
+            o.getView().bringToFront();
+            if (!o.isMoving()) {
+                remove();
+                game.removeView(o.getView());
+            }
         }
     }
 
-    public static class Goody extends GameObject2D {
-        public GameStats.Effect effect;
-        public int intersectableIn = 100;
-        public long start = 0;
+    public static class Explosion extends Animation {
+        private GameObject2D o;
+        public long start = System.currentTimeMillis();
+        private long past;
+        private ViewGroup game;
         private Context context;
+
+        public Explosion(Context context, Enemy enemy, final ViewGroup game) {
+            super(4);
+            o = new GameObject2D(new ImageView(context), enemy.o.getPosition().add(new Vector(-80, -80)), enemy.o.getDestination(), enemy.o.getSpeed(), true);
+            ((ImageView) o.getView()).setImageResource(R.drawable.explosion);
+            game.addView(o.getView());
+            this.game = game;
+            this.context = context;
+        }
+
+        @Override
+        public void update(double delta) {
+            o.update(delta);
+            past += delta;
+            o.getView().bringToFront();
+            if (past > GameStats.explosionTime) {
+                game.removeView(o.getView());
+                remove();
+                new Cloud(context, this, game);
+            }
+        }
+    }
+
+    public static class Cloud extends Animation {
+        private GameObject2D o;
         private ViewGroup game;
 
+        public Cloud(Context context, Explosion explosion, ViewGroup game) {
+            super(5);
+            o = new GameObject2D(new ImageView(context), explosion.o);
+            ((ImageView) o.getView()).setImageResource(R.drawable.cloud);
+            o.setPosition(o.getPosition().add(new Vector(20, 30)));
+            o.setDestination(new Vector(-150, o.getPosition().Y));
+            o.setSpeed(1000);
+            game.addView(o.getView());
+            this.game = game;
+        }
+
+        @Override
+        protected void update(double delta) {
+            o.update(delta);
+            o.getView().bringToFront();
+            if (!o.isMoving()) {
+                remove();
+                game.removeView(o.getView());
+            }
+        }
+    }
+
+
+    public static class Goody extends Animation {
+        public GameStats.Effect effect;
+        public int intersectableIn = 100;
+        private long start = 0;
+        private boolean good;
+        private ViewGroup game;
+        private Context context;
+        private GameObject2D o;
+
         public Goody(Context context, Enemy enemy, ViewGroup game, boolean good) {
-            super(new ImageView(context), enemy.getAnimated().clone());
+            super(6);
+            o = new GameObject2D(new ImageView(context), enemy.o.clone());
+            this.good = good;
             this.context = context;
-            intercectable = false;
-            if (good)
-                ((ImageView) getView()).setImageResource(R.drawable.goody_good);
-            else
-                ((ImageView) getView()).setImageResource(R.drawable.goody_bad);
+            o.intercectable = false;
             effect = GameStats.Effect.getEffect(good);
-            game.addView(getView());
+            if (effect == GameStats.Effect.timeLoop)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_time);
+            else if (effect == GameStats.Effect.increaseShootSpeed)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_laser_good);
+            else if (effect == GameStats.Effect.decreaseEnemySpeed)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_speed_good);
+            else if (effect == GameStats.Effect.decreaseShootSpeed)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_laser_bad);
+            else if (effect == GameStats.Effect.increaseEnemySpeed)
+                ((ImageView) o.getView()).setImageResource(R.drawable.g_speed_bad);
+            else if (good)
+                ((ImageView) o.getView()).setImageResource(R.drawable.goody_good);
+            else
+                ((ImageView) o.getView()).setImageResource(R.drawable.goody_bad);
+
+            game.addView(o.getView());
             this.game = game;
         }
 
         public boolean activate() {
+            o.getView().bringToFront();
+            if (GameStats.timeLoopAnimation.getPosition().get(0) != 1 && effect == GameStats.Effect.timeLoop)
+                effect = GameStats.Effect.increaseShootSpeed;
             boolean result = effect.activate();
             if (effect == GameStats.Effect.timeLoop) {
                 start = System.currentTimeMillis();
-                new LoopAnimationsOn(context, game);
-            }
-            else start = -1;
+                o.setPosition(new Vector(-100, -100));
+                game.removeView(o.getView());
+                o.stop();
+                new LoopAnimationOn(context, game);
+            } else remove();
+
             return result;
         }
 
         @Override
-        public void update(double deltaMilliseconds) {
-            super.update(deltaMilliseconds);
-            if (!intercectable) {
-                intercectable = System.currentTimeMillis() - created >= intersectableIn;
+        public void update(double delta) {
+            o.update(delta);
+            o.getView().bringToFront();
+            if (!o.intercectable) {
+                o.intercectable = System.currentTimeMillis() - o.created >= intersectableIn;
             }
-            long delta = System.currentTimeMillis() - start;
-            if (start > 0 && delta >= GameStats.TIME_LOOP_DELAY) {
-                GameStats.timeLoopAnimation.animate(new Vector(1));
-                Log.e(TAG, "time loop deactivate : " + GameStats.timeLoopAnimation);
-                start = -1;
+            if (start > 0) {
+                long delay = System.currentTimeMillis() - start;
+                if (delay >= GameStats.TIME_LOOP_DELAY) {
+                    GameStats.timeLoopAnimation.move(new Vector(1));
+                    new LoopAnimationOff(context, game);
+                    remove();
+                    return;
+                }
             }
-            if (start == -1 || !isMoving())
-                GameBuffer.remove(this);
+            if (!o.isMoving() && effect != GameStats.Effect.timeLoop)
+                remove();
+        }
+
+        @Override
+        public String toString() {
+            return effect.name + " : " + super.toString();
         }
     }
 
-    public static class Shoot extends GameObject2D {
+    public static class Shoot extends Animation {
         private long past;
         private ViewGroup game;
+        private Context context;
+        private GameObject2D o;
 
         public Shoot(Context context, ViewGroup game) {
-            super(new ImageView(context), new Animated(GameBuffer.ship.getPosition().clone().add(90, -20),
-                    GameBuffer.ship.getPosition().clone().add(110, -20), 30, true));
+            super(4);
+            o = new GameObject2D(new ImageView(context), ship.o.getPosition().add(90, -20));
             if (GameStats.shoot.id == 0)
-                ((ImageView) getView()).setImageResource(R.drawable.shoot_greed);
+                ((ImageView) o.getView()).setImageResource(R.drawable.shoot_greed);
             if (GameStats.shoot.id == 1)
-                ((ImageView) getView()).setImageResource(R.drawable.shoot_blue);
+                ((ImageView) o.getView()).setImageResource(R.drawable.shoot_blue);
             if (GameStats.shoot.id == 2)
-                ((ImageView) getView()).setImageResource(R.drawable.shoot_red);
-            game.addView(getView());
+                ((ImageView) o.getView()).setImageResource(R.drawable.shoot_red);
+            game.addView(o.getView());
             this.game = game;
         }
 
         @Override
-        public void update(double deltaMilliseconds) {
-            super.update(deltaMilliseconds);
-            past += deltaMilliseconds;
+        public void update(double delta) {
+            o.update(delta);
+            o.getView().bringToFront();
+            o.setPosition(ship.o.getPosition().add(90, -20));
+            past += delta;
             if (past > GameStats.shootTime) {
-                game.removeView(getView());
-                GameBuffer.remove(this);
+                game.removeView(o.getView());
+                remove();
             }
         }
     }
     //Animations_____________________
 
 
-    public static class LoopAnimationsOn extends Animations {
+    public static class LoopAnimationOn extends Animation {
         private Animated fade = new Animated(new Vector(1), new Vector(0), 2, true);
-        private RelativeLayout surfaceView;
+        private RelativeLayout o;
         private ViewGroup game;
 
-        public LoopAnimationsOn(Context context, ViewGroup game) {
+        public LoopAnimationOn(Context context, ViewGroup game) {
+            super(7);
             this.game = game;
-            surfaceView = new RelativeLayout(context);
-            surfaceView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            int color = (int) (Color.WHITE * fade.getStart().get(0));
-            surfaceView.setBackgroundColor(color);
-            this.game.addView(surfaceView);
+            o = new RelativeLayout(context);
+            o.setLayoutParams(new ViewGroup.LayoutParams(game.getWidth(), game.getHeight()));
+            this.game.addView(o);
         }
 
         @Override
-        protected void updateAnimation(double delta) {
+        protected void update(double delta) {
             fade.update(delta);
-            int color = (int) (Color.WHITE * fade.getStart().get(0));
-            surfaceView.setBackgroundColor(color);
-            if(!fade.isMoving()) {
-                game.removeView(surfaceView);
+            o.bringToFront();
+            int c = (int) (fade.getPosition().get(0) * 255);
+            int color = Color.argb(c, c, c, c);
+            o.setBackgroundColor(color);
+            if (!fade.isMoving()) {
+                game.removeView(o);
+                remove();
+            }
+        }
+    }
+
+    public static class LoopAnimationOff extends Animation {
+        private Animated fade = new Animated(new Vector(0), new Vector(1), 2, true);
+        private RelativeLayout o;
+        private ViewGroup game;
+
+        public LoopAnimationOff(Context context, ViewGroup game) {
+            super(7);
+            this.game = game;
+            o = new RelativeLayout(context);
+            o.setLayoutParams(new ViewGroup.LayoutParams(game.getWidth(), game.getHeight()));
+            this.game.addView(o);
+        }
+
+        @Override
+        protected void update(double delta) {
+            fade.update(delta);
+            o.bringToFront();
+            int c = (int) (fade.getPosition().get(0) * 128);
+            int color = Color.argb(c, c * 2, c * 2, 128 + c);
+            o.setBackgroundColor(color);
+            if (!fade.isMoving()) {
+                game.removeView(o);
                 remove();
             }
         }

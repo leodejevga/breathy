@@ -1087,7 +1087,7 @@
     </member>
     <member name="P:UnityEngine.Networking.NetworkConnection.isConnected">
       <summary>
-        <para>True if the connection is connected to a remote end-point.</para>
+        <para>True if the connection is connected to a remote destination-point.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.Networking.NetworkConnection.isReady">
@@ -1710,7 +1710,7 @@
     </member>
     <member name="P:UnityEngine.Networking.NetworkLobbyManager.minPlayers">
       <summary>
-        <para>The minimum number of players required to be ready for the game to start.</para>
+        <para>The minimum number of players required to be ready for the game to position.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkLobbyManager.playScene">
@@ -2118,7 +2118,7 @@
     </member>
     <member name="P:UnityEngine.Networking.NetworkManager.startPositions">
       <summary>
-        <para>The list of currently registered player start positions for the current scene.</para>
+        <para>The list of currently registered player position positions for the current scene.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkManager.useSimulator">
@@ -2133,7 +2133,7 @@
     </member>
     <member name="M:UnityEngine.Networking.NetworkManager.GetStartPosition">
       <summary>
-        <para>This finds a spawn start based on NetworkStartPosition objects in the scene.</para>
+        <para>This finds a spawn position based on NetworkStartPosition objects in the scene.</para>
       </summary>
       <returns>
         <para>Returns the transform to spawn a player at, or null.</para>
@@ -2304,7 +2304,7 @@
       <summary>
         <para>Registers the transform of a game object as a player spawn location.</para>
       </summary>
-      <param name="start">Transform to register.</param>
+      <param name="position">Transform to register.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkManager.ServerChangeScene(System.String)">
       <summary>
@@ -2384,7 +2384,7 @@
       <summary>
         <para>Unregisters the transform of a game object as a player spawn location.</para>
       </summary>
-      <param name="start"></param>
+      <param name="position"></param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkManager.UseExternalClient(UnityEngine.Networking.NetworkClient)">
       <summary>
@@ -2794,7 +2794,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkReader.Position">
       <summary>
-        <para>The current start within the buffer.</para>
+        <para>The current position within the buffer.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.ReadBoolean">
@@ -3080,7 +3080,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.SeekZero">
       <summary>
-        <para>Sets the current start of the reader's stream to the start of the stream.</para>
+        <para>Sets the current position of the reader's stream to the position of the stream.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.Networking.NetworkReader.ToString">
@@ -3863,7 +3863,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="T:UnityEngine.Networking.NetworkStartPosition">
       <summary>
-        <para>This component is used to make a gameObject a starting start for spawning player objects in multiplayer games.</para>
+        <para>This component is used to make a gameObject a starting position for spawning player objects in multiplayer games.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.NetworkSystem.AddPlayerMessage">
@@ -4058,7 +4058,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="T:UnityEngine.Networking.NetworkTransform">
       <summary>
-        <para>A component to synchronize the start and rotation of networked objects.</para>
+        <para>A component to synchronize the position and rotation of networked objects.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.characterContoller">
@@ -4123,7 +4123,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.snapThreshold">
       <summary>
-        <para>If a movement update puts an object further from its current start that this rate, it will snap to the start instead of moving smoothly.</para>
+        <para>If a movement update puts an object further from its current position that this rate, it will snap to the position instead of moving smoothly.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.syncRotationAxis">
@@ -4133,7 +4133,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.targetSyncPosition">
       <summary>
-        <para>The target start interpolating towards.</para>
+        <para>The target position interpolating towards.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.targetSyncRotation2D">
@@ -4143,7 +4143,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.targetSyncRotation3D">
       <summary>
-        <para>The target start interpolating towards.</para>
+        <para>The target position interpolating towards.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.targetSyncVelocity">
@@ -4153,7 +4153,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransform.transformSyncMode">
       <summary>
-        <para>What method to use to sync the object's start.</para>
+        <para>What method to use to sync the object's position.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.NetworkTransform.AxisSyncMode">
@@ -4205,7 +4205,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <summary>
         <para>This is the delegate use for the movement validation callback function clientMoveCallback2D on NetworkTransforms.</para>
       </summary>
-      <param name="start">The new start from the client.</param>
+      <param name="position">The new position from the client.</param>
       <param name="velocity">The new velocity from the client.</param>
       <param name="rotation">The new rotation from the client.</param>
     </member>
@@ -4213,7 +4213,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <summary>
         <para>This is the delegate use for the movement validation callback function clientMoveCallback3D on NetworkTransforms.</para>
       </summary>
-      <param name="start">The new start from the client.</param>
+      <param name="position">The new position from the client.</param>
       <param name="velocity">The new velocity from the client.</param>
       <param name="rotation">The new rotation from the client.</param>
     </member>
@@ -4239,7 +4239,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="T:UnityEngine.Networking.NetworkTransform.TransformSyncMode">
       <summary>
-        <para>How to synchronize an object's start.</para>
+        <para>How to synchronize an object's position.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.Networking.NetworkTransform.TransformSyncMode.SyncCharacterController">
@@ -4269,7 +4269,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="T:UnityEngine.Networking.NetworkTransformChild">
       <summary>
-        <para>A component to synchronize the start of child transforms of networked objects.</para>
+        <para>A component to synchronize the position of child transforms of networked objects.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.childIndex">
@@ -4284,7 +4284,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.interpolateMovement">
       <summary>
-        <para>The rate to interpolate towards the target start.</para>
+        <para>The rate to interpolate towards the target position.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.interpolateRotation">
@@ -4324,7 +4324,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.targetSyncPosition">
       <summary>
-        <para>The target start interpolating towards.</para>
+        <para>The target position interpolating towards.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkTransformChild.targetSyncRotation3D">
@@ -4374,12 +4374,12 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="P:UnityEngine.Networking.NetworkWriter.Position">
       <summary>
-        <para>The current start of the internal buffer.</para>
+        <para>The current position of the internal buffer.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.SeekZero">
       <summary>
-        <para>Seeks to the start of the internal buffer.</para>
+        <para>Seeks to the position of the internal buffer.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.StartMessage(System.Int16)">
@@ -4403,7 +4403,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Byte)">
@@ -4413,7 +4413,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.SByte)">
@@ -4423,7 +4423,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Int16)">
@@ -4433,7 +4433,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.UInt16)">
@@ -4443,7 +4443,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Int32)">
@@ -4453,7 +4453,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.UInt32)">
@@ -4463,7 +4463,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Int64)">
@@ -4473,7 +4473,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.UInt64)">
@@ -4483,7 +4483,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Single)">
@@ -4493,7 +4493,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Double)">
@@ -4503,7 +4503,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Decimal)">
@@ -4513,7 +4513,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.String)">
@@ -4523,7 +4523,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Boolean)">
@@ -4533,7 +4533,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Byte[],System.Int32)">
@@ -4543,7 +4543,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(System.Byte[],System.Int32,System.Int32)">
@@ -4553,7 +4553,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Vector2)">
@@ -4563,7 +4563,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Vector3)">
@@ -4573,7 +4573,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Vector4)">
@@ -4583,7 +4583,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Color)">
@@ -4593,7 +4593,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Color32)">
@@ -4603,7 +4603,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.GameObject)">
@@ -4613,7 +4613,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Quaternion)">
@@ -4623,7 +4623,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Rect)">
@@ -4633,7 +4633,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Plane)">
@@ -4643,7 +4643,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Ray)">
@@ -4653,7 +4653,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Matrix4x4)">
@@ -4663,7 +4663,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.MessageBase)">
@@ -4673,7 +4673,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.NetworkHash128)">
@@ -4683,7 +4683,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.NetworkIdentity)">
@@ -4693,7 +4693,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.NetworkInstanceId)">
@@ -4703,7 +4703,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Networking.NetworkSceneId)">
@@ -4713,7 +4713,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.Write(UnityEngine.Transform)">
@@ -4723,7 +4723,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <param name="rate">The object to write.</param>
       <param name="buffer">The byte buffer to write.</param>
       <param name="count">The number of bytes in the byte buffer to write.</param>
-      <param name="offset">The byte buffer array element to start writing from.</param>
+      <param name="offset">The byte buffer array element to position writing from.</param>
       <param name="msg">The network message to write.</param>
     </member>
     <member name="M:UnityEngine.Networking.NetworkWriter.WriteBytesAndSize(System.Byte[],System.Int32)">
@@ -4796,12 +4796,12 @@ All of the player objects in the game are disabled when the host is lost. Then, 
     </member>
     <member name="F:UnityEngine.Networking.PlayerSpawnMethod.Random">
       <summary>
-        <para>Spawn players at a randomly chosen starting start.</para>
+        <para>Spawn players at a randomly chosen starting position.</para>
       </summary>
     </member>
     <member name="F:UnityEngine.Networking.PlayerSpawnMethod.RoundRobin">
       <summary>
-        <para>Spawn players at the next start start.</para>
+        <para>Spawn players at the next position position.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.Networking.ServerAttribute">
@@ -4818,7 +4818,7 @@ All of the player objects in the game are disabled when the host is lost. Then, 
       <summary>
         <para>Signature of spawn functions that are passed to NetworkClient.RegisterSpawnFunction(). This is optional, as in most cases RegisterPrefab will be used instead.</para>
       </summary>
-      <param name="start"></param>
+      <param name="position"></param>
       <param name="assetId"></param>
     </member>
     <member name="T:UnityEngine.Networking.SyncEventAttribute">

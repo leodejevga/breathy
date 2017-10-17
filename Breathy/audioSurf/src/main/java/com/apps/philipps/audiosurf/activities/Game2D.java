@@ -74,7 +74,7 @@ public class Game2D extends Activity2D {
     }
 
     @Override
-    protected void onLoading(boolean firstLoad, int progress) {
+    protected void onLoading(boolean firstLoad, int progress, long delta) {
     }
 
 

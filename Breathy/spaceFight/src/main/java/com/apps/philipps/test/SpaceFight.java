@@ -16,12 +16,12 @@ public class SpaceFight extends BreathyGame {
 
     @Override
     public void init(Context context, boolean bought) {
-        game = new TestGame(context);
-        options = new TestOptions(context);
+        game = new SpaceFlightStart(context);
+        options = new SpaceFlightOptions(context);
         this.bought = bought;
     }
     @Override
-    public @RawRes Integer getPreview() {
+    public Integer getPreview() {
         return R.raw.preview1;
     }
 }

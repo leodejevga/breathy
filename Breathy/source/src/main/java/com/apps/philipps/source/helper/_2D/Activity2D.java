@@ -2,7 +2,6 @@ package com.apps.philipps.source.helper._2D;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -118,9 +117,9 @@ public abstract class Activity2D extends Activity implements IObserver {
 
     private void load(final boolean firstLoad) {
         // TODO: 05.09.2017 Vernünftige Load schreiben sie muss wissen wann alles geladen wurde
-        if (System.currentTimeMillis() - start > 6000) {
+
+        if (delta < 20 && delta != 0)
             loadingReady = true;
-        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -130,7 +129,7 @@ public abstract class Activity2D extends Activity implements IObserver {
                     currentTime = System.currentTimeMillis();
                     delta = currentTime - frameTime;
                     int percent = (int) (System.currentTimeMillis() - start) / 60;
-                    onLoading(firstLoad, percent > 100 ? 100 : percent);
+                    onLoading(firstLoad, percent > 100 ? 100 : percent, delta);
                 }
                 ready = true;
                 frameTime = System.currentTimeMillis();
@@ -186,7 +185,7 @@ public abstract class Activity2D extends Activity implements IObserver {
      * @param progress  progress of loading from 0 to 100;
      * @return true if this method called for the first time, otherwise false
      */
-    protected abstract void onLoading(boolean firstLoad, int progress);
+    protected abstract void onLoading(boolean firstLoad, int progress, long delta);
 
     /**
      * Draw your Frame

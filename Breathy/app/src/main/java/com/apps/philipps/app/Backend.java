@@ -20,6 +20,8 @@ import com.breathy.racing.Race;
 import java.util.ArrayList;
 import java.util.List;
 
+import breathing.philipps.apps.com.breathing.Breathing;
+
 /**
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy
  */
@@ -68,7 +70,9 @@ public class Backend {
             Backend.games.add(new SpaceFight());
             Backend.games.add(new Race());
             Backend.games.add(new Fade());
+            Backend.games.add(new Breathing());
             Backend.games.add(new Test());
+
 
             for(IGame game : Backend.games){
                 game.init(context, Backend.cacheManager.isIGameBought(game.getName()));
