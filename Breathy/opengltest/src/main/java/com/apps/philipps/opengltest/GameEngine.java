@@ -3,6 +3,7 @@ package com.apps.philipps.opengltest;
 import android.content.Context;
 import android.media.MediaPlayer;
 
+import com.apps.philipps.opengltest.activities.MyGLRenderer;
 import com.apps.philipps.source.BreathInterpreter;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.PlanManager;
@@ -49,6 +50,7 @@ public class GameEngine {
     private boolean isBackgroundMusicPlaying = false;
     public boolean isOkToPlay;
     private boolean isLoaded = false;
+    private Renderer3D renderer3D;
     /**
      * Set true to draw bounding box to debug
      */
@@ -57,8 +59,9 @@ public class GameEngine {
     /**
      * create street, carBody and enemies
      */
-    public GameEngine(Context mActivityContext) {
+    public GameEngine(Context mActivityContext, Renderer3D renderer3D) {
         this.mActivityContext = mActivityContext;
+        this.renderer3D = renderer3D;
         createCar();
         createEnemies();
         createStreet();
@@ -341,7 +344,7 @@ public class GameEngine {
 
     public void pause(boolean isRunning) {
         stopBackgroundMusic();
-        while ( current_camAngle < min_CamAngle)
+        while (current_camAngle < min_CamAngle)
             resetCamAngle();
         this.isRunning = isRunning;
     }
@@ -406,8 +409,10 @@ public class GameEngine {
             }
             while (isRunning) {
                 validateBreath();
-                collisionDetection();
-                enemiesSimulation();
+                if (!((MyGLRenderer) renderer3D).isDrawing) {
+                    collisionDetection();
+                    enemiesSimulation();
+                }
             }
         }
 
