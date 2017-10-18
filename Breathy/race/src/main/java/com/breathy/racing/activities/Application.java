@@ -1,28 +1,35 @@
 package com.breathy.racing.activities;
 
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.PlanManager;
+import com.apps.philipps.source.SaveData;
+import com.apps.philipps.source.cachemanager.UserData;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.Activity2D;
 import com.apps.philipps.source.helper._2D.GameObject2D;
 import com.breathy.racing.GameUtil;
 import com.breathy.racing.R;
 import com.breathy.racing.RaceBreathInterpreter;
+import com.breathy.racing.RaceTimer;
 import com.breathy.racing.RaceUtil;
 import com.breathy.racing.SlowCar;
 import com.breathy.racing.SlowerUpdate;
+import com.breathy.racing.stats.RaceDifficult;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -35,30 +42,37 @@ import java.util.Random;
 /**
  * This Class provides the Game Logic of the racing Game
  */
-
+//TODO screenfactor
 public class Application extends Activity2D {
-    // Gameobjects and Views
     GameObject2D car;
     ArrayList<SlowCar> slowCars;
     LinkedList<GameObject2D> background;
     RelativeLayout game;
-    int carNumber;
 
-    // Highscore
     double highscore = 0;
     double safedhighscore = 0;
     double gameScoreMultiplier = 1;
     TextView score;
     ProgressBar lvlUpBar;
 
+    MediaPlayer myMediaPlayer;
+    RaceTimer lvlUpTimer = new RaceTimer(0);
+    private int curLevel = 0;
+    private TextView lvlText;
+
+    private ImageView loadingImage;
+    private ProgressBar loadingProgress;
+    private ProgressBar loadingProgress2;
+    private TextView loadingProgressText;
+
     // Game stats
-    double deltaSpeed;
     long nextCar;
     long start;
     Random random;
     float[] xRoads;
     float yCar;
     RaceBreathInterpreter raceBreathInterpreter;
+    ArrayList<RaceTimer> timers = new ArrayList<RaceTimer>();
 
     // Player
     int curXIndex;
@@ -71,19 +85,68 @@ public class Application extends Activity2D {
     private LineDataSet breathChartData;
     private LineDataSet breathPlaneChartData;
 
-    private Integer xIndex = 0;
-
     final int BACKGROUNDSPEED = 20;
     private SlowerUpdate oneCallPerMin;
+    private ImageView black;
+    private RaceDifficult raceDifficult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.racing_gamescreen);
+        myMediaPlayer = MediaPlayer.create(this, R.raw.car_music);
+
+        int maxVolume = 50;
+        float log1=(float)(Math.log(maxVolume-25)/Math.log(maxVolume));
+        myMediaPlayer.setVolume(1-log1, 1-log1);
+        game = (RelativeLayout) findViewById( R.id.gameArea );
+        setToFullScreen();
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppState.inGame = AppState.recordData = false;
+        myMediaPlayer.release();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        myMediaPlayer.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        myMediaPlayer.start();
+        setToFullScreen();
     }
 
     @Override
     protected void onLoading(boolean firstLoad, int progress, long delta) {
+        if (firstLoad) {
+            loadingImage = (ImageView) findViewById(R.id.loadingImage);
+            loadingProgress = (ProgressBar) findViewById(R.id.loadingProgress);
+            loadingProgress2 = (ProgressBar) findViewById(R.id.loadingProgress2);
+            loadingProgressText = (TextView) findViewById(R.id.loadingText);
+            loadingImage.setImageResource(R.drawable.loading_image);
+        }
+        loadingProgress.setProgress(progress);
+        loadingProgress2.setProgress(progress);
+        loadingProgressText.setText("Loading... " + progress + "%");
+    }
+
+    @Override
+    protected void onLoadingReady() {
+        ((RelativeLayout) findViewById(R.id.loadingArea)).removeView(loadingImage);
+        ((RelativeLayout) findViewById(R.id.loadingArea)).removeView(loadingProgress);
+        ((RelativeLayout) findViewById(R.id.loadingArea)).removeView(loadingProgress2);
+        ((RelativeLayout) findViewById(R.id.loadingArea)).removeView(loadingProgressText);
+        game.setVisibility( View.VISIBLE);
+
     }
 
 
@@ -91,20 +154,27 @@ public class Application extends Activity2D {
     protected void draw() {
         long delta = System.currentTimeMillis() - start;
 
-        if(oneCallPerMin.update()){
-            calcSpeed();
+        if(!lvlUpTimer.update()){
+            lvlText.setVisibility( View.INVISIBLE );
+        }
 
-            Log.i("Move", "One Call move");
+        if (!PlanManager.isActive()) {
+            stopDrawing();
+        }
+
+        if(oneCallPerMin.update()){
+
             int target = (int) car.getDestination().get( 0 );
             yCar = raceBreathInterpreter.getCurY();
-            car.getView().setY( yCar );//setPosition( new Vector( car.getPosition().get( 0 ), yCar ) );
+            car.getView().setY( yCar );
             car.move(new Vector( target, yCar ) );
         }
         updateBreathStatus();
         calcEmeny( delta );
         Log.i("Draw",background.getFirst().isMoving() + "");
         //checkBackground
-        if ( background.getLast().getPosition().get( 1 )>= 0) { // !background.getFirst().isMoving() ||
+        //if ( background.getLast().getPosition().get( 1 )>= 0) { //
+        if(!background.getFirst().isMoving()){
 
             background.removeFirst();
             createBackground();
@@ -123,58 +193,89 @@ public class Application extends Activity2D {
 
     }
 
+    public void loadOptions( ){
+        SaveData<UserData> saveUserdata =new SaveData<>(this);
+        UserData userData = saveUserdata.readObject("userData");
+        setExpStats(userData.getExp());
+
+    }
+
+    private void setExpStats( UserData.Experience exp ) {
+        if (exp == UserData.Experience.BEGINNER || exp == null){
+            double deltaSpeed = 200 * SCREEN_FACTOR;
+            raceDifficult = new RaceDifficult( deltaSpeed, 1200., 1600., 2000.);
+        } else {
+            double deltaSpeed = 500 * SCREEN_FACTOR;
+            raceDifficult = new RaceDifficult( deltaSpeed, 1000, 1400., 1800.);
+        }
+    }
 
     @Override
     protected void init() {
-        //RelativeLayout game = new RelativeLayout(getBaseContext());
         PlanManager.getPlan( 0 );
         PlanManager.start();
 
-        game = (RelativeLayout) findViewById( R.id.gameArea );
-        score = (TextView) findViewById( R.id.score );
-        lvlUpBar = (ProgressBar) findViewById( R.id.progressBar );
-        lvlUpBar.setProgress( 0 );
-        lvlUpBar.setMax( 10000 );
-        xRoads = new float[]{(int) (getScreenWidth() /100 * 25), (int) (getScreenWidth() / 100 * 42.5), (int) (getScreenWidth() / 5 * 3)};
-        raceBreathInterpreter = new RaceBreathInterpreter( new Pair<>( (int) getScreenHeight() / 2, (int) getScreenHeight() - 264) );
+        loadOptions();
+        iniViews();
         this.oneCallPerMin = new SlowerUpdate( this.getFrameRate(), 1 );
-        yCar = (int) getScreenHeight() - 600;
+        raceBreathInterpreter = new RaceBreathInterpreter( new Pair<>( (int) getScreenHeight(true) / 2, (int) getScreenHeight(true) - 264) );
 
-        car = initObject( new ImageView( this ), R.drawable.car, 1, new Vector( xRoads[1], yCar ), new Vector( xRoads[1], yCar ), 1200 );
-        car.getView().getLayoutParams().height = (int) (getScreenWidth()*0.15);
-        car.getView().getLayoutParams().width = (int) (getScreenWidth()*0.15);
-
-        //Chart element
-        myChart = RaceUtil.createLineChart(this);
-        game.addView(myChart, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 400));
-        chartData = RaceUtil.createData();
-        myChart.setData(chartData);
-        myChart.bringToFront();
-        breathChartData = RaceUtil.createDataSet("BreathData", Color.RED);
-        chartData.addDataSet(breathChartData);
-        breathPlaneChartData = RaceUtil.createDataSet("PlanData", Color.GREEN);
-        chartData.addDataSet(breathPlaneChartData);
-        chartData.addDataSet(breathPlaneChartData);
-
-        chartData.notifyDataChanged();
-        //create Background
-        background = new LinkedList<>();
-        background.add(initObject(new ImageView(this), R.drawable.stadt, 3, new Vector(0, 0), new Vector(0, getScreenHeight()), (int) (BACKGROUNDSPEED + deltaSpeed)));
-        background.getFirst().getView().setLayoutParams(new ViewGroup.LayoutParams((int) getScreenWidth(), (int) getScreenHeight()));
-        GameUtil.sendViewToBack(background.getLast().getView());
-        createBackground();
+        iniPlayerCar();
+        iniChartElement();
+        iniBackground();
 
         curXIndex = 1;
         slowCars = new ArrayList<>();
         start = System.currentTimeMillis();
         nextCar = start;
 
-
-        if (game == null) stopDrawing();
-        deltaSpeed = 400 * SCREEN_FACTOR;
         random = new Random(5);
         if (game == null)
             stopDrawing();
+    }
+
+    private void iniBackground() {
+        background = new LinkedList<>();
+        background.add(initObject(new ImageView(this), R.drawable.stadt, 3, new Vector(0, 0), new Vector(0, getScreenHeight()), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed())));
+        background.getFirst().getView().setLayoutParams(new ViewGroup.LayoutParams((int) getScreenWidth(), (int) (getScreenHeight() * 4)));
+        background.getFirst().getView().requestLayout();
+        GameUtil.sendViewToBack(background.getLast().getView());
+        ((ImageView) background.getFirst().getView()).setScaleType( ImageView.ScaleType.FIT_XY );
+
+        createBackground();
+    }
+
+    private void iniPlayerCar() {
+        xRoads = new float[]{(int) (getScreenWidth(true) /100 * 25), (int) (getScreenWidth(true) / 100 * 42.5), (int) (getScreenWidth(true) / 5 * 3)};
+        yCar = (int) getScreenHeight(true) - 600;
+
+        car = initObject( new ImageView( this ), R.drawable.car, 1, new Vector( xRoads[1], yCar ), new Vector( xRoads[1], yCar ), 1200 );
+        car.getView().getLayoutParams().height = (int) (getScreenHeight(true)*0.15);
+        car.getView().getLayoutParams().width = (int) (getScreenWidth(true)*0.10);
+    }
+
+    private void iniChartElement() {
+        myChart = RaceUtil.createLineChart(this);
+        game.addView(myChart, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 600));
+        chartData = RaceUtil.createData();
+        myChart.setData(chartData);
+        myChart.bringToFront();
+        breathChartData = RaceUtil.createDataSet("BreathData", Color.RED);
+        chartData.addDataSet(breathChartData);
+        //breathPlaneChartData = RaceUtil.createDataSet("PlanData", Color.YELLOW);
+        //chartData.addDataSet(breathPlaneChartData);
+        //chartData.addDataSet(breathPlaneChartData);
+        chartData.notifyDataChanged();
+    }
+
+    private void iniViews() {
+        score = (TextView) findViewById( R.id.score );
+        lvlUpBar = (ProgressBar) findViewById( R.id.progressBar );
+        black = (ImageView) findViewById( R.id.black );
+        lvlText = (TextView) findViewById( R.id.level );
+        lvlUpBar.setProgress( 0 );
+        lvlUpBar.setMax( 1000 );
+
     }
 
     /**
@@ -184,22 +285,31 @@ public class Application extends Activity2D {
      */
     @Override
     protected void touch( MotionEvent event ) {
-        if ( event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) { //TODO hier muss wieder andere Touch event hin
+        if ( event.getAction() == MotionEvent.ACTION_DOWN){ // || event.getAction() == MotionEvent.ACTION_MOVE) { //TODO hier muss wieder andere Touch event hin
             int dx = (int) event.getX();
             int dy = (int) event.getY();
 
             // get the direction
-            if ( dy < getScreenHeight() / 2 && raceBreathInterpreter.getCurBostPoints() >= lvlUpBar.getMax() ) {
-
-                safedhighscore += highscore * 1.2;
-                raceBreathInterpreter.setCurBostPoints( 0 );
-                highscore = 0;
-            } else if (getScreenWidth() / 2 < dx) {
+            if ( dy < getScreenHeight(true) / 2 && raceBreathInterpreter.getCurBostPoints() >= lvlUpBar.getMax() ) {
+                lvlUp();
+            } else if (getScreenWidth(true) / 2 < dx) {
                 movePlayer("right");
             } else {
                 movePlayer("left");
             }
         }
+    }
+
+    private void lvlUp() {
+        safedhighscore += highscore * 1.2;
+        raceBreathInterpreter.setCurBostPoints( 0 );
+        highscore = 0;
+        calcSpeed();
+        curLevel++;
+        lvlText.setText( "Level "+ curLevel );
+        lvlText.setVisibility( View.VISIBLE );
+        removeEmeny();
+        lvlUpTimer.setI( 30 );
     }
 
     /**
@@ -239,30 +349,29 @@ public class Application extends Activity2D {
         }
 
         for (int i = 0; i < slowCars.size(); i++) {
-            boolean removed = false;
 
             if (slowCars.get(i).intersect(car)) {
                 game.removeView(slowCars.get(i).getView());
                 slowCars.remove(slowCars.get(i));
-                removed = true;
                 i--;
                 highscore = 0;
+                continue;
             }
 
 
 
-            if (!removed && !slowCars.get(i).isMoving()) {
+            if (!slowCars.get(i).isMoving() || slowCars.get( i ).getPosition().get( 0 ) > getScreenHeight( true )){
                 game.removeView(slowCars.get(i).getView());
                 slowCars.remove(slowCars.get(i));
                 highscore += 1 * gameScoreMultiplier;
+
                 i--;
-            } else if ( !removed ) {
+
+            } else {
                 checkOvertake( i );
                 slowCars.get( i ).update( delta );
 
             }
-
-
 
         }
     }
@@ -300,17 +409,24 @@ public class Application extends Activity2D {
 
         }
 
-        if (overtake != 0) {
+        if (overtake > 0) {
             if (rightLane) {
                 curCar.move(new Vector(xRoads[curStreet + 1], curCar.getDestination().get(1)));
             } else if (leftLane) {
                 curCar.move(new Vector(xRoads[curStreet - 1], curCar.getDestination().get(1)));
             } else {
-                curCar.move(slowCars.get(overtake).getSpeed()); //TODO Array out of bounds length = 15 index = -1
+                curCar.move(slowCars.get(overtake).getSpeed());
             }
         }
     }
 
+
+    private void removeEmeny(){
+        for(int i=0; i<slowCars.size(); i++){
+            game.removeView(slowCars.get(i).getView());
+        }
+        slowCars.clear();
+    }
     /**
      * creates a new Emeny on a pseudo random line
      */
@@ -323,10 +439,10 @@ public class Application extends Activity2D {
 
         double speed = GameUtil.triangularDistribution( 0.5, 1.4, 1 );
         slowCars.add( initSlowCar( new ImageView( this ), GameUtil.getRandomCar(), 0, new Vector( xRoads[xIndex], (float) 10 ),
-                new Vector( xRoads[xIndex], getScreenHeight() ), (int) deltaSpeed , xIndex, speed) );
-        slowCars.get( slowCars.size()-1).getView().getLayoutParams().height = (int) (getScreenWidth()*0.15);
-        slowCars.get( slowCars.size()-1).getView().getLayoutParams().width = (int) (getScreenWidth()*0.15);
-        nextCar = System.currentTimeMillis() + (long) GameUtil.triangularDistribution( 1200., 2000., 1600. );
+                new Vector( xRoads[xIndex], getScreenHeight(true) ), (int) raceDifficult.getDeltaSpeed() , xIndex, speed) );
+        slowCars.get( slowCars.size()-1).getView().getLayoutParams().height = (int) (getScreenHeight(true)*0.15);
+        slowCars.get( slowCars.size()-1).getView().getLayoutParams().width = (int) (getScreenWidth(true)*0.10);
+        nextCar = raceDifficult.getIntervalTime();
 
     }
 
@@ -345,47 +461,59 @@ public class Application extends Activity2D {
      */
     private void calcSpeed() {
 
-            deltaSpeed += 1;
-
+            raceDifficult.increaseSpeed();
             gameScoreMultiplier += .01;
             for ( int i = 0; i < slowCars.size(); i++ ) {
-                slowCars.get( i ).move( (int) (deltaSpeed*slowCars.get( i ).getGroundSpeed()) );
+                slowCars.get( i ).move( (int) (raceDifficult.getDeltaSpeed()*slowCars.get( i ).getGroundSpeed()) );
             }
-            background.getFirst().move( (int) (BACKGROUNDSPEED + deltaSpeed) );
-            background.getLast().move( (int) (BACKGROUNDSPEED + deltaSpeed) );
+            background.getFirst().move( (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed()) );
+            background.getLast().move( (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed()) );
 
 
+    }
+    private void setToFullScreen() {
+
+        game.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
     /**
      * creates a new Background above the screen and bring him to the back
      */
     private void createBackground() {
-        int start = 0 - (int)getScreenHeight();//background.getFirst().getView().getLayoutParams().height;
+        long start = (long) (background.getLast().getView().getY() -  getScreenHeight(true));
         if ( Math.random() > 0.5 ) {
-            background.add( initObject( new ImageView( this ), R.drawable.stadt22, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight() ), (int) (BACKGROUNDSPEED + deltaSpeed) ) );
+            background.add( initObject( new ImageView( this ), R.drawable.stadt22, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight(true) ), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed()) ) );
         } else {
-            background.add( initObject( new ImageView( this ), R.drawable.wald, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight() ), (int) (BACKGROUNDSPEED + deltaSpeed) ) );
+            background.add( initObject( new ImageView( this ), R.drawable.wueste, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight(true) ), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed()) ) );
         }
-        background.getLast().getView().setLayoutParams(new ViewGroup.LayoutParams((int) getScreenWidth(), (int) getScreenHeight()));
-        //background.getLast().getView().getLayoutParams().height = (int) getScreenHeight();
+        background.getLast().getView().setLayoutParams(new ViewGroup.LayoutParams((int) getScreenWidth(true), (int) (getScreenHeight(true))));
         GameUtil.sendViewToBack( background.getLast().getView() );
+        ((ImageView) background.getLast().getView()).setScaleType( ImageView.ScaleType.FIT_XY );
+
+        background.getLast().getView().requestLayout();
+
+
 
     }
 
     private void refreshChart() {
-        testdata = BreathData.get(0).data * GameUtil.getRandomNumber(0, 1);
+
         breathdata = BreathData.get(0).data;
 
         breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
-        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
+        //breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
         breathChartData.notifyDataSetChanged();
         chartData.notifyDataChanged();
         myChart.notifyDataSetChanged();
         myChart.refreshDrawableState();
         myChart.invalidate();
         myChart.setVisibleXRange(6, 60);
-        myChart.moveViewToX(breathPlaneChartData.getEntryCount() - 60);
+        myChart.moveViewToX(breathChartData.getEntryCount() - 60);
     }
 
     /**
