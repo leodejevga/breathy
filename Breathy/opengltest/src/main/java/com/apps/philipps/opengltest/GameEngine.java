@@ -32,7 +32,7 @@ public class GameEngine {
     private float zOffset = -0.2f;
     private float safeDistance = 0.5f;
     float carY_Position = -1.4f;
-    private int numberOfEnemies = 3;
+    private int numberOfEnemies = 5;
     private float relativeDistanceOfEnemies = numberOfEnemies * 2.0f;
     private float minDistanceToMainCar = 3f;
     private boolean isRunning = true;
@@ -47,6 +47,7 @@ public class GameEngine {
 
     private MediaPlayer myMediaPlayer;
     private boolean isBackgroundMusicPlaying = false;
+    public boolean isOkToPlay;
     private boolean isLoaded = false;
     /**
      * Set true to draw bounding box to debug
@@ -77,7 +78,7 @@ public class GameEngine {
             rotateCam();
             drawStreet(deltaTime);
             runSimulation(deltaTime);
-            if (!isBackgroundMusicPlaying && !collisionDetectionThread.crashed)
+            if (!collisionDetectionThread.crashed)
                 playBackgroundMusic();
             if (!PlanManager.isActive()) {
                 PlanManager.stop();
@@ -343,14 +344,15 @@ public class GameEngine {
         this.isRunning = isRunning;
     }
 
-    public void playBackgroundMusic() {
-        if (!isBackgroundMusicPlaying) {
+    private void playBackgroundMusic() {
+        if (!isBackgroundMusicPlaying && isOkToPlay) {
+            isBackgroundMusicPlaying = true;
             if (myMediaPlayer != null)
                 myMediaPlayer.release();
             myMediaPlayer = MediaPlayer.create(mActivityContext, Backend.getDefault_music_resource_id());
             myMediaPlayer.setLooping(true);
             myMediaPlayer.start();
-            isBackgroundMusicPlaying = true;
+
         }
     }
 
@@ -364,7 +366,8 @@ public class GameEngine {
     }
 
     private void stopBackgroundMusic() {
-        myMediaPlayer.release();
+        if (myMediaPlayer != null)
+            myMediaPlayer.release();
         isBackgroundMusicPlaying = false;
     }
 
@@ -437,13 +440,13 @@ public class GameEngine {
                 if (enemy.getCounter() > timeToStartTurn) {
                     int timeToEndTurn = 200;
                     if (enemy.isTurningLeft()) {
-                        enemy.turnLeft(0.02f * r);
+                        enemy.turnLeft(0.01f * r);
                         if (enemy.getCounter() > timeToEndTurn) {
                             enemy.setNewCounter();
                             enemy.setTurningLeft(false);
                         }
                     } else if (enemy.isTurningRight()) {
-                        enemy.turnRight(0.02f * r);
+                        enemy.turnRight(0.01f * r);
                         if (enemy.getCounter() > timeToEndTurn) {
                             enemy.setNewCounter();
                             enemy.setTurningRight(false);

@@ -43,6 +43,7 @@ public class TGame extends Activity3D {
     private LineDataSet breathChartData;
     private LineDataSet breathPlaneChartData;
     private long startTimeInMillisecond = System.currentTimeMillis();
+    private boolean isPaused;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class TGame extends Activity3D {
 
     @Override
     protected void onPause() {
+        isPaused = true;
         super.onPause();
         renderer3D.gameEngine.pause(renderer3D.gameEngine.isRunning());
     }
@@ -99,10 +101,17 @@ public class TGame extends Activity3D {
         Backend.score = 0;
     }
 
+    @Override
+    public void onBackPressed() {
+        onPause();
+        super.onBackPressed();
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
+        isPaused = false;
     }
 
     class BackGroundTask extends
@@ -116,7 +125,6 @@ public class TGame extends Activity3D {
         @Override
         protected void onPostExecute(Boolean result) {
             TGame.this.pd.dismiss();
-            renderer3D.gameEngine.playBackgroundMusic();
         }
 
         @Override
@@ -146,18 +154,21 @@ public class TGame extends Activity3D {
     }
 
     private void refreshChart() {
-        testdata = BreathData.get(0).data * getRandomNumber(0, 1);
-        breathdata = BreathData.get(0).data;
+        if (!isPaused) {
+            testdata = BreathData.get(0).data * getRandomNumber(0, 1);
+            breathdata = BreathData.get(0).data;
 
-        breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
-        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
-        breathChartData.notifyDataSetChanged();
-        chartData.notifyDataChanged();
-        myChart.notifyDataSetChanged();
-        myChart.refreshDrawableState();
-        myChart.invalidate();
-        myChart.setVisibleXRange(6, 60);
-        myChart.moveViewToX(breathPlaneChartData.getEntryCount() - 60);
+            breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
+            breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
+            breathChartData.notifyDataSetChanged();
+            chartData.notifyDataChanged();
+            myChart.notifyDataSetChanged();
+            myChart.refreshDrawableState();
+            myChart.invalidate();
+            myChart.setVisibleXRange(6, 60);
+            myChart.moveViewToX(breathPlaneChartData.getEntryCount() - 60);
+            renderer3D.gameEngine.isOkToPlay = true;
+        }
     }
 
     private int getRandomNumber(int Min, int Max) {

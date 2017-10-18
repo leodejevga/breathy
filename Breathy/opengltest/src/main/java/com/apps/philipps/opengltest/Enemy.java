@@ -9,7 +9,8 @@ public class Enemy extends Car {
     private int counterRange = 120;
     private boolean isTurningLeft = false;
     private boolean isTurningRight = false;
-
+    private float limit = GameEngine.streetSize / 2.0f;
+    private float xPosition = 0.0f;
 
     public Enemy() {
         counter = new Random().nextInt(counterRange);
@@ -48,4 +49,25 @@ public class Enemy extends Car {
         super.runsWithSpeed(speed);
     }
 
+    public void turnRight(float dx) {
+        if (Math.abs(xPosition) < limit) {
+            xPosition += dx;
+            carBody.turnLeft(dx);
+            for (Tire tire : tires)
+                tire.turnRight(dx);
+        } else {
+            isTurningRight = false;
+        }
+    }
+
+    public void turnLeft(float dx) {
+        if (Math.abs(xPosition) < limit) {
+            xPosition -= dx;
+            carBody.turnRight(dx);
+            for (Tire tire : tires)
+                tire.turnLeft(dx);
+        } else {
+            isTurningLeft = false;
+        }
+    }
 }

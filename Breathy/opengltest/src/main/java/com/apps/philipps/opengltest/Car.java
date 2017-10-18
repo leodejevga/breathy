@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 
 public class Car {
-    private CarBody carBody;
-    private ArrayList<Tire> tires = new ArrayList<>();
+    CarBody carBody;
+    ArrayList<Tire> tires = new ArrayList<>();
     private float limit = GameEngine.streetSize / 1.5f;
     private float xPosition = 0.0f;
 
