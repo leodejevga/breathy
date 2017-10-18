@@ -22,6 +22,6 @@ public class SpaceFight extends BreathyGame {
     }
     @Override
     public Integer getPreview() {
-        return R.raw.preview1;
+        return R.raw.spacefightpreview;
     }
 }
