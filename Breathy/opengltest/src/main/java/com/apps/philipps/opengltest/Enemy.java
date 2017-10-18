@@ -9,7 +9,7 @@ public class Enemy extends Car {
     private int counterRange = 120;
     private boolean isTurningLeft = false;
     private boolean isTurningRight = false;
-    private float limit = GameEngine.streetSize / 2.0f;
+    private float limit = GameEngine.streetSize / 1.5f;
     private float xPosition = 0.0f;
 
     public Enemy() {
@@ -47,6 +47,12 @@ public class Enemy extends Car {
     public void runsWithSpeed(float speed) {
         this.setCarBodyPosition(this.getCarBodyObject3D().getPosition().add(new Vector(0, -speed, 0)));
         super.runsWithSpeed(speed);
+    }
+
+    @Override
+    public void setCarBodyPosition(Vector position) {
+        xPosition = position.getF(0);
+        carBody.setPosition(position);
     }
 
     public void turnRight(float dx) {

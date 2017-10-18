@@ -442,13 +442,13 @@ public class GameEngine {
                 if (enemy.getCounter() > timeToStartTurn) {
                     int timeToEndTurn = 200;
                     if (enemy.isTurningLeft()) {
-                        enemy.turnLeft(0.01f * r);
+                        enemy.turnLeft(0.02f * r);
                         if (enemy.getCounter() > timeToEndTurn) {
                             enemy.setNewCounter();
                             enemy.setTurningLeft(false);
                         }
                     } else if (enemy.isTurningRight()) {
-                        enemy.turnRight(0.01f * r);
+                        enemy.turnRight(0.02f * r);
                         if (enemy.getCounter() > timeToEndTurn) {
                             enemy.setNewCounter();
                             enemy.setTurningRight(false);
