@@ -353,7 +353,6 @@ public class MainActivity extends AppCompatActivity implements Fish.FishListener
         textView.setText(status[arr[1]+1]);
         if (arr[1]==3 || arr[1]==4 || arr[1]==6 || arr[1]==5)
         {
-            pBar.setProgress(pBar.getProgress()-20);
             addFish+=5;
         }
 
