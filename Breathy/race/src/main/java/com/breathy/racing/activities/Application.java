@@ -309,7 +309,7 @@ public class Application extends Activity2D {
         lvlText.setText( "Level "+ curLevel );
         lvlText.setVisibility( View.VISIBLE );
         removeEmeny();
-        lvlUpTimer.setI( 15 );
+        lvlUpTimer.setI( 30 );
     }
 
     /**
@@ -485,7 +485,7 @@ public class Application extends Activity2D {
      * creates a new Background above the screen and bring him to the back
      */
     private void createBackground() {
-        int start = 0 - getScreenHeight(true);
+        long start = (long) (background.getLast().getView().getY() -  getScreenHeight(true));
         if ( Math.random() > 0.5 ) {
             background.add( initObject( new ImageView( this ), R.drawable.stadt22, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight(true) ), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed()) ) );
         } else {

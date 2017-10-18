@@ -8,7 +8,7 @@ import com.breathy.racing.GameUtil;
 
 public class RaceDifficult {
 
-    private static final double INCREASECONSTANT = 10;
+    private static final double INCREASECONSTANT = 20;
     private double deltaSpeed;
 
     private double minInterval;
