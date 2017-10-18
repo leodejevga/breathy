@@ -25,6 +25,18 @@
             android:textSize="18sp"
             android:textStyle="bold"/>
 
+        <TextView
+            android:id="@+id/level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/holo_orange_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="TextView"
+            android:visibility="invisible"/>
+
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -95,6 +107,7 @@
             android:layout_above="@+id/loadingProgress2"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="11dp"/>
+
 
 
 

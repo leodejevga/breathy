@@ -56,6 +56,9 @@ public class Application extends Activity2D {
     ProgressBar lvlUpBar;
 
     MediaPlayer myMediaPlayer;
+    RaceTimer lvlUpTimer = new RaceTimer(0);
+    private int curLevel = 0;
+    private TextView lvlText;
 
     private ImageView loadingImage;
     private ProgressBar loadingProgress;
@@ -96,6 +99,8 @@ public class Application extends Activity2D {
         int maxVolume = 50;
         float log1=(float)(Math.log(maxVolume-25)/Math.log(maxVolume));
         myMediaPlayer.setVolume(1-log1, 1-log1);
+        game = (RelativeLayout) findViewById( R.id.gameArea );
+        setToFullScreen();
 
 
     }
@@ -117,6 +122,7 @@ public class Application extends Activity2D {
     protected void onResume() {
         super.onResume();
         myMediaPlayer.start();
+        setToFullScreen();
     }
 
     @Override
@@ -148,6 +154,10 @@ public class Application extends Activity2D {
     protected void draw() {
         long delta = System.currentTimeMillis() - start;
 
+        if(!lvlUpTimer.update()){
+            lvlText.setVisibility( View.INVISIBLE );
+        }
+
         if (!PlanManager.isActive()) {
             stopDrawing();
         }
@@ -163,7 +173,8 @@ public class Application extends Activity2D {
         calcEmeny( delta );
         Log.i("Draw",background.getFirst().isMoving() + "");
         //checkBackground
-        if ( background.getLast().getPosition().get( 1 )>= 0) { // !background.getFirst().isMoving() ||
+        //if ( background.getLast().getPosition().get( 1 )>= 0) { //
+        if(!background.getFirst().isMoving()){
 
             background.removeFirst();
             createBackground();
@@ -225,9 +236,12 @@ public class Application extends Activity2D {
 
     private void iniBackground() {
         background = new LinkedList<>();
-        background.add(initObject(new ImageView(this), R.drawable.stadt, 3, new Vector(0, 0), new Vector(0, getScreenHeight(true)), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed())));
-        background.getFirst().getView().setLayoutParams(new ViewGroup.LayoutParams((int) getScreenWidth(true), (int) getScreenHeight(true)));
+        background.add(initObject(new ImageView(this), R.drawable.stadt, 3, new Vector(0, 0), new Vector(0, getScreenHeight()), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed())));
+        background.getFirst().getView().setLayoutParams(new ViewGroup.LayoutParams((int) getScreenWidth(), (int) (getScreenHeight() * 4)));
+        background.getFirst().getView().requestLayout();
         GameUtil.sendViewToBack(background.getLast().getView());
+        ((ImageView) background.getFirst().getView()).setScaleType( ImageView.ScaleType.FIT_XY );
+
         createBackground();
     }
 
@@ -236,8 +250,8 @@ public class Application extends Activity2D {
         yCar = (int) getScreenHeight(true) - 600;
 
         car = initObject( new ImageView( this ), R.drawable.car, 1, new Vector( xRoads[1], yCar ), new Vector( xRoads[1], yCar ), 1200 );
-        car.getView().getLayoutParams().height = (int) (getScreenWidth(true)*0.15);
-        car.getView().getLayoutParams().width = (int) (getScreenWidth(true)*0.15);
+        car.getView().getLayoutParams().height = (int) (getScreenHeight(true)*0.15);
+        car.getView().getLayoutParams().width = (int) (getScreenWidth(true)*0.10);
     }
 
     private void iniChartElement() {
@@ -248,19 +262,20 @@ public class Application extends Activity2D {
         myChart.bringToFront();
         breathChartData = RaceUtil.createDataSet("BreathData", Color.RED);
         chartData.addDataSet(breathChartData);
-        breathPlaneChartData = RaceUtil.createDataSet("PlanData", Color.YELLOW);
-        chartData.addDataSet(breathPlaneChartData);
+        //breathPlaneChartData = RaceUtil.createDataSet("PlanData", Color.YELLOW);
+        //chartData.addDataSet(breathPlaneChartData);
         //chartData.addDataSet(breathPlaneChartData);
         chartData.notifyDataChanged();
     }
 
     private void iniViews() {
-        game = (RelativeLayout) findViewById( R.id.gameArea );
         score = (TextView) findViewById( R.id.score );
         lvlUpBar = (ProgressBar) findViewById( R.id.progressBar );
         black = (ImageView) findViewById( R.id.black );
+        lvlText = (TextView) findViewById( R.id.level );
         lvlUpBar.setProgress( 0 );
-        lvlUpBar.setMax( 5000 );
+        lvlUpBar.setMax( 1000 );
+
     }
 
     /**
@@ -290,6 +305,11 @@ public class Application extends Activity2D {
         raceBreathInterpreter.setCurBostPoints( 0 );
         highscore = 0;
         calcSpeed();
+        curLevel++;
+        lvlText.setText( "Level "+ curLevel );
+        lvlText.setVisibility( View.VISIBLE );
+        removeEmeny();
+        lvlUpTimer.setI( 15 );
     }
 
     /**
@@ -353,8 +373,6 @@ public class Application extends Activity2D {
 
             }
 
-
-
         }
     }
 
@@ -402,6 +420,13 @@ public class Application extends Activity2D {
         }
     }
 
+
+    private void removeEmeny(){
+        for(int i=0; i<slowCars.size(); i++){
+            game.removeView(slowCars.get(i).getView());
+        }
+        slowCars.clear();
+    }
     /**
      * creates a new Emeny on a pseudo random line
      */
@@ -415,8 +440,8 @@ public class Application extends Activity2D {
         double speed = GameUtil.triangularDistribution( 0.5, 1.4, 1 );
         slowCars.add( initSlowCar( new ImageView( this ), GameUtil.getRandomCar(), 0, new Vector( xRoads[xIndex], (float) 10 ),
                 new Vector( xRoads[xIndex], getScreenHeight(true) ), (int) raceDifficult.getDeltaSpeed() , xIndex, speed) );
-        slowCars.get( slowCars.size()-1).getView().getLayoutParams().height = (int) (getScreenWidth(true)*0.15);
-        slowCars.get( slowCars.size()-1).getView().getLayoutParams().width = (int) (getScreenWidth(true)*0.15);
+        slowCars.get( slowCars.size()-1).getView().getLayoutParams().height = (int) (getScreenHeight(true)*0.15);
+        slowCars.get( slowCars.size()-1).getView().getLayoutParams().width = (int) (getScreenWidth(true)*0.10);
         nextCar = raceDifficult.getIntervalTime();
 
     }
@@ -446,21 +471,33 @@ public class Application extends Activity2D {
 
 
     }
+    private void setToFullScreen() {
+
+        game.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
 
     /**
      * creates a new Background above the screen and bring him to the back
      */
     private void createBackground() {
-        int start = 0 - background.getFirst().getView().getLayoutParams().height; //(int)getScreenHeight(true);
+        int start = 0 - getScreenHeight(true);
         if ( Math.random() > 0.5 ) {
             background.add( initObject( new ImageView( this ), R.drawable.stadt22, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight(true) ), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed()) ) );
         } else {
-            background.add( initObject( new ImageView( this ), R.drawable.wald, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight(true) ), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed()) ) );
+            background.add( initObject( new ImageView( this ), R.drawable.wueste, 3, new Vector( 0, start ), new Vector( 0, getScreenHeight(true) ), (int) (BACKGROUNDSPEED + raceDifficult.getDeltaSpeed()) ) );
         }
-        background.getLast().getView().setLayoutParams(new ViewGroup.LayoutParams((int) getScreenWidth(true), (int) getScreenHeight(true)));
-        background.getLast().getView().getLayoutParams().height =  getScreenHeight();
+        background.getLast().getView().setLayoutParams(new ViewGroup.LayoutParams((int) getScreenWidth(true), (int) (getScreenHeight(true))));
         GameUtil.sendViewToBack( background.getLast().getView() );
+        ((ImageView) background.getLast().getView()).setScaleType( ImageView.ScaleType.FIT_XY );
+
         background.getLast().getView().requestLayout();
+
+
 
     }
 
@@ -469,14 +506,14 @@ public class Application extends Activity2D {
         breathdata = BreathData.get(0).data;
 
         breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
-        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
+        //breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
         breathChartData.notifyDataSetChanged();
         chartData.notifyDataChanged();
         myChart.notifyDataSetChanged();
         myChart.refreshDrawableState();
         myChart.invalidate();
         myChart.setVisibleXRange(6, 60);
-        myChart.moveViewToX(breathPlaneChartData.getEntryCount() - 60);
+        myChart.moveViewToX(breathChartData.getEntryCount() - 60);
     }
 
     /**

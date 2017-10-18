@@ -14,9 +14,12 @@ public class RaceTimer {
 
     public boolean update(){
         i--;
-        if(i<=0){
+        if(i<0){
             return false;
         }
         return true;
+    }
+    public void setI(int i){
+        this.i=i;
     }
 }
