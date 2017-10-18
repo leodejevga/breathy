@@ -341,6 +341,8 @@ public class GameEngine {
 
     public void pause(boolean isRunning) {
         stopBackgroundMusic();
+        while ( current_camAngle < min_CamAngle)
+            resetCamAngle();
         this.isRunning = isRunning;
     }
 
