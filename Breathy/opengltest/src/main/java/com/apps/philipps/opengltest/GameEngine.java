@@ -408,8 +408,8 @@ public class GameEngine {
                 e.printStackTrace();
             }
             while (isRunning) {
-                validateBreath();
                 if (!((MyGLRenderer) renderer3D).isDrawing) {
+                    validateBreath();
                     collisionDetection();
                     enemiesSimulation();
                 }
