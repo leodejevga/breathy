@@ -134,7 +134,6 @@ public class Game extends Activity2D {
 
         SoundManager.init(this);
         AppState.recordData = false;
-        PlanManager.start();
         GameStats.init(SCREEN_FACTOR);
         game = (RelativeLayout) findViewById(R.id.test_game2d);
         if (GameStats.day)

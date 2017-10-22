@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * This Class must be instatiate from Backend Classes and save the specific data on the hard drive
@@ -57,23 +58,23 @@ public class SaveData<T extends Serializable> {
         return null;
     }
 
-    public static byte[] readFile(@NonNull String path) {
-        File file = new File(path);
-        byte[] data = new byte[(int) file.length()];
+    public static Object readFile(@NonNull String path) {
+        Object result = null;
+        File file = new File(AppState.DATA_STORAGE + File.separator + path);
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            fileInputStream.read(data);
-        } catch (IOException e) {
+            ObjectInputStream fileInputStream = new ObjectInputStream(new FileInputStream(file));
+            result = fileInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return data;
+        return result;
     }
 
-    public static void writeFile(@NonNull String path, byte[] data) {
-        File file = new File(path);
+    public static void writeFile(@NonNull String path, Serializable serializable) {
+        File file = new File(AppState.DATA_STORAGE + File.separator + path);
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            fileOutputStream.write(data);
+            ObjectOutputStream fileOutputStream = new ObjectOutputStream(new FileOutputStream(file));
+            fileOutputStream.writeObject(serializable);
         } catch (IOException e) {
             e.printStackTrace();
         }

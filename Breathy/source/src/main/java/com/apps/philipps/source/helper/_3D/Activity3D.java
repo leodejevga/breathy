@@ -21,7 +21,6 @@ public abstract class Activity3D extends Activity {
     protected void onPause() {
         super.onPause();
         Log.e(TAG, "OnPause");
-        BreathData.saveRest();
         PlanManager.pause();
         AppState.recordData = AppState.inGame = false;
         if (openGL != null)
@@ -45,5 +44,6 @@ public abstract class Activity3D extends Activity {
         super.onDestroy();
         Log.e(TAG, "OnDestroy");
         PlanManager.stop();
+        BreathData.save(getClass());
     }
 }

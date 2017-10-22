@@ -18,7 +18,8 @@ import java.io.File;
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
 public class AppState {
-    public final static String PLAN_STORAGE = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator +"PlanManager.pm";
+    public final static String PLAN_STORAGE = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "PlanManager.pm";
+    public final static String DATA_STORAGE = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "BreathData" + File.separator;
     public final static boolean simulateBreathy = true; //Debug purpose
     public final static boolean DEVELOPER = true;
 
@@ -32,7 +33,7 @@ public class AppState {
 
     public static boolean inGame = false;
     public static boolean recordData = false;
-    public static boolean btAsked=false;
+    public static boolean btAsked = false;
 
     public static AppState.BtState btState = BtState.Disabled;
 
@@ -71,15 +72,15 @@ public class AppState {
 
     public static void initBtState() {
         BluetoothAdapter a = BluetoothAdapter.getDefaultAdapter();
-        if(a==null)
+        if (a == null)
             btState = BtState.None;
-        else if(a.isEnabled())
+        else if (a.isEnabled())
             btState = BtState.Enabled;
         else
             btState = BtState.Disabled;
     }
 
-    public enum BtState{
+    public enum BtState {
         None,
         Disabled,
         Enabled,
@@ -89,7 +90,7 @@ public class AppState {
 
     /**
      * Checks if the app has permission to write to device storage
-     *
+     * <p>
      * If the app does not has permission then the user will be prompted to grant permissions
      *
      * @param activity

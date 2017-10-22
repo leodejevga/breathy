@@ -284,6 +284,7 @@ public abstract class PlanManager implements Serializable {
             if (running)
                 return false;
             else {
+                paused = false;
                 running = true;
                 currentOption = 0;
                 currentTime = options.get(currentOption).duration;

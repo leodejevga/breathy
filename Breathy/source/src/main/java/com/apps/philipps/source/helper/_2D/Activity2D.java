@@ -95,6 +95,7 @@ public abstract class Activity2D extends Activity implements IObserver {
                 public void run() {
                     if (!initialized) {
                         init();
+                        PlanManager.start();
                         millis = 1000L / 60L;
                     }
                     initialized = true;
@@ -240,7 +241,7 @@ public abstract class Activity2D extends Activity implements IObserver {
         super.onPause();
         Log.e(TAG, "OnPause");
         PlanManager.pause();
-        AppState.recordData = false;
+        AppState.recordData = AppState.inGame = false;
         draw = false;
     }
 
@@ -249,8 +250,7 @@ public abstract class Activity2D extends Activity implements IObserver {
         super.onDestroy();
         Log.e(TAG, "OnDestroy");
         BreathData.removeObserver(this);
-        BreathData.saveRest();
-        AppState.inGame = false;
+        BreathData.save(getClass());
         PlanManager.stop();
     }
 
@@ -258,7 +258,7 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "OnResume");
-        AppState.inGame = true;
+        AppState.inGame = AppState.recordData = true;
         BreathData.addObserver(this);
         PlanManager.resume();
         starToDraw();

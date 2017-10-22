@@ -4,10 +4,13 @@ package com.apps.philipps.source;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.apps.philipps.source.interfaces.IObserver;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,37 +22,20 @@ import java.util.List;
 public abstract class BreathData {
 
     private static List<IObserver> observer = new ArrayList<>();
-    private static RAM ram;
-    private static int ramSize = 500;
+    private static RAM ramTemp;
+    private static RAM ramGame;
     private static int blockSize = 500;
     private static boolean initialized = false;
 
     /**
-     * Initialize BreathData to perform saving the integer values in RAM and hard drive. Choose your own size of RAM
-     *
-     * @param context the context
-     * @param ramSize the size of ram in RAM. <code>ramSize==0</code> sets no Limit to RAM
-     * @return the boolean
-     */
-    public static boolean init(Context context, int ramSize) {
-        boolean result = init(context);
-        if (result) {
-            BreathData.ramSize = ramSize;
-            blockSize = ramSize / 2;
-        }
-        return result;
-    }
-
-    /**
      * Initialize BreathData to perform saving the integer values in RAM and hard drive.
      *
-     * @param context the context
      * @return the boolean
      */
-    public static boolean init(Context context) {
+    public static boolean init() {
         if (!initialized) {
-            DataBlock.info = new DataInfo(context);
-            ram = new RAM(context);
+            ramTemp = new RAM(500);
+            ramGame = new RAM();
             initialized = true;
             return true;
         }
@@ -63,7 +49,7 @@ public abstract class BreathData {
      * @param observer the observer
      */
     public static void addObserver(IObserver observer) {
-        if(!BreathData.observer.contains(observer))
+        if (!BreathData.observer.contains(observer))
             BreathData.observer.add(observer);
     }
 
@@ -73,8 +59,11 @@ public abstract class BreathData {
 
 
     public static void add(Element... elements) {
-        for (Element element : elements)
-            ram.addData(element);
+        for (Element element : elements) {
+            if (AppState.recordData)
+                ramGame.add(element);
+            ramTemp.add(element);
+        }
     }
 
     /**
@@ -87,9 +76,9 @@ public abstract class BreathData {
     public static Element[] get(int index, int range) {
         Element[] result = new Element[range];
         for (int i = index; i < index + range; i++) {
-            result[i - index] = ram.getData(i);
-//            if (result[i - index] == null)  //TODO wieder einkommentieren
-//                return result;
+            result[i - index] = ramTemp.get(i);
+            if (result[i - index] == null)
+                return result;
         }
         return result;
     }
@@ -117,184 +106,108 @@ public abstract class BreathData {
      * @return the integer at index, null if IndexOutOfRange
      */
     public static Element get(int index) {
-        return ram.getData(index);
+        Element result = ramTemp.get(index);
+        if (result == null)
+            return ramGame.get(index);
+        return result;
     }
 
-    public static void saveRest() {
-        if (AppState.recordData) {
-            ram.saveAll();
-            DataBlock.info.save();
+    public static void save(Class gameClass) {
+        ramGame.save(gameClass);
+    }
+
+
+    private static class RAM extends ArrayList<Element> implements Serializable {
+        private int ramSize;
+
+        /**
+         * Instantiates a new Limited list.
+         */
+        public RAM() {
+            this(-1);
         }
-    }
 
-
-    private static class RAM extends ArrayList<DataBlock> {
-        /**
-         * Instantiates a new Limited list.
-         */
-        private SaveData<DataBlock> saveData = null;
-
-        /**
-         * Instantiates a new Limited list.
-         */
-        public RAM(Context context) {
+        public RAM(int ramSize) {
             super();
-            if (ramSize != 0) {
-                saveData = new SaveData<>(context);
-                add(new DataBlock());
-            }
+            this.ramSize = ramSize;
+
         }
 
         @Override
-        public synchronized void add(int index, DataBlock element) {
-            add(element);
+        public synchronized boolean add(Element element) {
+            add(0, element);
+            return true;
         }
 
         @Override
-        public synchronized boolean add(DataBlock t) {
-            super.add(0, t);
+        public synchronized void add(int index, Element t) {
+            super.add(index, t);
 
-            if (size() > ramSize) {
-                DataBlock toSave = get(size() - 1);
-                if (AppState.recordData)
-                    saveData.writeObject(toSave.getName(), toSave);
+            if (size() > ramSize && ramSize >= 0) {
                 remove(size() - 1);
-                return true;
             }
-            return false;
 
         }
 
         @Override
-        public DataBlock get(int index) {
-            if (index < size())
-                return super.get(index);
-
-            index = DataBlock.info.names.size() - index;
-            if (index < 0)
+        public Element get(int index) {
+            if (index >= size())
                 return null;
-
-            String name = DataBlock.getName(index);
-            if (DataBlock.contains(name))
-                return saveData.readObject(name);
-            return null;
+            return super.get(index);
         }
 
-        public synchronized void addData(final Element element) {
-            if (!get(0).add(element))
-                add(new DataBlock(element));
-            Handler h = new Handler(Looper.getMainLooper());
-            h.post(new Runnable() {
-                @Override
-                public void run() {
-                    for (IObserver o : observer) {
-                        o.call(element, BreathInterpreter.getStatus());
-                    }
-                }
-            });
-        }
-
-        public Element getData(int i) {
-            DataBlock block = get(0);
-            if (i < block.elements.size())
-                return block.get(i);
-            i += blockSize - block.elements.size();
-
-            block = get(i / blockSize);
-            if (block == null)
-                return null;
-            return block.get(i % blockSize);
-        }
-
-        public synchronized void saveAll() {
-            for (DataBlock block : this)
-                saveData.writeObject(block.getName(), block);
+        public synchronized void save(Class gameClass) {
+            DataBlock dataBlock = new DataBlock(this, gameClass);
+            SaveData.writeFile(dataBlock.getName(), dataBlock);
             clear();
-            add(new DataBlock());
         }
     }
 
     public static class DataInfo implements Serializable {
-        private List<String> names;
         public static final String TAG = "BreathDataInfo";
-        public SaveData<DataInfo> save;
+        public Calendar date;
+        public PlanManager.Plan plan;
 
-        public DataInfo(Context context) {
-            this.save = new SaveData<>(context);
-            DataInfo save = this.save.readObject(TAG);
-            if (save == null)
-                names = new ArrayList<>();
-            else
-                names = save.names;
+        @Override
+        public String toString() {
+            return plan.getName() + "_" + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE) + ":" + date.get(Calendar.SECOND) + ":" + date.get(Calendar.MILLISECOND);
         }
 
-        public boolean contains(String name) {
-            return names.contains(name);
-        }
-
-        public boolean add(String name) {
-            return names.add(name);
-        }
-
-        public boolean remove(String name) {
-            return names.remove(name);
-        }
-
-        public void save() {
-            save.writeObject(TAG, this);
+        public DataInfo() {
+            date = Calendar.getInstance();
+            plan = PlanManager.getCurrentPlan();
         }
     }
 
     public static class DataBlock implements Serializable {
-        private List<Element> elements;
-        private int id = 0;
-        private static DataInfo info;
-        private static final String TAG = "BreathDataBlock";
+        public RAM ram;
+        public Class game;
+        public DataInfo info;
+        private static final String TAG = DataBlock.class.getSimpleName();
 
-
-        public DataBlock(Element element) {
-            this();
-            elements.add(0, element);
+        public DataBlock(RAM ram, Class game) {
+            this.game = game;
+            this.ram = ram;
+            this.info = new DataInfo();
         }
 
-        public DataBlock() {
-            this.id = info.names.size();
-            info.add(getName());
-            elements = new ArrayList<>();
-        }
-
-        public static String getName(int id) {
-            return TAG + id;
-        }
-
-        public static boolean contains(int id) {
-            return info.contains(getName(id));
-        }
-
-        public static boolean contains(String name) {
-            return info.contains(name);
-        }
-
-        public boolean add(Element element) {
-            if (elements.size() == blockSize)
-                return false;
-            elements.add(0, element);
-            return true;
-        }
-
-        public Element get(int i) {
-            if (i < elements.size())
-                return elements.get(i);
-            return null;
+        public static String[] getNames(final Class gameClass) {
+            File f = new File(AppState.DATA_STORAGE);
+            return f.list(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.contains(TAG + "_" + gameClass.getSimpleName());
+                }
+            });
         }
 
         public String getName() {
-            return TAG + id;
+            return TAG + "_" + game.getSimpleName() + "_" + info;
         }
 
         @Override
         public String toString() {
-            return getName() + ": #" + elements.size();
+            return getName();
         }
     }
 
