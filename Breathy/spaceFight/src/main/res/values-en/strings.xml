@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Space Fight</string>
+    <string name="title_activity_options">Options</string>
+    <string name="finished">Game over</string>
+    <string name="buy_day_skin">Buy day skin</string>
+    <string name="buy_alien_skin">Buy alien skin</string>
+    <string name="loading">Loading...</string>
+</resources>
