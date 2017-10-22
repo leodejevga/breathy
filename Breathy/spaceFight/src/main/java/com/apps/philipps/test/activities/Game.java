@@ -1,9 +1,11 @@
 package com.apps.philipps.test.activities;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.CollapsibleActionView;
 import android.view.MotionEvent;
@@ -58,7 +60,7 @@ public class Game extends Activity2D {
         }
         loadingProgress.setProgress(progress);
         loadingProgress2.setProgress(progress);
-        loadingProgressText.setText("Loading... " + progress + "%");
+        loadingProgressText.setText(getResources().getString(R.string.loading) + " " + progress + "%");
     }
 
     @Override
@@ -80,7 +82,7 @@ public class Game extends Activity2D {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                    GOFactory.ship.update(realTime);
+                GOFactory.ship.update(realTime);
             }
         });
 
@@ -108,7 +110,7 @@ public class Game extends Activity2D {
         }
         enemySpawned += loopTime;
         starSpawned += loopTime;
-        float comeAdd = (PlanManager.getCurrentPlan().getFrequency()/1.1f) * 4.9f;
+        float comeAdd = (PlanManager.getCurrentPlan().getFrequency() / 1.1f) * 4.9f;
         if (enemySpawned > GameStats.enemyCome - comeAdd) {
             enemySpawned = 0;
             new GOFactory.Enemy(this, new Vector(getScreenWidth() - 50, getEnemyY()), game);
@@ -127,7 +129,7 @@ public class Game extends Activity2D {
 
         SaveData<OptionManager<Boolean, Boolean>> save = new SaveData<>(this);
         OptionManager<Boolean, Boolean> options = save.readObject(FlightOptions.TAG);
-        if(options!=null){
+        if (options != null) {
             GameStats.day = options.getValue(0);
             GameStats.aliens = options.getValue(1);
         }

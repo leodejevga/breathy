@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/colorPrimary"
-                    android:text="Buy Day Skin"
+                    android:text="@string/buy_day_skin"
                     android:textColor="@color/colorAccent" />
 
             </LinearLayout>
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/colorPrimary"
-                    android:text="Buy Alien Skin"
+                    android:text="@string/buy_alien_skin"
                     android:textColor="@color/colorAccent" />
 
             </LinearLayout>

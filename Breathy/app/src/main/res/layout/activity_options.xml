@@ -88,6 +88,18 @@
                 android:id="@+id/radiogroup">
 
                 <RadioButton
+                    android:id="@+id/beginner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/colorAccent"
+                    android:checked="true"
+                    android:gravity="center_vertical|center_horizontal|center"
+                    android:onClick="onRadioButtonClicked"
+                    android:text="@string/noob"
+                    android:textColor="@color/text" />
+
+                <RadioButton
                     android:buttonTint="@color/colorAccent"
                     android:textColor="@color/text"
                     android:id="@+id/expert"
@@ -95,18 +107,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/pro"
                     android:onClick="onRadioButtonClicked"
-                    android:gravity="center_vertical|center_horizontal|center"
-                    android:layout_weight="1" />
-
-                <RadioButton
-                    android:buttonTint="@color/colorAccent"
-                    android:textColor="@color/text"
-                    android:id="@+id/beginner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/noob"
-                    android:onClick="onRadioButtonClicked"
-                    android:checked="true"
                     android:gravity="center_vertical|center_horizontal|center"
                     android:layout_weight="1" />
 

@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/loadingProgress2"
         android:layout_centerHorizontal="true"
-        android:text="Loading... 50%"
+        android:text="@string/loading"
         android:textColor="@color/colorAccent" />
 
     <ProgressBar

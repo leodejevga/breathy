@@ -38,7 +38,10 @@ public abstract class GOFactory {
         public GOAnimation(int level){
             super(level);
         }
-        public void removeGO(){
+
+        @Override
+        public void remove() {
+            super.remove();
             game.removeView(o.getView());
         }
     }
@@ -119,7 +122,6 @@ public abstract class GOFactory {
         @Override
         public void remove() {
             super.remove();
-            game.removeView(o.getView());
             if (!GameStats.aliens)
                 game.removeView(engine.getView());
         }
@@ -150,7 +152,6 @@ public abstract class GOFactory {
             o.update(delta);
             o.getView().bringToFront();
             if (!o.isMoving()) {
-                game.removeView(o.getView());
                 remove();
             } else {
                 for (Animation ani : get(Goody.class)) {
@@ -158,7 +159,6 @@ public abstract class GOFactory {
                     if (o.intersect(goody.o)) {
                         goody.activate();
                         game.removeView(goody.o.getView());
-                        game.removeView(o.getView());
                         remove();
                         return;
                     }
@@ -171,8 +171,6 @@ public abstract class GOFactory {
                         new GOFactory.Explosion(context, enemy, game);
                         if (new Random().nextInt() % 5 == 3)
                             new GOFactory.Goody(context, enemy, game, (new Random().nextInt() % 5 != 1));
-                        game.removeView(enemy.o.getView());
-                        game.removeView(o.getView());
                         remove();
                         enemy.remove();
                         break;
@@ -204,7 +202,6 @@ public abstract class GOFactory {
             o.getView().bringToFront();
             if (!o.isMoving()) {
                 remove();
-                game.removeView(o.getView());
             }
         }
     }
@@ -229,7 +226,6 @@ public abstract class GOFactory {
             past += delta;
             o.getView().bringToFront();
             if (past > GameStats.explosionTime) {
-                game.removeView(o.getView());
                 remove();
                 new Cloud(context, this, game);
             }
@@ -255,7 +251,6 @@ public abstract class GOFactory {
             o.getView().bringToFront();
             if (!o.isMoving()) {
                 remove();
-                game.removeView(o.getView());
             }
         }
     }
@@ -360,7 +355,6 @@ public abstract class GOFactory {
             o.setPosition(ship.o.getPosition().add(90, -20));
             past += delta;
             if (past > GameStats.shootTime) {
-                game.removeView(o.getView());
                 remove();
             }
         }

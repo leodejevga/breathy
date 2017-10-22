@@ -41,19 +41,17 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:text="Max" />
+                    android:text="@string/Max" />
 
                 <TextView
                     android:id="@+id/data_min"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/data_max"
-                    android:layout_below="@+id/data_max"
                     android:layout_marginBottom="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:text="Min" />
+                    android:text="@string/min" />
 
                 <Button
                     android:id="@+id/button"
@@ -63,8 +61,8 @@
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/colorPrimary"
-                    android:text="@string/accept"
                     android:onClick="accept"
+                    android:text="@string/accept"
                     android:textColor="@color/colorAccent" />
 
                 <TextView
