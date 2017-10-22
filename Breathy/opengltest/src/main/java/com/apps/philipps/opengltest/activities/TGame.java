@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -41,6 +42,8 @@ public class TGame extends Activity3D {
     private LineData chartData;
     private LineDataSet breathChartData;
     private LineDataSet breathPlaneChartData;
+    private long startTimeInMillisecond = System.currentTimeMillis();
+    private boolean isPaused;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,19 +62,17 @@ public class TGame extends Activity3D {
         openGL.setRenderer(renderer3D);
         Typeface myCustomFont = Typeface.createFromAsset(getAssets(), "fonts/slackeyregular.ttf");
         how_good = (TextView) findViewById(R.id.how_good);
-        how_good.setTextColor(Color.WHITE);
+        how_good.setTextColor(Color.BLACK);
         how_good.setTypeface(myCustomFont);
         how_good.setTextSize(10f);
         highscore = (TextView) findViewById(R.id.highscore);
-        highscore.setTextColor(Color.WHITE);
+        highscore.setTextColor(Color.BLACK);
         highscore.setTypeface(myCustomFont);
         highscore.setTextSize(10f);
         theend = (TextView) findViewById(R.id.theend);
-        theend.setTextColor(Color.WHITE);
-        theend.setTextSize(20f);
         theend.setTypeface(myCustomFont);
         score = (TextView) findViewById(R.id.score);
-        score.setTextColor(Color.YELLOW);
+        score.setTextColor(Color.BLUE);
         score.setTypeface(myCustomFont);
         score.setTextSize(20f);
         myChart = ChartUtil.createLineChart(this);
@@ -89,9 +90,9 @@ public class TGame extends Activity3D {
 
     @Override
     protected void onPause() {
-        renderer3D.gameEngine.pause(renderer3D.gameEngine.isRunning());
+        isPaused = true;
         super.onPause();
-
+        renderer3D.gameEngine.pause(renderer3D.gameEngine.isRunning());
     }
 
     @Override
@@ -100,10 +101,17 @@ public class TGame extends Activity3D {
         Backend.score = 0;
     }
 
+    @Override
+    public void onBackPressed() {
+        onPause();
+        super.onBackPressed();
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
+        isPaused = false;
     }
 
     class BackGroundTask extends
@@ -121,7 +129,7 @@ public class TGame extends Activity3D {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            while (TGame.this.renderer3D.gameEngine == null) {
+            while (TGame.this.renderer3D.gameEngine == null || !TGame.this.renderer3D.gameEngine.isLoaded()) {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -146,18 +154,21 @@ public class TGame extends Activity3D {
     }
 
     private void refreshChart() {
-        testdata = BreathData.get(0).data * getRandomNumber(0, 1);
-        breathdata = BreathData.get(0).data;
+        if (!isPaused) {
+            testdata = BreathData.get(0).data * getRandomNumber(0, 1);
+            breathdata = BreathData.get(0).data;
 
-        breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
-        breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
-        breathChartData.notifyDataSetChanged();
-        chartData.notifyDataChanged();
-        myChart.notifyDataSetChanged();
-        myChart.refreshDrawableState();
-        myChart.invalidate();
-        myChart.setVisibleXRange(6, 60);
-        myChart.moveViewToX(breathPlaneChartData.getEntryCount() - 60);
+            breathChartData.addEntry(new Entry(breathChartData.getEntryCount(), (float) breathdata));
+            breathPlaneChartData.addEntry(new Entry(breathPlaneChartData.getEntryCount(), (float) testdata));
+            breathChartData.notifyDataSetChanged();
+            chartData.notifyDataChanged();
+            myChart.notifyDataSetChanged();
+            myChart.refreshDrawableState();
+            myChart.invalidate();
+            myChart.setVisibleXRange(6, 60);
+            myChart.moveViewToX(breathPlaneChartData.getEntryCount() - 60);
+            renderer3D.gameEngine.isOkToPlay = true;
+        }
     }
 
     private int getRandomNumber(int Min, int Max) {
@@ -174,15 +185,26 @@ public class TGame extends Activity3D {
 
                             @Override
                             public void run() {
-                                PlanManager.update();
+                                AppState.recordData = true;
                                 long seconds = PlanManager.getDuration() / 1000;
                                 String left = (seconds / 60 != 0 ? (seconds / 60) + ":" : "")
                                         + (seconds != 0 ? seconds % 60 + ":" : "")
                                         + PlanManager.getDuration() % 1000;
                                 how_good.setText(BreathInterpreter.getStatus().getError().toString());
-                                highscore.setText("Time left: " + left + " Best score: " + Backend.highscore);
+                                highscore.setText("Time: " + left + " Best: " + Backend.highscore);
                                 score.setText("Score: " + Backend.score);
                                 refreshChart();
+                                if (renderer3D.gameEngine.collisionDetectionThread.isCrashed()) {
+                                    startTimeInMillisecond = System.currentTimeMillis();
+                                    theend.setTextColor(Color.RED);
+                                    theend.setTextSize(100f);
+                                    if (Backend.minusScore != 0)
+                                        theend.setText("-" + Backend.minusScore + " !");
+                                }
+                                if (System.currentTimeMillis() - startTimeInMillisecond > 1000) {
+                                    theend.setText("");
+                                }
+                                findViewById(R.id.loading_image).setVisibility(View.GONE);
                             }
                         });
                         Thread.sleep(50);
@@ -198,8 +220,9 @@ public class TGame extends Activity3D {
                         text = text + "\n" + "High scores:";
                         for (Object o : Backend.cacheManager.loadHighScore(Backend.gName))
                             text = text + "\n" + (int) o;
+                        theend.setTextColor(Color.WHITE);
+                        theend.setTextSize(20f);
                         theend.setText(text);
-
                     }
                 });
 

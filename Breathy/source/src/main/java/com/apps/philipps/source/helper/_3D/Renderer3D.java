@@ -4,7 +4,6 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 
-import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.helper.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;

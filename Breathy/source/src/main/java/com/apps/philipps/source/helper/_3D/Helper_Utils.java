@@ -49,7 +49,7 @@ public class Helper_Utils {
                             "vec3 toPointLight = vec3(u_PointLightPositions[i]) - vec3(v_Position);" +
                             "float distance = length(toPointLight);" +
                             "toPointLight = normalize(toPointLight);" +
-                            "float lambertian =  max(dot(v_Normal, toPointLight), 0.1);"+
+                            "float lambertian =  max(dot(v_Normal, toPointLight), 0.0);"+
                             "float diffuse = lambertian * (1.0 / (1.0 + (0.25 * distance * distance)));" +
                             "if(lambertian > 0.0) {"+
                                 "vec3 reflectDir = reflect(-toPointLight, v_Normal);"+
@@ -58,7 +58,7 @@ public class Helper_Utils {
                                 "specular = pow(specAngle, 4.0);"+
                             "}"+
 
-                            "lightingSum += ( (lambertian * diffuse * vec3(v_Color)) + (specular * u_PointLightColors[i]));" +
+                            "lightingSum += ((lambertian * diffuse  * specular) * u_PointLightColors[i]);" +
                         "}" +
                         "return lightingSum;" +
                     "}";
@@ -79,7 +79,7 @@ public class Helper_Utils {
                     "void main()" +
                     "{" +
                     // Multiply the color by the diffuse illumination level and texture value to get final output color.
-                    "gl_FragColor = (v_Color * vec4(lighting,1.0) * texture2D(u_Texture, v_TexCoordinate));" +
+                    "gl_FragColor = ((v_Color + vec4(lighting,1.0)) * texture2D(u_Texture, v_TexCoordinate));" +
                     //"gl_FragColor = (vec4(v_Normal, 0.0) * diffuse * texture2D(u_Texture, v_TexCoordinate));"+
                     // "gl_FragColor = vColor * texture2D(u_Texture, v_TexCoordinate);"+
                     "}";

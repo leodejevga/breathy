@@ -10,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.Game" />
-        <activity android:name=".activities.Application" />
+        <activity android:name=".activities.Application"
+                  android:screenOrientation="portrait"
+            />
+
         <activity
             android:name=".activities.Options"
             android:label="@string/title_activity_options" />

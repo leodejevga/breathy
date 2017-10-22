@@ -3,7 +3,9 @@ package com.breathy.racing;
 import android.content.Context;
 import android.content.Intent;
 
+import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.source.implementations.BreathyGameComponent;
+import com.breathy.racing.activities.Application;
 import com.breathy.racing.activities.Game;
 
 /**
@@ -18,8 +20,12 @@ public class RaceGame extends BreathyGameComponent {
 
     @Override
     public boolean start() {
-        Intent i = new Intent(context, Game.class);
-        context.startActivity(i);
+       if( PlanManager.getCurrentPlan()!=null) {
+            Intent i = new Intent(context, Application.class);
+            context.startActivity(i);
+        }
+        else
+            message("Bitte einen Plan auswählen!");
         return true;
     }
 }

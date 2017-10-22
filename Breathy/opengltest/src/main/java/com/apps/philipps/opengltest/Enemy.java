@@ -6,11 +6,14 @@ import java.util.Random;
 
 public class Enemy extends Car {
     private int counter = 0;
+    private int counterRange = 120;
     private boolean isTurningLeft = false;
     private boolean isTurningRight = false;
+    private float limit = GameEngine.streetSize / 1.5f;
+    private float xPosition = 0.0f;
 
     public Enemy() {
-        counter = new Random().nextInt(120);
+        counter = new Random().nextInt(counterRange);
     }
 
     public int getCounter() {
@@ -19,6 +22,10 @@ public class Enemy extends Car {
 
     public void setCounter(int counter) {
         this.counter = counter;
+    }
+
+    public void setNewCounter() {
+        this.counter = new Random().nextInt(counterRange);
     }
 
     public boolean isTurningLeft() {
@@ -42,4 +49,31 @@ public class Enemy extends Car {
         super.runsWithSpeed(speed);
     }
 
+    @Override
+    public void setCarBodyPosition(Vector position) {
+        xPosition = position.getF(0);
+        carBody.setPosition(position);
+    }
+
+    public void turnRight(float dx) {
+        if (Math.abs(xPosition) < limit) {
+            xPosition += dx;
+            carBody.turnLeft(dx);
+            for (Tire tire : tires)
+                tire.turnRight(dx);
+        } else {
+            isTurningRight = false;
+        }
+    }
+
+    public void turnLeft(float dx) {
+        if (Math.abs(xPosition) < limit) {
+            xPosition -= dx;
+            carBody.turnRight(dx);
+            for (Tire tire : tires)
+                tire.turnLeft(dx);
+        } else {
+            isTurningLeft = false;
+        }
+    }
 }

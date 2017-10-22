@@ -14,6 +14,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyGLRenderer extends Renderer3D {
     private Context mActivityContext;
+    public boolean isDrawing = false;
 
 
     public GameEngine gameEngine;
@@ -25,12 +26,14 @@ public class MyGLRenderer extends Renderer3D {
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         super.onSurfaceCreated(unused, config);
-        gameEngine = new GameEngine(mActivityContext);
+        gameEngine = new GameEngine(mActivityContext, this);
     }
 
     @Override
     public void onDrawFrame(GL10 unused) {
+        isDrawing = true;
         super.onDrawFrame(unused);
         gameEngine.runGame(deltaTime);
+        isDrawing=false;
     }
 }

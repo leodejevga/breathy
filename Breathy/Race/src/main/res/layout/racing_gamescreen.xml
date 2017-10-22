@@ -11,24 +11,105 @@
         android:id="@+id/gameArea"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp">
+        android:background="@drawable/black"
+
+        android:scaleType="fitXY"
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Highscore: "/>
+            android:text="Highscore: "
+            android:textColor="@android:color/holo_orange_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/holo_orange_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="TextView"
+            android:visibility="invisible"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:progress="0"/>
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_bar"/>
+
+        <ImageView
+            android:id="@+id/black"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            app:srcCompat="@drawable/black"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loadingArea"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp">
+
+        <ImageView
+            android:id="@+id/loadingImage"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            app:srcCompat="@drawable/loading_image"
+            />
+
+        <ProgressBar
+            android:id="@+id/loadingProgress2"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:backgroundTint="@android:color/white"
+            android:progress="50"/>
+
+        <TextView
+            android:id="@+id/loadingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/loadingProgress2"
+            android:layout_centerHorizontal="true"
+            android:text="Loading... 50%"
+            android:textColor="@color/colorAccent"/>
+
+        <ProgressBar
+            android:id="@+id/loadingProgress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/loadingProgress2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="11dp"/>
+
+
+
 
     </RelativeLayout>
 
