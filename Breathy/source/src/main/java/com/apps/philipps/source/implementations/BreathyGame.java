@@ -5,6 +5,7 @@ import android.content.Context;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.PlanManager;
+import com.apps.philipps.source.interfaces.IStart;
 import com.apps.philipps.source.interfaces.IGame;
 
 /**
@@ -15,11 +16,11 @@ public abstract class BreathyGame implements IGame {
     /**
      * The Game.
      */
-    protected BreathyGameComponent game;
+    protected IStart game;
     /**
      * The Options.
      */
-    protected BreathyGameComponent options;
+    protected IStart options;
     /**
      * The Price for this Game.
      */

@@ -89,7 +89,6 @@ public abstract class BreathInterpreter {
         double in = 0;
         double out = 0;
         double frequency = 0;
-        boolean readyToAdd = false;
         float founds = 0;
         for (int i = 0; i < data.length - 2 && data[i] != null && data[i + 1] != null; i++) {
             double d = data[i].data;

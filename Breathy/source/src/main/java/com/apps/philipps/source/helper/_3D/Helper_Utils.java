@@ -143,7 +143,7 @@ public class Helper_Utils {
 
             // If the compilation failed, delete the shader.
             if (compileStatus[0] == 0) {
-                Log.e("Helper_Utils :: CompileShader", "Error compiling shader: " + GLES20.glGetShaderInfoLog(shaderHandle));
+                Log.e("Helper_CompileShader", "Error compiling shader: " + GLES20.glGetShaderInfoLog(shaderHandle));
                 GLES20.glDeleteShader(shaderHandle);
                 shaderHandle = 0;
             }
@@ -191,7 +191,7 @@ public class Helper_Utils {
 
             // If the link failed, delete the program.
             if (linkStatus[0] == 0) {
-                Log.e("Helper_Utils :: CreateAndLinkProgramm", "Error compiling program: " + GLES20.glGetProgramInfoLog(programHandle));
+                Log.e("Helper_CompileShader", "Error compiling program: " + GLES20.glGetProgramInfoLog(programHandle));
                 GLES20.glDeleteProgram(programHandle);
                 programHandle = 0;
             }

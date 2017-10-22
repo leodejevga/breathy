@@ -3,12 +3,12 @@ package com.apps.philipps.source.implementations;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.apps.philipps.source.interfaces.IBootable;
+import com.apps.philipps.source.interfaces.IStart;
 
 /**
  * Created by Jevgenij Huebert on 28.01.2017. Project Breathy
  */
-public abstract class BreathyGameComponent implements IBootable {
+public abstract class BreathyGameComponent implements IStart {
     /**
      * The Context.
      */

@@ -2,6 +2,7 @@ package com.apps.philipps.source.helper._3D;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.support.annotation.CallSuper;
 import android.util.Log;
 
 import com.apps.philipps.source.helper.Vector;
@@ -43,6 +44,7 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
 
     }
 
+    @CallSuper
     @Override
     public void onDrawFrame(GL10 gl) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);

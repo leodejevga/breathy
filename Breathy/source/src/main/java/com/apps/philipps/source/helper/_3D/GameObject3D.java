@@ -6,7 +6,6 @@ import android.opengl.Matrix;
 import android.support.annotation.NonNull;
 
 import com.apps.philipps.source.helper.Vector;
-import com.apps.philipps.source.interfaces.IGameObject;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 /**
  * Created by Jevgenij Huebert on 23.03.2017. Project Breathy
  */
-public class GameObject3D implements IGameObject {
+public class GameObject3D {
 
     private Shape shape;
     private Vector rotation = new Vector(0, 0, 0, 0);
@@ -32,12 +31,10 @@ public class GameObject3D implements IGameObject {
         this.shape = shape;
     }
 
-    @Override
     public void setPosition(Vector position) {
         shape.setPosition(position);
     }
 
-    @Override
     public void setRotation(Vector rotation) {
         this.rotation = rotation;
     }
@@ -45,27 +42,22 @@ public class GameObject3D implements IGameObject {
     /**
      * Gets rotation.
      */
-    @Override
     public Vector getRotation() {
         return rotation;
     }
 
-    @Override
     public Vector getPosition() {
         return shape.getPosition();
     }
 
-    @Override
     public boolean isMoving() {
         return false;
     }
 
-    @Override
     public void move(Vector destination, double speed) {
 
     }
 
-    @Override
     public void rotate(Vector destination) {
         init();
         setRotation(destination);
@@ -75,7 +67,6 @@ public class GameObject3D implements IGameObject {
         Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
     }
 
-    @Override
     public void move(Vector destination) {
         init();
         shape.setPosition(getPosition().add(destination));
@@ -86,24 +77,22 @@ public class GameObject3D implements IGameObject {
         Matrix.multiplyMM(shape.model_Matrix, 0, shape.model_Matrix, 0, temp, 0);
     }
 
-    @Override
+    
     public void move(double speed) {
 
     }
 
-    @Override
+    
     public void update(double deltaMilliseconds) {
         init();
         shape.draw(result);
         isResultMatrixSet = false;
     }
 
-    @Override
-    public boolean intersect(IGameObject gameObject) {
+    public boolean intersect(GameObject3D gameObject) {
         return false;
     }
 
-    @Override
     public Vector getBoundaries() {
         return this.shape.boundingBox.getMax_min_value();
     }

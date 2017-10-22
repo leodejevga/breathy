@@ -12,12 +12,13 @@ public class FadeGame extends BreathyGameComponent {
      *
      * @param context the context
      */
-    public FadeGame(Context context){
+    public FadeGame(Context context) {
         this.context = context;
     }
+
     @Override
     public boolean start() {
-        if(context==null)
+        if (context == null)
             return false;
         Intent i = new Intent(context, Game.class);
         context.startActivity(i);
