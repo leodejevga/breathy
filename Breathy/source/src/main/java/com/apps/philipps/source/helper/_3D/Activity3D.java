@@ -45,7 +45,7 @@ public abstract class Activity3D extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "OnDestroy");
-        BreathData.saveRest();
+        BreathData.save(getClass());
         AppState.inGame = false;
         PlanManager.stop();
         BreathData.save(getClass());
