@@ -31,18 +31,19 @@ public abstract class GOFactory {
         ship.remove();
     }
 
-    public static abstract class GOAnimation extends Animation{
+    public static abstract class GOAnimation extends Animation {
         protected GameObject2D o;
         protected ViewGroup game;
 
-        public GOAnimation(int level){
+        public GOAnimation(int level) {
             super(level);
         }
 
         @Override
         public void remove() {
             super.remove();
-            game.removeView(o.getView());
+            if (o != null)
+                game.removeView(o.getView());
         }
     }
 

@@ -23,7 +23,7 @@ public class Test extends BreathyGame {
     @Override
     public @RawRes
     Integer getPreview(){
-        return R.raw.preview3d;
+        return R.raw.spacefightpreview;
     }
 
     @Override

@@ -152,7 +152,6 @@ public abstract class Activity2D extends Activity implements IObserver {
             @Override
             public void run() {
                 try {
-                    AppState.recordData = true;
                     currentTime = System.currentTimeMillis();
                     delta = currentTime - frameTime;
                     draw();
@@ -240,8 +239,10 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected void onPause() {
         super.onPause();
         Log.e(TAG, "OnPause");
-        PlanManager.pause();
-        AppState.recordData = AppState.inGame = false;
+        if (AppState.inGame) {
+            PlanManager.pause();
+        }
+        AppState.recordData = false;
         draw = false;
     }
 
@@ -249,19 +250,30 @@ public abstract class Activity2D extends Activity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "OnDestroy");
+        if (AppState.inGame) {
+            BreathData.save(getClass());
+            PlanManager.stop();
+            AppState.inGame = false;
+        }
         BreathData.removeObserver(this);
-        BreathData.save(getClass());
-        PlanManager.stop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "OnResume");
-        AppState.inGame = AppState.recordData = true;
+        AppState.recordData = true;
+        if (AppState.inGame) {
+            PlanManager.resume();
+        }
         BreathData.addObserver(this);
-        PlanManager.resume();
         starToDraw();
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AppState.inGame = true;
     }
 
     @Override

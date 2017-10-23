@@ -7,16 +7,17 @@ package com.apps.philipps.source;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * This Class must be instatiate from Backend Classes and save the specific data on the hard drive
@@ -58,9 +59,9 @@ public class SaveData<T extends Serializable> {
         return null;
     }
 
-    public static Object readFile(@NonNull String path) {
+    public static Object readFile(@NonNull String name) {
         Object result = null;
-        File file = new File(AppState.DATA_STORAGE + File.separator + path);
+        File file = new File(AppState.BREATHY_STORAGE + name);
         try {
             ObjectInputStream fileInputStream = new ObjectInputStream(new FileInputStream(file));
             result = fileInputStream.readObject();
@@ -70,9 +71,12 @@ public class SaveData<T extends Serializable> {
         return result;
     }
 
-    public static void writeFile(@NonNull String path, Serializable serializable) {
-        File file = new File(AppState.DATA_STORAGE + File.separator + path);
+    public static void writeFile(@NonNull String name, Serializable serializable) {
         try {
+            File file = new File(AppState.BREATHY_STORAGE + name);
+            File folder = new File(AppState.BREATHY_STORAGE);
+            if (!folder.exists())
+                folder.mkdir();
             ObjectOutputStream fileOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             fileOutputStream.writeObject(serializable);
         } catch (IOException e) {
@@ -82,24 +86,21 @@ public class SaveData<T extends Serializable> {
 
     public static void savePlanManager(Activity activity) {
         try {
-            File file = new File(AppState.PLAN_STORAGE);
             if (AppState.verifyStoragePermissions(activity)) {
+                File file = new File(AppState.PLAN_STORAGE);
+                File folder = new File(AppState.BREATHY_STORAGE);
+                if (!folder.exists())
+                    folder.mkdir();
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-                PlanManager.PlanManagerInstance planManagerInstanceForTesting = new PlanManager.PlanManagerInstance();
-                oos.writeObject(planManagerInstanceForTesting);
-                loadPlanManager();
-                if (planManagerInstanceForTesting.compareTo(new PlanManager.PlanManagerInstance()) == 0) {
-                    Toast.makeText(activity, "Plans are saved correctly", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(activity, "An error has been occurred", Toast.LENGTH_LONG).show();
-                }
+                PlanManager.PlanManagerInstance planInstance = new PlanManager.PlanManagerInstance();
+                oos.writeObject(planInstance);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void loadPlanManager() {
+    public static void loadPlanManager() throws PlanManager.PlanManagerAlreadyInitialized {
         try {
             File file = new File(AppState.PLAN_STORAGE);
             if (file.exists()) {
@@ -107,7 +108,46 @@ public class SaveData<T extends Serializable> {
                 PlanManager.PlanManagerInstance instance = (PlanManager.PlanManagerInstance) ois.readObject();
                 PlanManager.init(instance);
             }
-        } catch (ClassNotFoundException | IOException | PlanManager.PlanManagerAlreadyInitialized e) {
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        PlanManager.init();
+    }
+
+    public static void saveDataBlock(BreathData.DataBlock block) {
+        try {
+            File file = new File(AppState.BREATHY_STORAGE + block.getName());
+            File folder = new File(AppState.BREATHY_STORAGE);
+            if (!folder.exists())
+                folder.mkdir();
+
+            FileWriter bw = new FileWriter(file);
+
+            BreathData.DataInfo i = block.info;
+            PlanManager.Plan p = i.plan;
+            String toWrite = BreathData.DataBlock.TAG + ":\n\n" +
+                    "Information:\n" +
+                    "\tgame = " + i.game.getName() + "\n" +
+                    "\tfinish time = " + i.date.getTimeInMillis() + "\n" +
+                    "\tPlan: " + p.getName() + "\n";
+
+            bw.write(toWrite);
+            toWrite = "";
+            for (PlanManager.Plan.Option o : p) {
+                toWrite += "\t\tOption = " + o.getName() + "\n" +
+                        "\t\t\tin = " + o.getIn() + "\n" +
+                        "\t\t\tout = " + o.getOut() + "\n" +
+                        "\t\t\ttime = " + o.getDuration() + "\n" +
+                        "\t\t\tfrequency = " + o.getFrequency() + "\n";
+            }
+            toWrite += "Data:\n";
+            bw.write(toWrite);
+            for (BreathData.Element e : block.ram) {
+                bw.write("\t" + e.date.getTimeInMillis() + ": " + e.data + "\n");
+            }
+            bw.close();
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

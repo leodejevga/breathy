@@ -23,12 +23,10 @@ public abstract class PlanManager implements Serializable {
     private PlanManager() {
     }
 
-    public static void init(PlanManagerInstance instance) throws PlanManagerAlreadyInitialized {
-        if (!initialized) {
-            plans = instance.plans;
-            currentPlan = instance.currentPlan;
-            initialized = true;
+    public static void init() throws PlanManagerAlreadyInitialized {
 
+        if (!initialized) {
+            initialized = true;
             Thread update = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -37,13 +35,23 @@ public abstract class PlanManager implements Serializable {
                         try {
                             Thread.sleep(50);
 
-                        } catch (InterruptedException e){
-                            Log.e(TAG, "Update Plans has been interrupter", e);
+                        } catch (InterruptedException e) {
+                            Log.e(TAG, "Update Plan has been interrupter", e);
                         }
                     }
                 }
             });
             update.start();
+        } else
+            throw new PlanManagerAlreadyInitialized();
+
+    }
+
+    public static void init(PlanManagerInstance instance) throws PlanManagerAlreadyInitialized {
+        if (!initialized) {
+            plans = instance.plans;
+            currentPlan = instance.currentPlan;
+            init();
         } else
             throw new PlanManagerAlreadyInitialized();
     }
@@ -186,7 +194,7 @@ public abstract class PlanManager implements Serializable {
     }
 
 
-    public static class Plan implements Cloneable, Serializable, Part, Iterable, Comparable {
+    public static class Plan implements Cloneable, Serializable, Part, Iterable<Plan.Option>, Comparable<Plan> {
         private List<Option> options;
         private long currentTime;
         private int currentOption;
@@ -279,6 +287,13 @@ public abstract class PlanManager implements Serializable {
             return currentTime;
         }
 
+        public long getDuration() {
+            long result = 0;
+            for (Option o : options)
+                result += o.getDuration();
+            return result;
+        }
+
 
         private boolean startPlan() {
             if (running)
@@ -335,7 +350,8 @@ public abstract class PlanManager implements Serializable {
 
         @Override
         public int getId() {
-            return plans.indexOf(this);
+            int result = plans.indexOf(this);
+            return result;
         }
 
         @Override
@@ -345,7 +361,7 @@ public abstract class PlanManager implements Serializable {
 
 
         @Override
-        protected Object clone() throws CloneNotSupportedException {
+        protected Plan clone() {
             Plan result = new Plan();
             result.currentOption = currentOption;
             result.currentTime = currentTime;
@@ -354,7 +370,7 @@ public abstract class PlanManager implements Serializable {
             result.options = new ArrayList<>();
             for (Option o :
                     options) {
-                options.add((Option) o.clone());
+                options.add(o.clone());
             }
             return result;
         }
@@ -365,25 +381,23 @@ public abstract class PlanManager implements Serializable {
         }
 
         @Override
-        public Iterator iterator() {
+        public Iterator<Option> iterator() {
             return options.iterator();
         }
 
         @Override
-        public int compareTo(@NonNull Object o) {
-            if (o instanceof Plan) {
-                Plan p = (Plan) o;
-                if (p.currentOption == this.currentOption
-                        && p.currentTime == this.currentTime
-                        && p.delta == this.delta
-                        && p.running == this.running)
-                    for (int i = 0; i < this.options.size(); i++) {
-                        if (p.getOption(i).compareTo(this.getOption(i)) != 0)
-                            return 1;
-                    }
-                return 0;
+        public int compareTo(@NonNull Plan p) {
+            if (p.currentOption == this.currentOption
+                    && p.currentTime == this.currentTime
+                    && p.delta == this.delta
+                    && p.running == this.running) {
+                for (int i = 0; i < this.options.size(); i++) {
+                    int result;
+                    if ((result = p.getOption(i).compareTo(this.getOption(i))) != 0)
+                        return result;
+                }
             }
-            return -1;
+            return 0;
         }
 
         public enum BreathIntensity {
@@ -419,6 +433,11 @@ public abstract class PlanManager implements Serializable {
                         prev = i;
                 return null;
             }
+
+            @Override
+            public String toString() {
+                return id + ", " + value + ", " + name;
+            }
         }
 
         @Override
@@ -427,7 +446,7 @@ public abstract class PlanManager implements Serializable {
         }
 
 
-        public static class Option implements Cloneable, Serializable, Part, Comparable {
+        public static class Option implements Cloneable, Serializable, Part, Comparable<Option> {
             private BreathIntensity out;
             private BreathIntensity in;
             private int frequency;
@@ -490,7 +509,7 @@ public abstract class PlanManager implements Serializable {
             }
 
             @Override
-            protected Object clone() throws CloneNotSupportedException {
+            protected Option clone() {
                 return new Option(in, out, frequency, duration);
             }
 
@@ -505,18 +524,18 @@ public abstract class PlanManager implements Serializable {
             }
 
             @Override
-            public int compareTo(@NonNull Object o) {
-                if (o instanceof Option) {
-                    Option op = (Option) o;
-                    if (this.out == op.out
-                            && this.in == op.in
-                            && this.frequency == op.frequency
-                            && this.duration == op.duration
-                            && this.parent == op.parent
-                            && this.name == op.name)
-                        return 0;
-                }
-                return -1;
+            public int compareTo(@NonNull Option op) {
+                if (duration > op.duration)
+                    return 1;
+                else if (duration < op.duration) return -1;
+
+                if (frequency > op.frequency)
+                    return 1;
+                else if (frequency < op.frequency) return -1;
+
+                if (parent == op.parent && name.equals(op.name) && in == op.in && out == op.out)
+                    return 0;
+                return 1;
             }
         }
 

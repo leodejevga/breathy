@@ -18,8 +18,8 @@ import java.io.File;
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
 public class AppState {
-    public final static String PLAN_STORAGE = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "PlanManager.pm";
-    public final static String DATA_STORAGE = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "BreathData" + File.separator;
+    public final static String BREATHY_STORAGE = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "Breathy" + File.separator;
+    public final static String PLAN_STORAGE = BREATHY_STORAGE + "PlanManager.pm";
     public final static boolean simulateBreathy = true; //Debug purpose
     public final static boolean DEVELOPER = true;
 
@@ -39,7 +39,7 @@ public class AppState {
 
     public final static double MAX_BT_VALUE = 1024;
     public static int breathyNormState = 700;
-    public static int breathyDataFrequency = 4;
+    public static int breathyDataFrequency = 6;
     public static double breathyUserMax = 1024;
     public static double breathyUserMin = 200;
 

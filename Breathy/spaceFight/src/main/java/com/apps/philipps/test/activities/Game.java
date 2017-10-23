@@ -135,11 +135,10 @@ public class Game extends Activity2D {
         }
 
         SoundManager.init(this);
-        AppState.recordData = false;
         GameStats.init(SCREEN_FACTOR);
         game = (RelativeLayout) findViewById(R.id.test_game2d);
         if (GameStats.day)
-            game.setBackgroundColor(Color.WHITE);
+            game.setBackgroundColor(Color.CYAN);
         GOFactory.init(this, new Vector(50, getScreenHeight() / 2), game);
         finished = (TextView) findViewById(R.id.finished);
         secondsLeft = (TextView) findViewById(R.id.seconds_left);

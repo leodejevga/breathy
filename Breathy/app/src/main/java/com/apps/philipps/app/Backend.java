@@ -11,6 +11,7 @@ import com.apps.philipps.opengltest.Test;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.Coins;
+import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.source.SaveData;
 import com.apps.philipps.source.cachemanager.CacheManager;
 import com.apps.philipps.source.interfaces.IGame;
@@ -63,7 +64,11 @@ public class Backend {
      */
     public static boolean init(Context context) {
         if (!initialized) {
-            SaveData.loadPlanManager();
+            try {
+                SaveData.loadPlanManager();
+            } catch (PlanManager.PlanManagerAlreadyInitialized e) {
+                e.printStackTrace();
+            }
             cacheManager = new CacheManager(context);
             games = new ArrayList<>();
             Backend.games.add(new SpaceFight());
@@ -74,14 +79,14 @@ public class Backend {
 //            Backend.games.add(new AudioSurf());
 
 
-            for(IGame game : Backend.games){
+            for (IGame game : Backend.games) {
                 game.init(context, Backend.cacheManager.isIGameBought(game.getName()));
             }
             BreathData.init();
             Coins.init(context);
-            if(AppState.simulateBreathy) {
+            if (AppState.simulateBreathy) {
                 breathSimulator = BreathSimulator.getBreathSimulator();
-                breathSimulator.init(context, AppState.breathyDataFrequency);
+                breathSimulator.init(context);
 //              breathSimulator.removeRecordings(true);
 //              BreathSimulator.recordData(500);
             }

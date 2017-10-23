@@ -29,14 +29,14 @@ public class BreathSimulator {
         rate = 2;
     }
 
-    public BreathSimulator init(Context context, Integer... rate) {
+    public BreathSimulator init(Context context) {
         if (!initialized) {
             saveData = new SaveData<>(context);
             data = saveData.readObject(DATA_NAME);
             if (data == null)
                 data = new Integer[0];
             startSimulation();
-            simulator.rate = rate.length > 0 ? rate[0] : simulator.rate;
+            simulator.rate = AppState.breathyDataFrequency;
             initialized = true;
             simulator = this;
         }
@@ -112,6 +112,7 @@ public class BreathSimulator {
         Thread simulator = new Thread(null, new Runnable() {
             private long start = System.currentTimeMillis();
             private int value = 0;
+
             @Override
             public void run() {
 //                Looper.prepare();
@@ -120,7 +121,7 @@ public class BreathSimulator {
                 double millis = 1000 / rate;
                 while (AppState.btState == AppState.BtState.Connected) {
                     delta = System.currentTimeMillis() - start;
-                    if(data == null || data.length==0 || index>=data.length){
+                    if (data == null || data.length == 0 || index >= data.length) {
                         generate();
                         index = 0;
                     }
@@ -138,9 +139,9 @@ public class BreathSimulator {
     }
 
     private Random r = new Random(0);
-    private int num = 0;
-    private void generate(){
-        int kind = r.nextInt(3)%3;
+
+    private void generate() {
+        int kind = r.nextInt(3) % 3;
         breath();
 //        if(num++%20-10<0)
 //            pause();
@@ -152,63 +153,75 @@ public class BreathSimulator {
     }
 
     private void breath() {
-        data = new Integer[20];
-        data[0] = 700;
-        data[1] = 750 + r.nextInt()%30;
-        data[2] = 800 + r.nextInt()%30;
-        data[3] = 900 + r.nextInt()%30;
-        data[4] = 1000 + r.nextInt()%10;
-        data[5] = 950 + r.nextInt()%30;
-        data[6] = 850 + r.nextInt()%30;
-        data[7] = 750 + r.nextInt()%30;
-        data[8] = 700 + r.nextInt()%30;
-        data[9] = 700 + r.nextInt()%30;
-        data[10] = 650 + r.nextInt()%30;
-        data[11] = 600 + r.nextInt()%30;
-        data[12] = 550 + r.nextInt()%30;
-        data[13] = 500 + r.nextInt()%30;
-        data[14] = 450 + r.nextInt()%30;
-        data[15] = 400 + r.nextInt()%30;
-        data[16] = 300 + r.nextInt()%30;
-        data[17] = 400 + r.nextInt()%30;
-        data[18] = 550 + r.nextInt()%30;
-        data[19] = 700 + r.nextInt()%30;
+        data = new Integer[29];
+        data[0] = 700 + r.nextInt() % 10;
+        data[1] = 700 + r.nextInt() % 10;
+        data[2] = 700 + r.nextInt() % 10;
+        data[3] = 700 + r.nextInt() % 10;
+        data[4] = 750 + r.nextInt() % 30;
+        data[5] = 800 + r.nextInt() % 30;
+        data[6] = 900 + r.nextInt() % 30;
+        data[7] = 1000 + r.nextInt() % 10;
+        data[8] = 950 + r.nextInt() % 30;
+        data[9] = 850 + r.nextInt() % 30;
+        data[10] = 750 + r.nextInt() % 30;
+        data[11] = 700 + r.nextInt() % 10;
+        data[12] = 700 + r.nextInt() % 10;
+        data[13] = 700 + r.nextInt() % 10;
+        data[14] = 700 + r.nextInt() % 10;
+        data[15] = 700 + r.nextInt() % 10;
+        data[16] = 700 + r.nextInt() % 10;
+        data[17] = 700 + r.nextInt() % 10;
+        data[18] = 700 + r.nextInt() % 10;
+        data[19] = 650 + r.nextInt() % 30;
+        data[20] = 600 + r.nextInt() % 30;
+        data[21] = 550 + r.nextInt() % 30;
+        data[22] = 500 + r.nextInt() % 30;
+        data[23] = 450 + r.nextInt() % 30;
+        data[24] = 400 + r.nextInt() % 30;
+        data[25] = 300 + r.nextInt() % 30;
+        data[26] = 400 + r.nextInt() % 30;
+        data[27] = 550 + r.nextInt() % 30;
+        data[28] = 700 + r.nextInt() % 30;
     }
+
     private void pause() {
         data = new Integer[10];
-        data[0] = 700 + r.nextInt()%10;
-        data[1] = 700 + r.nextInt()%10;
-        data[2] = 700 + r.nextInt()%10;
-        data[3] = 700 + r.nextInt()%10;
-        data[4] = 700 + r.nextInt()%10;
-        data[5] = 700 + r.nextInt()%10;
-        data[6] = 700 + r.nextInt()%10;
-        data[7] = 700 + r.nextInt()%10;
-        data[8] = 700 + r.nextInt()%10;
-        data[9] = 700 + r.nextInt()%10;
+        data[0] = 700 + r.nextInt() % 10;
+        data[1] = 700 + r.nextInt() % 10;
+        data[2] = 700 + r.nextInt() % 10;
+        data[3] = 700 + r.nextInt() % 10;
+        data[4] = 700 + r.nextInt() % 10;
+        data[5] = 700 + r.nextInt() % 10;
+        data[6] = 700 + r.nextInt() % 10;
+        data[7] = 700 + r.nextInt() % 10;
+        data[8] = 700 + r.nextInt() % 10;
+        data[9] = 700 + r.nextInt() % 10;
     }
+
     private void breathIn() {
         data = new Integer[10];
         data[0] = 700;
-        data[1] = 750 + r.nextInt()%30;
-        data[2] = 800 + r.nextInt()%30;
-        data[3] = 900 + r.nextInt()%30;
-        data[4] = 1000 + r.nextInt()%24;
-        data[5] = 950 + r.nextInt()%30;
-        data[6] = 850 + r.nextInt()%30;
-        data[7] = 750 + r.nextInt()%30;
-        data[8] = 700 + r.nextInt()%30;
-        data[9] = 700 + r.nextInt()%30;
+        data[1] = 750 + r.nextInt() % 30;
+        data[2] = 800 + r.nextInt() % 30;
+        data[3] = 900 + r.nextInt() % 30;
+        data[4] = 1000 + r.nextInt() % 24;
+        data[5] = 950 + r.nextInt() % 30;
+        data[6] = 850 + r.nextInt() % 30;
+        data[7] = 750 + r.nextInt() % 30;
+        data[8] = 700 + r.nextInt() % 30;
+        data[9] = 700 + r.nextInt() % 30;
     }
+
     private void breathOut() {
         data = new Integer[8];
         data[0] = 700;
-        data[1] = 600 + r.nextInt()%30;
-        data[2] = 500 + r.nextInt()%30;
-        data[3] = 400 + r.nextInt()%30;
-        data[4] = 300 + r.nextInt()%30;
-        data[5] = 400 + r.nextInt()%30;
-        data[6] = 550 + r.nextInt()%30;
-        data[7] = 700 + r.nextInt()%30;
+        data[1] = 600 + r.nextInt() % 30;
+        data[2] = 500 + r.nextInt() % 30;
+        data[3] = 400 + r.nextInt() % 30;
+        data[4] = 300 + r.nextInt() % 30;
+        data[5] = 400 + r.nextInt() % 30;
+        data[6] = 550 + r.nextInt() % 30;
+        data[7] = 700 + r.nextInt() % 30;
     }
 }

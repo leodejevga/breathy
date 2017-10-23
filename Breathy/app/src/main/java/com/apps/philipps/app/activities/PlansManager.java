@@ -35,6 +35,7 @@ public class PlansManager extends AppCompatActivity {
             startActivity(i);
         });
     }
+
     private void initExpandableListView() {
         ExpandableListViewAdapter expandableListViewAdapter = new ExpandableListViewAdapter(this,
                 active(), edit(), delete());
@@ -43,9 +44,10 @@ public class PlansManager extends AppCompatActivity {
         elvPlans.setAdapter(expandableListViewAdapter);
         elvPlans.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             private int prev = -1;
+
             @Override
             public void onGroupExpand(int groupPosition) {
-                if(prev!=-1 && prev!=groupPosition)
+                if (prev != -1 && prev != groupPosition)
                     elvPlans.collapseGroup(prev);
                 prev = groupPosition;
             }
@@ -55,29 +57,32 @@ public class PlansManager extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        for(PlanManager.Plan plan : PlanManager.getPlans()){
-            if(plan.getName()==null || plan.getName().length()==0)
+        for (PlanManager.Plan plan : PlanManager.getPlans()) {
+            if (plan.getName() == null || plan.getName().length() == 0)
                 plan.setName("SpaceFight Plan");
         }
         initExpandableListView();
     }
 
-    private View.OnClickListener active(){
+    private View.OnClickListener active() {
         return v -> {
             PlanManager.setActive(ExpandableListViewAdapter.selected);
             initExpandableListView();
         };
     }
-    private View.OnClickListener edit(){
+
+    private View.OnClickListener edit() {
         return v -> {
             Intent i = new Intent(this, CreatePlan.class);
             i.putExtra("plan", ExpandableListViewAdapter.selected);
             startActivity(i);
         };
     }
-    private View.OnClickListener delete(){
+
+    private View.OnClickListener delete() {
         return v -> {
-            PlanManager.deletePlan(ExpandableListViewAdapter.selected); initExpandableListView();
+            PlanManager.deletePlan(ExpandableListViewAdapter.selected);
+            initExpandableListView();
             SaveData.savePlanManager(this);
         };
     }

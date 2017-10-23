@@ -39,7 +39,7 @@ public class Coins implements Comparable<Integer> {
             try {
                 amount = credits.readObject("credits");
             } catch (Exception e) {
-                amount = 1000;
+                amount = 0;
             }
         }
         initialized = true;

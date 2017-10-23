@@ -33,6 +33,6 @@ public class AudioSurf extends BreathyGame {
      */
     @Override
     public @RawRes Integer getPreview(){
-        return R.raw.preview;
+        return R.raw.spacefightpreview;
     }
 }

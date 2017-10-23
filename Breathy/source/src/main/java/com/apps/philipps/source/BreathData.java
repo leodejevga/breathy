@@ -1,11 +1,8 @@
 package com.apps.philipps.source;
 
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.ContactsContract;
-import android.util.Log;
 
 import com.apps.philipps.source.interfaces.IObserver;
 
@@ -59,10 +56,19 @@ public abstract class BreathData {
 
 
     public static void add(Element... elements) {
-        for (Element element : elements) {
+        for (final Element element : elements) {
             if (AppState.recordData)
                 ramGame.add(element);
             ramTemp.add(element);
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (IObserver o : observer) {
+                        o.call(element, BreathInterpreter.getStatus());
+                    }
+                }
+            });
         }
     }
 
@@ -117,7 +123,7 @@ public abstract class BreathData {
     }
 
 
-    private static class RAM extends ArrayList<Element> implements Serializable {
+    public static class RAM extends ArrayList<Element> implements Serializable {
         private int ramSize;
 
         /**
@@ -158,41 +164,50 @@ public abstract class BreathData {
 
         public synchronized void save(Class gameClass) {
             DataBlock dataBlock = new DataBlock(this, gameClass);
-            SaveData.writeFile(dataBlock.getName(), dataBlock);
+            SaveData.saveDataBlock(dataBlock);
             clear();
+        }
+
+        @Override
+        public String toString() {
+            return size() + " entries" + (ramSize >= 0 ? "of maximum " + ramSize + " entries" : " of unlimited RAM");
         }
     }
 
     public static class DataInfo implements Serializable {
         public static final String TAG = "BreathDataInfo";
         public Calendar date;
+        public Class game;
         public PlanManager.Plan plan;
+
+        public String getName() {
+            return game.getSimpleName() + "_" + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE) + ":" + date.get(Calendar.SECOND) + ":" + date.get(Calendar.MILLISECOND);
+        }
 
         @Override
         public String toString() {
-            return plan.getName() + "_" + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE) + ":" + date.get(Calendar.SECOND) + ":" + date.get(Calendar.MILLISECOND);
+            return (plan == null ? "" : plan.getName() + "_") + getName();
         }
 
-        public DataInfo() {
-            date = Calendar.getInstance();
-            plan = PlanManager.getCurrentPlan();
+        public DataInfo(Class game, Calendar date) {
+            this.game = game;
+            this.plan = PlanManager.getCurrentPlan();
+            this.date = date;
         }
     }
 
     public static class DataBlock implements Serializable {
         public RAM ram;
-        public Class game;
         public DataInfo info;
-        private static final String TAG = DataBlock.class.getSimpleName();
+        public static final String TAG = DataBlock.class.getSimpleName();
 
         public DataBlock(RAM ram, Class game) {
-            this.game = game;
             this.ram = ram;
-            this.info = new DataInfo();
+            this.info = new DataInfo(game, ram.size() > 0 ? ram.get(0).date : Calendar.getInstance());
         }
 
         public static String[] getNames(final Class gameClass) {
-            File f = new File(AppState.DATA_STORAGE);
+            File f = new File(AppState.BREATHY_STORAGE);
             return f.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
@@ -202,7 +217,7 @@ public abstract class BreathData {
         }
 
         public String getName() {
-            return TAG + "_" + game.getSimpleName() + "_" + info;
+            return TAG + "_" + info.getName() + ".txt";
         }
 
         @Override

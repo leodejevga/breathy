@@ -26,7 +26,7 @@ public class Race extends BreathyGame {
     public
     @RawRes
     Integer getPreview() {
-        return R.raw.preview2;
+        return R.raw.spacefightpreview;
     }
 }
 

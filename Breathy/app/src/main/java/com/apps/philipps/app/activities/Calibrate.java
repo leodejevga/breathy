@@ -33,6 +33,7 @@ public class Calibrate extends Activity2D {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibrate);
+        AppState.inGame = false;
     }
 
     @Override
@@ -91,8 +92,6 @@ public class Calibrate extends Activity2D {
         min = (TextView) findViewById(R.id.data_min);
         max = (TextView) findViewById(R.id.data_max);
         calibrateInformation = (TextView) findViewById(R.id.calibrateInformation);
-
-        AppState.recordData = AppState.inGame = false;
     }
 
     @Override
@@ -114,5 +113,16 @@ public class Calibrate extends Activity2D {
             this.o = o;
             this.data = data;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppState.recordData = false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
