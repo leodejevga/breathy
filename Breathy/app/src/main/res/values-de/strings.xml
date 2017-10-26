@@ -55,4 +55,5 @@
     <string name="cancel">Abbrechen</string>
     <string name="submit">Übernehmen</string>
     <string name="max">Max</string>
+    <string name="app_name">Breathy</string>
 </resources>
