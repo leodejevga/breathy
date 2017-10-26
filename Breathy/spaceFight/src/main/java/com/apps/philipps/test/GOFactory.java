@@ -28,7 +28,7 @@ public abstract class GOFactory {
 
     public static void init(Context context, Vector position, ViewGroup game) {
         ship = new Ship(context, position, game);
-        ship.remove();
+        ship.removeNormal();
     }
 
     public static abstract class GOAnimation extends Animation {
@@ -44,6 +44,9 @@ public abstract class GOFactory {
             super.remove();
             if (o != null)
                 game.removeView(o.getView());
+        }
+        protected void removeNormal(){
+            super.remove();
         }
     }
 
