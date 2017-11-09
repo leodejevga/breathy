@@ -7,21 +7,20 @@ import android.widget.ImageView;
 
 import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Vector;
-
 /**
  * Created by Jevgenij Huebert on 17.03.2017. Project Breathy
  */
 public class GameObject2D extends Animated implements Cloneable {
 
-    protected final String TAG = getClass().getSimpleName();
+    public boolean rotateToDirection = true;
+    private Animated rotation = new Animated();
     public boolean intercectable = true;
     private View object;
-    private double curRotation;
     public final long created = System.currentTimeMillis();
+    protected final String TAG = getClass().getSimpleName();
 
     public GameObject2D(Context context) {
-        super(new Vector());
-        object = new ImageView(context);
+        this(new ImageView(context));
     }
 
     public GameObject2D(@NonNull View object) {
@@ -34,12 +33,14 @@ public class GameObject2D extends Animated implements Cloneable {
 
 
     public GameObject2D(@NonNull View object, Vector position, Vector destination) {
-        this(object, position, destination, 0, false);
+        this(object, position, destination, 1, false);
     }
 
     public GameObject2D(@NonNull View object, Vector position, Vector destination, double speed, boolean active) {
         super(position, destination, speed, active);
         this.object = object;
+        this.object.setPivotX(0);
+        this.object.setPivotY(0);
         if (this.position == null)
             this.position = new Vector(this.object.getX(), this.object.getY());
         else {
@@ -50,12 +51,12 @@ public class GameObject2D extends Animated implements Cloneable {
             this.destination = this.position.clone();
     }
 
-    public GameObject2D(@NonNull View object, @NonNull GameObject2D gameObject) {
-        this(object, gameObject.getPosition(), gameObject.getDestination());
-        setSpeed(gameObject.getSpeed());
-        if(gameObject.isMoving())
+    public GameObject2D(@NonNull View object, @NonNull GameObject2D gameObject2D) {
+        this(object, gameObject2D.getPosition().clone(), gameObject2D.getDestination().clone());
+        setSpeed(gameObject2D.getSpeed());
+        if (gameObject2D.isMoving())
             move();
-        curRotation = gameObject.curRotation;
+        rotation = gameObject2D.rotation.clone();
     }
 
     public View getView() {
@@ -66,6 +67,8 @@ public class GameObject2D extends Animated implements Cloneable {
     @Override
     public void update(double deltaMilliseconds) {
         super.update(deltaMilliseconds);
+        if(rotateToDirection)
+            rotate();
         object.setX(position.getF(0));
         object.setY(position.getF(1));
     }
@@ -77,16 +80,13 @@ public class GameObject2D extends Animated implements Cloneable {
         object.setY(position.getF(1));
     }
 
-    public void setRotation(double alpha) {
-        curRotation += alpha;
-        //Animation rotationAnimation = new RotateAnimation(0.0f, -90.0f, 0.5f, 0.5f);
-        //rotationAnimation.setDuration(1000);
-        //rotationAnimation.setFillAfter(true);
-        //rotationAnimation.setInterpolator(new LinearInterpolator());
-        //getView().startAnimation( rotationAnimation );
-        calcNewTarget(alpha);
-        getView().setRotation((float) curRotation);
-
+    public void setRotation(Vector rotation) {
+        float angle = (float) Math.toDegrees(Math.atan2(rotation.get(1), rotation.get(0)));
+        getView().setRotation(angle);
+    }
+    public void rotate(){
+        float angle = (float) Math.toDegrees(Math.atan2(destination.get(1)-position.get(1), destination.get(0)-position.get(0)));
+        getView().setRotation(angle);
     }
 
     /**
@@ -98,21 +98,19 @@ public class GameObject2D extends Animated implements Cloneable {
         this.object = object;
     }
 
-    public void calcNewTarget(double alpha) {
-
-        float x = destination.getF(0);
-        float y = destination.getF(1);
-        float xD = position.getF(0);
-        float yD = position.getF(1);
-        float newX = (float) (xD + (x - xD) * Math.cos(alpha) - (y - yD) * Math.sin(alpha));
-        ;
-        float newY = (float) (yD + (x - xD) * Math.sin(alpha) + (y - yD) * Math.cos(alpha));
-        ;
-
-        //ToDo dafür sorgen das Bild unter bestimmten umständen aus dem Screen verschwindet
-
-        destination = new Vector(x, y);
-    }
+//    private void calcNewTarget(double alpha) {
+//
+//        float x = destination.getF(0);
+//        float y = destination.getF(1);
+//        float xD = position.getF(0);
+//        float yD = position.getF(1);
+//        float newX = (float) (xD + (x - xD) * Math.cos(alpha) - (y - yD) * Math.sin(alpha));
+//        float newY = (float) (yD + (x - xD) * Math.sin(alpha) + (y - yD) * Math.cos(alpha));
+//
+//        //ToDo dafür sorgen das Bild unter bestimmten umständen aus dem Screen verschwindet
+//
+//        destination = new Vector(x, y);
+//    }
 
     /**
      * Get Boundaries in the form:<br>
@@ -131,14 +129,13 @@ public class GameObject2D extends Animated implements Cloneable {
         return new Vector(pos[0], pos[0] + object.getMeasuredWidth(), pos[1], pos[1] + object.getMeasuredHeight());
     }
 
-    public boolean intersect(GameObject2D gameObject) {
+    public boolean intersect(GameObject2D gameObject2D) {
         if (intercectable) {
-            Vector b = getBoundaries();
-            Vector bO = gameObject.getBoundaries();
-            return bO.get(0) <= b.get(0) && b.get(0) <= bO.get(1) && bO.get(2) <= b.get(2) && b.get(2) <= bO.get(3) ||
-                    bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(2) && b.get(2) <= bO.get(3) ||
-                    bO.get(0) <= b.get(0) && b.get(0) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3) ||
-                    bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3);
+            Rect r1 = new Rect();
+            Rect r2 = new Rect();
+            object.getDrawingRect(r1);
+            gameObject2D.object.getDrawingRect(r2);
+            return r1.intersect(r2);
         }
         return false;
     }
