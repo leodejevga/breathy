@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.PersistableBundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -88,8 +91,10 @@ public abstract class Activity2D extends Activity implements IObserver {
         private int whiles = 0, ifs = 0, draws = 0;
         private long s = System.currentTimeMillis();
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void run() {
+            while(!Looper.getMainLooper().getQueue().isIdle());
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
