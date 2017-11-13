@@ -1,6 +1,7 @@
 package com.apps.philipps.source.helper._2D;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,7 +13,7 @@ import com.apps.philipps.source.helper.Vector;
  */
 public class GameObject2D extends Animated implements Cloneable {
 
-    public boolean rotateToDirection = true;
+    public boolean rotateToDirection = false;
     private Animated rotation = new Animated();
     public boolean intercectable = true;
     private View object;
@@ -39,8 +40,6 @@ public class GameObject2D extends Animated implements Cloneable {
     public GameObject2D(@NonNull View object, Vector position, Vector destination, double speed, boolean active) {
         super(position, destination, speed, active);
         this.object = object;
-        this.object.setPivotX(0);
-        this.object.setPivotY(0);
         if (this.position == null)
             this.position = new Vector(this.object.getX(), this.object.getY());
         else {
@@ -59,15 +58,15 @@ public class GameObject2D extends Animated implements Cloneable {
         rotation = gameObject2D.rotation.clone();
     }
 
-    public View getView() {
-        return object;
+    public <T extends View> T getView() {
+        return (T) object;
     }
 
 
     @Override
     public void update(double deltaMilliseconds) {
         super.update(deltaMilliseconds);
-        if(rotateToDirection)
+        if (rotateToDirection)
             rotate();
         object.setX(position.getF(0));
         object.setY(position.getF(1));
@@ -84,8 +83,9 @@ public class GameObject2D extends Animated implements Cloneable {
         float angle = (float) Math.toDegrees(Math.atan2(rotation.get(1), rotation.get(0)));
         getView().setRotation(angle);
     }
-    public void rotate(){
-        float angle = (float) Math.toDegrees(Math.atan2(destination.get(1)-position.get(1), destination.get(0)-position.get(0)));
+
+    public void rotate() {
+        float angle = (float) Math.toDegrees(Math.atan2(destination.get(1) - position.get(1), destination.get(0) - position.get(0)));
         getView().setRotation(angle);
     }
 
@@ -98,35 +98,16 @@ public class GameObject2D extends Animated implements Cloneable {
         this.object = object;
     }
 
-//    private void calcNewTarget(double alpha) {
-//
-//        float x = destination.getF(0);
-//        float y = destination.getF(1);
-//        float xD = position.getF(0);
-//        float yD = position.getF(1);
-//        float newX = (float) (xD + (x - xD) * Math.cos(alpha) - (y - yD) * Math.sin(alpha));
-//        float newY = (float) (yD + (x - xD) * Math.sin(alpha) + (y - yD) * Math.cos(alpha));
-//
-//        //ToDo dafür sorgen das Bild unter bestimmten umständen aus dem Screen verschwindet
-//
-//        destination = new Vector(x, y);
-//    }
 
     /**
-     * Get Boundaries in the form:<br>
-     * [x1 x2 y1 y2] This Coordinates describes edges in this kind:
-     * <pre>
-     * x1,y1   x2,y1
-     * x1,y2   x2,y2
-     * </pre>
-     * <p>
-     * x1,y1 is the Position of this Game Object
+     * Rect of the View
      *
-     * @return 4 Values that describes edges of a box
+     * @return Rect of the view
      */
-    public Vector getBoundaries() {
-        double[] pos = position.get();
-        return new Vector(pos[0], pos[0] + object.getMeasuredWidth(), pos[1], pos[1] + object.getMeasuredHeight());
+    public Rect getBoundaries() {
+        Rect r1 = new Rect();
+        object.getDrawingRect(r1);
+        return r1;
     }
 
     public boolean intersect(GameObject2D gameObject2D) {

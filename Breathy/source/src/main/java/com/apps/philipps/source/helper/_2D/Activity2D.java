@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.PlanManager;
+import com.apps.philipps.source.helper.BreathyActivity;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.interfaces.IObserver;
 
@@ -29,10 +30,9 @@ import java.util.Random;
 /**
  * Created by Jevgenij Huebert on 11.03.2017. Project Breathy
  */
-public abstract class Activity2D extends Activity implements IObserver {
+public abstract class Activity2D extends BreathyActivity{
     protected final float SCREEN_FACTOR = (float) (getScreenHeight(true) + getScreenWidth(true)) / (1080 + 1920);
 
-    protected final String TAG = getClass().getSimpleName();
     protected boolean draw;
     protected ViewGroup game;
     protected long delta;
@@ -91,7 +91,6 @@ public abstract class Activity2D extends Activity implements IObserver {
         private int whiles = 0, ifs = 0, draws = 0;
         private long s = System.currentTimeMillis();
 
-        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void run() {
             while(!Looper.getMainLooper().getQueue().isIdle());
@@ -243,35 +242,12 @@ public abstract class Activity2D extends Activity implements IObserver {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e(TAG, "OnPause");
-        if (AppState.inGame) {
-            PlanManager.pause();
-        }
-        AppState.recordData = false;
         draw = false;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e(TAG, "OnDestroy");
-        if (AppState.inGame) {
-            BreathData.save(getClass());
-            PlanManager.stop();
-            AppState.inGame = false;
-        }
-        BreathData.removeObserver(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "OnResume");
-        AppState.recordData = true;
-        if (AppState.inGame) {
-            PlanManager.resume();
-        }
-        BreathData.addObserver(this);
         starToDraw();
     }
 
@@ -288,24 +264,6 @@ public abstract class Activity2D extends Activity implements IObserver {
     }
 
     /**
-     * Use this Method to quickly initialize your GameObject2D
-     *
-     * @param content     id of your drawable content
-     * @param position    position ov the Object
-     * @param destination destination of the movement (can be null)
-     * @param move        speed of the movement
-     * @return your GameoObject2D
-     */
-    protected GameObject2D initObject(@DrawableRes int content, Vector position, Vector destination, double move) {
-        ImageView view = new ImageView(this);
-        view.setImageResource(content);
-        game.addView(view);
-        GameObject2D result = new GameObject2D(view, position, destination);
-        result.move(move);
-        return result;
-    }
-
-    /**
      * Get random int from to
      *
      * @param from frameTime of values
@@ -317,32 +275,4 @@ public abstract class Activity2D extends Activity implements IObserver {
         return (from + Math.abs(r.nextInt())) % to + 1;
     }
 
-    @Override
-    public void onBackPressed() {
-        onPause();
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("Do you really want to exit? Your coins will be lost and its not a good idea to interrupt the session.");
-        builder1.setCancelable(true);
-
-        builder1.setPositiveButton(
-                "Exit the game",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Activity2D.super.onBackPressed();
-                        dialog.cancel();
-                    }
-                });
-
-        builder1.setNegativeButton(
-                "Continue the game",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Activity2D.this.onResume();
-                        dialog.cancel();
-                    }
-                });
-
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
-    }
 }

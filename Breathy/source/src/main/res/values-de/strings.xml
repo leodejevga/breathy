@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Breathy</string>
+    <string name="really_exit">Wollen Sie wirklich beenden? Ihre Coins werden verloren gehen und es ist keine gute Idee mit der Sitzung aufzuhören.</string>
+    <string name="bt_error">Verbindung mit dem Breathy Gerät ist unterbrochen. Bitte verbinden Sie sich neu oder beenden Sie das Spiel.</string>
+    <string name="exit">Spiel beenden</string>
+    <string name="con">Spiel fortsetzen</string>
+    <string name="reconnect">Mit Breathy Gerät verbinden</string>
 
 </resources>

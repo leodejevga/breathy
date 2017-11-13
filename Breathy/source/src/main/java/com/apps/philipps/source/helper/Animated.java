@@ -22,6 +22,11 @@ public class Animated implements Cloneable {
 
     private boolean active = false;
 
+
+    public Animated(){
+        this(new Vector(), new Vector(), 0, false);
+    }
+
     /**
      * Instantiates a new Animated.
      *
@@ -73,11 +78,15 @@ public class Animated implements Cloneable {
      * Resume.
      */
     public void move() {
-        active = speed != 0 || destination.compareTo(position) == 0;
+        active = speed != 0 && destination.compareTo(position) != 0;
     }
 
     public void move(double speed) {
         move(destination, speed);
+    }
+
+    public void moveIn(long millis){
+        move(position.getDistance(destination)/millis*1000);
     }
 
     /**

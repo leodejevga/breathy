@@ -1,10 +1,9 @@
 package com.apps.philipps.app.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,10 +13,8 @@ import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.Activity2D;
 import com.apps.philipps.source.helper._2D.GameObject2D;
-import com.apps.philipps.test.activities.Game;
 
 import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 public class Calibrate extends Activity2D {
@@ -53,11 +50,9 @@ public class Calibrate extends Activity2D {
                 if (maxValue < y)
                     maxValue = y;
             }
-            min.setText("Min rate: " + minValue);
-            max.setText("Max rate: " + maxValue);
-            Vector position = new Vector(getScreenWidth(), data);
-            Vector destination = new Vector(-50, data);
-            points.add(new GO(initObject(R.drawable.point, position, destination, 150 * SCREEN_FACTOR), data));
+            min.setText(getString(R.string.min) + ": " + minValue);
+            max.setText(getString(R.string.min) + ": " + maxValue);
+            points.add(new GO(data));
         }
     }
 
@@ -105,11 +100,16 @@ public class Calibrate extends Activity2D {
         finish();
     }
 
-    private static class GO {
+    private class GO {
         GameObject2D o;
         double data;
 
-        public GO(GameObject2D o, double data) {
+        public GO(double data) {
+            Vector position = new Vector(Calibrate.this.getScreenWidth(), data);
+            Vector destination = new Vector(-50, data);
+            o = new GameObject2D(new ImageView(Calibrate.this), position, destination);
+            ImageView i = o.getView();
+            i.setImageResource(R.drawable.point);
             this.o = o;
             this.data = data;
         }

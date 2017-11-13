@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Breathy</string>
+    <string name="really_exit">Do you really want to exit? Your coins will be lost and its not a good idea to interrupt the session.</string>
+    <string name="bt_error">Connection with Breathy device is lost. Please connect your device again or exit the game.</string>
+    <string name="exit">Exit the game</string>
+    <string name="con">Continue the game</string>
+    <string name="reconnect">Connect to Breathy device</string>
 
 </resources>

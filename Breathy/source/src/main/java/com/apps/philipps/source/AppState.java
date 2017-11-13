@@ -12,12 +12,16 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.apps.philipps.source.interfaces.IObserver;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jevgenij Huebert on 22.02.2017. Project Breathy
  */
-public class AppState {
+public abstract class AppState implements IObserver {
     public final static String BREATHY_STORAGE = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "Breathy" + File.separator;
     public final static String PLAN_STORAGE = BREATHY_STORAGE + "PlanManager.pm";
     public final static boolean simulateBreathy = true; //Debug purpose
@@ -43,6 +47,8 @@ public class AppState {
     public static double breathyUserMax = 1024;
     public static double breathyUserMin = 200;
 
+    private static List<IObserver> btObserver = new ArrayList<>();
+
     public final static BroadcastReceiver btStateChanger = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -63,10 +69,13 @@ public class AppState {
                     btState = BtState.Connected;
                     break;
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+
                     btState = BtState.Enabled;
                     break;
             }
-            Log.w("AppState Bluetooth", AppState.btState + "");
+            for(IObserver o : btObserver)
+                o.call(btState);
+            Log.w("AppState Bluetooth", btState + "");
         }
     };
 
@@ -86,7 +95,6 @@ public class AppState {
         Enabled,
         Connected
     }
-
 
     /**
      * Checks if the app has permission to write to device storage
@@ -109,5 +117,12 @@ public class AppState {
             return false;
         }
         return true;
+    }
+
+    public static void addBTPObserver(IObserver o){
+        btObserver.add(o);
+    }
+    public static void removeBTPObserver(IObserver o){
+        btObserver.remove(o);
     }
 }
