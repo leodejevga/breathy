@@ -21,7 +21,6 @@ public abstract class BreathData {
     private static List<IObserver> observer = new ArrayList<>();
     private static RAM ramTemp;
     private static RAM ramGame;
-    private static int blockSize = 500;
     private static boolean initialized = false;
 
     /**
@@ -174,14 +173,15 @@ public abstract class BreathData {
         }
     }
 
-    public static class DataInfo implements Serializable {
-        public static final String TAG = "BreathDataInfo";
+    public static class DataInfo {
+        public static final String TAG = DataInfo.class.getSimpleName();
         public Calendar date;
         public Class game;
         public PlanManager.Plan plan;
 
         public String getName() {
-            return game.getSimpleName() + "_" + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE) + ":" + date.get(Calendar.SECOND) + ":" + date.get(Calendar.MILLISECOND);
+            return date.get(Calendar.YEAR) + "." + date.get(Calendar.MONTH) + "." + date.get(Calendar.DAY_OF_MONTH) + "_" +
+                    date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE) + ":" + date.get(Calendar.SECOND) + ":" + date.get(Calendar.MILLISECOND);
         }
 
         @Override
@@ -196,7 +196,7 @@ public abstract class BreathData {
         }
     }
 
-    public static class DataBlock implements Serializable {
+    public static class DataBlock {
         public RAM ram;
         public DataInfo info;
         public static final String TAG = DataBlock.class.getSimpleName();
@@ -204,16 +204,6 @@ public abstract class BreathData {
         public DataBlock(RAM ram, Class game) {
             this.ram = ram;
             this.info = new DataInfo(game, ram.size() > 0 ? ram.get(0).date : Calendar.getInstance());
-        }
-
-        public static String[] getNames(final Class gameClass) {
-            File f = new File(AppState.BREATHY_STORAGE);
-            return f.list(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.contains(TAG + "_" + gameClass.getSimpleName());
-                }
-            });
         }
 
         public String getName() {

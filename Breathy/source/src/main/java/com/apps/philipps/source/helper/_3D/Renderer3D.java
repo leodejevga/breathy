@@ -63,8 +63,6 @@ public abstract class Renderer3D implements GLSurfaceView.Renderer {
             frames = 0;
         }
         start = System.currentTimeMillis();
-
-
     }
 
     public static int loadShader(int type, String shaderCode) {

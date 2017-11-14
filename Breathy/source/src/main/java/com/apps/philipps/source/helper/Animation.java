@@ -20,11 +20,12 @@ import java.util.List;
  */
 public abstract class Animation {
     private Integer z;
+    protected OnFinished finished;
     private final static String TAG = "Animation";
     public static SparseArray<List<Animation>> animations = new SparseArray<>();
     private static List<Animation> toRemove = new ArrayList<>();
     private static List<Integer> levels = new ArrayList<>();
-    private static boolean removeAll = false;
+    private static int[] removeAll;
 
     /**
      * Initializes Animation with z = 0
@@ -67,26 +68,23 @@ public abstract class Animation {
 
         for (int i : levels) {
             for (final Animation animation : animations.get(i)) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            animation.update(delta);
-                        } catch (Exception e) {
-                            Log.e(TAG, "Update failed: " + animation + "\nError:", e);
-                        }
-                    }
-                });
+                animation.update(delta);
             }
         }
     }
 
     private static void executeToRemove() {
-        if (removeAll) {
+        if (removeAll != null && removeAll.length == 0) {
             animations.clear();
-            removeAll = false;
+            removeAll = null;
             toRemove.clear();
             levels.clear();
+            return;
+        }
+        if (removeAll != null) {
+            for (Integer i : removeAll)
+                animations.get(i).clear();
+            removeAll = null;
             return;
         }
         if (!toRemove.isEmpty()) {
@@ -154,7 +152,13 @@ public abstract class Animation {
      */
     @CallSuper
     public void remove() {
+        if (finished != null)
+            finished.run();
         toRemove.add(this);
+    }
+
+    public void setOnFinished(OnFinished finishedListener) {
+        finished = finishedListener;
     }
 
     /**
@@ -162,7 +166,15 @@ public abstract class Animation {
      */
     @CallSuper
     public static void removeAll() {
-        removeAll = true;
+        removeAll = new int[0];
+    }
+
+    /**
+     * Marks all Animations as removed. Important! The Animations will be removed at the beginning of calling {@link #updateAnimations(double)}
+     */
+    @CallSuper
+    public static void removeAll(int... z) {
+        removeAll = z;
     }
 
 
@@ -180,4 +192,8 @@ public abstract class Animation {
                 " Animations with keys=[" + (ls.isEmpty() ? "" : ls.substring(2)) + "]";
     }
 
+
+    public interface OnFinished {
+        void run();
+    }
 }
