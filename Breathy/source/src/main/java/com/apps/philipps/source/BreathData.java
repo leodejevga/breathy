@@ -20,7 +20,7 @@ public abstract class BreathData {
 
     private static List<IObserver> observer = new ArrayList<>();
     private static RAM ramTemp;
-    private static RAM ramGame;
+    private static RAM ramGame; 
     private static boolean initialized = false;
 
     /**
