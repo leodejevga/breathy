@@ -1,9 +1,8 @@
-package com.apps.philipps.test.activities;
+package com.apps.philipps.spaceFight.activities;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.ActionMenuItemView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,8 +11,8 @@ import android.widget.CompoundButton;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.OptionManager;
 import com.apps.philipps.source.SaveData;
-import com.apps.philipps.test.GameStats;
-import com.apps.philipps.test.R;
+import com.apps.philipps.spaceFight.GameStats;
+import com.apps.philipps.spaceFight.R;
 
 public class FlightOptions extends AppCompatActivity {
 

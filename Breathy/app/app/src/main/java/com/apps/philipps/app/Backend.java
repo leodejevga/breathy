@@ -12,7 +12,7 @@ import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.cachemanager.CacheManager;
 import com.apps.philipps.source.interfaces.IGame;
-import com.apps.philipps.test.Test;
+import com.apps.philipps.spaceFight.Test;
 import com.breathy.racing.Race;
 
 import java.util.ArrayList;

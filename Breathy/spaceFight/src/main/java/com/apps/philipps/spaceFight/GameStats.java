@@ -1,4 +1,4 @@
-package com.apps.philipps.test;
+package com.apps.philipps.spaceFight;
 
 import android.util.Log;
 

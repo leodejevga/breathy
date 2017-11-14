@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.apps.philipps.test">
+    package="com.apps.philipps.spaceFight">
 
     <application
         android:allowBackup="true"
@@ -9,8 +9,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Game" />
-        <activity android:name=".activities.FlightOptions"></activity>
+        <activity android:name="com.apps.philipps.spaceFight.activities.Game" />
+        <activity android:name="com.apps.philipps.spaceFight.activities.FlightOptions"></activity>
     </application>
 
 </manifest>

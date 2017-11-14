@@ -1,4 +1,4 @@
-package com.apps.philipps.test;
+package com.apps.philipps.spaceFight;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

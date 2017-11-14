@@ -5,9 +5,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 
 import com.apps.philipps.app.simulator.BreathSimulator;
-import com.apps.philipps.audiosurf.AudioSurf;
-import com.apps.philipps.fade.Fade;
-import com.apps.philipps.opengltest.Test;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
 import com.apps.philipps.source.Coins;
@@ -15,13 +12,10 @@ import com.apps.philipps.source.PlanManager;
 import com.apps.philipps.source.SaveData;
 import com.apps.philipps.source.cachemanager.CacheManager;
 import com.apps.philipps.source.interfaces.IGame;
-import com.apps.philipps.test.SpaceFight;
-import com.breathy.racing.Race;
+import com.apps.philipps.spaceFight.SpaceFight;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import breathing.philipps.apps.com.breathing.Breathing;
 
 /**
  * Created by Jevgenij Huebert on 27.01.2017. Project Breathy

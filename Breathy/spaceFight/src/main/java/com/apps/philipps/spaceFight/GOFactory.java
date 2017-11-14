@@ -1,4 +1,4 @@
-package com.apps.philipps.test;
+package com.apps.philipps.spaceFight;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,9 +12,7 @@ import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Animation;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.GameObject2D;
-import com.apps.philipps.test.activities.Game;
-
-import org.xml.sax.helpers.AttributesImpl;
+import com.apps.philipps.spaceFight.activities.Game;
 
 import java.util.Random;
 

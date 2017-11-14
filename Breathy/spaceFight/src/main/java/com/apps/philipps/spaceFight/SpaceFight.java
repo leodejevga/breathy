@@ -1,7 +1,6 @@
-package com.apps.philipps.test;
+package com.apps.philipps.spaceFight;
 
 import android.content.Context;
-import android.support.annotation.RawRes;
 
 import com.apps.philipps.source.implementations.BreathyGame;
 

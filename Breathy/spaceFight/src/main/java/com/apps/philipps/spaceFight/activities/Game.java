@@ -1,13 +1,9 @@
-package com.apps.philipps.test.activities;
+package com.apps.philipps.spaceFight.activities;
 
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
-import android.view.CollapsibleActionView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathInterpreter;
 import com.apps.philipps.source.Coins;
 import com.apps.philipps.source.OptionManager;
@@ -24,10 +19,10 @@ import com.apps.philipps.source.SaveData;
 import com.apps.philipps.source.helper.Animation;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.Activity2D;
-import com.apps.philipps.test.GOFactory;
-import com.apps.philipps.test.GameStats;
-import com.apps.philipps.test.R;
-import com.apps.philipps.test.SoundManager;
+import com.apps.philipps.spaceFight.GOFactory;
+import com.apps.philipps.spaceFight.GameStats;
+import com.apps.philipps.spaceFight.R;
+import com.apps.philipps.spaceFight.SoundManager;
 
 /**
  * Created by Jevgenij Huebert on 05.09.2017. Project Breathy.
