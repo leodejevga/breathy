@@ -275,7 +275,6 @@ public abstract class GOFactory {
             this.context = context;
             o.intercectable = false;
             effect = GameStats.Effect.getEffect(good);
-            effect = GameStats.Effect.timeLoop;
             if (effect == GameStats.Effect.timeLoop)
                 ((ImageView) o.getView()).setImageResource(R.drawable.g_time);
             else if (effect == GameStats.Effect.increaseShootSpeed)
