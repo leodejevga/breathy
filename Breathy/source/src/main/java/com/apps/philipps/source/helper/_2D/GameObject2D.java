@@ -1,13 +1,13 @@
 package com.apps.philipps.source.helper._2D;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.apps.philipps.source.helper.Animated;
 import com.apps.philipps.source.helper.Vector;
+
 /**
  * Created by Jevgenij Huebert on 17.03.2017. Project Breathy
  */
@@ -100,25 +100,30 @@ public class GameObject2D extends Animated implements Cloneable {
 
 
     /**
-     * Rect of the View
+     * Get Boundaries in the form:<br>
+     * [x1 x2 y1 y2] This Coordinates describes edges in this kind:
+     * <pre>
+     * x1,y1   x2,y1
+     * x1,y2   x2,y2
+     * </pre>
+     * <p>
+     * x1,y1 is the Position of this Game Object
      *
-     * @return Rect of the view
+     * @return 4 Values that describes edges of a box
      */
-    public Rect getBoundaries() {
-        Rect r1 = new Rect();
-        object.getDrawingRect(r1);
-        return r1;
+    public Vector getBoundaries() {
+        double[] pos = position.get();
+        return new Vector(pos[0], pos[0] + object.getMeasuredWidth(), pos[1], pos[1] + object.getMeasuredHeight());
     }
 
     public boolean intersect(GameObject2D gameObject2D) {
-        if (intercectable) {
-            Rect r1 = new Rect();
-            Rect r2 = new Rect();
-            object.getDrawingRect(r1);
-            gameObject2D.object.getDrawingRect(r2);
-            return r1.intersect(r2);
-        }
-        return false;
+
+        Vector b = getBoundaries();
+        Vector bO = gameObject2D.getBoundaries();
+        return bO.get(0) <= b.get(0) && b.get(0) <= bO.get(1) && bO.get(2) <= b.get(2) && b.get(2) <= bO.get(3) ||
+                bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(2) && b.get(2) <= bO.get(3) ||
+                bO.get(0) <= b.get(0) && b.get(0) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3) ||
+                bO.get(0) <= b.get(1) && b.get(1) <= bO.get(1) && bO.get(2) <= b.get(3) && b.get(3) <= bO.get(3);
     }
 
     @Override
