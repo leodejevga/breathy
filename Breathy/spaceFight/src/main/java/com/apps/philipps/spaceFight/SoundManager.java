@@ -2,6 +2,7 @@ package com.apps.philipps.spaceFight;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -11,10 +12,12 @@ import java.util.Random;
  */
 
 public class SoundManager {
+    public final static String TAG = SoundManager.class.getSimpleName();
     private static MediaPlayer shoot;
     private static MediaPlayer bang1;
     private static Random r;
     private static boolean initialized;
+    private static long time = System.currentTimeMillis();
 
     public static void init(Context context) {
         shoot = MediaPlayer.create(context, R.raw.shoot);
@@ -24,7 +27,8 @@ public class SoundManager {
     }
 
     public static void shoot() {
-        if (initialized) {
+        if (initialized && System.currentTimeMillis() - time > 120) {
+            time = System.currentTimeMillis();
             if (shoot.isPlaying())
                 shoot.seekTo(0);
             else

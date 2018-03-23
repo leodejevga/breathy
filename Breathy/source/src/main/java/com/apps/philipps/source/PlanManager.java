@@ -46,6 +46,9 @@ public abstract class PlanManager implements Serializable {
             throw new PlanManagerAlreadyInitialized();
 
     }
+    private static boolean checkCurrentPlan(){
+        return plans.size()>currentPlan && currentPlan>=0;
+    }
 
     public static void init(PlanManagerInstance instance) throws PlanManagerAlreadyInitialized {
         if (!initialized) {
@@ -89,7 +92,7 @@ public abstract class PlanManager implements Serializable {
     }
 
     public static boolean start() {
-        if (currentPlan != -1) {
+        if (checkCurrentPlan()) {
             plans.get(currentPlan).startPlan();
             return true;
         }
@@ -98,22 +101,22 @@ public abstract class PlanManager implements Serializable {
 
 
     public static void resume() {
-        if (currentPlan != -1)
+        if (checkCurrentPlan())
             plans.get(currentPlan).resume();
     }
 
     public static void stop() {
-        if (currentPlan != -1)
+        if (checkCurrentPlan())
             plans.get(currentPlan).stop();
     }
 
     public static void pause() {
-        if (currentPlan != -1)
+        if (checkCurrentPlan())
             plans.get(currentPlan).pause();
     }
 
     public static boolean isActive() {
-        if (currentPlan != -1)
+        if (checkCurrentPlan())
             return plans.get(currentPlan).running;
         return false;
     }
@@ -128,13 +131,13 @@ public abstract class PlanManager implements Serializable {
 
     @Nullable
     public static Plan getCurrentPlan() {
-        if (currentPlan != -1)
+        if (checkCurrentPlan())
             return plans.get(currentPlan);
         return null;
     }
 
     public static long getDuration() {
-        if (currentPlan != -1 && plans.get(currentPlan).running) {
+        if (checkCurrentPlan() && plans.get(currentPlan).running) {
             return plans.get(currentPlan).getCurrentDuration();
         }
         return 0;
@@ -143,18 +146,18 @@ public abstract class PlanManager implements Serializable {
 
     @Nullable
     public static String getStatus() {
-        if (currentPlan != -1 && plans.get(currentPlan).running)
+        if (checkCurrentPlan() && plans.get(currentPlan).running)
             return getCurrentOption() + "\nrest time: " + getCurrentPlan().getCurrentDuration();
         return null;
     }
 
     private static void update() {
-        if (currentPlan != -1)
+        if (checkCurrentPlan())
             plans.get(currentPlan).update();
     }
 
     public static Plan.Option getCurrentOption() {
-        if (currentPlan != -1 && plans.get(currentPlan).running)
+        if (checkCurrentPlan() && plans.get(currentPlan).running)
             return plans.get(currentPlan).getOption(plans.get(currentPlan).currentOption);
         return null;
     }
@@ -168,7 +171,7 @@ public abstract class PlanManager implements Serializable {
     }
 
     public static Plan.Option getOption(int optionId) {
-        if (currentPlan >= 0 && currentPlan < plans.size() && optionId >= 0 && optionId < plans.get(currentPlan).options.size())
+        if (checkCurrentPlan() && optionId >= 0 && optionId < plans.get(currentPlan).options.size())
             return plans.get(currentPlan).options.get(optionId);
         return null;
     }
@@ -179,7 +182,7 @@ public abstract class PlanManager implements Serializable {
     }
 
     public static void addOption(Plan.Option option) {
-        if (currentPlan >= 0 && currentPlan < plans.size())
+        if (checkCurrentPlan())
             plans.get(currentPlan).addOption(option);
     }
 

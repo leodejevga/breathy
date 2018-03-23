@@ -2,6 +2,7 @@ package com.apps.philipps.spaceFight;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -43,7 +44,8 @@ public abstract class GOFactory {
             if (o != null)
                 game.removeView(o.getView());
         }
-        protected void removeNormal(){
+
+        protected void removeNormal() {
             super.remove();
         }
     }
@@ -79,6 +81,10 @@ public abstract class GOFactory {
             double speed = Math.abs(o.getPosition().get(1) - y) * AppState.breathyDataFrequency;
             o.move(new Vector(o.getPosition().get(0), y), speed);
             o.getView().bringToFront();
+
+            for (Goody goody : get(Goody.class))
+                if (o.intersect(goody.o))
+                    goody.activate();
         }
     }
 
@@ -156,17 +162,14 @@ public abstract class GOFactory {
             if (!o.isMoving()) {
                 remove();
             } else {
-                for (Animation ani : get(Goody.class)) {
-                    Goody goody = (Goody) ani;
+                for (Goody goody : get(Goody.class)) {
                     if (o.intersect(goody.o)) {
                         goody.activate();
-                        game.removeView(goody.o.getView());
                         remove();
                         return;
                     }
                 }
-                for (Animation ani : get(Enemy.class)) {
-                    Enemy enemy = (Enemy) ani;
+                for (Enemy enemy : get(Enemy.class)) {
                     if (o.intersect(enemy.o)) {
                         context.addCoin();
                         SoundManager.bang();
@@ -272,6 +275,7 @@ public abstract class GOFactory {
             this.context = context;
             o.intercectable = false;
             effect = GameStats.Effect.getEffect(good);
+            effect = GameStats.Effect.timeLoop;
             if (effect == GameStats.Effect.timeLoop)
                 ((ImageView) o.getView()).setImageResource(R.drawable.g_time);
             else if (effect == GameStats.Effect.increaseShootSpeed)
@@ -298,6 +302,7 @@ public abstract class GOFactory {
             boolean result = effect.activate();
             if (effect == GameStats.Effect.timeLoop) {
                 start = System.currentTimeMillis();
+                Log.e(TAG, "start: " + start);
                 o.setPosition(new Vector(-100, -100));
                 game.removeView(o.getView());
                 o.stop();
@@ -314,9 +319,11 @@ public abstract class GOFactory {
             if (!o.intercectable) {
                 o.intercectable = System.currentTimeMillis() - o.created >= intersectableIn;
             }
+            Log.e(TAG, "start Update: " + start);
             if (start > 0) {
                 long delay = System.currentTimeMillis() - start;
                 if (delay >= GameStats.TIME_LOOP_DELAY) {
+                    start = 0;
                     GameStats.timeLoopAnimation.move(new Vector(1));
                     new LoopAnimationOff(context, game);
                     remove();

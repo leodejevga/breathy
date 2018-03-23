@@ -63,6 +63,10 @@ public class Vector implements Comparable<Vector>, Cloneable {
      * @return the position
      */
     public Vector add(Vector position) {
+        double a = get(0);
+        double b = position.get(0);
+        double ab = a+b;
+        double add = get(0) + position.get(0);
         for (int i = 0; i < getDimensions() || i < position.getDimensions(); i++)
             set(i, get(i) + position.get(i));
         return this;

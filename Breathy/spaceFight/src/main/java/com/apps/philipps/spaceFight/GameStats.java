@@ -47,7 +47,7 @@ public class GameStats {
         initialized = true;
     }
 
-    public enum Effect {
+    public static enum Effect {
         timeLoop(true, "Good: Time Loop for 3 seconds", System.currentTimeMillis()),
         increaseShootSpeed(true, "Good: Increase shoot speed", 0),
         decreaseShootSpeed(false, "Bad: Decrease shoot speed", 0),

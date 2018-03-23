@@ -24,6 +24,10 @@ public class GameObject2D extends Animated implements Cloneable {
         this(new ImageView(context));
     }
 
+    public GameObject2D(Context context, Vector position, Vector destination) {
+        this(new ImageView(context), position, destination);
+    }
+
     public GameObject2D(@NonNull View object) {
         this(object, null, null);
     }

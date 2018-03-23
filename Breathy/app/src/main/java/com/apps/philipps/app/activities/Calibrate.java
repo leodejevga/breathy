@@ -10,15 +10,12 @@ import android.widget.TextView;
 import com.apps.philipps.app.R;
 import com.apps.philipps.source.AppState;
 import com.apps.philipps.source.BreathData;
+import com.apps.philipps.source.helper.Animation;
 import com.apps.philipps.source.helper.Vector;
 import com.apps.philipps.source.helper._2D.Activity2D;
 import com.apps.philipps.source.helper._2D.GameObject2D;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Calibrate extends Activity2D {
-    private List<GO> points = new ArrayList<>();
 
     private double minValue;
     private double maxValue;
@@ -43,7 +40,7 @@ public class Calibrate extends Activity2D {
                 minValue = data;
             if (maxValue < data)
                 maxValue = data;
-            for (GO o : points) {
+            for (POINT o : Animation.get(POINT.class)) {
                 double y = o.data;
                 if (minValue > y)
                     minValue = y;
@@ -52,7 +49,7 @@ public class Calibrate extends Activity2D {
             }
             min.setText(getString(R.string.min) + ": " + minValue);
             max.setText(getString(R.string.min) + ": " + maxValue);
-            points.add(new GO(data));
+            new POINT(data);
         }
     }
 
@@ -62,23 +59,8 @@ public class Calibrate extends Activity2D {
 
     @Override
     protected void draw() {
-        List<GO> toRemove = new ArrayList<>();
-        for (GO point : points) {
-            double y = 0;
-            if (Math.abs(minValue - maxValue) <= AppState.MAX_BT_VALUE / 50)
-                y = point.data - AppState.breathyNormState + getScreenHeight() / 2;
-            else y = (point.data - minValue) / (maxValue - minValue) * (getScreenHeight() - 50);
-
-            point.o.setPosition(new Vector(point.o.getPosition().get(0), y));
-            point.o.move(new Vector(-50, y));
-            point.o.update(delta);
-            if (!point.o.isMoving()) {
-                game.removeView(point.o.getView());
-                toRemove.add(point);
-            }
-        }
         calibrateInformation.setText("Framerate " + getFrameRate());
-        points.removeAll(toRemove);
+        Animation.updateAnimations(delta);
     }
 
     @Override
@@ -100,18 +82,43 @@ public class Calibrate extends Activity2D {
         finish();
     }
 
-    private class GO {
+    private class POINT extends Animation {
         GameObject2D o;
         double data;
 
-        public GO(double data) {
+        public POINT(double data) {
+            super(1);
             Vector position = new Vector(Calibrate.this.getScreenWidth(), data);
             Vector destination = new Vector(-50, data);
-            o = new GameObject2D(new ImageView(Calibrate.this), position, destination);
+            o = new GameObject2D(Calibrate.this, position, destination);
             ImageView i = o.getView();
             i.setImageResource(R.drawable.point);
-            this.o = o;
+            game.addView(i);
+            o.move(100);
+
             this.data = data;
+        }
+
+        @Override
+        protected void update(double delta) {
+            if (!o.isMoving()) {
+                remove();
+            }
+            else {
+                double y = 0;
+                if (Math.abs(minValue - maxValue) <= AppState.MAX_BT_VALUE / 50)
+                    y = data - AppState.breathyNormState + getScreenHeight() / 2;
+                else y = (data - minValue) / (maxValue - minValue) * (getScreenHeight() - 50);
+                o.setPosition(new Vector(o.getPosition().get(0), y));
+                o.move(new Vector(-50, y));
+                o.update(delta);
+            }
+        }
+
+        @Override
+        public void remove() {
+            super.remove();
+            game.removeView(o.getView());
         }
     }
 

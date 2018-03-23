@@ -23,7 +23,7 @@ public class Animated implements Cloneable {
     private boolean active = false;
 
 
-    public Animated(){
+    public Animated() {
         this(new Vector(), new Vector(), 0, false);
     }
 
@@ -85,8 +85,8 @@ public class Animated implements Cloneable {
         move(destination, speed);
     }
 
-    public void moveIn(long millis){
-        move(position.getDistance(destination)/millis*1000);
+    public void moveIn(long millis) {
+        move(position.getDistance(destination) / millis * 1000);
     }
 
     /**
@@ -201,7 +201,7 @@ public class Animated implements Cloneable {
 
     @Override
     public String toString() {
-        return position + " --> " + destination + (isMoving() ? "  is moving with " + speed : "");
+        return position + " --> " + destination + (isMoving() ? "  is moving with " + speed + " pixels/second" : "");
     }
 
     @Override

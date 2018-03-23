@@ -12,6 +12,7 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public abstract class Animation {
     private final static String TAG = "Animation";
     public static SparseArray<List<Animation>> animations = new SparseArray<>();
     private static List<Animation> toRemove = new ArrayList<>();
+    private static List<Animation> toAdd = new ArrayList<>();
     private static List<Integer> levels = new ArrayList<>();
     private static int[] removeAll;
 
@@ -42,19 +44,7 @@ public abstract class Animation {
      */
     public Animation(@NonNull Integer z) {
         this.z = z;
-        List<Animation> level = animations.get(z);
-        if (level == null) {
-            levels.add(z);
-            Collections.sort(levels, new Comparator<Integer>() {
-                @Override
-                public int compare(Integer o1, Integer o2) {
-                    return o1.compareTo(o2);
-                }
-            });
-            level = new ArrayList<>();
-            animations.append(z, level);
-        }
-        level.add(this);
+        toAdd.add(this);
     }
 
     /**
@@ -64,13 +54,36 @@ public abstract class Animation {
      */
     @CallSuper
     public static void updateAnimations(final double delta) {
+        executeToAdd();
         executeToRemove();
-
-        for (int i : levels) {
-            for (final Animation animation : animations.get(i)) {
-                animation.update(delta);
+        try {
+            for (int i : levels) {
+                for (final Animation animation : animations.get(i)) {
+                    animation.update(delta);
+                }
             }
+        } catch (ConcurrentModificationException e){
+            Log.e(TAG, "Error + " + e.getMessage());
         }
+    }
+
+    private static void executeToAdd() {
+        for (Animation a: toAdd){
+            List<Animation> level = animations.get(a.z);
+            if (level == null) {
+                levels.add(a.z);
+                Collections.sort(levels, new Comparator<Integer>() {
+                    @Override
+                    public int compare(Integer o1, Integer o2) {
+                        return o1.compareTo(o2);
+                    }
+                });
+                level = new ArrayList<>();
+                animations.append(a.z, level);
+            }
+            level.add(a);
+        }
+        toAdd.clear();
     }
 
     private static void executeToRemove() {
@@ -118,13 +131,13 @@ public abstract class Animation {
      * @param clazz Class of Animation
      * @return List of those Animations
      */
-    public static List<Animation> get(Class clazz) {
-        List<Animation> result = new ArrayList<>();
+    public static <T extends Animation> List<T> get(Class<T> clazz) {
+        List<T> result = new ArrayList<>();
         for (int i : levels)
             for (int j = 0; j < animations.get(i).size(); j++)
                 if (animations.get(i).get(j).getClass() == clazz)
-                    result.add(animations.get(i).get(j));
-        return result;
+                    result.add((T)animations.get(i).get(j));
+        return (List<T>)result;
     }
 
     /**

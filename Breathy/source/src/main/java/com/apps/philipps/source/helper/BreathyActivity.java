@@ -107,13 +107,19 @@ public abstract class BreathyActivity extends Activity implements IObserver {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.really_exit);
         builder.setCancelable(true);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                BreathyActivity.this.onResume();
+            }
+        });
 
         builder.setPositiveButton(
                 getString(R.string.exit),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         BreathyActivity.super.onBackPressed();
-                        dialog.cancel();
+                        dialog.dismiss();
                     }
                 });
 
@@ -121,7 +127,6 @@ public abstract class BreathyActivity extends Activity implements IObserver {
                 getString(R.string.con),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        BreathyActivity.this.onResume();
                         dialog.cancel();
                     }
                 });
